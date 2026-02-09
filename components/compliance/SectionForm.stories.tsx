@@ -25,8 +25,8 @@ async function clickRadio(
     // Fallback: find by label text containing field id, then find radio in same group
     const label = canvas.getByText(new RegExp(`\\[${fieldId}\\]`));
     const group = label.closest(".group-layout, [class*='group']")?.parentElement ?? label.parentElement!;
-    const groupRadios = group.querySelectorAll<HTMLInputElement>('input[type="radio"]');
-    const fallback = Array.from(groupRadios).find((r) => r.value === value);
+    const groupRadios = (group as Element).querySelectorAll('input[type="radio"]');
+    const fallback = Array.from(groupRadios).find((r) => (r as HTMLInputElement).value === value) as HTMLInputElement | undefined;
     if (fallback) {
       await userEvent.click(fallback);
       return;

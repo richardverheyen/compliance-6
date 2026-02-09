@@ -1,9 +1,12 @@
 import { http, HttpResponse } from "msw";
 import { findUserByEmail, createUser } from "./db";
+import { complianceHandlers } from "./compliance-handlers";
 
 let currentUserId: string | null = null;
 
 export const handlers = [
+  ...complianceHandlers,
+
   http.post("/api/auth/signup", async ({ request }) => {
     const { email, password, name } = (await request.json()) as {
       email: string;

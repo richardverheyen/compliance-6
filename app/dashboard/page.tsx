@@ -1,9 +1,38 @@
 "use client";
 
+import { useEffect } from "react";
+import Link from "next/link";
 import { useAuthStore } from "@/lib/auth-store";
+import { useComplianceStore } from "@/lib/compliance-store";
+import { getProcessRating } from "@/lib/types/compliance";
+import { ProcessTable } from "@/components/compliance/ProcessTable";
+import { ComplianceCalendar } from "@/components/compliance/ComplianceCalendar";
 
 export default function DashboardPage() {
   const { user } = useAuthStore();
+  const { activeLegislations, legislations, teamMembers, fetchTeam } =
+    useComplianceStore();
+
+  useEffect(() => {
+    if (teamMembers.length === 0) {
+      fetchTeam();
+    }
+  }, [teamMembers.length, fetchTeam]);
+
+  function getLegislationName(id: string) {
+    return legislations.find((l) => l.id === id)?.shortName ?? id;
+  }
+
+  // Calculate health KPI across all processes
+  const allProcesses = activeLegislations.flatMap((al) => al.processes);
+  const compliantProcesses = allProcesses.filter(
+    (p) => getProcessRating(p) === "green",
+  );
+  const healthScore =
+    allProcesses.length > 0
+      ? Math.round((compliantProcesses.length / allProcesses.length) * 100)
+      : 0;
+  const healthPass = healthScore > 70;
 
   return (
     <div className="px-4 py-12">
@@ -13,46 +42,71 @@ export default function DashboardPage() {
           Welcome back{user?.name ? `, ${user.name}` : ""}!
         </p>
 
-        <div className="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
-          <div className="rounded-xl border border-gray-200 p-6">
-            <p className="text-sm font-medium text-gray-500">Compliance Score</p>
-            <p className="mt-2 text-3xl font-bold text-green-600">94%</p>
+        {activeLegislations.length === 0 ? (
+          <div className="mt-8 rounded-xl border border-gray-200 p-8 text-center">
+            <h2 className="text-lg font-semibold text-gray-900">
+              No active legislations
+            </h2>
+            <p className="mt-2 text-sm text-gray-600">
+              Get started by browsing available legislations and completing an
+              introduction form.
+            </p>
+            <Link
+              href="/dashboard/legislations"
+              className="mt-4 inline-block rounded-lg bg-indigo-600 px-4 py-2.5 text-sm font-semibold text-white hover:bg-indigo-500"
+            >
+              Browse Legislations
+            </Link>
           </div>
-          <div className="rounded-xl border border-gray-200 p-6">
-            <p className="text-sm font-medium text-gray-500">Open Issues</p>
-            <p className="mt-2 text-3xl font-bold text-gray-900">7</p>
-          </div>
-          <div className="rounded-xl border border-gray-200 p-6">
-            <p className="text-sm font-medium text-gray-500">Audits This Month</p>
-            <p className="mt-2 text-3xl font-bold text-gray-900">3</p>
-          </div>
-          <div className="rounded-xl border border-gray-200 p-6">
-            <p className="text-sm font-medium text-gray-500">Regulations Tracked</p>
-            <p className="mt-2 text-3xl font-bold text-gray-900">24</p>
-          </div>
-        </div>
-
-        <div className="mt-8 rounded-xl border border-gray-200 p-6">
-          <h2 className="text-lg font-semibold text-gray-900">Recent Activity</h2>
-          <div className="mt-4 space-y-4">
-            {[
-              { action: "SOC 2 audit completed", time: "2 hours ago", status: "Passed" },
-              { action: "New GDPR regulation detected", time: "5 hours ago", status: "Review needed" },
-              { action: "Risk assessment updated", time: "1 day ago", status: "3 new risks" },
-              { action: "Policy document approved", time: "2 days ago", status: "Approved" },
-            ].map((item) => (
-              <div key={item.action} className="flex items-center justify-between border-b border-gray-100 pb-3 last:border-0">
-                <div>
-                  <p className="text-sm font-medium text-gray-900">{item.action}</p>
-                  <p className="text-xs text-gray-500">{item.time}</p>
+        ) : (
+          <div className="mt-8 grid gap-8 lg:grid-cols-[1fr_320px]">
+            {/* Left column */}
+            <div className="space-y-8">
+              {/* Health KPI */}
+              <div className="flex items-center gap-6 rounded-xl border border-gray-200 bg-white p-6">
+                <div
+                  className={`flex h-20 w-20 shrink-0 items-center justify-center rounded-full border-4 ${
+                    healthPass
+                      ? "border-green-500 text-green-600"
+                      : "border-red-500 text-red-600"
+                  }`}
+                >
+                  <span className="text-2xl font-bold">{healthScore}%</span>
                 </div>
-                <span className="rounded-full bg-gray-100 px-3 py-1 text-xs font-medium text-gray-700">
-                  {item.status}
-                </span>
+                <div>
+                  <h2 className="text-lg font-semibold text-gray-900">
+                    Overall Compliance Health
+                  </h2>
+                  <p className="text-sm text-gray-500">
+                    {compliantProcesses.length} of {allProcesses.length} processes
+                    fully compliant
+                  </p>
+                </div>
               </div>
-            ))}
+
+              {/* Process tables per legislation */}
+              {activeLegislations.map((active) => (
+                <div key={active.legislationId}>
+                  <h2 className="text-lg font-semibold text-gray-900">
+                    {getLegislationName(active.legislationId)}
+                  </h2>
+                  <p className="mt-1 text-sm text-gray-500">
+                    Activated{" "}
+                    {new Date(active.activatedAt).toLocaleDateString()}
+                  </p>
+                  <div className="mt-3">
+                    <ProcessTable processes={active.processes} />
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            {/* Right column */}
+            <div>
+              <ComplianceCalendar />
+            </div>
           </div>
-        </div>
+        )}
       </div>
     </div>
   );

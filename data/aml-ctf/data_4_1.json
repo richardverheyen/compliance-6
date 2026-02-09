@@ -1,0 +1,281 @@
+{
+  "fields": [
+    {
+      "id": "4_1_2_1",
+      "label": "Does your business have customers who are pre-commencement customers?",
+      "detail-required": false,
+      "correct-option": "N/A"
+    },
+    {
+      "id": "4_1_2_2",
+      "label": "Does your business provide designated services covered by item 40, 42 or 44 of table 1 in section 6 of the AML/CTF Act?",
+      "detail-required": false,
+      "correct-option": "N/A"
+    },
+    {
+      "id": "4_1_3_1",
+      "label": "Does your business consider the risk posed by different customer types when identifying ML/TF risk?",
+      "detail-required": true,
+      "correct-option": "Yes",
+      "detail-label": "Which types of customers do you consider?"
+    },
+    {
+      "id": "4_1_3_1_a",
+      "label": "Does your risk identification process specifically consider the beneficial owners of customers?",
+      "detail-required": false,
+      "correct-option": "Yes"
+    },
+    {
+      "id": "4_1_3_1_b",
+      "label": "Does your risk identification process specifically consider any politically exposed persons (PEPs)?",
+      "detail-required": false,
+      "correct-option": "Yes"
+    },
+    {
+      "id": "4_1_3_2",
+      "label": "Does your business consider its customers' sources of funds and wealth?",
+      "detail-required": true,
+      "correct-option": "Yes",
+      "detail-label": "Describe how you consider customers' sources of funds and wealth."
+    },
+    {
+      "id": "4_1_3_3",
+      "label": "Does your business consider the nature and purpose of the business relationship with its customers?",
+      "detail-required": true,
+      "correct-option": "Yes",
+      "detail-label": "Describe how you consider the nature and purpose of the business relationship."
+    },
+    {
+      "id": "4_1_3_4",
+      "label": "Does your business consider the control structure of its non-individual customers?",
+      "detail-required": true,
+      "correct-option": "Yes",
+      "detail-label": "Describe how you consider the control structure of non-individual customers."
+    },
+    {
+      "id": "4_1_3_5",
+      "label": "Does your business consider the types of designated services it provides?",
+      "detail-required": true,
+      "correct-option": "Yes",
+      "detail-label": "Describe how you consider the risks posed by the designated services you provide."
+    },
+    {
+      "id": "4_1_3_6",
+      "label": "Does your business consider the methods by which it delivers designated services?",
+      "detail-required": true,
+      "correct-option": "Yes",
+      "detail-label": "Describe how you consider the risks posed by your delivery methods."
+    },
+    {
+      "id": "4_1_3_7",
+      "label": "Does your business consider the foreign jurisdictions with which it deals?",
+      "detail-required": true,
+      "correct-option": "Yes",
+      "detail-label": "Describe how you consider the risks posed by foreign jurisdictions."
+    },
+    {
+      "id": "4_1_4_1",
+      "label": "Does your business have customers who are individuals?",
+      "detail-required": false,
+      "correct-option": "N/A"
+    },
+    {
+      "id": "4_1_4_2",
+      "label": "Does your business have customers who are domestic or foreign companies?",
+      "detail-required": false,
+      "correct-option": "N/A"
+    },
+    {
+      "id": "4_1_4_3",
+      "label": "Does your business have customers who act in the capacity of a trustee of a trust?",
+      "detail-required": false,
+      "correct-option": "N/A"
+    },
+    {
+      "id": "4_1_4_4",
+      "label": "Does your business have customers who act in the capacity of a member of a partnership?",
+      "detail-required": false,
+      "correct-option": "N/A"
+    },
+    {
+      "id": "4_1_4_5",
+      "label": "Does your business have customers that are incorporated or unincorporated associations?",
+      "detail-required": false,
+      "correct-option": "N/A"
+    },
+    {
+      "id": "4_1_4_6",
+      "label": "Does your business have customers that are registered co-operatives?",
+      "detail-required": false,
+      "correct-option": "N/A"
+    },
+    {
+      "id": "4_1_4_7",
+      "label": "Does your business have customers that are government bodies?",
+      "detail-required": false,
+      "correct-option": "N/A"
+    },
+    {
+      "id": "4_1_5_1",
+      "label": "Does your business have customers with beneficial owners as defined in Part 4.12?",
+      "detail-required": false,
+      "correct-option": "N/A"
+    },
+    {
+      "id": "4_1_5_2",
+      "label": "Does your business have customers who are politically exposed persons as defined in Part 4.13?",
+      "detail-required": false,
+      "correct-option": "N/A"
+    },
+    {
+      "id": "4_1_8",
+      "label": "Does your business have agents authorized to act for or on behalf of a customer in relation to a designated service?",
+      "detail-required": false,
+      "correct-option": "N/A"
+    },
+    {
+      "id": "4_2_2",
+      "label": "Does your program include risk-based systems and controls designed to be reasonably satisfied that an individual customer is who they claim to be?",
+      "detail-required": false,
+      "correct-option": "Yes"
+    },
+    {
+      "id": "4_2_3",
+      "label": "Does your business have individual customers who are NOT acting in the capacity of a sole trader?",
+      "detail-required": false,
+      "correct-option": "N/A"
+    },
+    {
+      "id": "4_2_3_1",
+      "label": "Does your business collect the individual customer's full name?",
+      "detail-required": false,
+      "correct-option": "Yes"
+    },
+    {
+      "id": "4_2_3_2",
+      "label": "Does your business collect the individual customer's date of birth?",
+      "detail-required": false,
+      "correct-option": "Yes"
+    },
+    {
+      "id": "4_2_3_3",
+      "label": "Does your business collect the individual customer's residential address?",
+      "detail-required": false,
+      "correct-option": "Yes"
+    },
+    {
+      "id": "4_2_4",
+      "label": "Does your business have customers who act in the capacity of a sole trader?",
+      "detail-required": false,
+      "correct-option": "N/A"
+    },
+    {
+      "id": "4_2_4_1",
+      "label": "Does your business collect the sole trader's full name?",
+      "detail-required": false,
+      "correct-option": "Yes"
+    }
+  ],
+  "groups": [
+    {
+      "id": "4_1_2",
+      "title": "Scope and Applicability",
+      "description": "Determines if the rules in Chapter 4 apply to your specific customers or services."
+    },
+    {
+      "id": "4_1_3",
+      "title": "ML/TF Risk Identification Factors",
+      "description": "Mandatory factors a reporting entity must consider when identifying its ML/TF risk."
+    },
+    {
+      "id": "4_1_4",
+      "title": "Customer Categories",
+      "description": "Identifies which specific parts of the Rules apply based on the kinds of customers you serve."
+    },
+    {
+      "id": "4_1_5",
+      "title": "Specific Person Types",
+      "description": "Requirements for identifying beneficial owners and politically exposed persons."
+    },
+    {
+      "id": "4_1_8",
+      "title": "Agents",
+      "description": "Procedures for agents authorized to act on behalf of customers."
+    },
+    {
+      "id": "4_1",
+      "title": "Part 4.1: Introduction"
+    },
+    {
+      "id": "4_2",
+      "title": "Part 4.2: Individuals and Sole Traders",
+      "description": "Applicable customer identification procedures for individual customers."
+    }
+  ],
+  "rules": [
+    {
+      "target": "4_1_3_1_a",
+      "scope": "4_1_3_1",
+      "effect": "SHOW",
+      "schema": {
+        "const": "Yes"
+      }
+    },
+    {
+      "target": "4_1_3_1_b",
+      "scope": "4_1_3_1",
+      "effect": "SHOW",
+      "schema": {
+        "const": "Yes"
+      }
+    },
+    {
+      "target": "4_2",
+      "scope": "4_1_4_1",
+      "effect": "SHOW",
+      "schema": {
+        "const": "Yes"
+      }
+    },
+    {
+      "target": "4_3",
+      "scope": "4_1_4_2",
+      "effect": "SHOW",
+      "schema": {
+        "const": "Yes"
+      }
+    },
+    {
+      "target": "4_2_3_1",
+      "scope": "4_2_3",
+      "effect": "SHOW",
+      "schema": {
+        "const": "Yes"
+      }
+    },
+    {
+      "target": "4_2_3_2",
+      "scope": "4_2_3",
+      "effect": "SHOW",
+      "schema": {
+        "const": "Yes"
+      }
+    },
+    {
+      "target": "4_2_3_3",
+      "scope": "4_2_3",
+      "effect": "SHOW",
+      "schema": {
+        "const": "Yes"
+      }
+    },
+    {
+      "target": "4_2_4_1",
+      "scope": "4_2_4",
+      "effect": "SHOW",
+      "schema": {
+        "const": "Yes"
+      }
+    }
+  ]
+}

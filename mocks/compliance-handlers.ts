@@ -1,11 +1,12 @@
 import { http, HttpResponse } from "msw";
 import {
   legislationsCatalog,
-  generateMockRatings,
   mockTeamMembers,
   complianceCalendarEvents,
+  getSectionData,
 } from "./compliance-data";
-import type { BusinessProfile, ActiveLegislation, TeamMember } from "@/lib/types/compliance";
+import type { TeamMember } from "@/lib/types/compliance";
+import { compile } from "@/lib/compliance-forms";
 
 let teamMembers = [...mockTeamMembers];
 let nextTeamId = 6;
@@ -24,22 +25,35 @@ export const complianceHandlers = [
     return HttpResponse.json(legislation);
   }),
 
-  http.post("/api/compliance/legislations/:id/activate", async ({ params, request }) => {
-    const legislation = legislationsCatalog.find((l) => l.id === params.id);
-    if (!legislation) {
-      return HttpResponse.json({ error: "Not found" }, { status: 404 });
-    }
+  // Section schema (server-side compilation)
+  http.get(
+    "/api/compliance/legislations/:id/sections/:sectionId/schema",
+    ({ params }) => {
+      const legislation = legislationsCatalog.find((l) => l.id === params.id);
+      if (!legislation) {
+        return HttpResponse.json({ error: "Not found" }, { status: 404 });
+      }
 
-    const profile = (await request.json()) as BusinessProfile;
-    const active: ActiveLegislation = {
-      legislationId: legislation.id,
-      activatedAt: new Date().toISOString(),
-      businessProfile: profile,
-      processes: generateMockRatings(legislation),
-    };
+      const sectionData = getSectionData(params.sectionId as string);
+      if (sectionData.fields.length === 0 && sectionData.groups.length === 0) {
+        return HttpResponse.json({ error: "Section not found" }, { status: 404 });
+      }
 
-    return HttpResponse.json(active);
-  }),
+      const { schema, uiSchema } = compile(
+        sectionData.fields,
+        sectionData.groups,
+        sectionData.rules,
+      );
+
+      return HttpResponse.json({
+        schema,
+        uiSchema,
+        fields: sectionData.fields,
+        groups: sectionData.groups,
+        rules: sectionData.rules,
+      });
+    },
+  ),
 
   // Team
   http.get("/api/compliance/team", () => {

@@ -1,0 +1,179 @@
+{
+  "fields": [
+    {
+      "id": "4_12_1",
+      "label": "Does your program include systems and controls to determine the beneficial owner of each customer?",
+      "detail-required": true,
+      "correct-option": "Yes",
+      "detail-label": "Describe the systems and controls used to determine the beneficial owner of each customer."
+    },
+    {
+      "id": "4_12_1_1_a",
+      "label": "Does your business collect and take reasonable measures to verify each beneficial owner's full name?",
+      "detail-required": false,
+      "correct-option": "Yes"
+    },
+    {
+      "id": "4_12_1_1_b",
+      "label": "Does your business collect and take reasonable measures to verify each beneficial owner's date of birth?",
+      "detail-required": false,
+      "correct-option": "Yes"
+    },
+    {
+      "id": "4_12_1_1_c",
+      "label": "Does your business collect and take reasonable measures to verify each beneficial owner's full residential address?",
+      "detail-required": false,
+      "correct-option": "Yes"
+    },
+    {
+      "id": "4_12_2_1",
+      "label": "For individual customers, does your business assume the customer and beneficial owner are the same (unless grounds exist to consider otherwise)?",
+      "detail-required": false,
+      "correct-option": "N/A"
+    },
+    {
+      "id": "4_12_2_2_a",
+      "label": "Does your business exempt customers verified under the simplified company verification procedure (Part 4.3.8) from beneficial owner requirements?",
+      "detail-required": false,
+      "correct-option": "N/A"
+    },
+    {
+      "id": "4_12_2_2_b",
+      "label": "Does your business exempt customers verified under the simplified trustee verification procedure (Part 4.4.8) from beneficial owner requirements?",
+      "detail-required": false,
+      "correct-option": "N/A"
+    },
+    {
+      "id": "4_12_2_2_c",
+      "label": "Does your business exempt Australian Government Entities from beneficial owner requirements?",
+      "detail-required": false,
+      "correct-option": "N/A"
+    },
+    {
+      "id": "4_12_2_2_d",
+      "label": "Does your business exempt foreign listed public companies (or their majority-owned subsidiaries) from beneficial owner requirements?",
+      "detail-required": false,
+      "correct-option": "N/A"
+    },
+    {
+      "id": "4_12_3",
+      "label": "Does your program include risk-based systems to determine if additional information should be collected and verified about a beneficial owner?",
+      "detail-required": true,
+      "correct-option": "Yes",
+      "detail-label": "Describe the risk-based systems and controls used to determine if additional information should be collected and verified."
+    },
+    {
+      "id": "4_12_4_1",
+      "label": "Does your business verify beneficial owner information using reliable and independent documentation?",
+      "detail-required": true,
+      "correct-option": "Yes",
+      "detail-label": "Specify the reliable and independent documentation used for verification."
+    },
+    {
+      "id": "4_12_4_2",
+      "label": "Does your business verify beneficial owner information using reliable and independent electronic data?",
+      "detail-required": true,
+      "correct-option": "Yes",
+      "detail-label": "Specify the reliable and independent electronic data sources used for verification."
+    },
+    {
+      "id": "4_12_7",
+      "label": "Does your business use a safe harbour procedure for beneficial owners where the ML/TF risk is medium or lower?",
+      "detail-required": false,
+      "correct-option": "N/A"
+    },
+    {
+      "id": "4_12_7_2",
+      "label": "Does your safe harbour procedure include documentation-based verification using primary or secondary identification documents?",
+      "detail-required": false,
+      "correct-option": "Yes"
+    },
+    {
+      "id": "4_12_7_4",
+      "label": "Does your safe harbour procedure include electronic-based verification using reliable and independent data from at least two separate sources?",
+      "detail-required": false,
+      "correct-option": "Yes"
+    },
+    {
+      "id": "4_12_8_1",
+      "label": "For companies, does your business define a beneficial owner as an individual with 25% or more ownership or control?",
+      "detail-required": false,
+      "correct-option": "Yes"
+    },
+    {
+      "id": "4_12_8_2",
+      "label": "For trusts, does your business define a beneficial owner as any individual who holds the power to appoint or remove trustees?",
+      "detail-required": false,
+      "correct-option": "Yes"
+    },
+    {
+      "id": "4_12_8_3",
+      "label": "For associations or co-operatives, does your business define a beneficial owner based on 25% voting rights, property entitlement, or senior management position?",
+      "detail-required": false,
+      "correct-option": "Yes"
+    }
+  ],
+  "groups": [
+    {
+      "id": "4_12",
+      "title": "Part 4.12: Beneficial Owners",
+      "description": "Requirements for identifying and verifying the individuals who ultimately own or control a customer."
+    },
+    {
+      "id": "4_12_1",
+      "title": "",
+      "description": ""
+    },
+    {
+      "id": "4_12_1_1",
+      "title": "Collection and Verification",
+      "description": "Minimum KYC information for beneficial owners."
+    },
+    {
+      "id": "4_12_2",
+      "title": "Modifications and Exemptions",
+      "description": "Scenarios where standard beneficial ownership procedures may be modified or omitted."
+    },
+    {
+      "id": "4_12_4",
+      "title": "Verification Methods",
+      "description": "Acceptable sources for verifying beneficial owner identity."
+    },
+    {
+      "id": "4_12_7",
+      "title": "Safe Harbour Procedures",
+      "description": "Standardized verification procedures for medium or lower risk relationships."
+    },
+    {
+      "id": "4_12_8",
+      "title": "Beneficial Owner Definitions",
+      "description": "Specific criteria for determining beneficial ownership across different entity types."
+    }
+  ],
+  "rules": [
+    {
+      "target": "4_12",
+      "scope": "4_1_5_1",
+      "effect": "SHOW",
+      "schema": { "const": "Yes" }
+    },
+    {
+      "target": "4_12_1_1",
+      "scope": "4_12_1",
+      "effect": "SHOW",
+      "schema": { "const": "Yes" }
+    },
+    {
+      "target": "4_12_7_2",
+      "scope": "4_12_7",
+      "effect": "SHOW",
+      "schema": { "const": "Yes" }
+    },
+    {
+      "target": "4_12_7_4",
+      "scope": "4_12_7",
+      "effect": "SHOW",
+      "schema": { "const": "Yes" }
+    }
+  ]
+}

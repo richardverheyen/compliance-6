@@ -1,0 +1,208 @@
+{
+    "fields": [
+      {
+        "id": "4_5_1",
+        "label": "Does your AML/CTF program comply with the requirements of Part 4.5 for customers acting in the capacity of a partner in a partnership?",
+        "detail-required": false,
+        "correct-option": "N/A"
+      },
+      {
+        "id": "4_5_2_1",
+        "label": "Does your program include risk-based systems and controls to be reasonably satisfied that the partnership exists?",
+        "detail-required": true,
+        "correct-option": "Yes",
+        "detail-label": "Describe the risk-based systems and controls used to verify the existence of the partnership."
+      },
+      {
+        "id": "4_5_2_2",
+        "label": "Does your program include systems to ensure the name of each partner in the partnership has been provided?",
+        "detail-required": true,
+        "correct-option": "Yes",
+        "detail-label": "Describe the systems used to ensure all partner names are provided in accordance with the rules."
+      },
+      {
+        "id": "4_5_3_1",
+        "label": "Does your business collect the full name of the partnership?",
+        "detail-required": false,
+        "correct-option": "Yes"
+      },
+      {
+        "id": "4_5_3_2",
+        "label": "Does your business collect the full business name (if any) of the partnership as registered under business names legislation?",
+        "detail-required": false,
+        "correct-option": "Yes"
+      },
+      {
+        "id": "4_5_3_3",
+        "label": "Does your business collect the country in which the partnership was established?",
+        "detail-required": false,
+        "correct-option": "Yes"
+      },
+      {
+        "id": "4_5_3_4",
+        "label": "Does your business collect information about at least one partner according to individual identification procedures?",
+        "detail-required": false,
+        "correct-option": "Yes"
+      },
+      {
+        "id": "4_5_3_5",
+        "label": "Does your business collect the full name and residential address of each partner in the partnership (unless regulated status is otherwise confirmed)?",
+        "detail-required": false,
+        "correct-option": "Yes"
+      },
+      {
+        "id": "4_5_4",
+        "label": "Does your program include risk-based systems to determine whether any other KYC information should be collected for a partnership?",
+        "detail-required": true,
+        "correct-option": "Yes",
+        "detail-label": "Describe the risk-based systems used to determine if additional KYC information is required."
+      },
+      {
+        "id": "4_5_5_1",
+        "label": "Does your business verify the full name of the partnership using reliable and independent sources?",
+        "detail-required": false,
+        "correct-option": "Yes"
+      },
+      {
+        "id": "4_5_5_2",
+        "label": "Does your business verify information about at least one partner according to individual identification procedures?",
+        "detail-required": false,
+        "correct-option": "Yes"
+      },
+      {
+        "id": "4_5_6",
+        "label": "Does your program include risk-based systems to determine whether any other KYC information collected should be verified?",
+        "detail-required": true,
+        "correct-option": "Yes",
+        "detail-label": "Describe the process for determining which additional KYC information requires verification."
+      },
+      {
+        "id": "4_5_7_1",
+        "label": "Does your business base the verification of partnership information on a partnership agreement or a certified extract?",
+        "detail-required": false,
+        "correct-option": "Yes"
+      },
+      {
+        "id": "4_5_7_2",
+        "label": "Does your business use other reliable and independent documents or electronic data for verification?",
+        "detail-required": false,
+        "correct-option": "Yes"
+      },
+      {
+        "id": "4_5_8",
+        "label": "Does your program include systems and controls to respond to any discrepancies that arise during verification?",
+        "detail-required": true,
+        "correct-option": "Yes",
+        "detail-label": "Describe the systems and controls for identifying and responding to verification discrepancies."
+      },
+      {
+        "id": "4_5_9",
+        "label": "Is the partnership considered a 'low risk' customer relationship for the purpose of the simplified verification procedure?",
+        "detail-required": false,
+        "correct-option": "N/A"
+      },
+      {
+        "id": "4_5_10",
+        "label": "Does your business utilize the simplified verification procedure for low-risk partnerships?",
+        "detail-required": false,
+        "correct-option": "N/A"
+      },
+      {
+        "id": "4_5_10_1",
+        "label": "Does the simplified procedure verify the full name of the partnership using at least one reliable and independent source?",
+        "detail-required": false,
+        "correct-option": "Yes"
+      },
+      {
+        "id": "4_5_10_2",
+        "label": "Does the simplified procedure verify information about at least one partner in accordance with individual identification procedures?",
+        "detail-required": false,
+        "correct-option": "Yes"
+      }
+    ],
+    "groups": [
+        {
+          "id": "4_5",
+          "title": "Partners and Partnerships",
+          "description": ""
+        },
+        {
+          "id": "4_5_2",
+          "title": "Risk-Based Systems and Controls",
+          "description": "Mandatory risk-based systems to ensure the existence of the partnership and identification of partners."
+        },
+      {
+        "id": "4_5_3",
+        "title": "Collection of Information",
+        "description": "Minimum KYC information and documentation required to be collected for partnerships."
+      },
+      {
+        "id": "4_5_5",
+        "title": "Verification of Information",
+        "description": "Requirements for verifying the identity of the partnership and its partners."
+      },
+      {
+        "id": "4_5_7",
+        "title": "Methods and Discrepancies",
+        "description": "Acceptable verification sources and procedures for handling data conflicts."
+      }
+    ],
+    "rules": [
+      {
+        "target": "4_5",
+        "scope": "4_1_4_4",
+        "effect": "SHOW",
+        "schema": {
+          "const": "Yes"
+        }
+      },
+      {
+        "target": "4_5_2",
+        "scope": "4_5_1",
+        "effect": "SHOW",
+        "schema": {
+          "const": "Yes"
+        }
+      },
+      {
+        "target": "4_5_3",
+        "scope": "4_5_1",
+        "effect": "SHOW",
+        "schema": {
+          "const": "Yes"
+        }
+      },
+      {
+        "target": "4_5_5",
+        "scope": "4_5_1",
+        "effect": "SHOW",
+        "schema": {
+          "const": "Yes"
+        }
+      },
+      {
+        "target": "4_5_6",
+        "scope": "4_5_1",
+        "effect": "SHOW",
+        "schema": {
+          "const": "Yes"
+        }
+      },
+      {
+        "target": "4_5_7",
+        "scope": "4_5_1",
+        "effect": "SHOW",
+        "schema": {
+          "const": "Yes"
+        }
+      },
+      {
+        "target": "4_5_10",
+        "scope": "4_5_9",
+        "effect": "SHOW",
+        "schema": {
+          "const": "Yes"
+        }
+      }
+    ]
+  }

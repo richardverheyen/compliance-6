@@ -14,10 +14,11 @@ export interface BusinessProcess {
   lastUpdated: string;
 }
 
-export interface LegislationRequirement {
+export interface LegislationSection {
   id: string;
+  partNumber: string;
   title: string;
-  stepTitles: string[];
+  description?: string;
 }
 
 export interface Legislation {
@@ -28,7 +29,7 @@ export interface Legislation {
   jurisdiction: string;
   description: string;
   applicableServices: string[];
-  requirements: LegislationRequirement[];
+  sections: LegislationSection[];
 }
 
 export interface BusinessProfile {
@@ -43,6 +44,7 @@ export interface ActiveLegislation {
   legislationId: string;
   activatedAt: string;
   businessProfile: BusinessProfile;
+  sectionAnswers: Record<string, Record<string, string>>;
   processes: BusinessProcess[];
 }
 

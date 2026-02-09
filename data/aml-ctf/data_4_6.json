@@ -1,0 +1,165 @@
+{
+    "fields": [
+      { 
+        "id": "4_6_1", 
+        "label": "Does your business have customers that are Incorporated Associations?",
+        "detail-required": false,
+        "correct-option": "N/A"
+      },
+      { 
+        "id": "4_6_2", 
+        "label": "Does your business have customers that are Unincorporated Associations?",
+        "detail-required": false,
+        "correct-option": "N/A"
+      },
+      { 
+        "id": "4_6_2_1", 
+        "label": "Does your program include risk-based systems to be satisfied that the association exists?",
+        "detail-required": true,
+        "correct-option": "Yes",
+        "detail-label": "Describe the risk-based systems and controls used to ensure the association exists."
+      },
+      { 
+        "id": "4_6_2_2", 
+        "label": "Does your program include procedures to collect the names of all members of the governing committee?",
+        "detail-required": true,
+        "correct-option": "Yes",
+        "detail-label": "Describe the procedure for collecting names of governing committee members."
+      },
+      { 
+        "id": "4_6_3_1_a", 
+        "label": "Does your business collect the full name of the incorporated association?",
+        "detail-required": false,
+        "correct-option": "Yes"
+      },
+      { 
+        "id": "4_6_3_1_b", 
+        "label": "Does your business collect the address of the association's principal place of administration, registered office, or the residential address of its public officer?",
+        "detail-required": false,
+        "correct-option": "Yes"
+      },
+      { 
+        "id": "4_6_3_1_c", 
+        "label": "Does your business collect the unique identifying number issued to the association upon incorporation?",
+        "detail-required": false,
+        "correct-option": "Yes"
+      },
+      { 
+        "id": "4_6_3_1_d", 
+        "label": "Does your business collect the full name of the chairman, secretary, and treasurer (or equivalent officers)?",
+        "detail-required": false,
+        "correct-option": "Yes"
+      },
+      { 
+        "id": "4_6_3_2_a", 
+        "label": "Does your business collect the full name of the unincorporated association?",
+        "detail-required": false,
+        "correct-option": "Yes"
+      },
+      { 
+        "id": "4_6_3_2_b", 
+        "label": "Does your business collect the full address of the unincorporated association's principal place of administration?",
+        "detail-required": false,
+        "correct-option": "Yes"
+      },
+      { 
+        "id": "4_6_3_2_c", 
+        "label": "Does your business collect the full name of the chairman, secretary, and treasurer (or equivalent officers) of the unincorporated association?",
+        "detail-required": false,
+        "correct-option": "Yes"
+      },
+      { 
+        "id": "4_6_3_2_d", 
+        "label": "Does your business collect the required KYC information for the member acting on behalf of the unincorporated association?",
+        "detail-required": false,
+        "correct-option": "Yes"
+      },
+      { 
+        "id": "4_6_4", 
+        "label": "Does your program include risk-based systems to determine if additional KYC information should be collected for associations?",
+        "detail-required": true,
+        "correct-option": "Yes",
+        "detail-label": "Describe the systems used to determine if additional KYC information is needed."
+      },
+      { 
+        "id": "4_6_5_1_a", 
+        "label": "Does your business verify the full name of the incorporated association?",
+        "detail-required": false,
+        "correct-option": "Yes"
+      },
+      { 
+        "id": "4_6_5_1_b", 
+        "label": "Does your business verify the unique identifying number issued to the incorporated association?",
+        "detail-required": false,
+        "correct-option": "Yes"
+      },
+      { 
+        "id": "4_6_5_2_a", 
+        "label": "Does your business verify the full name of the unincorporated association?",
+        "detail-required": false,
+        "correct-option": "Yes"
+      },
+      { 
+        "id": "4_6_5_2_b", 
+        "label": "Does your business verify the identity of the member in accordance with individual identification procedures?",
+        "detail-required": false,
+        "correct-option": "Yes"
+      },
+      { 
+        "id": "4_6_7", 
+        "label": "Does your program specify the reliable and independent sources used for verifying association information?",
+        "detail-required": true,
+        "correct-option": "Yes",
+        "detail-label": "List the reliable and independent documents or data sources used for association verification."
+      },
+      { 
+        "id": "4_6_9", 
+        "label": "Does your program include systems and controls to respond to any discrepancies that arise during association verification?",
+        "detail-required": true,
+        "correct-option": "Yes",
+        "detail-label": "Describe the procedure for resolving discrepancies found during the verification process."
+      }
+    ],
+    "groups": [
+      { 
+        "id": "4_6", 
+        "title": "Part 4.6: Associations", 
+        "description": "General identification requirements for incorporated and unincorporated associations." 
+      },
+      { 
+        "id": "4_6_3", 
+        "title": ""
+      },
+      { 
+        "id": "4_6_5", 
+        "title": ""
+      },
+      { 
+        "id": "4_6_3_1", 
+        "title": "Incorporated Associations (Collection)", 
+        "description": "Minimum information to be collected for incorporated associations." 
+      },
+      { 
+        "id": "4_6_3_2", 
+        "title": "Unincorporated Associations (Collection)", 
+        "description": "Minimum information to be collected for unincorporated associations." 
+      },
+      { 
+        "id": "4_6_5_1", 
+        "title": "Incorporated Associations (Verification)", 
+        "description": "Verification requirements for incorporated entities." 
+      },
+      { 
+        "id": "4_6_5_2", 
+        "title": "Unincorporated Associations (Verification)", 
+        "description": "Verification requirements for unincorporated entities and their members." 
+      }
+    ],
+    "rules": [
+      { "target": "4_6", "scope": "4_1_4_5", "effect": "SHOW", "schema": { "const": "Yes" } },
+      { "target": "4_6_3_1", "scope": "4_6_1", "effect": "SHOW", "schema": { "const": "Yes" } },
+      { "target": "4_6_5_1", "scope": "4_6_1", "effect": "SHOW", "schema": { "const": "Yes" } },
+      { "target": "4_6_3_2", "scope": "4_6_2", "effect": "SHOW", "schema": { "const": "Yes" } },
+      { "target": "4_6_5_2", "scope": "4_6_2", "effect": "SHOW", "schema": { "const": "Yes" } }
+    ]
+}

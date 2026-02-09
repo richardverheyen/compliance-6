@@ -95,7 +95,10 @@ export default function DashboardPage() {
                     {new Date(active.activatedAt).toLocaleDateString()}
                   </p>
                   <div className="mt-3">
-                    <ProcessTable processes={active.processes} />
+                    <ProcessTable
+                      processes={active.processes}
+                      legislationId={active.legislationId}
+                    />
                   </div>
                 </div>
               ))}

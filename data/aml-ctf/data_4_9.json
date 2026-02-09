@@ -1,0 +1,143 @@
+{
+    "fields": [
+      {
+        "id": "4_9_1",
+        "label": "Does your business provide for the verification of KYC information about an individual by means of reliable and independent documentation?",
+        "detail-required": false,
+        "correct-option": "N/A"
+      },
+      {
+        "id": "4_9_2",
+        "label": "Does your program require that any document from which you verify an individual's identity has not expired (excepting Australian passports expired within the last 2 years)?",
+        "detail-required": false,
+        "correct-option": "Yes"
+      },
+      {
+        "id": "4_9_3_1",
+        "label": "Does your business determine what reliable and independent documentation you require for the purpose of verifying an individual's name and date of birth and/or residential address?",
+        "detail-required": true,
+        "correct-option": "Yes",
+        "detail-label": "Describe the documentation required for verifying an individual's name, DOB, and/or residential address."
+      },
+      {
+        "id": "4_9_3_2",
+        "label": "Does your business determine what reliable and independent documentation may be used to verify any other KYC information about an individual?",
+        "detail-required": true,
+        "correct-option": "Yes",
+        "detail-label": "Specify the documentation used to verify other KYC information about an individual."
+      },
+      {
+        "id": "4_9_3_3",
+        "label": "Does your business determine the circumstances in which you are prepared to rely on a copy of a reliable and independent document for an individual?",
+        "detail-required": true,
+        "correct-option": "Yes",
+        "detail-label": "Describe the circumstances and conditions for relying on copies of documents for individuals."
+      },
+      {
+        "id": "4_9_3_4",
+        "label": "Does your business determine the circumstances and steps taken to identify if a document produced about an individual has been forged, tampered with, cancelled, or stolen?",
+        "detail-required": true,
+        "correct-option": "Yes",
+        "detail-label": "Describe the process for identifying and handling forged, tampered, or stolen documents for individuals."
+      },
+      {
+        "id": "4_9_3_5",
+        "label": "Does your business determine whether you will use any authentication service available in respect of a document for an individual?",
+        "detail-required": true,
+        "correct-option": "Yes",
+        "detail-label": "Describe the authentication services used for individual customer documents."
+      },
+      {
+        "id": "4_9_3_6",
+        "label": "Does your business determine whether and how to confirm KYC information about an individual by independently initiating contact with them?",
+        "detail-required": true,
+        "correct-option": "Yes",
+        "detail-label": "Describe the procedures for confirming identity by independently initiating contact with an individual."
+      },
+      {
+        "id": "4_9_4",
+        "label": "Does your business provide for the verification of KYC information about a customer who is not an individual by means of reliable and independent documentation?",
+        "detail-required": false,
+        "correct-option": "N/A"
+      },
+      {
+        "id": "4_9_5_1",
+        "label": "Does your business determine what and how many reliable and independent documents you will use for the purpose of verifying a non-individual customer?",
+        "detail-required": true,
+        "correct-option": "Yes",
+        "detail-label": "Specify the types and number of documents used to verify non-individual customers."
+      },
+      {
+        "id": "4_9_5_2",
+        "label": "Does your business determine whether a document produced about a non-individual customer may have been forged, tampered with, cancelled or stolen?",
+        "detail-required": true,
+        "correct-option": "Yes",
+        "detail-label": "Describe the steps taken to identify if a document for a non-individual has been forged, tampered, or stolen."
+      },
+      {
+        "id": "4_9_5_3",
+        "label": "Does your business determine whether and in what circumstances you are prepared to rely on a copy of a reliable and independent document for a non-individual customer?",
+        "detail-required": true,
+        "correct-option": "Yes",
+        "detail-label": "Describe the circumstances and conditions for relying on copies of documents for non-individuals."
+      },
+      {
+        "id": "4_9_5_4",
+        "label": "Does your business determine what reliable and independent documentation may be used to verify any other information about a non-individual customer?",
+        "detail-required": true,
+        "correct-option": "Yes",
+        "detail-label": "Specify the documentation used to verify other KYC information about a non-individual customer."
+      },
+      {
+        "id": "4_9_5_5",
+        "label": "Does your business determine whether you will use any authentication service available in respect of a document for a non-individual customer?",
+        "detail-required": true,
+        "correct-option": "Yes",
+        "detail-label": "Describe the authentication services used for non-individual customer documents."
+      },
+      {
+        "id": "4_9_5_6",
+        "label": "Does your business determine whether and how to confirm information about a non-individual customer by independently initiating contact with them?",
+        "detail-required": true,
+        "correct-option": "Yes",
+        "detail-label": "Describe the procedures for confirming information by independently initiating contact with a non-individual customer."
+      }
+    ],
+    "groups": [
+      {
+        "id": "4_9",
+        "title": "Part 4.9: Verification from Documentation",
+        "description": "Requirements for programs that verify KYC information using reliable and independent documentation."
+      },
+      {
+        "id": "4_9_3",
+        "title": "Verification Systems (Individuals)",
+        "description": "Mandatory risk-based systems and controls for verifying individual customers via documents."
+      },
+      {
+        "id": "4_9_5",
+        "title": "Verification Systems (Non-Individuals)",
+        "description": "Mandatory risk-based systems and controls for verifying customers other than individuals via documents."
+      }
+    ],
+    "rules": [
+      {
+        "target": "4_9_2",
+        "scope": "4_9_1",
+        "effect": "SHOW",
+        "schema": { "const": "Yes" }
+      },
+      {
+        "target": "4_9_3",
+        "scope": "4_9_1",
+        "effect": "SHOW",
+        "schema": { "const": "Yes" }
+      },
+      {
+        "target": "4_9_5",
+        "scope": "4_9_4",
+        "effect": "SHOW",
+        "schema": { "const": "Yes" }
+      }
+    ]
+}

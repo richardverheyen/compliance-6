@@ -7,6 +7,7 @@ import type {
   TeamMember,
   ComplianceEvent,
 } from "@/lib/types/compliance";
+import { computeProcessesFromAnswers } from "@/mocks/compliance-data";
 
 interface ComplianceState {
   legislations: Legislation[];
@@ -17,18 +18,34 @@ interface ComplianceState {
 
   fetchLegislations: () => Promise<void>;
   getLegislation: (id: string) => Legislation | undefined;
-  activateLegislation: (id: string, profile: BusinessProfile) => Promise<void>;
   getActiveLegislation: (id: string) => ActiveLegislation | undefined;
   hasActiveLegislations: () => boolean;
 
+  // Section-based activation & answers
+  activateLegislation: (id: string, profile: BusinessProfile, introAnswers: Record<string, string>) => void;
+  saveSectionAnswers: (legislationId: string, sectionId: string, answers: Record<string, string>) => void;
+  getSectionAnswers: (legislationId: string, sectionId: string) => Record<string, string>;
+  clearSectionAnswers: (legislationId: string, sectionId: string) => void;
+
+  // Team
   fetchTeam: () => Promise<void>;
   addTeamMember: (member: { name: string; email: string; role: string }) => Promise<void>;
   removeTeamMember: (id: string) => Promise<void>;
   getTeamMember: (id: string) => TeamMember | undefined;
 
   fetchCalendarEvents: () => Promise<void>;
-
   assignProcessOwner: (legislationId: string, processId: string, ownerId: string) => void;
+}
+
+function recomputeProcesses(al: ActiveLegislation): ActiveLegislation {
+  return {
+    ...al,
+    processes: computeProcessesFromAnswers(al.sectionAnswers).map((p) => {
+      // Preserve existing owner assignments
+      const existing = al.processes.find((ep) => ep.id === p.id);
+      return existing ? { ...p, ownerId: existing.ownerId } : p;
+    }),
+  };
 }
 
 export const useComplianceStore = create<ComplianceState>()(
@@ -47,33 +64,64 @@ export const useComplianceStore = create<ComplianceState>()(
         set({ legislations: data, isLoading: false });
       },
 
-      getLegislation: (id) => {
-        return get().legislations.find((l) => l.id === id);
-      },
+      getLegislation: (id) => get().legislations.find((l) => l.id === id),
 
-      activateLegislation: async (id, profile) => {
-        set({ isLoading: true });
-        const res = await fetch(`/api/compliance/legislations/${id}/activate`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(profile),
-        });
-        const active: ActiveLegislation = await res.json();
+      getActiveLegislation: (id) =>
+        get().activeLegislations.find((a) => a.legislationId === id),
+
+      hasActiveLegislations: () => get().activeLegislations.length > 0,
+
+      activateLegislation: (id, profile, introAnswers) => {
+        const sectionAnswers: Record<string, Record<string, string>> = {
+          "4_1": introAnswers,
+        };
+        const newActive: ActiveLegislation = {
+          legislationId: id,
+          activatedAt: new Date().toISOString(),
+          businessProfile: profile,
+          sectionAnswers,
+          processes: computeProcessesFromAnswers(sectionAnswers),
+        };
         set((state) => ({
           activeLegislations: [
             ...state.activeLegislations.filter((a) => a.legislationId !== id),
-            active,
+            newActive,
           ],
-          isLoading: false,
         }));
       },
 
-      getActiveLegislation: (id) => {
-        return get().activeLegislations.find((a) => a.legislationId === id);
+      saveSectionAnswers: (legislationId, sectionId, answers) => {
+        set((state) => ({
+          activeLegislations: state.activeLegislations.map((al) => {
+            if (al.legislationId !== legislationId) return al;
+            const updated = {
+              ...al,
+              sectionAnswers: {
+                ...al.sectionAnswers,
+                [sectionId]: answers,
+              },
+            };
+            return recomputeProcesses(updated);
+          }),
+        }));
       },
 
-      hasActiveLegislations: () => {
-        return get().activeLegislations.length > 0;
+      getSectionAnswers: (legislationId, sectionId) => {
+        const al = get().activeLegislations.find(
+          (a) => a.legislationId === legislationId,
+        );
+        return al?.sectionAnswers?.[sectionId] || {};
+      },
+
+      clearSectionAnswers: (legislationId, sectionId) => {
+        set((state) => ({
+          activeLegislations: state.activeLegislations.map((al) => {
+            if (al.legislationId !== legislationId) return al;
+            const { [sectionId]: _, ...rest } = al.sectionAnswers;
+            const updated = { ...al, sectionAnswers: rest };
+            return recomputeProcesses(updated);
+          }),
+        }));
       },
 
       fetchTeam: async () => {
@@ -99,9 +147,7 @@ export const useComplianceStore = create<ComplianceState>()(
         }));
       },
 
-      getTeamMember: (id) => {
-        return get().teamMembers.find((m) => m.id === id);
-      },
+      getTeamMember: (id) => get().teamMembers.find((m) => m.id === id),
 
       fetchCalendarEvents: async () => {
         const res = await fetch("/api/compliance/calendar");

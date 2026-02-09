@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
 import type { BusinessProcess } from "@/lib/types/compliance";
 import { getProcessRating } from "@/lib/types/compliance";
 import { useComplianceStore } from "@/lib/compliance-store";
@@ -13,9 +14,10 @@ const ratingConfig = {
 
 interface ProcessTableProps {
   processes: BusinessProcess[];
+  legislationId?: string;
 }
 
-export function ProcessTable({ processes }: ProcessTableProps) {
+export function ProcessTable({ processes, legislationId }: ProcessTableProps) {
   const [expandedRows, setExpandedRows] = useState<Set<string>>(new Set());
   const { getTeamMember } = useComplianceStore();
 
@@ -34,9 +36,9 @@ export function ProcessTable({ processes }: ProcessTableProps) {
         <thead>
           <tr className="border-b border-gray-200 text-left text-xs font-medium uppercase tracking-wider text-gray-500">
             <th className="w-10 px-4 py-3" />
-            <th className="px-4 py-3">Process</th>
+            <th className="px-4 py-3">Section</th>
             <th className="px-4 py-3">Status</th>
-            <th className="hidden px-4 py-3 md:table-cell">Last Updated</th>
+            <th className="hidden px-4 py-3 md:table-cell">Progress</th>
             <th className="hidden px-4 py-3 md:table-cell">Owner</th>
           </tr>
         </thead>
@@ -46,15 +48,17 @@ export function ProcessTable({ processes }: ProcessTableProps) {
             const config = ratingConfig[rating];
             const expanded = expandedRows.has(proc.id);
             const owner = proc.ownerId ? getTeamMember(proc.ownerId) : undefined;
+            const greenCount = proc.steps.filter((s) => s.rating === "green").length;
 
             return (
               <ProcessRow
                 key={proc.id}
                 process={proc}
-                rating={rating}
                 config={config}
                 expanded={expanded}
                 ownerName={owner?.name ?? "Unassigned"}
+                greenCount={greenCount}
+                legislationId={legislationId}
                 onToggle={() => toggleRow(proc.id)}
               />
             );
@@ -70,17 +74,18 @@ function ProcessRow({
   config,
   expanded,
   ownerName,
+  greenCount,
+  legislationId,
   onToggle,
 }: {
   process: BusinessProcess;
-  rating: string;
   config: { dot: string; label: string; text: string };
   expanded: boolean;
   ownerName: string;
+  greenCount: number;
+  legislationId?: string;
   onToggle: () => void;
 }) {
-  const lastUpdated = new Date(process.lastUpdated).toLocaleDateString();
-
   return (
     <>
       <tr
@@ -110,7 +115,7 @@ function ProcessRow({
           </span>
         </td>
         <td className="hidden px-4 py-3 text-sm text-gray-500 md:table-cell">
-          {lastUpdated}
+          {greenCount}/{process.steps.length}
         </td>
         <td className="hidden px-4 py-3 text-sm text-gray-500 md:table-cell">
           {ownerName}
@@ -119,6 +124,17 @@ function ProcessRow({
       {expanded && (
         <tr>
           <td colSpan={5} className="bg-gray-50 px-4 pb-4 pt-2">
+            {legislationId && (
+              <div className="mb-3">
+                <Link
+                  href={`/dashboard/legislations/${legislationId}/sections/${process.id}`}
+                  className="text-sm font-medium text-indigo-600 hover:text-indigo-500"
+                  onClick={(e) => e.stopPropagation()}
+                >
+                  Open Section Questionnaire &rarr;
+                </Link>
+              </div>
+            )}
             <p className="mb-2 text-xs font-medium uppercase tracking-wider text-gray-500">
               Rule-Level Breakdown
             </p>

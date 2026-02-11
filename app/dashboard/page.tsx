@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useAuthStore } from "@/lib/auth-store";
 import { useComplianceStore } from "@/lib/compliance-store";
 import { getProcessRating } from "@/lib/types/compliance";
+import type { LegislationProcess } from "@/lib/types/compliance";
 import { ProcessTable } from "@/components/compliance/ProcessTable";
 import { ComplianceCalendar } from "@/components/compliance/ComplianceCalendar";
 
@@ -19,20 +20,25 @@ export default function DashboardPage() {
     }
   }, [teamMembers.length, fetchTeam]);
 
-  function getLegislationName(id: string) {
-    return legislations.find((l) => l.id === id)?.shortName ?? id;
-  }
-
-  // Calculate health KPI across all processes
-  const allProcesses = activeLegislations.flatMap((al) => al.processes);
-  const compliantProcesses = allProcesses.filter(
+  // Calculate health KPI across all computed processes (from form answers)
+  const allComputedProcesses = activeLegislations.flatMap((al) => al.processes);
+  const compliantProcesses = allComputedProcesses.filter(
     (p) => getProcessRating(p) === "green",
   );
   const healthScore =
-    allProcesses.length > 0
-      ? Math.round((compliantProcesses.length / allProcesses.length) * 100)
+    allComputedProcesses.length > 0
+      ? Math.round((compliantProcesses.length / allComputedProcesses.length) * 100)
       : 0;
   const healthPass = healthScore > 70;
+
+  // Collect LegislationProcess items from parent Legislation for each active legislation
+  const allLegislationProcesses: LegislationProcess[] = [];
+  for (const al of activeLegislations) {
+    const leg = legislations.find((l) => l.id === al.legislationId);
+    if (leg?.processes) {
+      allLegislationProcesses.push(...leg.processes);
+    }
+  }
 
   return (
     <div className="px-4 py-12">
@@ -78,30 +84,26 @@ export default function DashboardPage() {
                     Overall Compliance Health
                   </h2>
                   <p className="text-sm text-gray-500">
-                    {compliantProcesses.length} of {allProcesses.length} processes
+                    {compliantProcesses.length} of {allComputedProcesses.length} sections
                     fully compliant
                   </p>
                 </div>
               </div>
 
-              {/* Process tables per legislation */}
-              {activeLegislations.map((active) => (
-                <div key={active.legislationId}>
+              {/* Business Processes table */}
+              {allLegislationProcesses.length > 0 && (
+                <div>
                   <h2 className="text-lg font-semibold text-gray-900">
-                    {getLegislationName(active.legislationId)}
+                    Business Processes
                   </h2>
                   <p className="mt-1 text-sm text-gray-500">
-                    Activated{" "}
-                    {new Date(active.activatedAt).toLocaleDateString()}
+                    Key processes across your active legislations
                   </p>
                   <div className="mt-3">
-                    <ProcessTable
-                      processes={active.processes}
-                      legislationId={active.legislationId}
-                    />
+                    <ProcessTable processes={allLegislationProcesses} />
                   </div>
                 </div>
-              ))}
+              )}
             </div>
 
             {/* Right column */}

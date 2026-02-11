@@ -21,6 +21,24 @@ export interface LegislationSection {
   description?: string;
 }
 
+export interface ProcessOwner {
+  name: string;
+  role: string;
+  department: string;
+}
+
+export interface LegislationProcess {
+  id: string;
+  name: string;
+  description: string;
+  businessObjective: string;
+  owner: ProcessOwner;
+  frequency: string;
+  frequencyPer: string;
+  frequencyDetail: string;
+  status: string;
+}
+
 export interface Legislation {
   id: string;
   name: string;
@@ -30,6 +48,7 @@ export interface Legislation {
   description: string;
   applicableServices: string[];
   sections: LegislationSection[];
+  processes: LegislationProcess[];
 }
 
 export interface BusinessProfile {

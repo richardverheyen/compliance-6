@@ -4,9 +4,11 @@ import { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import Link from "next/link";
 import { useComplianceStore } from "@/lib/compliance-store";
-import { SectionForm } from "@/components/compliance/SectionForm";
 import type { Legislation } from "@/lib/types/compliance";
 import { getProcessRating } from "@/lib/types/compliance";
+import { JsonForms } from "@jsonforms/react";
+import { vanillaCells } from "@jsonforms/vanilla-renderers";
+import { tailwindRenderers } from "@/components/compliance/tailwind-renderers";
 
 const locations = [
   "New South Wales",
@@ -44,7 +46,7 @@ export default function LegislationDetailPage() {
   const [employeeCount, setEmployeeCount] = useState("");
   const [selectedServices, setSelectedServices] = useState<string[]>([]);
   const [introAnswers, setIntroAnswers] = useState<Record<string, string>>({});
-  const [showIntroForm, setShowIntroForm] = useState(false);
+  const [showActivationForm, setShowActivationForm] = useState(false);
 
   useEffect(() => {
     if (legislations.length === 0) {
@@ -88,10 +90,9 @@ export default function LegislationDetailPage() {
       introAnswers,
     );
     router.push(`/dashboard/legislations/${id}`);
-    setShowIntroForm(false);
+    setShowActivationForm(false);
   }
 
-  // Find section process from active legislation to show status
   function getSectionStatus(sectionId: string) {
     if (!active) return null;
     const process = active.processes.find((p) => p.id === sectionId);
@@ -107,9 +108,11 @@ export default function LegislationDetailPage() {
     return { answered, total: process.steps.length };
   }
 
+  const processes = legislation.processes ?? [];
+
   return (
     <div className="px-4 py-12">
-      <div className="mx-auto max-w-4xl">
+      <div className="mx-auto max-w-7xl">
         <Link
           href="/dashboard/legislations"
           className="text-sm text-indigo-600 hover:text-indigo-500"
@@ -130,206 +133,238 @@ export default function LegislationDetailPage() {
         </div>
         <p className="mt-4 text-gray-600">{legislation.description}</p>
 
-        {!active ? (
-          <>
-            {/* Not activated — show intro form */}
-            <div className="mt-8 rounded-xl border border-indigo-200 bg-indigo-50 p-6">
-              <h2 className="text-lg font-semibold text-gray-900">
-                Getting Started
-              </h2>
-              <p className="mt-1 text-sm text-gray-600">
-                Complete the business profile and Section 4.1 introduction
-                questions to activate compliance tracking.
-              </p>
-            </div>
+        {/* 2-column layout */}
+        <div className="mt-8 grid gap-8 lg:grid-cols-[1fr_400px]">
+          {/* Left column — Business Processes */}
+          <div className="space-y-6">
+            <h2 className="text-xl font-semibold text-gray-900">Business Processes</h2>
 
-            {/* Business profile form */}
-            <form onSubmit={handleActivate} className="mt-6 space-y-6">
-              <div className="rounded-xl border border-gray-200 bg-white p-6">
-                <h3 className="text-base font-semibold text-gray-900">
-                  Business Profile
-                </h3>
-                <div className="mt-4 space-y-4">
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700">
-                      Business Name
-                    </label>
-                    <input
-                      type="text"
-                      required
-                      value={businessName}
-                      onChange={(e) => setBusinessName(e.target.value)}
-                      className="mt-1 block w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-indigo-500 focus:ring-indigo-500 focus:outline-none"
-                    />
+            {processes.map((proc) => (
+              <div key={proc.id} className="rounded-xl border border-gray-200 bg-white p-5">
+                <div className="flex items-start justify-between gap-4">
+                  <div className="min-w-0 flex-1">
+                    <h3 className="font-medium text-gray-900">{proc.name}</h3>
+                    <p className="mt-1 text-sm text-gray-600">{proc.description}</p>
                   </div>
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700">
-                      Location
-                    </label>
-                    <select
-                      required
-                      value={location}
-                      onChange={(e) => setLocation(e.target.value)}
-                      className="mt-1 block w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-indigo-500 focus:ring-indigo-500 focus:outline-none"
-                    >
-                      <option value="">Select a state or territory</option>
-                      {locations.map((loc) => (
-                        <option key={loc} value={loc}>{loc}</option>
-                      ))}
-                    </select>
-                  </div>
-                  <div className="grid grid-cols-2 gap-4">
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700">
-                        Founding Year
-                      </label>
-                      <input
-                        type="number"
-                        required
-                        min="1900"
-                        max={new Date().getFullYear()}
-                        value={foundingYear}
-                        onChange={(e) => setFoundingYear(e.target.value)}
-                        className="mt-1 block w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-indigo-500 focus:ring-indigo-500 focus:outline-none"
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700">
-                        Employee Count
-                      </label>
-                      <input
-                        type="number"
-                        required
-                        min="1"
-                        value={employeeCount}
-                        onChange={(e) => setEmployeeCount(e.target.value)}
-                        className="mt-1 block w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-indigo-500 focus:ring-indigo-500 focus:outline-none"
-                      />
-                    </div>
-                  </div>
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700">
-                      Applicable Services
-                    </label>
-                    <div className="mt-2 grid grid-cols-2 gap-2">
-                      {legislation.applicableServices.map((service) => (
-                        <label key={service} className="flex items-center gap-2 text-sm text-gray-700">
-                          <input
-                            type="checkbox"
-                            checked={selectedServices.includes(service)}
-                            onChange={() => toggleService(service)}
-                            className="rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
-                          />
-                          {service}
-                        </label>
-                      ))}
-                    </div>
-                  </div>
+                  <span className="shrink-0 rounded-full bg-indigo-50 px-2.5 py-0.5 text-xs font-medium text-indigo-700 capitalize">
+                    {proc.frequency}
+                  </span>
+                </div>
+                <div className="mt-3 text-sm">
+                  <p className="text-xs font-medium uppercase tracking-wider text-gray-500">Business Objective</p>
+                  <p className="mt-1 text-gray-700">{proc.businessObjective}</p>
+                </div>
+                <div className="mt-3 flex items-center gap-4 text-sm text-gray-500">
+                  <span>
+                    <span className="font-medium text-gray-700">{proc.owner.name}</span> &middot; {proc.owner.role}
+                  </span>
                 </div>
               </div>
+            ))}
 
-              {/* Section 4.1 Introduction Questions */}
-              <div>
-                <h3 className="text-base font-semibold text-gray-900">
-                  Section 4.1: Introduction Questions
-                </h3>
-                <p className="mt-1 text-sm text-gray-600">
-                  Answer the introductory compliance questions below.
-                </p>
-                <div className="mt-4">
-                  <IntroFormLoader
-                    legislationId={id}
-                    onChange={setIntroAnswers}
-                  />
-                </div>
-              </div>
-
-              <button
-                type="submit"
-                className="w-full rounded-lg bg-indigo-600 px-4 py-2.5 text-sm font-semibold text-white hover:bg-indigo-500"
-              >
-                Activate Compliance Tracking
-              </button>
-            </form>
-          </>
-        ) : (
-          <>
-            {/* Activated — show sections list */}
-            <div className="mt-8 rounded-xl border border-green-200 bg-green-50 p-4">
-              <div className="flex items-center justify-between">
-                <p className="font-medium text-green-800">
-                  Compliance tracking is active
-                </p>
-                <Link
-                  href="/dashboard"
-                  className="text-sm font-medium text-green-700 underline hover:text-green-600"
-                >
-                  View Dashboard
-                </Link>
-              </div>
-            </div>
-
-            <h2 className="mt-8 text-xl font-semibold text-gray-900">
-              Chapter 4 Sections
-            </h2>
-            <p className="mt-1 text-sm text-gray-600">
-              Click a section to review and answer its compliance questions.
-            </p>
-
-            <div className="mt-4 space-y-3">
-              {legislation.sections.map((section) => {
-                const rating = getSectionStatus(section.id);
-                const config = rating ? ratingConfig[rating] : ratingConfig.red;
-                const { answered, total } = getSectionCompletion(section.id);
-
-                return (
-                  <Link
-                    key={section.id}
-                    href={`/dashboard/legislations/${id}/sections/${section.id}`}
-                    className="group flex items-center gap-4 rounded-xl border border-gray-200 bg-white p-4 transition-shadow hover:shadow-md"
+            {/* CTA or active status */}
+            {!active ? (
+              <>
+                {!showActivationForm ? (
+                  <button
+                    onClick={() => setShowActivationForm(true)}
+                    className="w-full rounded-lg bg-indigo-600 px-4 py-3 text-sm font-semibold text-white hover:bg-indigo-500"
                   >
-                    <span className={`h-3 w-3 shrink-0 rounded-full ${config.dot}`} />
-                    <div className="flex-1 min-w-0">
-                      <h3 className="text-sm font-medium text-gray-900 group-hover:text-indigo-600">
-                        {section.title}
-                      </h3>
-                      {section.description && (
-                        <p className="text-xs text-gray-500 truncate">
-                          {section.description}
-                        </p>
-                      )}
+                    Begin Compliance Assessment
+                  </button>
+                ) : (
+                  <form onSubmit={handleActivate} className="space-y-6">
+                    <div className="rounded-xl border border-indigo-200 bg-indigo-50 p-6">
+                      <h3 className="text-lg font-semibold text-gray-900">Getting Started</h3>
+                      <p className="mt-1 text-sm text-gray-600">
+                        Complete the business profile and Section 4.1 introduction questions to activate compliance tracking.
+                      </p>
                     </div>
-                    <div className="flex items-center gap-3">
-                      {total > 0 && (
-                        <span className="text-xs text-gray-500">
-                          {answered}/{total}
-                        </span>
-                      )}
-                      <span className={`rounded-full px-2 py-0.5 text-xs font-medium ${config.text} ${config.bg}`}>
-                        {config.label}
-                      </span>
-                      <svg
-                        className="h-4 w-4 text-gray-400"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        stroke="currentColor"
-                        strokeWidth={2}
+
+                    <div className="rounded-xl border border-gray-200 bg-white p-6">
+                      <h3 className="text-base font-semibold text-gray-900">Business Profile</h3>
+                      <div className="mt-4 space-y-4">
+                        <div>
+                          <label className="block text-sm font-medium text-gray-700">Business Name</label>
+                          <input
+                            type="text"
+                            required
+                            value={businessName}
+                            onChange={(e) => setBusinessName(e.target.value)}
+                            className="mt-1 block w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-indigo-500 focus:ring-indigo-500 focus:outline-none"
+                          />
+                        </div>
+                        <div>
+                          <label className="block text-sm font-medium text-gray-700">Location</label>
+                          <select
+                            required
+                            value={location}
+                            onChange={(e) => setLocation(e.target.value)}
+                            className="mt-1 block w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-indigo-500 focus:ring-indigo-500 focus:outline-none"
+                          >
+                            <option value="">Select a state or territory</option>
+                            {locations.map((loc) => (
+                              <option key={loc} value={loc}>{loc}</option>
+                            ))}
+                          </select>
+                        </div>
+                        <div className="grid grid-cols-2 gap-4">
+                          <div>
+                            <label className="block text-sm font-medium text-gray-700">Founding Year</label>
+                            <input
+                              type="number"
+                              required
+                              min="1900"
+                              max={new Date().getFullYear()}
+                              value={foundingYear}
+                              onChange={(e) => setFoundingYear(e.target.value)}
+                              className="mt-1 block w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-indigo-500 focus:ring-indigo-500 focus:outline-none"
+                            />
+                          </div>
+                          <div>
+                            <label className="block text-sm font-medium text-gray-700">Employee Count</label>
+                            <input
+                              type="number"
+                              required
+                              min="1"
+                              value={employeeCount}
+                              onChange={(e) => setEmployeeCount(e.target.value)}
+                              className="mt-1 block w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-indigo-500 focus:ring-indigo-500 focus:outline-none"
+                            />
+                          </div>
+                        </div>
+                        <div>
+                          <label className="block text-sm font-medium text-gray-700">Applicable Services</label>
+                          <div className="mt-2 grid grid-cols-2 gap-2">
+                            {legislation.applicableServices.map((service) => (
+                              <label key={service} className="flex items-center gap-2 text-sm text-gray-700">
+                                <input
+                                  type="checkbox"
+                                  checked={selectedServices.includes(service)}
+                                  onChange={() => toggleService(service)}
+                                  className="rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
+                                />
+                                {service}
+                              </label>
+                            ))}
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div>
+                      <h3 className="text-base font-semibold text-gray-900">Section 4.1: Introduction Questions</h3>
+                      <p className="mt-1 text-sm text-gray-600">Answer the introductory compliance questions below.</p>
+                      <div className="mt-4">
+                        <IntroFormLoader legislationId={id} onChange={setIntroAnswers} />
+                      </div>
+                    </div>
+
+                    <button
+                      type="submit"
+                      className="w-full rounded-lg bg-indigo-600 px-4 py-2.5 text-sm font-semibold text-white hover:bg-indigo-500"
+                    >
+                      Activate Compliance Tracking
+                    </button>
+                  </form>
+                )}
+              </>
+            ) : (
+              <>
+                <div className="rounded-xl border border-green-200 bg-green-50 p-4">
+                  <div className="flex items-center justify-between">
+                    <p className="font-medium text-green-800">Compliance tracking is active</p>
+                    <Link
+                      href="/dashboard"
+                      className="text-sm font-medium text-green-700 underline hover:text-green-600"
+                    >
+                      View Dashboard
+                    </Link>
+                  </div>
+                </div>
+
+                <h3 className="text-lg font-semibold text-gray-900">Chapter 4 Sections</h3>
+                <p className="text-sm text-gray-600">
+                  Click a section to review and answer its compliance questions.
+                </p>
+                <div className="space-y-3">
+                  {legislation.sections.map((section) => {
+                    const rating = getSectionStatus(section.id);
+                    const config = rating ? ratingConfig[rating] : ratingConfig.red;
+                    const { answered, total } = getSectionCompletion(section.id);
+
+                    return (
+                      <Link
+                        key={section.id}
+                        href={`/dashboard/legislations/${id}/sections/${section.id}`}
+                        className="group flex items-center gap-4 rounded-xl border border-gray-200 bg-white p-4 transition-shadow hover:shadow-md"
                       >
-                        <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
-                      </svg>
-                    </div>
-                  </Link>
-                );
-              })}
+                        <span className={`h-3 w-3 shrink-0 rounded-full ${config.dot}`} />
+                        <div className="flex-1 min-w-0">
+                          <h3 className="text-sm font-medium text-gray-900 group-hover:text-indigo-600">
+                            {section.title}
+                          </h3>
+                          {section.description && (
+                            <p className="text-xs text-gray-500 truncate">{section.description}</p>
+                          )}
+                        </div>
+                        <div className="flex items-center gap-3">
+                          {total > 0 && (
+                            <span className="text-xs text-gray-500">{answered}/{total}</span>
+                          )}
+                          <span className={`rounded-full px-2 py-0.5 text-xs font-medium ${config.text} ${config.bg}`}>
+                            {config.label}
+                          </span>
+                          <svg
+                            className="h-4 w-4 text-gray-400"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            stroke="currentColor"
+                            strokeWidth={2}
+                          >
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
+                          </svg>
+                        </div>
+                      </Link>
+                    );
+                  })}
+                </div>
+              </>
+            )}
+          </div>
+
+          {/* Right column — PDF placeholder */}
+          <div className="hidden lg:block">
+            <div className="sticky top-8 rounded-xl border-2 border-dashed border-gray-200 bg-gray-50 p-8">
+              <div className="flex flex-col items-center text-center">
+                <svg
+                  className="h-12 w-12 text-gray-300"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                  strokeWidth={1}
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m2.25 0H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z"
+                  />
+                </svg>
+                <p className="mt-4 text-sm font-medium text-gray-500">
+                  Legislation Source Document
+                </p>
+                <p className="mt-1 text-xs text-gray-400">
+                  The legislation source document will appear here
+                </p>
+              </div>
             </div>
-          </>
-        )}
+          </div>
+        </div>
       </div>
     </div>
   );
 }
 
-// Sub-component to load the intro JSON Forms inline
 function IntroFormLoader({
   legislationId,
   onChange,
@@ -360,12 +395,12 @@ function IntroFormLoader({
   }
 
   return (
-    <div className="jsonforms-wrapper rounded-xl border border-gray-200 bg-white p-6">
+    <div>
       <JsonForms
         schema={schemaData.schema}
         uischema={schemaData.uiSchema}
         data={formData}
-        renderers={vanillaRenderers}
+        renderers={tailwindRenderers}
         cells={vanillaCells}
         onChange={({ data }: { data: Record<string, string> }) => {
           setFormData(data);
@@ -375,7 +410,3 @@ function IntroFormLoader({
     </div>
   );
 }
-
-// Need these imports for the IntroFormLoader
-import { JsonForms } from "@jsonforms/react";
-import { vanillaRenderers, vanillaCells } from "@jsonforms/vanilla-renderers";

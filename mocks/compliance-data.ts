@@ -1,5 +1,6 @@
 import type {
   Legislation,
+  LegislationProcess,
   BusinessProcess,
   ComplianceRating,
   TeamMember,
@@ -91,6 +92,64 @@ export const amlCtfSections: LegislationSection[] = Object.entries(sectionTitles
   }),
 );
 
+export const amlCtfProcesses: LegislationProcess[] = [
+  {
+    id: "PROC-AML-001",
+    name: "Risk Assessment",
+    description: "Process of identifying, assessing, and documenting money laundering and terrorism financing (ML/TF) risks associated with customers, products, services, delivery channels, and jurisdictions",
+    businessObjective: "Identify, mitigate, and manage ML/TF risks to prevent the entity from being used for illicit activities",
+    owner: { name: "Liam Patel", role: "Service Desk Manager", department: "IT Operations" },
+    frequency: "ongoing",
+    frequencyPer: "entity",
+    frequencyDetail: "Conducted initially, then regularly reviewed (e.g., annually or upon material changes) and updated as part of the AML/CTF program",
+    status: "active",
+  },
+  {
+    id: "PROC-AML-002",
+    name: "Beneficial Owner",
+    description: "Process of identifying and verifying the ultimate beneficial owners (individuals who ultimately own or control the customer) for legal entities or arrangements",
+    businessObjective: "Ensure transparency in ownership structures to detect and prevent misuse for ML/TF purposes",
+    owner: { name: "Liam Patel", role: "Service Desk Manager", department: "IT Operations" },
+    frequency: "once",
+    frequencyPer: "customer",
+    frequencyDetail: "Performed during customer onboarding, with updates triggered by material changes or as part of ongoing due diligence",
+    status: "active",
+  },
+  {
+    id: "PROC-AML-003",
+    name: "Politically Exposed Persons",
+    description: "Process of screening customers and beneficial owners to determine if they are politically exposed persons (PEPs), their family members, or close associates, and applying appropriate due diligence",
+    businessObjective: "Mitigate heightened corruption and ML/TF risks associated with PEPs through enhanced scrutiny",
+    owner: { name: "Liam Patel", role: "Service Desk Manager", department: "IT Operations" },
+    frequency: "once",
+    frequencyPer: "customer",
+    frequencyDetail: "Conducted during onboarding and as part of ongoing due diligence (e.g., when new information arises or periodically reviewed)",
+    status: "active",
+  },
+  {
+    id: "PROC-AML-004",
+    name: "OCDD",
+    description: "Ongoing Customer Due Diligence process to monitor customer relationships, review and update information, and detect changes in risk profile or suspicious activity",
+    businessObjective: "Maintain up-to-date customer information and identify emerging ML/TF risks throughout the business relationship",
+    owner: { name: "Liam Patel", role: "Service Desk Manager", department: "IT Operations" },
+    frequency: "ongoing",
+    frequencyPer: "customer",
+    frequencyDetail: "Continuous monitoring, with periodic reviews, transaction analysis, and updates triggered by events or risk indicators",
+    status: "active",
+  },
+  {
+    id: "PROC-AML-005",
+    name: "ECDD",
+    description: "Enhanced Customer Due Diligence process applied to high-risk customers (e.g., PEPs, high-risk jurisdictions, or elevated ML/TF risk), involving additional verification, source of funds/wealth checks, and senior approval",
+    businessObjective: "Apply proportionate additional controls to manage elevated ML/TF risks and prevent abuse",
+    owner: { name: "Liam Patel", role: "Service Desk Manager", department: "IT Operations" },
+    frequency: "once",
+    frequencyPer: "customer",
+    frequencyDetail: "Triggered when a high-risk scenario is identified (e.g., during onboarding, OCDD, or risk reassessment)",
+    status: "active",
+  },
+];
+
 export const legislationsCatalog: Legislation[] = [
   {
     id: "aml-ctf-rules",
@@ -109,6 +168,7 @@ export const legislationsCatalog: Legislation[] = [
       "Superannuation",
     ],
     sections: amlCtfSections,
+    processes: amlCtfProcesses,
   },
 ];
 

@@ -1,25 +1,19 @@
 "use client";
 
 import { useState } from "react";
-import Link from "next/link";
-import type { BusinessProcess } from "@/lib/types/compliance";
-import { getProcessRating } from "@/lib/types/compliance";
-import { useComplianceStore } from "@/lib/compliance-store";
+import type { LegislationProcess } from "@/lib/types/compliance";
 
-const ratingConfig = {
-  red: { dot: "bg-red-500", label: "Action Required", text: "text-red-700" },
-  yellow: { dot: "bg-yellow-500", label: "Review Needed", text: "text-yellow-700" },
-  green: { dot: "bg-green-500", label: "Valid", text: "text-green-700" },
+const statusConfig: Record<string, { dot: string; text: string; bg: string; label: string }> = {
+  active: { dot: "bg-green-500", text: "text-green-700", bg: "bg-green-50", label: "Active" },
+  inactive: { dot: "bg-gray-400", text: "text-gray-600", bg: "bg-gray-50", label: "Inactive" },
 };
 
 interface ProcessTableProps {
-  processes: BusinessProcess[];
-  legislationId?: string;
+  processes: LegislationProcess[];
 }
 
-export function ProcessTable({ processes, legislationId }: ProcessTableProps) {
+export function ProcessTable({ processes }: ProcessTableProps) {
   const [expandedRows, setExpandedRows] = useState<Set<string>>(new Set());
-  const { getTeamMember } = useComplianceStore();
 
   function toggleRow(id: string) {
     setExpandedRows((prev) => {
@@ -36,19 +30,16 @@ export function ProcessTable({ processes, legislationId }: ProcessTableProps) {
         <thead>
           <tr className="border-b border-gray-200 text-left text-xs font-medium uppercase tracking-wider text-gray-500">
             <th className="w-10 px-4 py-3" />
-            <th className="px-4 py-3">Section</th>
-            <th className="px-4 py-3">Status</th>
-            <th className="hidden px-4 py-3 md:table-cell">Progress</th>
+            <th className="px-4 py-3">Process Name</th>
             <th className="hidden px-4 py-3 md:table-cell">Owner</th>
+            <th className="hidden px-4 py-3 md:table-cell">Frequency</th>
+            <th className="px-4 py-3">Status</th>
           </tr>
         </thead>
         <tbody>
           {processes.map((proc) => {
-            const rating = getProcessRating(proc);
-            const config = ratingConfig[rating];
             const expanded = expandedRows.has(proc.id);
-            const owner = proc.ownerId ? getTeamMember(proc.ownerId) : undefined;
-            const greenCount = proc.steps.filter((s) => s.rating === "green").length;
+            const config = statusConfig[proc.status] ?? statusConfig.active;
 
             return (
               <ProcessRow
@@ -56,9 +47,6 @@ export function ProcessTable({ processes, legislationId }: ProcessTableProps) {
                 process={proc}
                 config={config}
                 expanded={expanded}
-                ownerName={owner?.name ?? "Unassigned"}
-                greenCount={greenCount}
-                legislationId={legislationId}
                 onToggle={() => toggleRow(proc.id)}
               />
             );
@@ -73,17 +61,11 @@ function ProcessRow({
   process,
   config,
   expanded,
-  ownerName,
-  greenCount,
-  legislationId,
   onToggle,
 }: {
-  process: BusinessProcess;
-  config: { dot: string; label: string; text: string };
+  process: LegislationProcess;
+  config: { dot: string; text: string; bg: string; label: string };
   expanded: boolean;
-  ownerName: string;
-  greenCount: number;
-  legislationId?: string;
   onToggle: () => void;
 }) {
   return (
@@ -104,7 +86,15 @@ function ProcessRow({
           </svg>
         </td>
         <td className="px-4 py-3 text-sm font-medium text-gray-900">
-          {process.title}
+          {process.name}
+        </td>
+        <td className="hidden px-4 py-3 text-sm text-gray-500 md:table-cell">
+          {process.owner.name}
+        </td>
+        <td className="hidden px-4 py-3 md:table-cell">
+          <span className="rounded-full bg-indigo-50 px-2 py-0.5 text-xs font-medium text-indigo-700 capitalize">
+            {process.frequency}
+          </span>
         </td>
         <td className="px-4 py-3">
           <span className="flex items-center gap-2">
@@ -114,49 +104,19 @@ function ProcessRow({
             </span>
           </span>
         </td>
-        <td className="hidden px-4 py-3 text-sm text-gray-500 md:table-cell">
-          {greenCount}/{process.steps.length}
-        </td>
-        <td className="hidden px-4 py-3 text-sm text-gray-500 md:table-cell">
-          {ownerName}
-        </td>
       </tr>
       {expanded && (
         <tr>
           <td colSpan={5} className="bg-gray-50 px-4 pb-4 pt-2">
-            {legislationId && (
-              <div className="mb-3">
-                <Link
-                  href={`/dashboard/legislations/${legislationId}/sections/${process.id}`}
-                  className="text-sm font-medium text-indigo-600 hover:text-indigo-500"
-                  onClick={(e) => e.stopPropagation()}
-                >
-                  Open Section Questionnaire &rarr;
-                </Link>
+            <div className="space-y-2">
+              <div>
+                <p className="text-xs font-medium uppercase tracking-wider text-gray-500">Description</p>
+                <p className="mt-1 text-sm text-gray-700">{process.description}</p>
               </div>
-            )}
-            <p className="mb-2 text-xs font-medium uppercase tracking-wider text-gray-500">
-              Rule-Level Breakdown
-            </p>
-            <div className="space-y-1.5">
-              {process.steps.map((step) => {
-                const pass = step.rating === "green";
-                return (
-                  <div
-                    key={step.id}
-                    className="flex items-center justify-between rounded-md bg-white px-3 py-2"
-                  >
-                    <span className="text-sm text-gray-700">{step.title}</span>
-                    <span
-                      className={`text-xs font-semibold ${
-                        pass ? "text-green-600" : step.rating === "yellow" ? "text-yellow-600" : "text-red-600"
-                      }`}
-                    >
-                      {pass ? "\u2713 PASS" : step.rating === "yellow" ? "\u25CB REVIEW" : "\u2717 FAIL"}
-                    </span>
-                  </div>
-                );
-              })}
+              <div>
+                <p className="text-xs font-medium uppercase tracking-wider text-gray-500">Business Objective</p>
+                <p className="mt-1 text-sm text-gray-700">{process.businessObjective}</p>
+              </div>
             </div>
           </td>
         </tr>

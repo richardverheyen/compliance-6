@@ -4,11 +4,7 @@ import { useState } from "react";
 import { useComplianceStore } from "@/lib/compliance-store";
 import type { LegislationProcess } from "@/lib/types/compliance";
 import Link from "next/link";
-
-const statusConfig: Record<string, { dot: string; text: string; bg: string; label: string }> = {
-  active: { dot: "bg-green-500", text: "text-green-700", bg: "bg-green-50", label: "Active" },
-  inactive: { dot: "bg-gray-400", text: "text-gray-600", bg: "bg-gray-50", label: "Inactive" },
-};
+import { AssignOwnerModal } from "@/components/compliance/AssignOwnerModal";
 
 interface ProcessGroup {
   legislationId: string;
@@ -17,8 +13,9 @@ interface ProcessGroup {
 }
 
 export default function ProcessesPage() {
-  const { activeLegislations, legislations } = useComplianceStore();
+  const { activeLegislations, legislations, getLegislationProcessOwner, getTeamMembersWithAuth } = useComplianceStore();
   const [expandedProcess, setExpandedProcess] = useState<string | null>(null);
+  const [assignModal, setAssignModal] = useState<{ processId: string; processName: string } | null>(null);
 
   function getLegislationName(id: string) {
     return legislations.find((l) => l.id === id)?.shortName ?? id;
@@ -79,8 +76,9 @@ export default function ProcessesPage() {
 
             <div className="space-y-4">
               {group.processes.map((proc) => {
-                const config = statusConfig[proc.status] ?? statusConfig.active;
                 const expanded = expandedProcess === proc.id;
+                const ownerId = getLegislationProcessOwner(proc.id);
+                const owner = ownerId ? getTeamMembersWithAuth().find((m) => m.id === ownerId) : undefined;
 
                 return (
                   <div key={proc.id} className="rounded-xl border border-gray-200 bg-white">
@@ -88,16 +86,24 @@ export default function ProcessesPage() {
                       className="flex cursor-pointer items-center gap-4 p-5"
                       onClick={() => setExpandedProcess(expanded ? null : proc.id)}
                     >
-                      <span className={`h-3 w-3 shrink-0 rounded-full ${config.dot}`} />
                       <div className="flex-1 min-w-0">
                         <h3 className="font-medium text-gray-900">{proc.name}</h3>
                         <p className="text-xs text-gray-500">
-                          {proc.owner.name} &middot; {proc.owner.role}
+                          {owner ? (
+                            <>{owner.name} &middot; {owner.role}</>
+                          ) : (
+                            <button
+                              onClick={(e) => { e.stopPropagation(); setAssignModal({ processId: proc.id, processName: proc.name }); }}
+                              className="font-medium text-indigo-600 hover:text-indigo-500"
+                            >
+                              Unassigned
+                            </button>
+                          )}
                         </p>
                       </div>
                       <div className="hidden items-center gap-4 sm:flex">
-                        <span className={`rounded-full px-2.5 py-0.5 text-xs font-medium ${config.text} ${config.bg}`}>
-                          {config.label}
+                        <span className="rounded-full bg-gray-100 px-2.5 py-0.5 text-xs font-medium text-gray-700">
+                          {proc.frequencyLabel}
                         </span>
                       </div>
                       <svg
@@ -129,7 +135,16 @@ export default function ProcessesPage() {
                           <div>
                             <p className="text-xs font-medium uppercase tracking-wider text-gray-500">Owner</p>
                             <p className="mt-1 text-sm text-gray-700">
-                              {proc.owner.name} &middot; {proc.owner.role} &middot; {proc.owner.department}
+                              {owner ? (
+                                <>{owner.name} &middot; {owner.role}</>
+                              ) : (
+                                <button
+                                  onClick={() => setAssignModal({ processId: proc.id, processName: proc.name })}
+                                  className="font-medium text-indigo-600 hover:text-indigo-500"
+                                >
+                                  Unassigned &mdash; click to assign
+                                </button>
+                              )}
                             </p>
                           </div>
                         </div>
@@ -145,6 +160,15 @@ export default function ProcessesPage() {
             </div>
           </div>
         ))}
+
+        {assignModal && (
+          <AssignOwnerModal
+            processId={assignModal.processId}
+            processName={assignModal.processName}
+            isOpen
+            onClose={() => setAssignModal(null)}
+          />
+        )}
       </div>
     </div>
   );

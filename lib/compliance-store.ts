@@ -8,6 +8,7 @@ import type {
   ComplianceEvent,
 } from "@/lib/types/compliance";
 import { computeProcessesFromAnswers } from "@/mocks/compliance-data";
+import { useAuthStore } from "@/lib/auth-store";
 
 interface ComplianceState {
   legislations: Legislation[];
@@ -15,6 +16,7 @@ interface ComplianceState {
   teamMembers: TeamMember[];
   calendarEvents: ComplianceEvent[];
   isLoading: boolean;
+  processAssignments: Record<string, string>; // processId -> teamMemberId
 
   fetchLegislations: () => Promise<void>;
   getLegislation: (id: string) => Legislation | undefined;
@@ -32,9 +34,15 @@ interface ComplianceState {
   addTeamMember: (member: { name: string; email: string; role: string }) => Promise<void>;
   removeTeamMember: (id: string) => Promise<void>;
   getTeamMember: (id: string) => TeamMember | undefined;
+  getTeamMembersWithAuth: () => TeamMember[];
 
   fetchCalendarEvents: () => Promise<void>;
   assignProcessOwner: (legislationId: string, processId: string, ownerId: string) => void;
+
+  // Legislation process assignments
+  assignLegislationProcessOwner: (processId: string, teamMemberId: string) => void;
+  unassignLegislationProcessOwner: (processId: string) => void;
+  getLegislationProcessOwner: (processId: string) => string | undefined;
 }
 
 function recomputeProcesses(al: ActiveLegislation): ActiveLegislation {
@@ -56,6 +64,7 @@ export const useComplianceStore = create<ComplianceState>()(
       teamMembers: [],
       calendarEvents: [],
       isLoading: false,
+      processAssignments: {},
 
       fetchLegislations: async () => {
         set({ isLoading: true });
@@ -149,6 +158,22 @@ export const useComplianceStore = create<ComplianceState>()(
 
       getTeamMember: (id) => get().teamMembers.find((m) => m.id === id),
 
+      getTeamMembersWithAuth: () => {
+        const members = get().teamMembers;
+        const user = useAuthStore.getState().user;
+        if (!user || members.some((m) => m.email === user.email)) {
+          return members;
+        }
+        const authMember: TeamMember = {
+          id: `auth-${user.id}`,
+          name: user.name,
+          email: user.email,
+          role: "Account Owner",
+          avatarColor: "bg-violet-500",
+        };
+        return [...members, authMember];
+      },
+
       fetchCalendarEvents: async () => {
         const res = await fetch("/api/compliance/calendar");
         const data = await res.json();
@@ -168,6 +193,21 @@ export const useComplianceStore = create<ComplianceState>()(
           }),
         }));
       },
+
+      assignLegislationProcessOwner: (processId, teamMemberId) => {
+        set((state) => ({
+          processAssignments: { ...state.processAssignments, [processId]: teamMemberId },
+        }));
+      },
+
+      unassignLegislationProcessOwner: (processId) => {
+        set((state) => {
+          const { [processId]: _, ...rest } = state.processAssignments;
+          return { processAssignments: rest };
+        });
+      },
+
+      getLegislationProcessOwner: (processId) => get().processAssignments[processId],
     }),
     { name: "compliance-storage" },
   ),

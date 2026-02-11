@@ -9,6 +9,7 @@ import { getProcessRating } from "@/lib/types/compliance";
 import { JsonForms } from "@jsonforms/react";
 import { vanillaCells } from "@jsonforms/vanilla-renderers";
 import { tailwindRenderers } from "@/components/compliance/tailwind-renderers";
+import { AssignOwnerModal } from "@/components/compliance/AssignOwnerModal";
 
 const locations = [
   "New South Wales",
@@ -37,6 +38,8 @@ export default function LegislationDetailPage() {
     fetchLegislations,
     getActiveLegislation,
     activateLegislation,
+    getLegislationProcessOwner,
+    getTeamMembersWithAuth,
   } = useComplianceStore();
 
   const [legislation, setLegislation] = useState<Legislation | undefined>();
@@ -47,6 +50,7 @@ export default function LegislationDetailPage() {
   const [selectedServices, setSelectedServices] = useState<string[]>([]);
   const [introAnswers, setIntroAnswers] = useState<Record<string, string>>({});
   const [showActivationForm, setShowActivationForm] = useState(false);
+  const [assignModal, setAssignModal] = useState<{ processId: string; processName: string } | null>(null);
 
   useEffect(() => {
     if (legislations.length === 0) {
@@ -155,12 +159,34 @@ export default function LegislationDetailPage() {
                   <p className="mt-1 text-gray-700">{proc.businessObjective}</p>
                 </div>
                 <div className="mt-3 flex items-center gap-4 text-sm text-gray-500">
-                  <span>
-                    <span className="font-medium text-gray-700">{proc.owner.name}</span> &middot; {proc.owner.role}
-                  </span>
+                  {(() => {
+                    const ownerId = getLegislationProcessOwner(proc.id);
+                    const owner = ownerId ? getTeamMembersWithAuth().find((m) => m.id === ownerId) : undefined;
+                    return owner ? (
+                      <span>
+                        <span className="font-medium text-gray-700">{owner.name}</span> &middot; {owner.role}
+                      </span>
+                    ) : (
+                      <button
+                        onClick={() => setAssignModal({ processId: proc.id, processName: proc.name })}
+                        className="font-medium text-indigo-600 hover:text-indigo-500"
+                      >
+                        Unassigned &mdash; click to assign
+                      </button>
+                    );
+                  })()}
                 </div>
               </div>
             ))}
+
+            {assignModal && (
+              <AssignOwnerModal
+                processId={assignModal.processId}
+                processName={assignModal.processName}
+                isOpen
+                onClose={() => setAssignModal(null)}
+              />
+            )}
 
             {/* CTA or active status */}
             {!active ? (

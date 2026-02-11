@@ -5,13 +5,16 @@ import { useComplianceStore } from "@/lib/compliance-store";
 
 export default function TeamPage() {
   const {
-    teamMembers,
     activeLegislations,
+    legislations,
     fetchTeam,
     addTeamMember,
     removeTeamMember,
-    getTeamMember,
+    getTeamMembersWithAuth,
+    processAssignments,
   } = useComplianceStore();
+
+  const teamMembers = getTeamMembersWithAuth();
 
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -40,6 +43,7 @@ export default function TeamPage() {
   // Build a map of memberId -> processes they own
   function getOwnedProcesses(memberId: string) {
     const owned: { processTitle: string; legislationName: string }[] = [];
+    // Check BusinessProcess assignments (section-based)
     for (const al of activeLegislations) {
       for (const proc of al.processes) {
         if (proc.ownerId === memberId) {
@@ -47,6 +51,22 @@ export default function TeamPage() {
             processTitle: proc.title,
             legislationName: al.legislationId,
           });
+        }
+      }
+    }
+    // Check LegislationProcess assignments
+    for (const [processId, assignedMemberId] of Object.entries(processAssignments)) {
+      if (assignedMemberId === memberId) {
+        // Look up process name from legislations catalog
+        for (const leg of legislations) {
+          const proc = leg.processes.find((p) => p.id === processId);
+          if (proc) {
+            owned.push({
+              processTitle: proc.name,
+              legislationName: leg.shortName,
+            });
+            break;
+          }
         }
       }
     }

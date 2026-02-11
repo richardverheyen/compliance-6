@@ -2,11 +2,8 @@
 
 import { useState } from "react";
 import type { LegislationProcess } from "@/lib/types/compliance";
-
-const statusConfig: Record<string, { dot: string; text: string; bg: string; label: string }> = {
-  active: { dot: "bg-green-500", text: "text-green-700", bg: "bg-green-50", label: "Active" },
-  inactive: { dot: "bg-gray-400", text: "text-gray-600", bg: "bg-gray-50", label: "Inactive" },
-};
+import { useComplianceStore } from "@/lib/compliance-store";
+import { AssignOwnerModal } from "./AssignOwnerModal";
 
 interface ProcessTableProps {
   processes: LegislationProcess[];
@@ -14,6 +11,7 @@ interface ProcessTableProps {
 
 export function ProcessTable({ processes }: ProcessTableProps) {
   const [expandedRows, setExpandedRows] = useState<Set<string>>(new Set());
+  const [assignModal, setAssignModal] = useState<{ processId: string; processName: string } | null>(null);
 
   function toggleRow(id: string) {
     setExpandedRows((prev) => {
@@ -25,49 +23,63 @@ export function ProcessTable({ processes }: ProcessTableProps) {
   }
 
   return (
-    <div className="rounded-xl border border-gray-200 bg-white">
-      <table className="w-full">
-        <thead>
-          <tr className="border-b border-gray-200 text-left text-xs font-medium uppercase tracking-wider text-gray-500">
-            <th className="w-10 px-4 py-3" />
-            <th className="px-4 py-3">Process Name</th>
-            <th className="hidden px-4 py-3 md:table-cell">Owner</th>
-            <th className="hidden px-4 py-3 md:table-cell">Frequency</th>
-            <th className="px-4 py-3">Status</th>
-          </tr>
-        </thead>
-        <tbody>
-          {processes.map((proc) => {
-            const expanded = expandedRows.has(proc.id);
-            const config = statusConfig[proc.status] ?? statusConfig.active;
+    <>
+      <div className="rounded-xl border border-gray-200 bg-white">
+        <table className="w-full">
+          <thead>
+            <tr className="border-b border-gray-200 text-left text-xs font-medium uppercase tracking-wider text-gray-500">
+              <th className="w-10 px-4 py-3" />
+              <th className="px-4 py-3">Process Name</th>
+              <th className="hidden px-4 py-3 md:table-cell">Owner</th>
+              <th className="hidden px-4 py-3 md:table-cell">Frequency</th>
+              <th className="px-4 py-3">Scope</th>
+            </tr>
+          </thead>
+          <tbody>
+            {processes.map((proc) => {
+              const expanded = expandedRows.has(proc.id);
 
-            return (
-              <ProcessRow
-                key={proc.id}
-                process={proc}
-                config={config}
-                expanded={expanded}
-                onToggle={() => toggleRow(proc.id)}
-              />
-            );
-          })}
-        </tbody>
-      </table>
-    </div>
+              return (
+                <ProcessRow
+                  key={proc.id}
+                  process={proc}
+                  expanded={expanded}
+                  onToggle={() => toggleRow(proc.id)}
+                  onAssign={() => setAssignModal({ processId: proc.id, processName: proc.name })}
+                />
+              );
+            })}
+          </tbody>
+        </table>
+      </div>
+
+      {assignModal && (
+        <AssignOwnerModal
+          processId={assignModal.processId}
+          processName={assignModal.processName}
+          isOpen
+          onClose={() => setAssignModal(null)}
+        />
+      )}
+    </>
   );
 }
 
 function ProcessRow({
   process,
-  config,
   expanded,
   onToggle,
+  onAssign,
 }: {
   process: LegislationProcess;
-  config: { dot: string; text: string; bg: string; label: string };
   expanded: boolean;
   onToggle: () => void;
+  onAssign: () => void;
 }) {
+  const { getLegislationProcessOwner, getTeamMembersWithAuth } = useComplianceStore();
+  const ownerId = getLegislationProcessOwner(process.id);
+  const owner = ownerId ? getTeamMembersWithAuth().find((m) => m.id === ownerId) : undefined;
+
   return (
     <>
       <tr
@@ -88,8 +100,17 @@ function ProcessRow({
         <td className="px-4 py-3 text-sm font-medium text-gray-900">
           {process.name}
         </td>
-        <td className="hidden px-4 py-3 text-sm text-gray-500 md:table-cell">
-          {process.owner.name}
+        <td className="hidden px-4 py-3 text-sm md:table-cell">
+          {owner ? (
+            <span className="text-gray-700">{owner.name}</span>
+          ) : (
+            <button
+              onClick={(e) => { e.stopPropagation(); onAssign(); }}
+              className="text-indigo-600 hover:text-indigo-500 font-medium"
+            >
+              Unassigned
+            </button>
+          )}
         </td>
         <td className="hidden px-4 py-3 md:table-cell">
           <span className="rounded-full bg-indigo-50 px-2 py-0.5 text-xs font-medium text-indigo-700 capitalize">
@@ -97,11 +118,8 @@ function ProcessRow({
           </span>
         </td>
         <td className="px-4 py-3">
-          <span className="flex items-center gap-2">
-            <span className={`h-2.5 w-2.5 rounded-full ${config.dot}`} />
-            <span className={`text-xs font-medium ${config.text}`}>
-              {config.label}
-            </span>
+          <span className="rounded-full bg-gray-100 px-2.5 py-0.5 text-xs font-medium text-gray-700">
+            {process.frequencyLabel}
           </span>
         </td>
       </tr>

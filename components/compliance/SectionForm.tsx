@@ -2,10 +2,8 @@
 
 import { useEffect, useState, useCallback, useRef } from "react";
 import { JsonForms } from "@jsonforms/react";
-import {
-  vanillaRenderers,
-  vanillaCells,
-} from "@jsonforms/vanilla-renderers";
+import { vanillaCells } from "@jsonforms/vanilla-renderers";
+import { tailwindRenderers } from "@/components/compliance/tailwind-renderers";
 import { useComplianceStore } from "@/lib/compliance-store";
 
 interface SectionFormProps {
@@ -77,12 +75,12 @@ export function SectionForm({
 
   return (
     <div>
-      <div className="jsonforms-wrapper rounded-xl border border-gray-200 bg-white p-6">
+      <div>
         <JsonForms
           schema={schemaData.schema}
           uischema={schemaData.uiSchema}
           data={formData}
-          renderers={vanillaRenderers}
+          renderers={tailwindRenderers}
           cells={vanillaCells}
           onChange={handleChange}
         />

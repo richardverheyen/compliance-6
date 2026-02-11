@@ -21,22 +21,16 @@ export interface LegislationSection {
   description?: string;
 }
 
-export interface ProcessOwner {
-  name: string;
-  role: string;
-  department: string;
-}
-
 export interface LegislationProcess {
   id: string;
   name: string;
   description: string;
   businessObjective: string;
-  owner: ProcessOwner;
+  ownerId?: string;
   frequency: string;
   frequencyPer: string;
   frequencyDetail: string;
-  status: string;
+  frequencyLabel: string;
 }
 
 export interface Legislation {

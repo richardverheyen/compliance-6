@@ -26,6 +26,7 @@ export interface LegislationProcess {
   name: string;
   description: string;
   businessObjective: string;
+  parentId?: string;
   ownerId?: string;
   frequency: string;
   frequencyPer: string;

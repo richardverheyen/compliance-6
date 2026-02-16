@@ -13,6 +13,9 @@ export function ProcessTable({ processes }: ProcessTableProps) {
   const [expandedRows, setExpandedRows] = useState<Set<string>>(new Set());
   const [assignModal, setAssignModal] = useState<{ processId: string; processName: string } | null>(null);
 
+  const topLevel = processes.filter((p) => !p.parentId);
+  const childrenOf = (parentId: string) => processes.filter((p) => p.parentId === parentId);
+
   function toggleRow(id: string) {
     setExpandedRows((prev) => {
       const next = new Set(prev);
@@ -36,16 +39,18 @@ export function ProcessTable({ processes }: ProcessTableProps) {
             </tr>
           </thead>
           <tbody>
-            {processes.map((proc) => {
+            {topLevel.map((proc) => {
               const expanded = expandedRows.has(proc.id);
+              const children = childrenOf(proc.id);
 
               return (
-                <ProcessRow
+                <ProcessGroup
                   key={proc.id}
-                  process={proc}
-                  expanded={expanded}
-                  onToggle={() => toggleRow(proc.id)}
-                  onAssign={() => setAssignModal({ processId: proc.id, processName: proc.name })}
+                  parent={proc}
+                  children={children}
+                  expandedRows={expandedRows}
+                  onToggle={toggleRow}
+                  onAssign={(id, name) => setAssignModal({ processId: id, processName: name })}
                 />
               );
             })}
@@ -65,16 +70,62 @@ export function ProcessTable({ processes }: ProcessTableProps) {
   );
 }
 
+function ProcessGroup({
+  parent,
+  children,
+  expandedRows,
+  onToggle,
+  onAssign,
+}: {
+  parent: LegislationProcess;
+  children: LegislationProcess[];
+  expandedRows: Set<string>;
+  onToggle: (id: string) => void;
+  onAssign: (id: string, name: string) => void;
+}) {
+  const parentExpanded = expandedRows.has(parent.id);
+  const hasChildren = children.length > 0;
+
+  return (
+    <>
+      <ProcessRow
+        process={parent}
+        expanded={parentExpanded}
+        onToggle={() => onToggle(parent.id)}
+        onAssign={() => onAssign(parent.id, parent.name)}
+        hasChildren={hasChildren}
+      />
+      {parentExpanded && children.map((child) => {
+        const childExpanded = expandedRows.has(child.id);
+        return (
+          <ProcessRow
+            key={child.id}
+            process={child}
+            expanded={childExpanded}
+            onToggle={() => onToggle(child.id)}
+            onAssign={() => onAssign(child.id, child.name)}
+            isChild
+          />
+        );
+      })}
+    </>
+  );
+}
+
 function ProcessRow({
   process,
   expanded,
   onToggle,
   onAssign,
+  isChild,
+  hasChildren,
 }: {
   process: LegislationProcess;
   expanded: boolean;
   onToggle: () => void;
   onAssign: () => void;
+  isChild?: boolean;
+  hasChildren?: boolean;
 }) {
   const { getLegislationProcessOwner, getTeamMembersWithAuth } = useComplianceStore();
   const ownerId = getLegislationProcessOwner(process.id);
@@ -84,9 +135,9 @@ function ProcessRow({
     <>
       <tr
         onClick={onToggle}
-        className="cursor-pointer border-b border-gray-100 hover:bg-gray-50"
+        className={`cursor-pointer border-b border-gray-100 hover:bg-gray-50 ${isChild ? "bg-gray-50/50" : ""}`}
       >
-        <td className="px-4 py-3">
+        <td className={`py-3 ${isChild ? "pl-8 pr-4" : "px-4"}`}>
           <svg
             className={`h-4 w-4 text-gray-400 transition-transform ${expanded ? "rotate-180" : ""}`}
             fill="none"
@@ -97,8 +148,14 @@ function ProcessRow({
             <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
           </svg>
         </td>
-        <td className="px-4 py-3 text-sm font-medium text-gray-900">
-          {process.name}
+        <td className={`py-3 text-sm ${isChild ? "pl-4 pr-4" : "px-4"}`}>
+          <span className={`${isChild ? "text-gray-700" : "font-medium text-gray-900"}`}>
+            {isChild && <span className="mr-1.5 text-gray-300">&mdash;</span>}
+            {process.name}
+          </span>
+          {hasChildren && !expanded && (
+            <span className="ml-2 text-xs text-gray-400">+ sub-processes</span>
+          )}
         </td>
         <td className="hidden px-4 py-3 text-sm md:table-cell">
           {owner ? (
@@ -125,7 +182,7 @@ function ProcessRow({
       </tr>
       {expanded && (
         <tr>
-          <td colSpan={5} className="bg-gray-50 px-4 pb-4 pt-2">
+          <td colSpan={5} className={`bg-gray-50 pb-4 pt-2 ${isChild ? "pl-12 pr-4" : "px-4"}`}>
             <div className="space-y-2">
               <div>
                 <p className="text-xs font-medium uppercase tracking-wider text-gray-500">Description</p>

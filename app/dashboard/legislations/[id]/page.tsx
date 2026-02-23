@@ -6,10 +6,26 @@ import Link from "next/link";
 import { useComplianceStore } from "@/lib/compliance-store";
 import type { Legislation } from "@/lib/types/compliance";
 import { getProcessRating } from "@/lib/types/compliance";
-import { JsonForms } from "@jsonforms/react";
-import { vanillaCells } from "@jsonforms/vanilla-renderers";
-import { tailwindRenderers } from "@/components/compliance/tailwind-renderers";
 import { AssignOwnerModal } from "@/components/compliance/AssignOwnerModal";
+import { introductionData, SECTION_TO_PROCESS, PROCESS_GATED_BY } from "@/lib/process-forms";
+import MermaidDiagram from "@/components/compliance/MermaidDiagram";
+
+// Build the set of process IDs visible for a given set of intro answers.
+// Returns null when there are no answers yet (= show everything).
+type ScopingEntry = { sections: string[]; processes: string[] };
+
+function getVisibleProcessIds(answers: Record<string, string>): Set<string> | null {
+  if (Object.keys(answers).length === 0) return null;
+  const scoping = (introductionData as unknown as { scoping: Record<string, ScopingEntry> }).scoping;
+  const alwaysActive = (introductionData as unknown as { alwaysActive: { processes: string[] } }).alwaysActive.processes;
+  const visible = new Set<string>(alwaysActive);
+  for (const [controlId, entry] of Object.entries(scoping)) {
+    if (answers[controlId] === "Yes") {
+      for (const procId of entry.processes) visible.add(procId);
+    }
+  }
+  return visible;
+}
 
 const locations = [
   "New South Wales",
@@ -27,6 +43,25 @@ const ratingConfig = {
   yellow: { dot: "bg-yellow-500", label: "In Progress", text: "text-yellow-700", bg: "bg-yellow-50" },
   green: { dot: "bg-green-500", label: "Complete", text: "text-green-700", bg: "bg-green-50" },
 };
+
+// Derive 4_1_5_1 and 4_1_5_2 from selected customer types
+function deriveAnswers(base: Record<string, string>): Record<string, string> {
+  const derived = { ...base };
+  const nonIndividual = ["4_1_4_2", "4_1_4_3", "4_1_4_4", "4_1_4_5", "4_1_4_6", "4_1_4_7"];
+  const anyCustomer = ["4_1_4_1", ...nonIndividual];
+  if (nonIndividual.some((k) => derived[k] === "Yes")) derived["4_1_5_1"] = "Yes";
+  if (anyCustomer.some((k) => derived[k] === "Yes")) derived["4_1_5_2"] = "Yes";
+  return derived;
+}
+
+// Determines if a section is unlocked based on intro answers
+function isSectionUnlocked(sectionId: string, introAnswers: Record<string, string>): boolean {
+  const slug = SECTION_TO_PROCESS[sectionId];
+  if (!slug) return true;
+  const gate = PROCESS_GATED_BY[slug];
+  if (!gate) return true;
+  return introAnswers[gate] === "Yes";
+}
 
 export default function LegislationDetailPage() {
   const params = useParams();
@@ -82,6 +117,7 @@ export default function LegislationDetailPage() {
 
   function handleActivate(e: React.FormEvent) {
     e.preventDefault();
+    const fullAnswers = deriveAnswers(introAnswers);
     activateLegislation(
       id,
       {
@@ -91,7 +127,7 @@ export default function LegislationDetailPage() {
         employeeCount: Number(employeeCount),
         services: selectedServices,
       },
-      introAnswers,
+      fullAnswers,
     );
     router.push(`/dashboard/legislations/${id}`);
     setShowActivationForm(false);
@@ -111,6 +147,10 @@ export default function LegislationDetailPage() {
     const answered = process.steps.filter((s) => s.rating === "green").length;
     return { answered, total: process.steps.length };
   }
+
+  const activeIntroAnswers = active
+    ? active.sectionAnswers["4_1"] ?? {}
+    : deriveAnswers(introAnswers);
 
   const processes = legislation.processes ?? [];
 
@@ -138,60 +178,122 @@ export default function LegislationDetailPage() {
         <p className="mt-4 text-gray-600">{legislation.description}</p>
 
         {/* 2-column layout */}
-        <div className="mt-8 grid gap-8 lg:grid-cols-[1fr_400px]">
-          {/* Left column — Business Processes */}
+        <div className="mt-8 grid gap-8 lg:grid-cols-2">
+          {/* Left column */}
           <div className="space-y-6">
-            <h2 className="text-xl font-semibold text-gray-900">Business Processes</h2>
-
-            {processes.map((proc) => (
-              <div key={proc.id} className="rounded-xl border border-gray-200 bg-white p-5">
-                <div className="flex items-start justify-between gap-4">
-                  <div className="min-w-0 flex-1">
-                    <h3 className="font-medium text-gray-900">{proc.name}</h3>
-                    <p className="mt-1 text-sm text-gray-600">{proc.description}</p>
+            {showActivationForm ? (
+              /* ── Activation form — replaces the entire left column ── */
+              <form onSubmit={handleActivate} className="space-y-6">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <h2 className="text-lg font-semibold text-gray-900">Begin Compliance Assessment</h2>
+                    <p className="mt-0.5 text-sm text-gray-600">
+                      Complete your business profile and scoping questions to activate compliance tracking.
+                    </p>
                   </div>
-                  <span className="shrink-0 rounded-full bg-indigo-50 px-2.5 py-0.5 text-xs font-medium text-indigo-700 capitalize">
-                    {proc.frequency}
-                  </span>
+                  <button
+                    type="button"
+                    onClick={() => setShowActivationForm(false)}
+                    className="text-sm text-gray-500 hover:text-gray-700"
+                  >
+                    Cancel
+                  </button>
                 </div>
-                <div className="mt-3 text-sm">
-                  <p className="text-xs font-medium uppercase tracking-wider text-gray-500">Business Objective</p>
-                  <p className="mt-1 text-gray-700">{proc.businessObjective}</p>
-                </div>
-                <div className="mt-3 flex items-center gap-4 text-sm text-gray-500">
-                  {(() => {
-                    const ownerId = getLegislationProcessOwner(proc.id);
-                    const owner = ownerId ? getTeamMembersWithAuth().find((m) => m.id === ownerId) : undefined;
-                    return owner ? (
-                      <span>
-                        <span className="font-medium text-gray-700">{owner.name}</span> &middot; {owner.role}
-                      </span>
-                    ) : (
-                      <button
-                        onClick={() => setAssignModal({ processId: proc.id, processName: proc.name })}
-                        className="font-medium text-indigo-600 hover:text-indigo-500"
+
+                {/* Business Profile */}
+                <div className="rounded-xl border border-gray-200 bg-white p-6">
+                  <h3 className="text-base font-semibold text-gray-900">Business Profile</h3>
+                  <div className="mt-4 space-y-4">
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700">Business Name</label>
+                      <input
+                        type="text"
+                        required
+                        value={businessName}
+                        onChange={(e) => setBusinessName(e.target.value)}
+                        className="mt-1 block w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-indigo-500 focus:ring-indigo-500 focus:outline-none"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700">Location</label>
+                      <select
+                        required
+                        value={location}
+                        onChange={(e) => setLocation(e.target.value)}
+                        className="mt-1 block w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-indigo-500 focus:ring-indigo-500 focus:outline-none"
                       >
-                        Unassigned &mdash; click to assign
-                      </button>
-                    );
-                  })()}
+                        <option value="">Select a state or territory</option>
+                        {locations.map((loc) => (
+                          <option key={loc} value={loc}>{loc}</option>
+                        ))}
+                      </select>
+                    </div>
+                    <div className="grid grid-cols-2 gap-4">
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700">Founding Year</label>
+                        <input
+                          type="number"
+                          required
+                          min="1900"
+                          max={new Date().getFullYear()}
+                          value={foundingYear}
+                          onChange={(e) => setFoundingYear(e.target.value)}
+                          className="mt-1 block w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-indigo-500 focus:ring-indigo-500 focus:outline-none"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700">Employee Count</label>
+                        <input
+                          type="number"
+                          required
+                          min="1"
+                          value={employeeCount}
+                          onChange={(e) => setEmployeeCount(e.target.value)}
+                          className="mt-1 block w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-indigo-500 focus:ring-indigo-500 focus:outline-none"
+                        />
+                      </div>
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700">Applicable Services</label>
+                      <div className="mt-2 grid grid-cols-2 gap-2">
+                        {legislation.applicableServices.map((service) => (
+                          <label key={service} className="flex items-center gap-2 text-sm text-gray-700">
+                            <input
+                              type="checkbox"
+                              checked={selectedServices.includes(service)}
+                              onChange={() => toggleService(service)}
+                              className="rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
+                            />
+                            {service}
+                          </label>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
                 </div>
-              </div>
-            ))}
 
-            {assignModal && (
-              <AssignOwnerModal
-                processId={assignModal.processId}
-                processName={assignModal.processName}
-                isOpen
-                onClose={() => setAssignModal(null)}
-              />
-            )}
+                {/* Introduction / Scoping form */}
+                <div className="rounded-xl border border-gray-200 bg-white p-6">
+                  <h3 className="text-base font-semibold text-gray-900">Scoping Questions</h3>
+                  <p className="mt-1 text-sm text-gray-600">
+                    {introductionData.groups[0]?.description}
+                  </p>
+                  <div className="mt-4">
+                    <IntroForm answers={introAnswers} onChange={setIntroAnswers} />
+                  </div>
+                </div>
 
-            {/* CTA or active status */}
-            {!active ? (
+                <button
+                  type="submit"
+                  className="w-full rounded-lg bg-indigo-600 px-4 py-2.5 text-sm font-semibold text-white hover:bg-indigo-500"
+                >
+                  Activate Compliance Tracking
+                </button>
+              </form>
+            ) : (
               <>
-                {!showActivationForm ? (
+                {/* CTA or active status */}
+                {!active ? (
                   <button
                     onClick={() => setShowActivationForm(true)}
                     className="w-full rounded-lg bg-indigo-600 px-4 py-3 text-sm font-semibold text-white hover:bg-indigo-500"
@@ -199,190 +301,198 @@ export default function LegislationDetailPage() {
                     Begin Compliance Assessment
                   </button>
                 ) : (
-                  <form onSubmit={handleActivate} className="space-y-6">
-                    <div className="rounded-xl border border-indigo-200 bg-indigo-50 p-6">
-                      <h3 className="text-lg font-semibold text-gray-900">Getting Started</h3>
-                      <p className="mt-1 text-sm text-gray-600">
-                        Complete the business profile and Section 4.1 introduction questions to activate compliance tracking.
-                      </p>
+                  <>
+                    <div className="rounded-xl border border-green-200 bg-green-50 p-4">
+                      <div className="flex items-center justify-between">
+                        <p className="font-medium text-green-800">Compliance tracking is active</p>
+                        <Link
+                          href="/dashboard"
+                          className="text-sm font-medium text-green-700 underline hover:text-green-600"
+                        >
+                          View Dashboard
+                        </Link>
+                      </div>
                     </div>
 
-                    <div className="rounded-xl border border-gray-200 bg-white p-6">
-                      <h3 className="text-base font-semibold text-gray-900">Business Profile</h3>
-                      <div className="mt-4 space-y-4">
-                        <div>
-                          <label className="block text-sm font-medium text-gray-700">Business Name</label>
-                          <input
-                            type="text"
-                            required
-                            value={businessName}
-                            onChange={(e) => setBusinessName(e.target.value)}
-                            className="mt-1 block w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-indigo-500 focus:ring-indigo-500 focus:outline-none"
-                          />
-                        </div>
-                        <div>
-                          <label className="block text-sm font-medium text-gray-700">Location</label>
-                          <select
-                            required
-                            value={location}
-                            onChange={(e) => setLocation(e.target.value)}
-                            className="mt-1 block w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-indigo-500 focus:ring-indigo-500 focus:outline-none"
+                    <h3 className="text-lg font-semibold text-gray-900">Chapter 4 Sections</h3>
+                    <p className="text-sm text-gray-600">
+                      Click a section to review and answer its compliance questions.
+                    </p>
+                    <div className="space-y-3">
+                      {legislation.sections.map((section) => {
+                        const unlocked = isSectionUnlocked(section.id, activeIntroAnswers);
+                        const rating = unlocked ? getSectionStatus(section.id) : null;
+                        const config = rating ? ratingConfig[rating] : ratingConfig.red;
+                        const { answered, total } = getSectionCompletion(section.id);
+
+                        if (!unlocked) {
+                          return (
+                            <div
+                              key={section.id}
+                              className="flex items-center gap-4 rounded-xl border border-gray-100 bg-gray-50 p-4 opacity-60"
+                            >
+                              <svg className="h-4 w-4 shrink-0 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                                <path strokeLinecap="round" strokeLinejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                              </svg>
+                              <div className="flex-1 min-w-0">
+                                <h3 className="text-sm font-medium text-gray-500">{section.title}</h3>
+                              </div>
+                              <span className="text-xs text-gray-400">Not applicable</span>
+                            </div>
+                          );
+                        }
+
+                        return (
+                          <Link
+                            key={section.id}
+                            href={`/dashboard/legislations/${id}/sections/${section.id}`}
+                            className="group flex items-center gap-4 rounded-xl border border-gray-200 bg-white p-4 transition-shadow hover:shadow-md"
                           >
-                            <option value="">Select a state or territory</option>
-                            {locations.map((loc) => (
-                              <option key={loc} value={loc}>{loc}</option>
-                            ))}
-                          </select>
-                        </div>
-                        <div className="grid grid-cols-2 gap-4">
-                          <div>
-                            <label className="block text-sm font-medium text-gray-700">Founding Year</label>
-                            <input
-                              type="number"
-                              required
-                              min="1900"
-                              max={new Date().getFullYear()}
-                              value={foundingYear}
-                              onChange={(e) => setFoundingYear(e.target.value)}
-                              className="mt-1 block w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-indigo-500 focus:ring-indigo-500 focus:outline-none"
-                            />
-                          </div>
-                          <div>
-                            <label className="block text-sm font-medium text-gray-700">Employee Count</label>
-                            <input
-                              type="number"
-                              required
-                              min="1"
-                              value={employeeCount}
-                              onChange={(e) => setEmployeeCount(e.target.value)}
-                              className="mt-1 block w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-indigo-500 focus:ring-indigo-500 focus:outline-none"
-                            />
-                          </div>
-                        </div>
-                        <div>
-                          <label className="block text-sm font-medium text-gray-700">Applicable Services</label>
-                          <div className="mt-2 grid grid-cols-2 gap-2">
-                            {legislation.applicableServices.map((service) => (
-                              <label key={service} className="flex items-center gap-2 text-sm text-gray-700">
-                                <input
-                                  type="checkbox"
-                                  checked={selectedServices.includes(service)}
-                                  onChange={() => toggleService(service)}
-                                  className="rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
-                                />
-                                {service}
-                              </label>
-                            ))}
-                          </div>
-                        </div>
-                      </div>
+                            <span className={`h-3 w-3 shrink-0 rounded-full ${config.dot}`} />
+                            <div className="flex-1 min-w-0">
+                              <h3 className="text-sm font-medium text-gray-900 group-hover:text-indigo-600">
+                                {section.title}
+                              </h3>
+                              {section.description && (
+                                <p className="text-xs text-gray-500 truncate">{section.description}</p>
+                              )}
+                            </div>
+                            <div className="flex items-center gap-3">
+                              {total > 0 && (
+                                <span className="text-xs text-gray-500">{answered}/{total}</span>
+                              )}
+                              <span className={`rounded-full px-2 py-0.5 text-xs font-medium ${config.text} ${config.bg}`}>
+                                {config.label}
+                              </span>
+                              <svg
+                                className="h-4 w-4 text-gray-400"
+                                fill="none"
+                                viewBox="0 0 24 24"
+                                stroke="currentColor"
+                                strokeWidth={2}
+                              >
+                                <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
+                              </svg>
+                            </div>
+                          </Link>
+                        );
+                      })}
                     </div>
-
-                    <div>
-                      <h3 className="text-base font-semibold text-gray-900">Section 4.1: Introduction Questions</h3>
-                      <p className="mt-1 text-sm text-gray-600">Answer the introductory compliance questions below.</p>
-                      <div className="mt-4">
-                        <IntroFormLoader legislationId={id} onChange={setIntroAnswers} />
-                      </div>
-                    </div>
-
-                    <button
-                      type="submit"
-                      className="w-full rounded-lg bg-indigo-600 px-4 py-2.5 text-sm font-semibold text-white hover:bg-indigo-500"
-                    >
-                      Activate Compliance Tracking
-                    </button>
-                  </form>
+                  </>
                 )}
-              </>
-            ) : (
-              <>
-                <div className="rounded-xl border border-green-200 bg-green-50 p-4">
-                  <div className="flex items-center justify-between">
-                    <p className="font-medium text-green-800">Compliance tracking is active</p>
-                    <Link
-                      href="/dashboard"
-                      className="text-sm font-medium text-green-700 underline hover:text-green-600"
-                    >
-                      View Dashboard
-                    </Link>
-                  </div>
-                </div>
 
-                <h3 className="text-lg font-semibold text-gray-900">Chapter 4 Sections</h3>
-                <p className="text-sm text-gray-600">
-                  Click a section to review and answer its compliance questions.
-                </p>
+                {/* Mermaid Flowchart */}
+                <MermaidDiagram />
+
+                {/* Business Processes */}
                 <div className="space-y-3">
-                  {legislation.sections.map((section) => {
-                    const rating = getSectionStatus(section.id);
-                    const config = rating ? ratingConfig[rating] : ratingConfig.red;
-                    const { answered, total } = getSectionCompletion(section.id);
+                  <div className="flex items-baseline gap-2">
+                    <h2 className="text-xl font-semibold text-gray-900">Business Processes</h2>
+                    {active && (
+                      <span className="text-xs text-gray-400">filtered to your business</span>
+                    )}
+                  </div>
 
-                    return (
-                      <Link
-                        key={section.id}
-                        href={`/dashboard/legislations/${id}/sections/${section.id}`}
-                        className="group flex items-center gap-4 rounded-xl border border-gray-200 bg-white p-4 transition-shadow hover:shadow-md"
-                      >
-                        <span className={`h-3 w-3 shrink-0 rounded-full ${config.dot}`} />
-                        <div className="flex-1 min-w-0">
-                          <h3 className="text-sm font-medium text-gray-900 group-hover:text-indigo-600">
-                            {section.title}
-                          </h3>
-                          {section.description && (
-                            <p className="text-xs text-gray-500 truncate">{section.description}</p>
+                  {(() => {
+                    const visibleIds = getVisibleProcessIds(activeIntroAnswers);
+                    const topLevel = processes.filter((p) => !p.parentId);
+
+                    const visibleTopLevel = topLevel.filter((proc) => {
+                      if (visibleIds === null) return true;
+                      if (visibleIds.has(proc.id)) return true;
+                      // Show parent if any child is visible
+                      return processes.some((p) => p.parentId === proc.id && visibleIds.has(p.id));
+                    });
+
+                    if (visibleTopLevel.length === 0) {
+                      return (
+                        <p className="text-sm text-gray-400">
+                          No processes match your current scoping answers.
+                        </p>
+                      );
+                    }
+
+                    return visibleTopLevel.map((proc) => {
+                      const allSubProcs = processes.filter((p) => p.parentId === proc.id);
+                      const visibleSubProcs = visibleIds === null
+                        ? allSubProcs
+                        : allSubProcs.filter((s) => visibleIds.has(s.id));
+                      const ownerId = getLegislationProcessOwner(proc.id);
+                      const owner = ownerId ? getTeamMembersWithAuth().find((m) => m.id === ownerId) : undefined;
+
+                      return (
+                        <div key={proc.id} className="overflow-hidden rounded-xl border border-gray-200 bg-white">
+                          {/* Parent process row */}
+                          <div className="flex items-start gap-3 px-4 py-3">
+                            <div className="min-w-0 flex-1">
+                              <div className="flex flex-wrap items-center gap-2">
+                                <h3 className="text-sm font-semibold text-gray-900">{proc.name}</h3>
+                                <span className="rounded-full bg-indigo-50 px-2 py-0.5 text-xs font-medium text-indigo-700">
+                                  {proc.frequencyLabel}
+                                </span>
+                              </div>
+                              <p className="mt-1 line-clamp-2 text-xs text-gray-500">{proc.businessObjective}</p>
+                            </div>
+                            <div className="shrink-0 pt-0.5">
+                              {owner ? (
+                                <span className="text-xs text-gray-500">
+                                  <span className="font-medium text-gray-700">{owner.name}</span>
+                                </span>
+                              ) : (
+                                <button
+                                  onClick={() => setAssignModal({ processId: proc.id, processName: proc.name })}
+                                  className="text-xs font-medium text-indigo-600 hover:text-indigo-500"
+                                >
+                                  Assign owner
+                                </button>
+                              )}
+                            </div>
+                          </div>
+
+                          {/* Sub-processes — only visible ones */}
+                          {visibleSubProcs.length > 0 && (
+                            <div className="divide-y divide-gray-50 border-t border-gray-100">
+                              {visibleSubProcs.map((sub) => (
+                                <div key={sub.id} className="flex items-start gap-3 bg-gray-50/60 px-4 py-2.5">
+                                  <div className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-gray-300" />
+                                  <div className="min-w-0 flex-1">
+                                    <p className="text-xs font-medium text-gray-700">{sub.name}</p>
+                                    <p className="line-clamp-1 text-xs text-gray-400">{sub.businessObjective}</p>
+                                  </div>
+                                  <span className="shrink-0 rounded-full bg-white px-2 py-0.5 text-xs text-gray-400 ring-1 ring-gray-200">
+                                    {sub.frequencyLabel}
+                                  </span>
+                                </div>
+                              ))}
+                            </div>
                           )}
                         </div>
-                        <div className="flex items-center gap-3">
-                          {total > 0 && (
-                            <span className="text-xs text-gray-500">{answered}/{total}</span>
-                          )}
-                          <span className={`rounded-full px-2 py-0.5 text-xs font-medium ${config.text} ${config.bg}`}>
-                            {config.label}
-                          </span>
-                          <svg
-                            className="h-4 w-4 text-gray-400"
-                            fill="none"
-                            viewBox="0 0 24 24"
-                            stroke="currentColor"
-                            strokeWidth={2}
-                          >
-                            <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
-                          </svg>
-                        </div>
-                      </Link>
-                    );
-                  })}
+                      );
+                    });
+                  })()}
+
+                  {assignModal && (
+                    <AssignOwnerModal
+                      processId={assignModal.processId}
+                      processName={assignModal.processName}
+                      isOpen
+                      onClose={() => setAssignModal(null)}
+                    />
+                  )}
                 </div>
               </>
             )}
           </div>
 
-          {/* Right column — PDF placeholder */}
+          {/* Right column — legislation source PDF */}
           <div className="hidden lg:block">
-            <div className="sticky top-8 rounded-xl border-2 border-dashed border-gray-200 bg-gray-50 p-8">
-              <div className="flex flex-col items-center text-center">
-                <svg
-                  className="h-12 w-12 text-gray-300"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                  strokeWidth={1}
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m2.25 0H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z"
-                  />
-                </svg>
-                <p className="mt-4 text-sm font-medium text-gray-500">
-                  Legislation Source Document
-                </p>
-                <p className="mt-1 text-xs text-gray-400">
-                  The legislation source document will appear here
-                </p>
-              </div>
+            <div className="sticky top-8">
+              <p className="mb-2 text-xs font-medium text-gray-500">Legislation Source Document</p>
+              <iframe
+                src="/chapter4.pdf"
+                title="AML/CTF Chapter 4 Rules"
+                className="h-[calc(100vh-6rem)] w-full rounded-xl border border-gray-200 bg-gray-50"
+              />
             </div>
           </div>
         </div>
@@ -391,48 +501,69 @@ export default function LegislationDetailPage() {
   );
 }
 
-function IntroFormLoader({
-  legislationId,
+// ── Introduction / Scoping Form ──────────────────────────────────────────────
+// Renders the buttonGroups from data/introduction.json as toggle buttons.
+// Produces answers like { "4_1_4_1": "Yes", "4_1_4_2": "Yes", "4_1_8": "Yes" }
+
+type ButtonGroupDef = {
+  label: string;
+  multi: boolean;
+  options: Array<{ key: string; label: string; controlId: string }>;
+};
+
+function IntroForm({
+  answers,
   onChange,
 }: {
-  legislationId: string;
+  answers: Record<string, string>;
   onChange: (data: Record<string, string>) => void;
 }) {
-  const [schemaData, setSchemaData] = useState<{
-    schema: Record<string, unknown>;
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    uiSchema: any;
-  } | null>(null);
-  const [formData, setFormData] = useState<Record<string, string>>({});
+  const buttonGroups = introductionData.buttonGroups as Record<string, ButtonGroupDef>;
 
-  useEffect(() => {
-    async function load() {
-      const res = await fetch(
-        `/api/compliance/legislations/${legislationId}/sections/4_1/schema`,
-      );
-      const data = await res.json();
-      setSchemaData({ schema: data.schema, uiSchema: data.uiSchema });
+  function toggle(controlId: string) {
+    const next = { ...answers };
+    if (next[controlId] === "Yes") {
+      delete next[controlId];
+    } else {
+      next[controlId] = "Yes";
     }
-    load();
-  }, [legislationId]);
-
-  if (!schemaData) {
-    return <p className="text-sm text-gray-500">Loading questions...</p>;
+    onChange(next);
   }
 
   return (
-    <div>
-      <JsonForms
-        schema={schemaData.schema}
-        uischema={schemaData.uiSchema}
-        data={formData}
-        renderers={tailwindRenderers}
-        cells={vanillaCells}
-        onChange={({ data }: { data: Record<string, string> }) => {
-          setFormData(data);
-          onChange(data);
-        }}
-      />
+    <div className="space-y-6">
+      {Object.entries(buttonGroups).map(([groupId, group]) => {
+        const groupDef = introductionData.groups.find((g) => g.id === groupId);
+        return (
+          <div key={groupId} className="rounded-xl border border-gray-200 bg-white p-5">
+            {groupDef && (
+              <p className="mb-1 text-xs font-semibold uppercase tracking-wider text-gray-500">
+                {groupDef.title}
+              </p>
+            )}
+            <p className="mb-3 text-sm font-medium text-gray-800">{group.label}</p>
+            <div className="flex flex-wrap gap-2">
+              {group.options.map((opt) => {
+                const active = answers[opt.controlId] === "Yes";
+                return (
+                  <button
+                    key={opt.key}
+                    type="button"
+                    onClick={() => toggle(opt.controlId)}
+                    className={`rounded-full border px-4 py-1.5 text-sm font-medium transition-colors ${
+                      active
+                        ? "border-indigo-600 bg-indigo-600 text-white"
+                        : "border-gray-300 bg-white text-gray-700 hover:border-indigo-400 hover:text-indigo-700"
+                    }`}
+                  >
+                    {opt.label}
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+        );
+      })}
     </div>
   );
 }

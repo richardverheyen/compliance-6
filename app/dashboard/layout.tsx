@@ -13,7 +13,7 @@ const navItems = [
 ];
 
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
-  const { user } = useAuthStore();
+  const { user, logout } = useAuthStore();
   const router = useRouter();
   const pathname = usePathname();
 
@@ -25,7 +25,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
 
   if (!user) {
     return (
-      <div className="flex min-h-[80vh] items-center justify-center">
+      <div className="flex min-h-screen items-center justify-center">
         <p className="text-sm text-gray-500">Redirecting to login...</p>
       </div>
     );
@@ -36,45 +36,65 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
     return pathname.startsWith(href);
   }
 
+  const handleLogout = async () => {
+    await logout();
+    router.push("/");
+  };
+
   return (
-    <div className="flex min-h-[calc(100vh-4rem)]">
-      {/* Sidebar - hidden on mobile */}
-      <aside className="hidden w-64 shrink-0 border-r border-gray-200 bg-white md:block">
-        <nav className="flex flex-col gap-1 p-4">
+    <div className="flex min-h-screen flex-col">
+      <nav className="sticky top-0 z-50 border-b border-gray-200 bg-white/80 backdrop-blur-md">
+        <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
+          <div className="flex items-center gap-8">
+            <Link href="/" className="text-xl font-bold text-gray-900">
+              ComplianceIQ
+            </Link>
+            <div className="hidden items-center gap-1 md:flex">
+              {navItems.map((item) => (
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  className={`rounded-lg px-3 py-2 text-sm font-medium transition-colors ${
+                    isActive(item.href)
+                      ? "bg-indigo-50 text-indigo-600"
+                      : "text-gray-600 hover:bg-gray-50 hover:text-gray-900"
+                  }`}
+                >
+                  {item.label}
+                </Link>
+              ))}
+            </div>
+          </div>
+
+          <div className="hidden items-center gap-3 md:flex">
+            <span className="text-sm text-gray-600">{user.name}</span>
+            <button
+              onClick={handleLogout}
+              className="rounded-lg border border-gray-300 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50"
+            >
+              Logout
+            </button>
+          </div>
+        </div>
+
+        {/* Mobile: horizontally scrollable nav links */}
+        <div className="flex gap-1 overflow-x-auto border-t border-gray-100 px-4 py-2 md:hidden">
           {navItems.map((item) => (
             <Link
               key={item.href}
               href={item.href}
-              className={`rounded-lg px-3 py-2 text-sm font-medium transition-colors ${
+              className={`shrink-0 rounded-lg px-3 py-1.5 text-sm font-medium transition-colors ${
                 isActive(item.href)
                   ? "bg-indigo-50 text-indigo-600"
-                  : "text-gray-700 hover:bg-gray-50 hover:text-gray-900"
+                  : "text-gray-600 hover:bg-gray-50"
               }`}
             >
               {item.label}
             </Link>
           ))}
-        </nav>
-      </aside>
+        </div>
+      </nav>
 
-      {/* Mobile sub-nav */}
-      <div className="fixed bottom-0 left-0 right-0 z-10 flex border-t border-gray-200 bg-white md:hidden">
-        {navItems.map((item) => (
-          <Link
-            key={item.href}
-            href={item.href}
-            className={`flex-1 py-3 text-center text-sm font-medium ${
-              isActive(item.href)
-                ? "text-indigo-600"
-                : "text-gray-500"
-            }`}
-          >
-            {item.label}
-          </Link>
-        ))}
-      </div>
-
-      {/* Content */}
       <main className="flex-1">{children}</main>
     </div>
   );

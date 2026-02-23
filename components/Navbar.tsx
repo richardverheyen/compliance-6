@@ -2,13 +2,16 @@
 
 import Link from "next/link";
 import { useAuthStore } from "@/lib/auth-store";
-import { useRouter } from "next/navigation";
+import { useRouter, usePathname } from "next/navigation";
 import { useState } from "react";
 
 export default function Navbar() {
   const { user, logout } = useAuthStore();
   const router = useRouter();
+  const pathname = usePathname();
   const [mobileOpen, setMobileOpen] = useState(false);
+
+  if (pathname.startsWith("/dashboard")) return null;
 
   const handleLogout = async () => {
     await logout();

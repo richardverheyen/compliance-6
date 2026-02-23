@@ -1,59 +1,99 @@
 import { http, HttpResponse } from "msw";
 import {
-  legislationsCatalog,
+  regulationsCatalog,
   mockTeamMembers,
   complianceCalendarEvents,
-  getSectionData,
 } from "./compliance-data";
 import type { TeamMember } from "@/lib/types/compliance";
-import { compile } from "@/lib/compliance-forms";
+import type { FeedbackData } from "@/lib/types/process-form";
+import { getProcessFormForSection, compileProcess, SECTION_TO_PROCESS } from "@/lib/process-forms";
+
+// Seed in-memory feedback store from copied JSON files
+import cddIndividualsFeedback from "@/data/feedback/cdd-individuals.json";
+import riskAssessmentFeedback from "@/data/feedback/risk-assessment.json";
+
+const feedbackStore: Record<string, FeedbackData> = {
+  "cdd-individuals": cddIndividualsFeedback as FeedbackData,
+  "risk-assessment": riskAssessmentFeedback as FeedbackData,
+};
 
 let teamMembers = [...mockTeamMembers];
 let nextTeamId = 6;
 
 export const complianceHandlers = [
-  // Legislations
-  http.get("/api/compliance/legislations", () => {
-    return HttpResponse.json(legislationsCatalog);
+  // Regulations
+  http.get("/api/compliance/regulations", () => {
+    return HttpResponse.json(regulationsCatalog);
   }),
 
-  http.get("/api/compliance/legislations/:id", ({ params }) => {
-    const legislation = legislationsCatalog.find((l) => l.id === params.id);
-    if (!legislation) {
+  http.get("/api/compliance/regulations/:id", ({ params }) => {
+    const regulation = regulationsCatalog.find((l) => l.id === params.id);
+    if (!regulation) {
       return HttpResponse.json({ error: "Not found" }, { status: 404 });
     }
-    return HttpResponse.json(legislation);
+    return HttpResponse.json(regulation);
   }),
 
-  // Section schema (server-side compilation)
+  // Section schema (compiled from process forms)
   http.get(
-    "/api/compliance/legislations/:id/sections/:sectionId/schema",
+    "/api/compliance/regulations/:id/sections/:sectionId/schema",
     ({ params }) => {
-      const legislation = legislationsCatalog.find((l) => l.id === params.id);
-      if (!legislation) {
+      const regulation = regulationsCatalog.find((l) => l.id === params.id);
+      if (!regulation) {
         return HttpResponse.json({ error: "Not found" }, { status: 404 });
       }
 
-      const sectionData = getSectionData(params.sectionId as string);
-      if (sectionData.fields.length === 0 && sectionData.groups.length === 0) {
+      let form;
+      try {
+        form = getProcessFormForSection(params.sectionId as string);
+      } catch {
         return HttpResponse.json({ error: "Section not found" }, { status: 404 });
       }
 
-      const { schema, uiSchema } = compile(
-        sectionData.fields,
-        sectionData.groups,
-        sectionData.rules,
-      );
+      const compiled = compileProcess(form);
 
-      return HttpResponse.json({
-        schema,
-        uiSchema,
-        fields: sectionData.fields,
-        groups: sectionData.groups,
-        rules: sectionData.rules,
-      });
+      // Attach any stored feedback as review metadata
+      const slug = SECTION_TO_PROCESS[params.sectionId as string];
+      const feedback = slug ? feedbackStore[slug] : undefined;
+      if (feedback && compiled._review_metadata === undefined) {
+        compiled._review_metadata = {
+          form_id: slug,
+          notes: feedback.notes,
+          control_notes: feedback.control_notes,
+          last_updated: feedback.last_updated,
+        };
+      }
+
+      return HttpResponse.json(compiled);
     },
   ),
+
+  // Feedback — GET
+  http.get("/api/compliance/feedback/:formId", ({ params }) => {
+    const formId = params.formId as string;
+    const data = feedbackStore[formId] ?? { form_id: formId };
+    return HttpResponse.json(data);
+  }),
+
+  // Feedback — POST (merge-write)
+  http.post("/api/compliance/feedback/:formId", async ({ params, request }) => {
+    const formId = params.formId as string;
+    const incoming = (await request.json()) as Partial<FeedbackData>;
+    const existing = feedbackStore[formId] ?? { form_id: formId };
+
+    feedbackStore[formId] = {
+      ...existing,
+      ...incoming,
+      form_id: formId,
+      control_notes: {
+        ...(existing.control_notes ?? {}),
+        ...(incoming.control_notes ?? {}),
+      },
+      last_updated: new Date().toISOString(),
+    };
+
+    return HttpResponse.json(feedbackStore[formId]);
+  }),
 
   // Team
   http.get("/api/compliance/team", () => {

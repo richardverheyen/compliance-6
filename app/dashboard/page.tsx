@@ -5,13 +5,13 @@ import Link from "next/link";
 import { useAuthStore } from "@/lib/auth-store";
 import { useComplianceStore } from "@/lib/compliance-store";
 import { getProcessRating } from "@/lib/types/compliance";
-import type { LegislationProcess } from "@/lib/types/compliance";
+import type { RegulationProcess } from "@/lib/types/compliance";
 import { ProcessTable } from "@/components/compliance/ProcessTable";
 import { ComplianceCalendar } from "@/components/compliance/ComplianceCalendar";
 
 export default function DashboardPage() {
   const { user } = useAuthStore();
-  const { activeLegislations, legislations, teamMembers, fetchTeam } =
+  const { activeRegulations, regulations, teamMembers, fetchTeam } =
     useComplianceStore();
 
   useEffect(() => {
@@ -21,7 +21,7 @@ export default function DashboardPage() {
   }, [teamMembers.length, fetchTeam]);
 
   // Calculate health KPI across all computed processes (from form answers)
-  const allComputedProcesses = activeLegislations.flatMap((al) => al.processes);
+  const allComputedProcesses = activeRegulations.flatMap((al) => al.processes);
   const compliantProcesses = allComputedProcesses.filter(
     (p) => getProcessRating(p) === "green",
   );
@@ -31,12 +31,12 @@ export default function DashboardPage() {
       : 0;
   const healthPass = healthScore > 70;
 
-  // Collect LegislationProcess items from parent Legislation for each active legislation
-  const allLegislationProcesses: LegislationProcess[] = [];
-  for (const al of activeLegislations) {
-    const leg = legislations.find((l) => l.id === al.legislationId);
+  // Collect RegulationProcess items from parent Regulation for each active regulation
+  const allRegulationProcesses: RegulationProcess[] = [];
+  for (const al of activeRegulations) {
+    const leg = regulations.find((l) => l.id === al.regulationId);
     if (leg?.processes) {
-      allLegislationProcesses.push(...leg.processes);
+      allRegulationProcesses.push(...leg.processes);
     }
   }
 
@@ -48,20 +48,20 @@ export default function DashboardPage() {
           Welcome back{user?.name ? `, ${user.name}` : ""}!
         </p>
 
-        {activeLegislations.length === 0 ? (
+        {activeRegulations.length === 0 ? (
           <div className="mt-8 rounded-xl border border-gray-200 p-8 text-center">
             <h2 className="text-lg font-semibold text-gray-900">
-              No active legislations
+              No active regulations
             </h2>
             <p className="mt-2 text-sm text-gray-600">
-              Get started by browsing available legislations and completing an
+              Get started by browsing available regulations and completing an
               introduction form.
             </p>
             <Link
-              href="/dashboard/legislations"
+              href="/dashboard/regulations"
               className="mt-4 inline-block rounded-lg bg-indigo-600 px-4 py-2.5 text-sm font-semibold text-white hover:bg-indigo-500"
             >
-              Browse Legislations
+              Browse Regulations
             </Link>
           </div>
         ) : (
@@ -91,16 +91,16 @@ export default function DashboardPage() {
               </div>
 
               {/* Business Processes table */}
-              {allLegislationProcesses.length > 0 && (
+              {allRegulationProcesses.length > 0 && (
                 <div>
                   <h2 className="text-lg font-semibold text-gray-900">
                     Business Processes
                   </h2>
                   <p className="mt-1 text-sm text-gray-500">
-                    Key processes across your active legislations
+                    Key processes across your active regulations
                   </p>
                   <div className="mt-3">
-                    <ProcessTable processes={allLegislationProcesses} />
+                    <ProcessTable processes={allRegulationProcesses} />
                   </div>
                 </div>
               )}

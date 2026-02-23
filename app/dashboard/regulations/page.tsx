@@ -4,19 +4,19 @@ import { useEffect } from "react";
 import Link from "next/link";
 import { useComplianceStore } from "@/lib/compliance-store";
 
-export default function LegislationsPage() {
-  const { legislations, activeLegislations, isLoading, fetchLegislations } =
+export default function RegulationsPage() {
+  const { regulations, activeRegulations, isLoading, fetchRegulations } =
     useComplianceStore();
 
   useEffect(() => {
-    fetchLegislations();
-  }, [fetchLegislations]);
+    fetchRegulations();
+  }, [fetchRegulations]);
 
-  if (isLoading && legislations.length === 0) {
+  if (isLoading && regulations.length === 0) {
     return (
       <div className="px-4 py-12">
         <div className="mx-auto max-w-7xl">
-          <p className="text-sm text-gray-500">Loading legislations...</p>
+          <p className="text-sm text-gray-500">Loading regulations...</p>
         </div>
       </div>
     );
@@ -25,20 +25,20 @@ export default function LegislationsPage() {
   return (
     <div className="px-4 py-12">
       <div className="mx-auto max-w-7xl">
-        <h1 className="text-3xl font-bold text-gray-900">Legislations</h1>
+        <h1 className="text-3xl font-bold text-gray-900">Regulations</h1>
         <p className="mt-2 text-gray-600">
-          Browse available legislations and activate them for your business.
+          Browse available regulations and activate them for your business.
         </p>
 
         <div className="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-          {legislations.map((leg) => {
-            const isActive = activeLegislations.some(
-              (a) => a.legislationId === leg.id,
+          {regulations.map((leg) => {
+            const isActive = activeRegulations.some(
+              (a) => a.regulationId === leg.id,
             );
             return (
               <Link
                 key={leg.id}
-                href={`/dashboard/legislations/${leg.id}`}
+                href={`/dashboard/regulations/${leg.id}`}
                 className="group rounded-xl border border-gray-200 p-6 transition-shadow hover:shadow-md"
               >
                 <div className="flex items-start justify-between">

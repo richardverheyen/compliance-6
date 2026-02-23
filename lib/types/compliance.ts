@@ -14,14 +14,14 @@ export interface BusinessProcess {
   lastUpdated: string;
 }
 
-export interface LegislationSection {
+export interface RegulationSection {
   id: string;
   partNumber: string;
   title: string;
   description?: string;
 }
 
-export interface LegislationProcess {
+export interface RegulationProcess {
   id: string;
   name: string;
   description: string;
@@ -34,7 +34,7 @@ export interface LegislationProcess {
   frequencyLabel: string;
 }
 
-export interface Legislation {
+export interface Regulation {
   id: string;
   name: string;
   shortName: string;
@@ -42,8 +42,8 @@ export interface Legislation {
   jurisdiction: string;
   description: string;
   applicableServices: string[];
-  sections: LegislationSection[];
-  processes: LegislationProcess[];
+  sections: RegulationSection[];
+  processes: RegulationProcess[];
 }
 
 export interface BusinessProfile {
@@ -54,8 +54,8 @@ export interface BusinessProfile {
   services: string[];
 }
 
-export interface ActiveLegislation {
-  legislationId: string;
+export interface ActiveRegulation {
+  regulationId: string;
   activatedAt: string;
   businessProfile: BusinessProfile;
   sectionAnswers: Record<string, Record<string, string>>;

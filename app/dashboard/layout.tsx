@@ -7,7 +7,7 @@ import { useAuthStore } from "@/lib/auth-store";
 
 const navItems = [
   { href: "/dashboard", label: "Dashboard" },
-  { href: "/dashboard/legislations", label: "Legislations" },
+  { href: "/dashboard/regulations", label: "Regulations" },
   { href: "/dashboard/processes", label: "Business Processes" },
   { href: "/dashboard/team", label: "My Team" },
 ];
@@ -47,7 +47,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
         <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
           <div className="flex items-center gap-8">
             <Link href="/" className="text-xl font-bold text-gray-900">
-              ComplianceIQ
+              Valour Compliance
             </Link>
             <div className="hidden items-center gap-1 md:flex">
               {navItems.map((item) => (

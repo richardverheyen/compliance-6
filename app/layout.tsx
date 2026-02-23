@@ -16,9 +16,9 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "ComplianceIQ - Compliance Validation Made Simple",
+  title: "Valour Compliance - Compliance Validation Made Simple",
   description:
-    "Automate regulatory tracking, audits, and risk assessment with ComplianceIQ.",
+    "Automate regulatory tracking, audits, and risk assessment with Valour Compliance.",
 };
 
 export default function RootLayout({

@@ -13,14 +13,14 @@ interface AssignOwnerModalProps {
 export function AssignOwnerModal({ processId, processName, isOpen, onClose }: AssignOwnerModalProps) {
   const {
     getTeamMembersWithAuth,
-    getLegislationProcessOwner,
-    assignLegislationProcessOwner,
-    unassignLegislationProcessOwner,
+    getRegulationProcessOwner,
+    assignRegulationProcessOwner,
+    unassignRegulationProcessOwner,
     addTeamMember,
   } = useComplianceStore();
 
   const members = getTeamMembersWithAuth();
-  const currentOwnerId = getLegislationProcessOwner(processId);
+  const currentOwnerId = getRegulationProcessOwner(processId);
 
   const [showAddForm, setShowAddForm] = useState(false);
   const [newName, setNewName] = useState("");
@@ -31,9 +31,9 @@ export function AssignOwnerModal({ processId, processName, isOpen, onClose }: As
 
   function handleSelect(memberId: string | null) {
     if (memberId === null) {
-      unassignLegislationProcessOwner(processId);
+      unassignRegulationProcessOwner(processId);
     } else {
-      assignLegislationProcessOwner(processId, memberId);
+      assignRegulationProcessOwner(processId, memberId);
     }
     onClose();
   }
@@ -45,7 +45,7 @@ export function AssignOwnerModal({ processId, processName, isOpen, onClose }: As
     const updated = useComplianceStore.getState().teamMembers;
     const newMember = updated.find((m) => m.email === newEmail);
     if (newMember) {
-      assignLegislationProcessOwner(processId, newMember.id);
+      assignRegulationProcessOwner(processId, newMember.id);
     }
     setNewName("");
     setNewEmail("");

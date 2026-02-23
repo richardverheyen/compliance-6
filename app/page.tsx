@@ -41,7 +41,7 @@ const steps = [
 
 const testimonials = [
   {
-    quote: "ComplianceIQ cut our audit preparation time by 70%. It's a game-changer for our legal team.",
+    quote: "Valour Compliance cut our audit preparation time by 70%. It's a game-changer for our legal team.",
     name: "Sarah Chen",
     title: "VP of Compliance, Meridian Financial",
   },
@@ -162,7 +162,7 @@ export default function Home() {
             Ready to streamline your compliance?
           </h2>
           <p className="mt-4 text-indigo-100">
-            Join hundreds of teams that trust ComplianceIQ to keep them compliant.
+            Join hundreds of teams that trust Valour Compliance to keep them compliant.
           </p>
           <div className="mt-8 flex items-center justify-center gap-4">
             <Link

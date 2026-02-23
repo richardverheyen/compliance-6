@@ -5,8 +5,8 @@ import { useComplianceStore } from "@/lib/compliance-store";
 
 export default function TeamPage() {
   const {
-    activeLegislations,
-    legislations,
+    activeRegulations,
+    regulations,
     fetchTeam,
     addTeamMember,
     removeTeamMember,
@@ -42,28 +42,28 @@ export default function TeamPage() {
 
   // Build a map of memberId -> processes they own
   function getOwnedProcesses(memberId: string) {
-    const owned: { processTitle: string; legislationName: string }[] = [];
+    const owned: { processTitle: string; regulationName: string }[] = [];
     // Check BusinessProcess assignments (section-based)
-    for (const al of activeLegislations) {
+    for (const al of activeRegulations) {
       for (const proc of al.processes) {
         if (proc.ownerId === memberId) {
           owned.push({
             processTitle: proc.title,
-            legislationName: al.legislationId,
+            regulationName: al.regulationId,
           });
         }
       }
     }
-    // Check LegislationProcess assignments
+    // Check RegulationProcess assignments
     for (const [processId, assignedMemberId] of Object.entries(processAssignments)) {
       if (assignedMemberId === memberId) {
-        // Look up process name from legislations catalog
-        for (const leg of legislations) {
+        // Look up process name from regulations catalog
+        for (const leg of regulations) {
           const proc = leg.processes.find((p) => p.id === processId);
           if (proc) {
             owned.push({
               processTitle: proc.name,
-              legislationName: leg.shortName,
+              regulationName: leg.shortName,
             });
             break;
           }

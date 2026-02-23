@@ -8,6 +8,8 @@ export interface FormField {
   "detail-required": boolean;
   "correct-option": string;
   "detail-label"?: string;
+  // ProcessControl fields (optional for backward compat)
+  group?: string;
 }
 
 export interface FormGroup {
@@ -98,9 +100,12 @@ export function getGroupMetrics(
     return data[rule.scope] === rule.schema.const;
   };
 
-  const fields = allFields.filter(
-    (f) => f.id.startsWith(groupId + "_") || f.id === groupId,
-  );
+  // Support slug-based groups (ProcessControl.group) and legacy prefix-based groups
+  const fields = allFields.filter((f) => {
+    if (f.group !== undefined) return f.group === groupId;
+    return f.id.startsWith(groupId + "_") || f.id === groupId;
+  });
+
   fields.forEach((f) => {
     if (checkVisibility(f.id)) {
       const status = getFieldStatus(f, data);
@@ -116,13 +121,12 @@ export function computeSectionRating(
   sectionData: SectionData,
   answers: Record<string, string>,
 ): ComplianceRating {
-  // Find the root group for this section
-  const rootGroups = sectionData.groups.filter(
-    (g) =>
-      !sectionData.groups
-        .map((x) => x.id)
-        .includes(getParentId(g.id) ?? ""),
-  );
+  // Root groups: those whose parent ID is not also in the group list
+  const groupIds = new Set(sectionData.groups.map((g) => g.id));
+  const rootGroups = sectionData.groups.filter((g) => {
+    const parentId = g.id.split("_").slice(0, -1).join("_");
+    return !parentId || !groupIds.has(parentId);
+  });
 
   let totalFields = 0;
   let greenFields = 0;
@@ -140,7 +144,7 @@ export function computeSectionRating(
     greenFields += metrics.green;
   }
 
-  // Also count top-level fields not under any root group
+  // Fallback: no groups at all
   if (rootGroups.length === 0) {
     sectionData.fields.forEach((f) => {
       const status = getFieldStatus(f, answers);
@@ -165,197 +169,4 @@ export function computeSectionRating(
   if (score >= 1) return "green";
   if (score >= 0.5) return "yellow";
   return "red";
-}
-
-// --- Compile (JSON Schema + UI Schema from fields/groups/rules) ---
-
-interface JsonSchemaObj {
-  type: string;
-  properties: Record<string, unknown>;
-}
-
-interface UiSchemaElement {
-  type: string;
-  label?: string;
-  text?: string;
-  scope?: string;
-  options?: Record<string, unknown>;
-  elements?: UiSchemaElement[];
-  rule?: {
-    effect: string;
-    condition: { scope: string; schema: { const: string } };
-  };
-}
-
-export function compile(
-  fields: FormField[],
-  groups: FormGroup[],
-  rules: FormRule[],
-): { schema: JsonSchemaObj; uiSchema: UiSchemaElement } {
-  const schema: JsonSchemaObj = { type: "object", properties: {} };
-  const sortedFields = [...fields].sort(sortById);
-  const sortedGroups = [...groups].sort(sortById);
-
-  sortedFields.forEach((f) => {
-    schema.properties[f.id] = { type: "string", enum: ["Yes", "No"] };
-    if (f["detail-required"]) {
-      schema.properties[`${f.id}_detail`] = { type: "string" };
-    }
-  });
-
-  const createFieldControls = (field: FormField): UiSchemaElement[] => {
-    const controls: UiSchemaElement[] = [];
-    const mainControl: UiSchemaElement = {
-      type: "Control",
-      label: `[${field.id}] ${field.label}`,
-      scope: `#/properties/${field.id}`,
-      options: { format: "radio" },
-    };
-
-    const externalRule = rules.find((r) => r.target === field.id);
-    if (externalRule) {
-      mainControl.rule = {
-        effect: externalRule.effect,
-        condition: {
-          scope: `#/properties/${externalRule.scope}`,
-          schema: externalRule.schema,
-        },
-      };
-    }
-    controls.push(mainControl);
-
-    if (field["detail-required"]) {
-      controls.push({
-        type: "Control",
-        label: field["detail-label"] || "Please provide details:",
-        scope: `#/properties/${field.id}_detail`,
-        rule: {
-          effect: "SHOW",
-          condition: {
-            scope: `#/properties/${field.id}`,
-            schema: { const: "Yes" },
-          },
-        },
-      });
-    }
-    return controls;
-  };
-
-  const buildLevel = (parentId: string | null): UiSchemaElement[] => {
-    const levelGroupIds = sortedGroups
-      .filter((g) => getParentId(g.id) === parentId)
-      .map((g) => g.id);
-    const levelFieldIds = sortedFields
-      .filter((f) => getParentId(f.id) === parentId)
-      .map((f) => f.id);
-    const uniqueIds = Array.from(new Set([...levelGroupIds, ...levelFieldIds])).sort(
-      (a, b) => a.localeCompare(b, undefined, { numeric: true, sensitivity: "base" }),
-    );
-
-    return uniqueIds.flatMap((id) => {
-      const field = sortedFields.find((f) => f.id === id);
-      const group = sortedGroups.find((g) => g.id === id);
-
-      if (field && group) {
-        const groupElements: UiSchemaElement[] = [...createFieldControls(field)];
-        if (group.description) {
-          groupElements.push({
-            type: "Label",
-            text: group.description,
-            options: { classNames: "group-description" },
-          });
-        }
-        groupElements.push(...buildLevel(id));
-        const groupUI: UiSchemaElement = {
-          type: "Group",
-          label: group.title,
-          elements: groupElements,
-        };
-        const rule = rules.find((r) => r.target === id);
-        if (rule) {
-          groupUI.rule = {
-            effect: rule.effect,
-            condition: {
-              scope: `#/properties/${rule.scope}`,
-              schema: rule.schema,
-            },
-          };
-        }
-        return [groupUI];
-      }
-
-      if (group) {
-        const groupElements: UiSchemaElement[] = [];
-        if (group.description) {
-          groupElements.push({
-            type: "Label",
-            text: group.description,
-            options: { classNames: "group-description" },
-          });
-        }
-        groupElements.push(...buildLevel(id));
-        const groupUI: UiSchemaElement = {
-          type: "Group",
-          label: `[${group.id}] ${group.title}`,
-          elements: groupElements,
-        };
-        const rule = rules.find((r) => r.target === id);
-        if (rule) {
-          groupUI.rule = {
-            effect: rule.effect,
-            condition: {
-              scope: `#/properties/${rule.scope}`,
-              schema: rule.schema,
-            },
-          };
-        }
-        return [groupUI];
-      }
-
-      return createFieldControls(field!);
-    });
-  };
-
-  const roots = sortedGroups
-    .filter(
-      (g) =>
-        !sortedGroups.map((x) => x.id).includes(getParentId(g.id) ?? ""),
-    )
-    .sort(sortById);
-
-  return {
-    schema,
-    uiSchema: {
-      type: "VerticalLayout",
-      elements: roots.map((r) => {
-        const rootUI: UiSchemaElement = {
-          type: "Group",
-          label: `[${r.id}] ${r.title}`,
-          elements: [
-            ...(r.description
-              ? [
-                  {
-                    type: "Label",
-                    text: r.description,
-                    options: { classNames: "group-description" },
-                  },
-                ]
-              : []),
-            ...buildLevel(r.id),
-          ],
-        };
-        const rule = rules.find((ruleObj) => ruleObj.target === r.id);
-        if (rule) {
-          rootUI.rule = {
-            effect: rule.effect,
-            condition: {
-              scope: `#/properties/${rule.scope}`,
-              schema: rule.schema,
-            },
-          };
-        }
-        return rootUI;
-      }),
-    },
-  };
 }

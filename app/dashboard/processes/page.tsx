@@ -2,33 +2,33 @@
 
 import { useState } from "react";
 import { useComplianceStore } from "@/lib/compliance-store";
-import type { LegislationProcess } from "@/lib/types/compliance";
+import type { RegulationProcess } from "@/lib/types/compliance";
 import Link from "next/link";
 import { AssignOwnerModal } from "@/components/compliance/AssignOwnerModal";
 
 interface ProcessGroup {
-  legislationId: string;
-  legislationName: string;
-  processes: LegislationProcess[];
+  regulationId: string;
+  regulationName: string;
+  processes: RegulationProcess[];
 }
 
 export default function ProcessesPage() {
-  const { activeLegislations, legislations, getLegislationProcessOwner, getTeamMembersWithAuth } = useComplianceStore();
+  const { activeRegulations, regulations, getRegulationProcessOwner, getTeamMembersWithAuth } = useComplianceStore();
   const [expandedProcess, setExpandedProcess] = useState<string | null>(null);
   const [assignModal, setAssignModal] = useState<{ processId: string; processName: string } | null>(null);
 
-  function getLegislationName(id: string) {
-    return legislations.find((l) => l.id === id)?.shortName ?? id;
+  function getRegulationName(id: string) {
+    return regulations.find((l) => l.id === id)?.shortName ?? id;
   }
 
-  // Group processes by legislation
+  // Group processes by regulation
   const groups: ProcessGroup[] = [];
-  for (const al of activeLegislations) {
-    const leg = legislations.find((l) => l.id === al.legislationId);
+  for (const al of activeRegulations) {
+    const leg = regulations.find((l) => l.id === al.regulationId);
     if (leg?.processes && leg.processes.length > 0) {
       groups.push({
-        legislationId: al.legislationId,
-        legislationName: getLegislationName(al.legislationId),
+        regulationId: al.regulationId,
+        regulationName: getRegulationName(al.regulationId),
         processes: leg.processes,
       });
     }
@@ -44,13 +44,13 @@ export default function ProcessesPage() {
           <div className="mt-8 rounded-xl border border-gray-200 p-8 text-center">
             <h2 className="text-lg font-semibold text-gray-900">No active processes</h2>
             <p className="mt-2 text-sm text-gray-600">
-              Activate a legislation to see your business processes here.
+              Activate a regulation to see your business processes here.
             </p>
             <Link
-              href="/dashboard/legislations"
+              href="/dashboard/regulations"
               className="mt-4 inline-block rounded-lg bg-indigo-600 px-4 py-2.5 text-sm font-semibold text-white hover:bg-indigo-500"
             >
-              Browse Legislations
+              Browse Regulations
             </Link>
           </div>
         </div>
@@ -63,7 +63,7 @@ export default function ProcessesPage() {
       <div className="mx-auto max-w-7xl">
         <h1 className="text-3xl font-bold text-gray-900">Business Processes</h1>
         <p className="mt-2 text-gray-600">
-          View and manage compliance processes across your active legislations.
+          View and manage compliance processes across your active regulations.
         </p>
 
         {groups.map((group) => {
@@ -71,10 +71,10 @@ export default function ProcessesPage() {
           const childrenOf = (parentId: string) => group.processes.filter((p) => p.parentId === parentId);
 
           return (
-            <div key={group.legislationId} className="mt-8">
+            <div key={group.regulationId} className="mt-8">
               {groups.length > 1 && (
                 <h2 className="mb-4 text-lg font-semibold text-gray-900">
-                  {group.legislationName}
+                  {group.regulationName}
                 </h2>
               )}
 
@@ -90,7 +90,7 @@ export default function ProcessesPage() {
                       expandedProcess={expandedProcess}
                       onToggle={(id) => setExpandedProcess(expandedProcess === id ? null : id)}
                       onAssign={(id, name) => setAssignModal({ processId: id, processName: name })}
-                      getLegislationProcessOwner={getLegislationProcessOwner}
+                      getRegulationProcessOwner={getRegulationProcessOwner}
                       getTeamMembersWithAuth={getTeamMembersWithAuth}
                     />
                   );
@@ -119,19 +119,19 @@ function ProcessCard({
   expandedProcess,
   onToggle,
   onAssign,
-  getLegislationProcessOwner,
+  getRegulationProcessOwner,
   getTeamMembersWithAuth,
 }: {
-  process: LegislationProcess;
-  children: LegislationProcess[];
+  process: RegulationProcess;
+  children: RegulationProcess[];
   expandedProcess: string | null;
   onToggle: (id: string) => void;
   onAssign: (id: string, name: string) => void;
-  getLegislationProcessOwner: (id: string) => string | undefined;
+  getRegulationProcessOwner: (id: string) => string | undefined;
   getTeamMembersWithAuth: () => { id: string; name: string; role: string }[];
 }) {
   const expanded = expandedProcess === process.id;
-  const ownerId = getLegislationProcessOwner(process.id);
+  const ownerId = getRegulationProcessOwner(process.id);
   const owner = ownerId ? getTeamMembersWithAuth().find((m) => m.id === ownerId) : undefined;
   const hasChildren = children.length > 0;
 
@@ -226,7 +226,7 @@ function ProcessCard({
                     expanded={expandedProcess === child.id}
                     onToggle={() => onToggle(child.id)}
                     onAssign={() => onAssign(child.id, child.name)}
-                    getLegislationProcessOwner={getLegislationProcessOwner}
+                    getRegulationProcessOwner={getRegulationProcessOwner}
                     getTeamMembersWithAuth={getTeamMembersWithAuth}
                   />
                 ))}
@@ -244,17 +244,17 @@ function SubProcessCard({
   expanded,
   onToggle,
   onAssign,
-  getLegislationProcessOwner,
+  getRegulationProcessOwner,
   getTeamMembersWithAuth,
 }: {
-  process: LegislationProcess;
+  process: RegulationProcess;
   expanded: boolean;
   onToggle: () => void;
   onAssign: () => void;
-  getLegislationProcessOwner: (id: string) => string | undefined;
+  getRegulationProcessOwner: (id: string) => string | undefined;
   getTeamMembersWithAuth: () => { id: string; name: string; role: string }[];
 }) {
-  const ownerId = getLegislationProcessOwner(process.id);
+  const ownerId = getRegulationProcessOwner(process.id);
   const owner = ownerId ? getTeamMembersWithAuth().find((m) => m.id === ownerId) : undefined;
 
   return (

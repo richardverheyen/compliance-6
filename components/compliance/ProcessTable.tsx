@@ -1,12 +1,12 @@
 "use client";
 
 import { useState } from "react";
-import type { LegislationProcess } from "@/lib/types/compliance";
+import type { RegulationProcess } from "@/lib/types/compliance";
 import { useComplianceStore } from "@/lib/compliance-store";
 import { AssignOwnerModal } from "./AssignOwnerModal";
 
 interface ProcessTableProps {
-  processes: LegislationProcess[];
+  processes: RegulationProcess[];
 }
 
 export function ProcessTable({ processes }: ProcessTableProps) {
@@ -34,7 +34,6 @@ export function ProcessTable({ processes }: ProcessTableProps) {
               <th className="w-10 px-4 py-3" />
               <th className="px-4 py-3">Process Name</th>
               <th className="hidden px-4 py-3 md:table-cell">Owner</th>
-              <th className="hidden px-4 py-3 md:table-cell">Frequency</th>
               <th className="px-4 py-3">Scope</th>
             </tr>
           </thead>
@@ -77,8 +76,8 @@ function ProcessGroup({
   onToggle,
   onAssign,
 }: {
-  parent: LegislationProcess;
-  children: LegislationProcess[];
+  parent: RegulationProcess;
+  children: RegulationProcess[];
   expandedRows: Set<string>;
   onToggle: (id: string) => void;
   onAssign: (id: string, name: string) => void;
@@ -120,15 +119,15 @@ function ProcessRow({
   isChild,
   hasChildren,
 }: {
-  process: LegislationProcess;
+  process: RegulationProcess;
   expanded: boolean;
   onToggle: () => void;
   onAssign: () => void;
   isChild?: boolean;
   hasChildren?: boolean;
 }) {
-  const { getLegislationProcessOwner, getTeamMembersWithAuth } = useComplianceStore();
-  const ownerId = getLegislationProcessOwner(process.id);
+  const { getRegulationProcessOwner, getTeamMembersWithAuth } = useComplianceStore();
+  const ownerId = getRegulationProcessOwner(process.id);
   const owner = ownerId ? getTeamMembersWithAuth().find((m) => m.id === ownerId) : undefined;
 
   return (
@@ -169,11 +168,6 @@ function ProcessRow({
             </button>
           )}
         </td>
-        <td className="hidden px-4 py-3 md:table-cell">
-          <span className="rounded-full bg-indigo-50 px-2 py-0.5 text-xs font-medium text-indigo-700 capitalize">
-            {process.frequency}
-          </span>
-        </td>
         <td className="px-4 py-3">
           <span className="rounded-full bg-gray-100 px-2.5 py-0.5 text-xs font-medium text-gray-700">
             {process.frequencyLabel}
@@ -182,7 +176,7 @@ function ProcessRow({
       </tr>
       {expanded && (
         <tr>
-          <td colSpan={5} className={`bg-gray-50 pb-4 pt-2 ${isChild ? "pl-12 pr-4" : "px-4"}`}>
+          <td colSpan={4} className={`bg-gray-50 pb-4 pt-2 ${isChild ? "pl-12 pr-4" : "px-4"}`}>
             <div className="space-y-2">
               <div>
                 <p className="text-xs font-medium uppercase tracking-wider text-gray-500">Description</p>

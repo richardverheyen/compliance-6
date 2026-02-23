@@ -1,8 +1,8 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 import type {
-  Legislation,
-  ActiveLegislation,
+  Regulation,
+  ActiveRegulation,
   BusinessProfile,
   TeamMember,
   ComplianceEvent,
@@ -11,23 +11,23 @@ import { computeProcessesFromAnswers } from "@/mocks/compliance-data";
 import { useAuthStore } from "@/lib/auth-store";
 
 interface ComplianceState {
-  legislations: Legislation[];
-  activeLegislations: ActiveLegislation[];
+  regulations: Regulation[];
+  activeRegulations: ActiveRegulation[];
   teamMembers: TeamMember[];
   calendarEvents: ComplianceEvent[];
   isLoading: boolean;
   processAssignments: Record<string, string>; // processId -> teamMemberId
 
-  fetchLegislations: () => Promise<void>;
-  getLegislation: (id: string) => Legislation | undefined;
-  getActiveLegislation: (id: string) => ActiveLegislation | undefined;
-  hasActiveLegislations: () => boolean;
+  fetchRegulations: () => Promise<void>;
+  getRegulation: (id: string) => Regulation | undefined;
+  getActiveRegulation: (id: string) => ActiveRegulation | undefined;
+  hasActiveRegulations: () => boolean;
 
   // Section-based activation & answers
-  activateLegislation: (id: string, profile: BusinessProfile, introAnswers: Record<string, string>) => void;
-  saveSectionAnswers: (legislationId: string, sectionId: string, answers: Record<string, string>) => void;
-  getSectionAnswers: (legislationId: string, sectionId: string) => Record<string, string>;
-  clearSectionAnswers: (legislationId: string, sectionId: string) => void;
+  activateRegulation: (id: string, profile: BusinessProfile, introAnswers: Record<string, string>) => void;
+  saveSectionAnswers: (regulationId: string, sectionId: string, answers: Record<string, string>) => void;
+  getSectionAnswers: (regulationId: string, sectionId: string) => Record<string, string>;
+  clearSectionAnswers: (regulationId: string, sectionId: string) => void;
 
   // Team
   fetchTeam: () => Promise<void>;
@@ -37,15 +37,15 @@ interface ComplianceState {
   getTeamMembersWithAuth: () => TeamMember[];
 
   fetchCalendarEvents: () => Promise<void>;
-  assignProcessOwner: (legislationId: string, processId: string, ownerId: string) => void;
+  assignProcessOwner: (regulationId: string, processId: string, ownerId: string) => void;
 
-  // Legislation process assignments
-  assignLegislationProcessOwner: (processId: string, teamMemberId: string) => void;
-  unassignLegislationProcessOwner: (processId: string) => void;
-  getLegislationProcessOwner: (processId: string) => string | undefined;
+  // Regulation process assignments
+  assignRegulationProcessOwner: (processId: string, teamMemberId: string) => void;
+  unassignRegulationProcessOwner: (processId: string) => void;
+  getRegulationProcessOwner: (processId: string) => string | undefined;
 }
 
-function recomputeProcesses(al: ActiveLegislation): ActiveLegislation {
+function recomputeProcesses(al: ActiveRegulation): ActiveRegulation {
   return {
     ...al,
     processes: computeProcessesFromAnswers(al.sectionAnswers).map((p) => {
@@ -59,50 +59,50 @@ function recomputeProcesses(al: ActiveLegislation): ActiveLegislation {
 export const useComplianceStore = create<ComplianceState>()(
   persist(
     (set, get) => ({
-      legislations: [],
-      activeLegislations: [],
+      regulations: [],
+      activeRegulations: [],
       teamMembers: [],
       calendarEvents: [],
       isLoading: false,
       processAssignments: {},
 
-      fetchLegislations: async () => {
+      fetchRegulations: async () => {
         set({ isLoading: true });
-        const res = await fetch("/api/compliance/legislations");
+        const res = await fetch("/api/compliance/regulations");
         const data = await res.json();
-        set({ legislations: data, isLoading: false });
+        set({ regulations: data, isLoading: false });
       },
 
-      getLegislation: (id) => get().legislations.find((l) => l.id === id),
+      getRegulation: (id) => get().regulations.find((l) => l.id === id),
 
-      getActiveLegislation: (id) =>
-        get().activeLegislations.find((a) => a.legislationId === id),
+      getActiveRegulation: (id) =>
+        get().activeRegulations.find((a) => a.regulationId === id),
 
-      hasActiveLegislations: () => get().activeLegislations.length > 0,
+      hasActiveRegulations: () => get().activeRegulations.length > 0,
 
-      activateLegislation: (id, profile, introAnswers) => {
+      activateRegulation: (id, profile, introAnswers) => {
         const sectionAnswers: Record<string, Record<string, string>> = {
           "4_1": introAnswers,
         };
-        const newActive: ActiveLegislation = {
-          legislationId: id,
+        const newActive: ActiveRegulation = {
+          regulationId: id,
           activatedAt: new Date().toISOString(),
           businessProfile: profile,
           sectionAnswers,
           processes: computeProcessesFromAnswers(sectionAnswers),
         };
         set((state) => ({
-          activeLegislations: [
-            ...state.activeLegislations.filter((a) => a.legislationId !== id),
+          activeRegulations: [
+            ...state.activeRegulations.filter((a) => a.regulationId !== id),
             newActive,
           ],
         }));
       },
 
-      saveSectionAnswers: (legislationId, sectionId, answers) => {
+      saveSectionAnswers: (regulationId, sectionId, answers) => {
         set((state) => ({
-          activeLegislations: state.activeLegislations.map((al) => {
-            if (al.legislationId !== legislationId) return al;
+          activeRegulations: state.activeRegulations.map((al) => {
+            if (al.regulationId !== regulationId) return al;
             const updated = {
               ...al,
               sectionAnswers: {
@@ -115,17 +115,17 @@ export const useComplianceStore = create<ComplianceState>()(
         }));
       },
 
-      getSectionAnswers: (legislationId, sectionId) => {
-        const al = get().activeLegislations.find(
-          (a) => a.legislationId === legislationId,
+      getSectionAnswers: (regulationId, sectionId) => {
+        const al = get().activeRegulations.find(
+          (a) => a.regulationId === regulationId,
         );
         return al?.sectionAnswers?.[sectionId] || {};
       },
 
-      clearSectionAnswers: (legislationId, sectionId) => {
+      clearSectionAnswers: (regulationId, sectionId) => {
         set((state) => ({
-          activeLegislations: state.activeLegislations.map((al) => {
-            if (al.legislationId !== legislationId) return al;
+          activeRegulations: state.activeRegulations.map((al) => {
+            if (al.regulationId !== regulationId) return al;
             const { [sectionId]: _, ...rest } = al.sectionAnswers;
             const updated = { ...al, sectionAnswers: rest };
             return recomputeProcesses(updated);
@@ -180,10 +180,10 @@ export const useComplianceStore = create<ComplianceState>()(
         set({ calendarEvents: data });
       },
 
-      assignProcessOwner: (legislationId, processId, ownerId) => {
+      assignProcessOwner: (regulationId, processId, ownerId) => {
         set((state) => ({
-          activeLegislations: state.activeLegislations.map((al) => {
-            if (al.legislationId !== legislationId) return al;
+          activeRegulations: state.activeRegulations.map((al) => {
+            if (al.regulationId !== regulationId) return al;
             return {
               ...al,
               processes: al.processes.map((p) =>
@@ -194,20 +194,20 @@ export const useComplianceStore = create<ComplianceState>()(
         }));
       },
 
-      assignLegislationProcessOwner: (processId, teamMemberId) => {
+      assignRegulationProcessOwner: (processId, teamMemberId) => {
         set((state) => ({
           processAssignments: { ...state.processAssignments, [processId]: teamMemberId },
         }));
       },
 
-      unassignLegislationProcessOwner: (processId) => {
+      unassignRegulationProcessOwner: (processId) => {
         set((state) => {
           const { [processId]: _, ...rest } = state.processAssignments;
           return { processAssignments: rest };
         });
       },
 
-      getLegislationProcessOwner: (processId) => get().processAssignments[processId],
+      getRegulationProcessOwner: (processId) => get().processAssignments[processId],
     }),
     { name: "compliance-storage" },
   ),

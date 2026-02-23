@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import type { FormField, FormGroup, FormRule, FieldStatus } from "@/lib/compliance-forms";
-import { getFieldStatus, getGroupMetrics, sortById } from "@/lib/compliance-forms";
+import { getFieldStatus } from "@/lib/compliance-forms";
 
 interface SectionStatusProps {
   fields: FormField[];
@@ -34,17 +34,63 @@ function StatusDot({ status }: { status: FieldStatus }) {
   );
 }
 
-function TreeNode({
-  item,
-  type,
+// Determine if a field belongs to a group — supports both slug-based (ProcessControl.group)
+// and hierarchical-prefix-based (legacy FormField) matching.
+function fieldBelongsToGroup(field: FormField, groupId: string): boolean {
+  if ("group" in field && typeof (field as { group: string }).group === "string") {
+    return (field as { group: string }).group === groupId;
+  }
+  const parts = field.id.split("_");
+  return parts.slice(0, -1).join("_") === groupId;
+}
+
+// Groups are flat slugs (no nesting) for ProcessForms.
+// For legacy hierarchical IDs, find child groups by prefix.
+function getChildGroups(group: FormGroup, allGroups: FormGroup[]): FormGroup[] {
+  // Slug-based: no children (flat structure)
+  if (!/^\d/.test(group.id)) return [];
+  // Legacy hierarchical
+  return allGroups.filter((g) => {
+    const parts = g.id.split("_");
+    return parts.slice(0, -1).join("_") === group.id;
+  });
+}
+
+function getGroupMetrics(
+  group: FormGroup,
+  allFields: FormField[],
+  allRules: FormRule[],
+  data: Record<string, string>,
+): { score: number; total: number; green: number } {
+  let total = 0;
+  let green = 0;
+
+  const checkVisibility = (id: string): boolean => {
+    const rule = allRules.find((r) => r.target === id);
+    return !rule || data[rule.scope] === rule.schema.const;
+  };
+
+  const fields = allFields.filter((f) => fieldBelongsToGroup(f, group.id));
+  fields.forEach((f) => {
+    if (checkVisibility(f.id)) {
+      const status = getFieldStatus(f, data);
+      total++;
+      if (status === "success") green++;
+    }
+  });
+
+  return { score: total === 0 ? 1 : green / total, total, green };
+}
+
+function GroupNode({
+  group,
   allFields,
   allGroups,
   allRules,
   data,
   depth = 0,
 }: {
-  item: FormField | FormGroup;
-  type: "field" | "group";
+  group: FormGroup;
   allFields: FormField[];
   allGroups: FormGroup[];
   allRules: FormRule[];
@@ -58,42 +104,11 @@ function TreeNode({
     return !rule || data[rule.scope] === rule.schema.const;
   };
 
-  if (!checkVisibility(item.id)) return null;
-
-  if (type === "field") {
-    const field = item as FormField;
-    const status = getFieldStatus(field, data);
-    return (
-      <div className="flex items-center gap-2 py-0.5" style={{ paddingLeft: `${depth * 16}px` }}>
-        <StatusDot status={status} />
-        <span className="text-xs text-gray-500 font-mono">{field.id}</span>
-        <span className="text-sm text-gray-700 truncate">{field.label}</span>
-      </div>
-    );
-  }
-
-  const group = item as FormGroup;
-  const { score, total, green } = getGroupMetrics(
-    group.id,
-    allFields,
-    allGroups,
-    allRules,
-    data,
-  );
+  const { score, total, green } = getGroupMetrics(group, allFields, allRules, data);
   if (total === 0) return null;
 
-  const childGroups = allGroups
-    .filter((g) => {
-      const parts = g.id.split("_");
-      return parts.slice(0, -1).join("_") === group.id;
-    })
-    .sort(sortById);
-  const childFields = allFields
-    .filter((f) => {
-      const parts = f.id.split("_");
-      return parts.slice(0, -1).join("_") === group.id;
-    })
-    .sort(sortById);
+  const childGroups = getChildGroups(group, allGroups);
+  const childFields = allFields.filter((f) => fieldBelongsToGroup(f, group.id));
 
   return (
     <div style={{ paddingLeft: `${depth * 16}px` }}>
@@ -129,10 +144,9 @@ function TreeNode({
       {isOpen && (
         <div className="ml-1 border-l border-gray-200 pl-2">
           {childGroups.map((g) => (
-            <TreeNode
+            <GroupNode
               key={g.id}
-              item={g}
-              type="group"
+              group={g}
               allFields={allFields}
               allGroups={allGroups}
               allRules={allRules}
@@ -140,18 +154,21 @@ function TreeNode({
               depth={depth + 1}
             />
           ))}
-          {childFields.map((f) => (
-            <TreeNode
-              key={f.id}
-              item={f}
-              type="field"
-              allFields={allFields}
-              allGroups={allGroups}
-              allRules={allRules}
-              data={data}
-              depth={depth + 1}
-            />
-          ))}
+          {childFields.map((f) => {
+            if (!checkVisibility(f.id)) return null;
+            const status = getFieldStatus(f, data);
+            return (
+              <div
+                key={f.id}
+                className="flex items-center gap-2 py-0.5"
+                style={{ paddingLeft: `${(depth + 1) * 4}px` }}
+              >
+                <StatusDot status={status} />
+                <span className="text-xs text-gray-500 font-mono">{f.id}</span>
+                <span className="text-sm text-gray-700 truncate">{f.label}</span>
+              </div>
+            );
+          })}
         </div>
       )}
     </div>
@@ -159,11 +176,13 @@ function TreeNode({
 }
 
 export function SectionStatus({ fields, groups, rules, answers }: SectionStatusProps) {
-  const rootGroups = groups
-    .filter((g) => !groups.map((x) => x.id).includes(
-      g.id.split("_").slice(0, -1).join("_"),
-    ))
-    .sort(sortById);
+  // Root groups: for slug IDs (no underscore-separated parent), all are roots.
+  // For legacy hierarchical IDs, filter by whether their parent ID exists in groups.
+  const groupIds = new Set(groups.map((g) => g.id));
+  const rootGroups = groups.filter((g) => {
+    const parentId = g.id.split("_").slice(0, -1).join("_");
+    return !parentId || !groupIds.has(parentId);
+  });
 
   return (
     <div className="rounded-xl border border-gray-200 bg-white p-4">
@@ -172,10 +191,9 @@ export function SectionStatus({ fields, groups, rules, answers }: SectionStatusP
       </h3>
       <div className="max-h-80 space-y-1 overflow-y-auto">
         {rootGroups.map((group) => (
-          <TreeNode
+          <GroupNode
             key={group.id}
-            item={group}
-            type="group"
+            group={group}
             allFields={fields}
             allGroups={groups}
             allRules={rules}

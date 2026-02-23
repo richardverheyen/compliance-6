@@ -2,10 +2,10 @@ export default function AboutPage() {
   return (
     <div className="px-4 py-20">
       <div className="mx-auto max-w-3xl">
-        <h1 className="text-4xl font-bold text-gray-900">About ComplianceIQ</h1>
+        <h1 className="text-4xl font-bold text-gray-900">About Valour Compliance</h1>
         <div className="mt-8 space-y-6 text-gray-600 leading-7">
           <p>
-            ComplianceIQ was founded with a simple mission: make compliance
+            Valour Compliance was founded with a simple mission: make compliance
             accessible and manageable for organizations of every size. We
             believe that staying compliant shouldn&apos;t require an army of
             consultants or endless spreadsheets.
@@ -15,7 +15,7 @@ export default function AboutPage() {
             audit workflows, and AI-powered risk assessment into a single,
             intuitive dashboard. Whether you&apos;re a startup navigating your
             first SOC 2 audit or an enterprise managing compliance across dozens
-            of jurisdictions, ComplianceIQ scales with you.
+            of jurisdictions, Valour Compliance scales with you.
           </p>
           <p>
             Based in San Francisco, our team brings together expertise in

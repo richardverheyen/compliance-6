@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import Link from "next/link";
 import { useComplianceStore } from "@/lib/compliance-store";
-import type { Legislation } from "@/lib/types/compliance";
+import type { Regulation } from "@/lib/types/compliance";
 import { getProcessRating } from "@/lib/types/compliance";
 import { AssignOwnerModal } from "@/components/compliance/AssignOwnerModal";
 import { introductionData, SECTION_TO_PROCESS, PROCESS_GATED_BY } from "@/lib/process-forms";
@@ -63,21 +63,21 @@ function isSectionUnlocked(sectionId: string, introAnswers: Record<string, strin
   return introAnswers[gate] === "Yes";
 }
 
-export default function LegislationDetailPage() {
+export default function RegulationDetailPage() {
   const params = useParams();
   const router = useRouter();
   const id = params.id as string;
 
   const {
-    legislations,
-    fetchLegislations,
-    getActiveLegislation,
-    activateLegislation,
-    getLegislationProcessOwner,
+    regulations,
+    fetchRegulations,
+    getActiveRegulation,
+    activateRegulation,
+    getRegulationProcessOwner,
     getTeamMembersWithAuth,
   } = useComplianceStore();
 
-  const [legislation, setLegislation] = useState<Legislation | undefined>();
+  const [regulation, setRegulation] = useState<Regulation | undefined>();
   const [businessName, setBusinessName] = useState("");
   const [location, setLocation] = useState("");
   const [foundingYear, setFoundingYear] = useState("");
@@ -88,18 +88,18 @@ export default function LegislationDetailPage() {
   const [assignModal, setAssignModal] = useState<{ processId: string; processName: string } | null>(null);
 
   useEffect(() => {
-    if (legislations.length === 0) {
-      fetchLegislations();
+    if (regulations.length === 0) {
+      fetchRegulations();
     }
-  }, [legislations.length, fetchLegislations]);
+  }, [regulations.length, fetchRegulations]);
 
   useEffect(() => {
-    setLegislation(legislations.find((l) => l.id === id));
-  }, [legislations, id]);
+    setRegulation(regulations.find((l) => l.id === id));
+  }, [regulations, id]);
 
-  const active = getActiveLegislation(id);
+  const active = getActiveRegulation(id);
 
-  if (!legislation) {
+  if (!regulation) {
     return (
       <div className="px-4 py-12">
         <div className="mx-auto max-w-7xl">
@@ -118,7 +118,7 @@ export default function LegislationDetailPage() {
   function handleActivate(e: React.FormEvent) {
     e.preventDefault();
     const fullAnswers = deriveAnswers(introAnswers);
-    activateLegislation(
+    activateRegulation(
       id,
       {
         businessName,
@@ -129,7 +129,7 @@ export default function LegislationDetailPage() {
       },
       fullAnswers,
     );
-    router.push(`/dashboard/legislations/${id}`);
+    router.push(`/dashboard/regulations/${id}`);
     setShowActivationForm(false);
   }
 
@@ -152,30 +152,30 @@ export default function LegislationDetailPage() {
     ? active.sectionAnswers["4_1"] ?? {}
     : deriveAnswers(introAnswers);
 
-  const processes = legislation.processes ?? [];
+  const processes = regulation.processes ?? [];
 
   return (
     <div className="px-4 py-12">
       <div className="mx-auto max-w-7xl">
         <Link
-          href="/dashboard/legislations"
+          href="/dashboard/regulations"
           className="text-sm text-indigo-600 hover:text-indigo-500"
         >
-          &larr; Back to Legislations
+          &larr; Back to Regulations
         </Link>
 
         <h1 className="mt-4 text-3xl font-bold text-gray-900">
-          {legislation.name}
+          {regulation.name}
         </h1>
         <div className="mt-2 flex gap-3">
           <span className="rounded-full bg-indigo-50 px-2.5 py-0.5 text-xs font-medium text-indigo-700">
-            {legislation.agency}
+            {regulation.agency}
           </span>
           <span className="rounded-full bg-gray-100 px-2.5 py-0.5 text-xs font-medium text-gray-700">
-            {legislation.jurisdiction}
+            {regulation.jurisdiction}
           </span>
         </div>
-        <p className="mt-4 text-gray-600">{legislation.description}</p>
+        <p className="mt-4 text-gray-600">{regulation.description}</p>
 
         {/* 2-column layout */}
         <div className="mt-8 grid gap-8 lg:grid-cols-2">
@@ -256,7 +256,7 @@ export default function LegislationDetailPage() {
                     <div>
                       <label className="block text-sm font-medium text-gray-700">Applicable Services</label>
                       <div className="mt-2 grid grid-cols-2 gap-2">
-                        {legislation.applicableServices.map((service) => (
+                        {regulation.applicableServices.map((service) => (
                           <label key={service} className="flex items-center gap-2 text-sm text-gray-700">
                             <input
                               type="checkbox"
@@ -319,7 +319,7 @@ export default function LegislationDetailPage() {
                       Click a section to review and answer its compliance questions.
                     </p>
                     <div className="space-y-3">
-                      {legislation.sections.map((section) => {
+                      {regulation.sections.map((section) => {
                         const unlocked = isSectionUnlocked(section.id, activeIntroAnswers);
                         const rating = unlocked ? getSectionStatus(section.id) : null;
                         const config = rating ? ratingConfig[rating] : ratingConfig.red;
@@ -345,7 +345,7 @@ export default function LegislationDetailPage() {
                         return (
                           <Link
                             key={section.id}
-                            href={`/dashboard/legislations/${id}/sections/${section.id}`}
+                            href={`/dashboard/regulations/${id}/sections/${section.id}`}
                             className="group flex items-center gap-4 rounded-xl border border-gray-200 bg-white p-4 transition-shadow hover:shadow-md"
                           >
                             <span className={`h-3 w-3 shrink-0 rounded-full ${config.dot}`} />
@@ -417,7 +417,7 @@ export default function LegislationDetailPage() {
                       const visibleSubProcs = visibleIds === null
                         ? allSubProcs
                         : allSubProcs.filter((s) => visibleIds.has(s.id));
-                      const ownerId = getLegislationProcessOwner(proc.id);
+                      const ownerId = getRegulationProcessOwner(proc.id);
                       const owner = ownerId ? getTeamMembersWithAuth().find((m) => m.id === ownerId) : undefined;
 
                       return (
@@ -484,10 +484,10 @@ export default function LegislationDetailPage() {
             )}
           </div>
 
-          {/* Right column — legislation source PDF */}
+          {/* Right column — regulation source PDF */}
           <div className="hidden lg:block">
             <div className="sticky top-8">
-              <p className="mb-2 text-xs font-medium text-gray-500">Legislation Source Document</p>
+              <p className="mb-2 text-xs font-medium text-gray-500">Regulation Source Document</p>
               <iframe
                 src="/chapter4.pdf"
                 title="AML/CTF Chapter 4 Rules"

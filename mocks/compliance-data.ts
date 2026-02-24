@@ -212,6 +212,132 @@ export const amlCtfProcesses: RegulationProcess[] = [
   },
 ];
 
+export const privacyActSections: RegulationSection[] = [
+  { id: "APP1", partNumber: "APP 1", title: "Open and Transparent Management", description: "Manage personal information in an open and transparent way, including maintaining an up-to-date privacy policy." },
+  { id: "APP2", partNumber: "APP 2", title: "Anonymity and Pseudonymity", description: "Give individuals the option to interact anonymously or by pseudonym where lawful and practicable." },
+  { id: "APP3", partNumber: "APP 3", title: "Collection of Solicited Personal Information", description: "Only collect personal information that is reasonably necessary for one or more of the entity's functions or activities." },
+  { id: "APP4", partNumber: "APP 4", title: "Dealing with Unsolicited Personal Information", description: "Determine whether unsolicited personal information could have been collected under APP 3, and destroy or de-identify it if not." },
+  { id: "APP5", partNumber: "APP 5", title: "Notification of Collection", description: "At or before the time of collection, notify individuals of key matters including the entity's identity, purposes, and how they can access their information." },
+  { id: "APP6", partNumber: "APP 6", title: "Use or Disclosure", description: "Use or disclose personal information only for the primary purpose of collection or a permitted secondary purpose." },
+  { id: "APP7", partNumber: "APP 7", title: "Direct Marketing", description: "Do not use or disclose personal information for direct marketing unless specific conditions are met, and always provide an opt-out mechanism." },
+  { id: "APP8", partNumber: "APP 8", title: "Cross-border Disclosure", description: "Before disclosing personal information to an overseas recipient, take reasonable steps to ensure the recipient complies with the APPs." },
+  { id: "APP9", partNumber: "APP 9", title: "Government Related Identifiers", description: "Do not adopt, use, or disclose a government related identifier of an individual as your own identifier, except in permitted circumstances." },
+  { id: "APP10", partNumber: "APP 10", title: "Quality of Personal Information", description: "Take reasonable steps to ensure personal information is accurate, up-to-date, and complete before use or disclosure." },
+  { id: "APP11", partNumber: "APP 11", title: "Security of Personal Information", description: "Take reasonable steps to protect personal information from misuse, interference, loss, and unauthorised access, modification, or disclosure." },
+  { id: "APP12", partNumber: "APP 12", title: "Access to Personal Information", description: "On request, give individuals access to their personal information held by the entity within a reasonable timeframe." },
+  { id: "APP13", partNumber: "APP 13", title: "Correction of Personal Information", description: "Take reasonable steps to correct personal information to ensure it is accurate, up-to-date, complete, relevant, and not misleading." },
+];
+
+export const privacyActProcesses: RegulationProcess[] = [
+  {
+    id: "PROC-PRIV-001",
+    name: "Privacy Governance",
+    description:
+      "Establishing and maintaining the governance framework for privacy compliance, including designating a privacy officer, maintaining a privacy policy, conducting privacy impact assessments for new initiatives, and training staff on privacy obligations under the Privacy Act 1988.",
+    businessObjective:
+      "Embed privacy accountability across the organisation so that personal information handling obligations are understood, assigned, and systematically met",
+    frequency: "ongoing",
+    frequencyPer: "organisation",
+    frequencyDetail:
+      "Policy reviewed annually or upon material change to data handling practices or regulatory requirements",
+    frequencyLabel: "Ongoing",
+  },
+  {
+    id: "PROC-PRIV-001a",
+    name: "Privacy Policy Management",
+    parentId: "PROC-PRIV-001",
+    description:
+      "Maintaining a clearly expressed, up-to-date privacy policy that describes the kinds of personal information collected, how it is collected, held, used, and disclosed, how individuals may access and correct their information, and how to make a privacy complaint.",
+    businessObjective:
+      "Satisfy APP 1 transparency obligations and provide individuals with a clear and accessible account of how their personal information is managed",
+    frequency: "ongoing",
+    frequencyPer: "organisation",
+    frequencyDetail:
+      "Reviewed at least annually and updated whenever handling practices change materially",
+    frequencyLabel: "Annual Review",
+  },
+  {
+    id: "PROC-PRIV-001b",
+    name: "Privacy Impact Assessments",
+    parentId: "PROC-PRIV-001",
+    description:
+      "Conducting privacy impact assessments (PIAs) for new projects, systems, or data flows that involve the collection or handling of personal information, identifying privacy risks and implementing mitigations before the initiative is launched.",
+    businessObjective:
+      "Proactively identify and mitigate privacy risks in new initiatives before personal information is collected or systems are deployed",
+    frequency: "once",
+    frequencyPer: "project",
+    frequencyDetail:
+      "Performed prior to launch of any new product, service, or system that involves personal information handling",
+    frequencyLabel: "Once per Project",
+  },
+  {
+    id: "PROC-PRIV-002",
+    name: "Collection and Notification",
+    description:
+      "Ensuring personal information is only collected where reasonably necessary for the entity's functions, that collection methods are lawful and fair, and that individuals are notified of key collection details at or before the time of collection in accordance with APPs 3–5.",
+    businessObjective:
+      "Limit collection to what is genuinely required and ensure individuals are fully informed about how their personal information will be used at the point of collection",
+    frequency: "once",
+    frequencyPer: "customer",
+    frequencyDetail:
+      "Performed at the point of initial collection; collection notices reviewed annually or when purposes change",
+    frequencyLabel: "Once per Customer",
+  },
+  {
+    id: "PROC-PRIV-003",
+    name: "Use and Disclosure Controls",
+    description:
+      "Controls governing the use and disclosure of personal information, ensuring it is only used or disclosed for the primary purpose of collection or a permitted secondary purpose (APP 6), that direct marketing use meets opt-out and consent requirements (APP 7), and that overseas disclosures satisfy cross-border accountability obligations (APP 8).",
+    businessObjective:
+      "Prevent unauthorised use or disclosure of personal information and ensure all secondary uses are within the boundaries permitted by the APPs",
+    frequency: "ongoing",
+    frequencyPer: "transaction",
+    frequencyDetail:
+      "Applied at each point of use or disclosure; direct marketing lists reviewed quarterly; cross-border agreements reviewed annually",
+    frequencyLabel: "Ongoing per Transaction",
+  },
+  {
+    id: "PROC-PRIV-004",
+    name: "Data Quality and Security",
+    description:
+      "Processes to maintain the accuracy, completeness, and currency of personal information before use or disclosure (APP 10), and to protect personal information from misuse, interference, loss, and unauthorised access through appropriate technical and organisational security measures (APP 11), including a data breach response procedure aligned with the Notifiable Data Breaches scheme.",
+    businessObjective:
+      "Ensure personal information remains accurate and is protected against unauthorised access or loss throughout its lifecycle, and that eligible data breaches are identified and notified promptly",
+    frequency: "ongoing",
+    frequencyPer: "organisation",
+    frequencyDetail:
+      "Security controls reviewed annually; data quality checks applied before material use or disclosure; breach response tested at least annually",
+    frequencyLabel: "Ongoing",
+  },
+  {
+    id: "PROC-PRIV-004a",
+    name: "Notifiable Data Breaches",
+    parentId: "PROC-PRIV-004",
+    description:
+      "Procedures for assessing and responding to suspected data breaches in accordance with the Notifiable Data Breaches (NDB) scheme under Part IIIC of the Privacy Act 1988. Includes triage and containment, assessment of whether a breach is 'eligible' (likely to result in serious harm), notification to the OAIC and affected individuals within 30 days of becoming aware, and post-incident review.",
+    businessObjective:
+      "Meet statutory notification obligations under the NDB scheme and minimise harm to individuals by responding promptly and transparently to eligible data breaches",
+    frequency: "once",
+    frequencyPer: "incident",
+    frequencyDetail:
+      "Triggered upon becoming aware of a suspected eligible data breach; OAIC notification required within 30 days of awareness",
+    frequencyLabel: "Once per Incident",
+  },
+  {
+    id: "PROC-PRIV-005",
+    name: "Individual Rights Management",
+    description:
+      "Processes for handling individual requests to access (APP 12) and correct (APP 13) their personal information, including acknowledging requests within required timeframes, locating and providing access to held information, correcting inaccurate or misleading information, and managing privacy complaints in accordance with the OAIC's complaint handling requirements.",
+    businessObjective:
+      "Uphold individuals' rights over their personal information by providing timely access and correction, and resolving privacy complaints fairly and efficiently",
+    frequency: "once",
+    frequencyPer: "request",
+    frequencyDetail:
+      "Handled on receipt; access provided within 30 days (or extended with notice); complaints acknowledged within 30 days",
+    frequencyLabel: "Once per Request",
+  },
+];
+
 export const regulationsCatalog: Regulation[] = [
   {
     id: "aml-ctf-rules",
@@ -231,6 +357,27 @@ export const regulationsCatalog: Regulation[] = [
     ],
     sections: amlCtfSections,
     processes: amlCtfProcesses,
+  },
+  {
+    id: "privacy-act-1988",
+    name: "Privacy Act 1988 — Australian Privacy Principles",
+    shortName: "Privacy Act (APPs)",
+    agency: "OAIC",
+    jurisdiction: "Australia",
+    description:
+      "The Australian Privacy Principles (APPs) set out the obligations of Australian Government agencies and private sector organisations with an annual turnover above $3 million (and certain others) in relation to the collection, use, disclosure, quality, security, and individual access to personal information.",
+    applicableServices: [
+      "Banking",
+      "Insurance",
+      "Superannuation",
+      "Healthcare",
+      "Telecommunications",
+      "Retail",
+      "Technology",
+      "Financial Planning",
+    ],
+    sections: privacyActSections,
+    processes: privacyActProcesses,
   },
 ];
 

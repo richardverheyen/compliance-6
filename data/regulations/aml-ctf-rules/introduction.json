@@ -1,0 +1,71 @@
+{
+  "controls": [],
+  "groups": [
+    {
+      "id": "4_1",
+      "title": "Part 4.1: Introduction",
+      "description": "This introduction determines which parts of Chapter 4 apply to your business. Your answers here will scope the detailed compliance forms you need to complete."
+    },
+    {
+      "id": "4_1_4",
+      "title": "Customer Categories",
+      "description": "Select the types of customers your business provides designated services to. This determines which identification, verification and record-keeping rules apply to your program."
+    },
+    {
+      "id": "4_1_8",
+      "title": "Agents",
+      "description": "Select if your business deals with agents acting on behalf of customers."
+    }
+  ],
+  "rules": [],
+  "buttonGroups": {
+    "4_1_4": {
+      "label": "What types of customers does your business serve?",
+      "multi": true,
+      "options": [
+        { "key": "individuals",       "label": "Individuals",      "controlId": "4_1_4_1" },
+        { "key": "companies",         "label": "Companies",        "controlId": "4_1_4_2" },
+        { "key": "trusts",            "label": "Trusts",           "controlId": "4_1_4_3" },
+        { "key": "partnerships",      "label": "Partnerships",     "controlId": "4_1_4_4" },
+        { "key": "associations",      "label": "Associations",     "controlId": "4_1_4_5" },
+        { "key": "cooperatives",      "label": "Co-operatives",    "controlId": "4_1_4_6" },
+        { "key": "government_bodies", "label": "Government Bodies","controlId": "4_1_4_7" }
+      ]
+    },
+    "4_1_8": {
+      "label": "Does your business deal with customer agents?",
+      "multi": true,
+      "options": [
+        { "key": "agents", "label": "Customer Agents", "controlId": "4_1_8" }
+      ]
+    }
+  },
+  "derived": {
+    "4_1_5_1": {
+      "label": "Beneficial Owners",
+      "condition": "any non-individual customer type selected",
+      "appliesTo": ["4_1_4_2", "4_1_4_3", "4_1_4_4", "4_1_4_5", "4_1_4_6", "4_1_4_7"]
+    },
+    "4_1_5_2": {
+      "label": "Politically Exposed Persons",
+      "condition": "any customer type selected (individuals and beneficial owners)",
+      "appliesTo": ["4_1_4_1", "4_1_4_2", "4_1_4_3", "4_1_4_4", "4_1_4_5", "4_1_4_6", "4_1_4_7"]
+    }
+  },
+  "scoping": {
+    "4_1_4_1": { "sections": ["4_2"], "processes": ["PROC-AML-002", "PROC-AML-002a", "PROC-AML-002b"] },
+    "4_1_4_2": { "sections": ["4_3"], "processes": ["PROC-AML-002", "PROC-AML-002a", "PROC-AML-002b"] },
+    "4_1_4_3": { "sections": ["4_4"], "processes": ["PROC-AML-002", "PROC-AML-002a", "PROC-AML-002b"] },
+    "4_1_4_4": { "sections": ["4_5"], "processes": ["PROC-AML-002", "PROC-AML-002a", "PROC-AML-002b"] },
+    "4_1_4_5": { "sections": ["4_6"], "processes": ["PROC-AML-002", "PROC-AML-002a", "PROC-AML-002b"] },
+    "4_1_4_6": { "sections": ["4_7"], "processes": ["PROC-AML-002", "PROC-AML-002a", "PROC-AML-002b"] },
+    "4_1_4_7": { "sections": ["4_8"], "processes": ["PROC-AML-002", "PROC-AML-002a", "PROC-AML-002b"] },
+    "4_1_5_1": { "sections": ["4_12"], "processes": ["PROC-AML-003", "PROC-AML-003a", "PROC-AML-003c"] },
+    "4_1_5_2": { "sections": ["4_13"], "processes": ["PROC-AML-003", "PROC-AML-003b", "PROC-AML-003c"] },
+    "4_1_8":   { "sections": ["4_11"], "processes": ["PROC-AML-001"] }
+  },
+  "alwaysActive": {
+    "sections": ["4_1", "4_9", "4_10", "4_14", "4_15"],
+    "processes": ["PROC-AML-002c", "PROC-AML-004", "PROC-AML-004a", "PROC-AML-004b"]
+  }
+}

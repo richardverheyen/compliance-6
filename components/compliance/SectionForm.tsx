@@ -2,9 +2,9 @@
 
 import { useEffect, useState } from "react";
 import { useComplianceStore } from "@/lib/compliance-store";
-import { getProcessFormForSection, SECTION_TO_PROCESS } from "@/lib/process-forms";
-import type { FeedbackData } from "@/lib/types/process-form";
+import type { ProcessForm as ProcessFormData, FeedbackData } from "@/lib/types/process-form";
 import { ProcessForm } from "@/components/compliance/ProcessForm";
+import { getProcessToSection } from "@/mocks/regulation-content/index";
 
 interface SectionFormProps {
   regulationId: string;
@@ -14,34 +14,57 @@ interface SectionFormProps {
 
 export function SectionForm({ regulationId, sectionId, onSave }: SectionFormProps) {
   const { getSectionAnswers, saveSectionAnswers } = useComplianceStore();
+  const [form, setForm] = useState<ProcessFormData | null>(null);
   const [feedback, setFeedback] = useState<FeedbackData | undefined>(undefined);
+  const [loading, setLoading] = useState(true);
 
-  // Fetch feedback for this process slug (non-blocking)
   useEffect(() => {
-    const slug = SECTION_TO_PROCESS[sectionId];
-    if (!slug) return;
-    fetch(`/api/compliance/feedback/${slug}`)
-      .then((r) => r.json())
-      .then((data: FeedbackData) => {
-        if (data?.control_notes || data?.notes) setFeedback(data);
+    setLoading(true);
+    fetch(`/api/compliance/regulations/${regulationId}/sections/${sectionId}/schema`)
+      .then((r) => (r.ok ? r.json() : null))
+      .then((data) => {
+        if (!data) {
+          setForm(null);
+          setLoading(false);
+          return;
+        }
+        // The schema response has the compiled form fields; reconstruct a minimal ProcessFormData
+        setForm({
+          controls: data.fields ?? [],
+          groups: data.groups ?? [],
+          rules: data.rules ?? [],
+          sub_scoping: data.sub_scoping ?? [],
+          form_links: data.form_links ?? [],
+          _review_metadata: data._review_metadata,
+        } as unknown as ProcessFormData);
+        if (data._review_metadata?.control_notes || data._review_metadata?.notes) {
+          setFeedback(data._review_metadata as FeedbackData);
+        }
+        setLoading(false);
       })
-      .catch(() => {});
-  }, [sectionId]);
+      .catch(() => {
+        setForm(null);
+        setLoading(false);
+      });
+  }, [regulationId, sectionId]);
 
-  // Load the process form directly (synchronous static import — no API fetch needed)
-  let form;
-  try {
-    form = getProcessFormForSection(sectionId);
-  } catch {
+  if (loading) {
+    return (
+      <div className="py-8 text-center text-sm text-gray-500">Loading form…</div>
+    );
+  }
+
+  if (!form) {
     return (
       <div className="py-8 text-center text-sm text-gray-500">
-        No form found for section {sectionId}.
+        No form available for this section.
       </div>
     );
   }
 
   const initialAnswers = getSectionAnswers(regulationId, sectionId);
   const introAnswers = getSectionAnswers(regulationId, "4_1");
+  const processToSection = getProcessToSection(regulationId);
 
   function handleAnswersChange(answers: Record<string, string>) {
     saveSectionAnswers(regulationId, sectionId, answers);
@@ -56,6 +79,8 @@ export function SectionForm({ regulationId, sectionId, onSave }: SectionFormProp
       introAnswers={introAnswers}
       regulationId={regulationId}
       sectionId={sectionId}
+      formId={sectionId}
+      processToSection={processToSection}
       onAnswersChange={handleAnswersChange}
     />
   );

@@ -6,7 +6,9 @@ import {
 } from "./compliance-data";
 import type { TeamMember } from "@/lib/types/compliance";
 import type { FeedbackData } from "@/lib/types/process-form";
-import { getProcessFormForSection, compileProcess, SECTION_TO_PROCESS } from "@/lib/process-forms";
+import { compileProcess } from "@/lib/process-forms";
+import { getRegulationContent } from "./regulation-content/index";
+import { AML_SECTION_TO_PROCESS } from "./regulation-content/aml-ctf-rules";
 
 // Seed in-memory feedback store from copied JSON files
 import cddIndividualsFeedback from "@/data/feedback/cdd-individuals.json";
@@ -15,6 +17,11 @@ import riskAssessmentFeedback from "@/data/feedback/risk-assessment.json";
 const feedbackStore: Record<string, FeedbackData> = {
   "cdd-individuals": cddIndividualsFeedback as FeedbackData,
   "risk-assessment": riskAssessmentFeedback as FeedbackData,
+};
+
+// Per-regulation section→process slug mappings (for feedback lookup)
+const SECTION_TO_PROCESS_BY_REGULATION: Record<string, Record<string, string>> = {
+  "aml-ctf-rules": AML_SECTION_TO_PROCESS,
 };
 
 let teamMembers = [...mockTeamMembers];
@@ -34,6 +41,24 @@ export const complianceHandlers = [
     return HttpResponse.json(regulation);
   }),
 
+  // Introduction data for a regulation
+  http.get("/api/compliance/regulations/:id/introduction", ({ params }) => {
+    const content = getRegulationContent(params.id as string);
+    if (!content) {
+      return HttpResponse.json({ error: "Not found" }, { status: 404 });
+    }
+    return HttpResponse.json(content.introduction);
+  }),
+
+  // Manifest (pdfUrl, mermaidDiagram, hasIntroductionForm, sectionGating)
+  http.get("/api/compliance/regulations/:id/manifest", ({ params }) => {
+    const content = getRegulationContent(params.id as string);
+    if (!content) {
+      return HttpResponse.json({ error: "Not found" }, { status: 404 });
+    }
+    return HttpResponse.json(content.manifest);
+  }),
+
   // Section schema (compiled from process forms)
   http.get(
     "/api/compliance/regulations/:id/sections/:sectionId/schema",
@@ -43,17 +68,17 @@ export const complianceHandlers = [
         return HttpResponse.json({ error: "Not found" }, { status: 404 });
       }
 
-      let form;
-      try {
-        form = getProcessFormForSection(params.sectionId as string);
-      } catch {
+      const content = getRegulationContent(params.id as string);
+      const form = content?.sectionForms[params.sectionId as string];
+      if (!form) {
         return HttpResponse.json({ error: "Section not found" }, { status: 404 });
       }
 
       const compiled = compileProcess(form);
 
       // Attach any stored feedback as review metadata
-      const slug = SECTION_TO_PROCESS[params.sectionId as string];
+      const sectionToProcess = SECTION_TO_PROCESS_BY_REGULATION[params.id as string] ?? {};
+      const slug = sectionToProcess[params.sectionId as string];
       const feedback = slug ? feedbackStore[slug] : undefined;
       if (feedback && compiled._review_metadata === undefined) {
         compiled._review_metadata = {

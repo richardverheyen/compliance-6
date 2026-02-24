@@ -1,0 +1,240 @@
+{
+  "controls": [
+    {
+      "id": "4_7_2",
+      "group": "general-cdd-obligation",
+      "label": "Does your AML/CTF program include appropriate risk-based systems and controls to verify that a registered co-operative exists when notified by the customer?",
+      "detail-required": true,
+      "detail-label": "Describe the systems and controls you have implemented to verify co-operative existence.",
+      "correct-option": "Yes",
+      "source-rules": [
+        "4.7.2",
+        "4.7.2(1)"
+      ],
+      "mapping-confidence": 0.95,
+      "process-id": "PROC-AML-002c"
+    },
+    {
+      "id": "4_7_2_2",
+      "group": "general-cdd-obligation",
+      "label": "Does your AML/CTF program include appropriate risk-based systems and controls to verify that the names of the chairman, secretary or equivalent officer of the co-operative have been provided?",
+      "detail-required": true,
+      "detail-label": "Describe the systems and controls you have implemented to obtain and verify officer details.",
+      "correct-option": "Yes",
+      "source-rules": [
+        "4.7.2",
+        "4.7.2(2)"
+      ],
+      "mapping-confidence": 0.95,
+      "process-id": "PROC-AML-002c"
+    },
+    {
+      "id": "4_7_3",
+      "group": "collection-kyc",
+      "label": "Does your AML/CTF program include a procedure to collect the full name of the registered co-operative?",
+      "detail-required": true,
+      "detail-label": "Describe your procedure for collecting the full name of the co-operative.",
+      "correct-option": "Yes",
+      "source-rules": [
+        "4.7.3",
+        "4.7.3(1)"
+      ],
+      "mapping-confidence": 1.0,
+      "process-id": "PROC-AML-002a"
+    },
+    {
+      "id": "4_7_3_2",
+      "group": "collection-kyc",
+      "label": "Does your AML/CTF program include a procedure to collect the co-operative's registered office address or principal place of operations (or residential address of the secretary, president or treasurer if no office address available)?",
+      "detail-required": true,
+      "detail-label": "Describe your procedure for collecting the co-operative's address details.",
+      "correct-option": "Yes",
+      "source-rules": [
+        "4.7.3",
+        "4.7.3(2)"
+      ],
+      "mapping-confidence": 1.0,
+      "process-id": "PROC-AML-002a"
+    },
+    {
+      "id": "4_7_3_3",
+      "group": "collection-kyc",
+      "label": "Does your AML/CTF program include a procedure to collect any unique identifying number issued to the co-operative upon its registration by the relevant State, Territory or overseas body?",
+      "detail-required": true,
+      "detail-label": "Describe your procedure for collecting the co-operative's registration number.",
+      "correct-option": "Yes",
+      "source-rules": [
+        "4.7.3",
+        "4.7.3(3)"
+      ],
+      "mapping-confidence": 1.0,
+      "process-id": "PROC-AML-002a"
+    },
+    {
+      "id": "4_7_3_4",
+      "group": "collection-kyc",
+      "label": "Does your AML/CTF program include a procedure to collect the full names of the chairman, secretary and treasurer or equivalent officers of the co-operative?",
+      "detail-required": true,
+      "detail-label": "Describe your procedure for collecting the names of the co-operative's officers.",
+      "correct-option": "Yes",
+      "source-rules": [
+        "4.7.3",
+        "4.7.3(4)"
+      ],
+      "mapping-confidence": 1.0,
+      "process-id": "PROC-AML-002a"
+    },
+    {
+      "id": "4_7_4",
+      "group": "additional-kyc-assessment",
+      "label": "Does your AML/CTF program include appropriate risk-based systems and controls to determine whether additional KYC information beyond the minimum requirements should be collected for a registered co-operative?",
+      "detail-required": true,
+      "detail-label": "Describe your risk-based process for determining when to collect additional information about co-operatives.",
+      "correct-option": "Yes",
+      "source-rules": [
+        "4.7.4"
+      ],
+      "mapping-confidence": 0.95,
+      "process-id": "PROC-AML-002c"
+    },
+    {
+      "id": "4_7_5",
+      "group": "verification-kyc",
+      "label": "Does your AML/CTF program include a procedure to verify the full name of the co-operative from ASIC, the registration body, co-operative registers, or reliable and independent documents or electronic data?",
+      "detail-required": true,
+      "detail-label": "Describe your procedure for verifying the co-operative's full name.",
+      "correct-option": "Yes",
+      "source-rules": [
+        "4.7.5",
+        "4.7.5(1)"
+      ],
+      "mapping-confidence": 1.0,
+      "process-id": "PROC-AML-002b"
+    },
+    {
+      "id": "4_7_5_2",
+      "group": "verification-kyc",
+      "label": "Does your AML/CTF program include a procedure to verify any unique identifying number issued to the co-operative upon its registration from ASIC, the registration body, co-operative registers, or reliable and independent documents or electronic data?",
+      "detail-required": true,
+      "detail-label": "Describe your procedure for verifying the co-operative's registration number.",
+      "correct-option": "Yes",
+      "source-rules": [
+        "4.7.5",
+        "4.7.5(2)"
+      ],
+      "mapping-confidence": 1.0,
+      "process-id": "PROC-AML-002b"
+    },
+    {
+      "id": "4_7_6",
+      "group": "additional-kyc-assessment",
+      "label": "Does your AML/CTF program include appropriate risk-based systems and controls to determine whether additional KYC information beyond the minimum requirements should be verified for a registered co-operative?",
+      "detail-required": true,
+      "detail-label": "Describe your risk-based process for determining when to verify additional information about co-operatives.",
+      "correct-option": "Yes",
+      "source-rules": [
+        "4.7.6"
+      ],
+      "mapping-confidence": 0.95,
+      "process-id": "PROC-AML-002c"
+    },
+    {
+      "id": "4_7_7",
+      "group": "verification-kyc",
+      "label": "Does your AML/CTF program require that verification of information about a registered co-operative be based on co-operative registers, minutes of meetings, information from the registration body, or reliable and independent documents or electronic data?",
+      "detail-required": true,
+      "detail-label": "Describe the verification sources and methods you use for co-operatives.",
+      "correct-option": "Yes",
+      "source-rules": [
+        "4.7.7",
+        "4.7.7(1)",
+        "4.7.7(2)",
+        "4.7.7(3)",
+        "4.7.7(4)",
+        "4.7.7(5)",
+        "4.7.7(6)"
+      ],
+      "mapping-confidence": 0.95,
+      "process-id": "PROC-AML-002b"
+    },
+    {
+      "id": "4_7_8",
+      "group": "disclosure-certificate-procedure",
+      "label": "Does your AML/CTF program permit the use of disclosure certificates as reliable and independent documents to verify co-operative information when it is not otherwise reasonably available from prescribed sources?",
+      "detail-required": true,
+      "detail-label": "Describe the circumstances in which you use disclosure certificates and how you determine when information is not reasonably available.",
+      "correct-option": "Yes",
+      "source-rules": [
+        "4.7.8",
+        "4.7.8(1)",
+        "4.7.8(2)"
+      ],
+      "mapping-confidence": 0.9,
+      "process-id": "PROC-AML-002b"
+    },
+    {
+      "id": "4_7_9",
+      "group": "discrepancy-handling",
+      "label": "Does your AML/CTF program include appropriate risk-based systems and controls to respond to discrepancies that arise during verification of co-operative information?",
+      "detail-required": true,
+      "detail-label": "Describe your process for identifying, investigating and resolving discrepancies in co-operative information.",
+      "correct-option": "Yes",
+      "source-rules": [
+        "4.7.9"
+      ],
+      "mapping-confidence": 0.95,
+      "process-id": "PROC-AML-002c"
+    }
+  ],
+  "groups": [
+    {
+      "id": "general-cdd-obligation",
+      "title": "General CDD Obligation",
+      "description": "Initial risk-based systems and controls to verify co-operative existence and key officer details.",
+      "variant": "main"
+    },
+    {
+      "id": "collection-kyc",
+      "title": "Collection of KYC Information",
+      "description": "Minimum KYC information to be collected about registered co-operatives, with risk-based assessment for additional information.",
+      "variant": "main"
+    },
+    {
+      "id": "verification-kyc",
+      "title": "Verification of Information",
+      "description": "Minimum verification requirements and permitted sources, including disclosure certificates for information not readily available.",
+      "variant": "main"
+    },
+    {
+      "id": "additional-kyc-assessment",
+      "title": "Additional KYC Assessment",
+      "description": "Risk-based determination of whether to collect and verify additional KYC information beyond minimum requirements.",
+      "variant": "main"
+    },
+    {
+      "id": "discrepancy-handling",
+      "title": "Responding to Discrepancies",
+      "description": "Risk-based systems and controls to manage discrepancies discovered during verification.",
+      "variant": "main"
+    },
+    {
+      "id": "disclosure-certificate-procedure",
+      "title": "Disclosure Certificate Procedure",
+      "description": "Optional use of disclosure certificates as reliable and independent documents when information is not otherwise reasonably available.",
+      "variant": "subprocess",
+      "subprocess-label": "Disclosure Certificate"
+    }
+  ],
+  "rules": [
+    {
+      "target": "4_7",
+      "scope": "4_1_4_6",
+      "effect": "SHOW",
+      "schema": {
+        "const": "Yes"
+      }
+    }
+  ],
+  "sub_scoping": [],
+  "form_links": []
+}

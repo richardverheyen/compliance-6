@@ -1,0 +1,543 @@
+{
+  "controls": [
+    {
+      "id": "4_3_2",
+      "group": "general-obligation",
+      "label": "Does your AML/CTF program include appropriate risk-based systems and controls to be reasonably satisfied that each company customer exists and that beneficial ownership obligations (Part 4.12) are met?",
+      "detail-required": true,
+      "detail-label": "Describe your risk-based systems and controls for confirming company existence and beneficial ownership compliance",
+      "correct-option": "Yes",
+      "process-id": "PROC-AML-002",
+      "source-rules": [
+        "4.3.2",
+        "4.3.2(1)",
+        "4.3.2(2)"
+      ],
+      "mapping-confidence": 0.95
+    },
+    {
+      "id": "4_3_3_1",
+      "group": "collection-kyc",
+      "label": "Does your AML/CTF program include a procedure to collect the minimum KYC information for domestic companies: full name (as registered by ASIC), registered office address, principal place of business address (if any), ACN, company type (proprietary/public), and if proprietary, director names?",
+      "detail-required": true,
+      "detail-label": "Describe your procedure for collecting minimum KYC information for domestic companies",
+      "correct-option": "Yes",
+      "process-id": "PROC-AML-002a",
+      "source-rules": [
+        "4.3.3",
+        "4.3.3(1)",
+        "4.3.3(1)(a)",
+        "4.3.3(1)(b)",
+        "4.3.3(1)(c)",
+        "4.3.3(1)(d)",
+        "4.3.3(1)(e)",
+        "4.3.3(1)(f)"
+      ],
+      "mapping-confidence": 0.95,
+      "checklist-items": [
+        {
+          "label": "Full name (as registered by ASIC)"
+        },
+        {
+          "label": "Registered office address"
+        },
+        {
+          "label": "Principal place of business address",
+          "note": "if any"
+        },
+        {
+          "label": "ACN"
+        },
+        {
+          "label": "Company type (proprietary or public)"
+        },
+        {
+          "label": "Director names",
+          "note": "if company is proprietary"
+        }
+      ]
+    },
+    {
+      "id": "4_3_3_2",
+      "group": "collection-kyc",
+      "label": "Does your AML/CTF program include a procedure to collect the minimum KYC information for registered foreign companies: full name (as registered by ASIC), registered office address in Australia, principal place of business in Australia or local agent details (if any), ARBN, country of formation, registration status and company type (private/public/other), and if private, director names?",
+      "detail-required": true,
+      "detail-label": "Describe your procedure for collecting minimum KYC information for registered foreign companies",
+      "correct-option": "Yes",
+      "process-id": "PROC-AML-002a",
+      "source-rules": [
+        "4.3.3",
+        "4.3.3(2)",
+        "4.3.3(2)(a)",
+        "4.3.3(2)(b)",
+        "4.3.3(2)(c)",
+        "4.3.3(2)(d)",
+        "4.3.3(2)(e)",
+        "4.3.3(2)(f)",
+        "4.3.3(2)(g)"
+      ],
+      "mapping-confidence": 0.95,
+      "checklist-items": [
+        {
+          "label": "Full name (as registered by ASIC)"
+        },
+        {
+          "label": "Registered office address in Australia"
+        },
+        {
+          "type": "or-group",
+          "items": [
+            {
+              "label": "Principal place of business in Australia"
+            },
+            {
+              "label": "Local agent details"
+            }
+          ]
+        },
+        {
+          "label": "ARBN"
+        },
+        {
+          "label": "Country of formation"
+        },
+        {
+          "label": "Registration status"
+        },
+        {
+          "label": "Company type (private/public/other)"
+        },
+        {
+          "label": "Director names",
+          "note": "if company is private"
+        }
+      ]
+    },
+    {
+      "id": "4_3_3_3",
+      "group": "collection-kyc",
+      "label": "Does your AML/CTF program include a procedure to collect the minimum KYC information for unregistered foreign companies: full name, country of formation, registration status with foreign body, and if registered: foreign identification number, full address in country of registration, company type (private/public/other), director names (if private), or if not registered: principal place of business address in country of formation?",
+      "detail-required": true,
+      "detail-label": "Describe your procedure for collecting minimum KYC information for unregistered foreign companies",
+      "correct-option": "Yes",
+      "process-id": "PROC-AML-002a",
+      "source-rules": [
+        "4.3.3",
+        "4.3.3(3)",
+        "4.3.3(3)(a)",
+        "4.3.3(3)(b)",
+        "4.3.3(3)(c)",
+        "4.3.3(3)(i)",
+        "4.3.3(3)(i)(ii)",
+        "4.3.3(3)(i)(iii)",
+        "4.3.3(3)(d)",
+        "4.3.3(3)(e)"
+      ],
+      "mapping-confidence": 0.95,
+      "checklist-items": [
+        {
+          "label": "Full name"
+        },
+        {
+          "label": "Country of formation"
+        },
+        {
+          "label": "Registration status with foreign body"
+        },
+        {
+          "label": "Foreign identification number",
+          "note": "if registered with a foreign body"
+        },
+        {
+          "label": "Full address in country of registration",
+          "note": "if registered with a foreign body"
+        },
+        {
+          "label": "Company type (private/public/other)",
+          "note": "if registered with a foreign body"
+        },
+        {
+          "label": "Director names",
+          "note": "if registered and private company"
+        },
+        {
+          "label": "Principal place of business address in country of formation",
+          "note": "if not registered with a foreign body"
+        }
+      ]
+    },
+    {
+      "id": "4_3_4",
+      "group": "collection-kyc",
+      "label": "Does your AML/CTF program include appropriate risk-based systems and controls to determine whether any KYC information beyond the minimum (4.3.3) should be collected for a company?",
+      "detail-required": true,
+      "detail-label": "Describe your risk-based approach to determining additional KYC information collection",
+      "correct-option": "Yes",
+      "process-id": "PROC-AML-002c",
+      "source-rules": [
+        "4.3.4"
+      ],
+      "mapping-confidence": 1.0
+    },
+    {
+      "id": "4_3_5_1",
+      "group": "verification",
+      "label": "Does your AML/CTF program include a procedure to verify the minimum information for domestic companies: full name (as registered by ASIC), company type (proprietary/public), and ACN?",
+      "detail-required": true,
+      "detail-label": "Describe your procedure for verifying minimum information for domestic companies",
+      "correct-option": "Yes",
+      "process-id": "PROC-AML-002b",
+      "source-rules": [
+        "4.3.5",
+        "4.3.5(1)",
+        "4.3.5(1)(a)",
+        "4.3.5(1)(b)",
+        "4.3.5(1)(c)"
+      ],
+      "mapping-confidence": 0.95,
+      "checklist-items": [
+        {
+          "label": "Full name (as registered by ASIC)"
+        },
+        {
+          "label": "Company type (proprietary or public)"
+        },
+        {
+          "label": "ACN"
+        }
+      ]
+    },
+    {
+      "id": "4_3_5_2",
+      "group": "verification",
+      "label": "Does your AML/CTF program include a procedure to verify the minimum information for registered foreign companies: full name (as registered by ASIC), registration status and company type (private/public), and ARBN?",
+      "detail-required": true,
+      "detail-label": "Describe your procedure for verifying minimum information for registered foreign companies",
+      "correct-option": "Yes",
+      "process-id": "PROC-AML-002b",
+      "source-rules": [
+        "4.3.5",
+        "4.3.5(2)",
+        "4.3.5(2)(a)",
+        "4.3.5(2)(b)",
+        "4.3.5(2)(c)"
+      ],
+      "mapping-confidence": 0.95,
+      "checklist-items": [
+        {
+          "label": "Full name (as registered by ASIC)"
+        },
+        {
+          "label": "Registration status"
+        },
+        {
+          "label": "Company type (private/public)"
+        },
+        {
+          "label": "ARBN"
+        }
+      ]
+    },
+    {
+      "id": "4_3_5_3",
+      "group": "verification",
+      "label": "Does your AML/CTF program include a procedure to verify the minimum information for unregistered foreign companies: full name, and if registered with foreign body: foreign identification number and company type (private/public)?",
+      "detail-required": true,
+      "detail-label": "Describe your procedure for verifying minimum information for unregistered foreign companies",
+      "correct-option": "Yes",
+      "process-id": "PROC-AML-002b",
+      "source-rules": [
+        "4.3.5",
+        "4.3.5(3)",
+        "4.3.5(3)(a)",
+        "4.3.5(3)(b)",
+        "4.3.5(3)(i)",
+        "4.3.5(3)(i)(ii)"
+      ],
+      "mapping-confidence": 0.95,
+      "checklist-items": [
+        {
+          "label": "Full name"
+        },
+        {
+          "label": "Foreign identification number",
+          "note": "if registered with a foreign body"
+        },
+        {
+          "label": "Company type (private/public)",
+          "note": "if registered with a foreign body"
+        }
+      ]
+    },
+    {
+      "id": "4_3_6",
+      "group": "verification",
+      "label": "Does your AML/CTF program include appropriate risk-based systems and controls to determine whether any additional KYC information (beyond 4.3.5 minimum) should be verified?",
+      "detail-required": true,
+      "detail-label": "Describe your risk-based approach to determining additional KYC information verification",
+      "correct-option": "Yes",
+      "process-id": "PROC-AML-002c",
+      "source-rules": [
+        "4.3.6"
+      ],
+      "mapping-confidence": 1.0
+    },
+    {
+      "id": "4_3_7",
+      "group": "verification",
+      "label": "When determining what additional information to collect and/or verify (per 4.3.4/4.3.6), does your entity have regard to ML/TF risk relevant to the provision of the designated service?",
+      "detail-required": false,
+      "correct-option": "Yes",
+      "process-id": "PROC-AML-002c",
+      "source-rules": [
+        "4.3.7"
+      ],
+      "mapping-confidence": 1.0
+    },
+    {
+      "id": "4_3_8",
+      "group": "safe-harbour-listed",
+      "label": "Does your AML/CTF program include the simplified company verification procedure for domestic listed public companies, their majority-owned subsidiaries, or companies licensed and regulated by a Commonwealth, State or Territory statutory regulator?",
+      "detail-required": true,
+      "detail-label": "Describe your simplified verification procedure, including methods to confirm the company's status (e.g., stock exchange search, public company documents, ASIC database search, regulator licence search)",
+      "correct-option": "N/A",
+      "process-id": "PROC-AML-002b",
+      "source-rules": [
+        "4.3.8",
+        "4.3.8(1)",
+        "4.3.8(2)",
+        "4.3.8(3)",
+        "4.3.5(1)",
+        "4.3.5(2)",
+        "4.3.5(3)",
+        "4.3.5(4)",
+        "4.3.5(5)",
+        "4.3.5(6)",
+        "4.3.5(7)"
+      ],
+      "mapping-confidence": 0.9
+    },
+    {
+      "id": "4_3_9_1",
+      "group": "foreign-listed",
+      "label": "Does your AML/CTF program include risk-based systems and controls to determine whether and how to verify a foreign company's existence by confirming it is a foreign listed public company?",
+      "detail-required": true,
+      "detail-label": "Describe your risk-based approach to verifying foreign listed public companies",
+      "correct-option": "N/A",
+      "process-id": "PROC-AML-002b",
+      "source-rules": [
+        "4.3.9(1)"
+      ],
+      "mapping-confidence": 0.95
+    },
+    {
+      "id": "4_3_9_2",
+      "group": "foreign-listed",
+      "label": "If your program includes foreign listed public company verification, does it require regard to ML/TF risk (including the location of the foreign stock exchange) when determining whether and how to use this method?",
+      "detail-required": false,
+      "correct-option": "Yes",
+      "process-id": "PROC-AML-002c",
+      "source-rules": [
+        "4.3.9(2)"
+      ],
+      "mapping-confidence": 1.0
+    },
+    {
+      "id": "4_3_10",
+      "group": "verification-methods",
+      "label": "Does your AML/CTF program require that verification of company information be based as far as possible on reliable and independent documentation, reliable and independent electronic data, or a combination of both?",
+      "detail-required": true,
+      "detail-label": "Describe the reliable and independent sources (documentation and/or electronic data) used to verify company information",
+      "correct-option": "Yes",
+      "process-id": "PROC-AML-002b",
+      "source-rules": [
+        "4.3.10",
+        "4.3.10(1)",
+        "4.3.10(2)",
+        "4.3.10(3)"
+      ],
+      "mapping-confidence": 0.95
+    },
+    {
+      "id": "4_3_12",
+      "group": "disclosure-certificates",
+      "label": "Does your AML/CTF program include appropriate risk-based systems and controls to determine whether to rely on a disclosure certificate to verify information about a foreign company where such information is not otherwise reasonably available?",
+      "detail-required": true,
+      "detail-label": "Describe your risk-based approach to determining when to rely on disclosure certificates for foreign companies",
+      "correct-option": "N/A",
+      "process-id": "PROC-AML-002b",
+      "source-rules": [
+        "4.3.11",
+        "4.3.12"
+      ],
+      "mapping-confidence": 0.9
+    },
+    {
+      "id": "4_3_13",
+      "group": "disclosure-certificates",
+      "label": "If your program allows disclosure certificates for foreign company verification, does it require regard to ML/TF risk including the jurisdiction of incorporation, jurisdiction of primary operations, and location of foreign stock exchange (if any)?",
+      "detail-required": false,
+      "correct-option": "Yes",
+      "process-id": "PROC-AML-002c",
+      "source-rules": [
+        "4.3.13"
+      ],
+      "mapping-confidence": 1.0
+    },
+    {
+      "id": "4_3_14",
+      "group": "discrepancy-handling",
+      "label": "Does your AML/CTF program include appropriate risk-based systems and controls to respond to any discrepancy that arises during verification of company information?",
+      "detail-required": true,
+      "detail-label": "Describe your risk-based approach to responding to verification discrepancies for companies",
+      "correct-option": "Yes",
+      "process-id": "PROC-AML-002b",
+      "source-rules": [
+        "4.3.14"
+      ],
+      "mapping-confidence": 1.0
+    }
+  ],
+  "groups": [
+    {
+      "id": "general-obligation",
+      "title": "General CDD Obligation",
+      "description": "Risk-based systems and controls to confirm the company exists and beneficial ownership obligations are met.",
+      "variant": "main"
+    },
+    {
+      "id": "collection-kyc",
+      "title": "Collection of KYC Information",
+      "description": "Minimum KYC information required for each company type, plus risk-based additional collection.",
+      "variant": "main"
+    },
+    {
+      "id": "verification",
+      "title": "Verification of Information",
+      "description": "Minimum verification requirements for each company type, plus risk-based additional verification.",
+      "variant": "main"
+    },
+    {
+      "id": "safe-harbour-listed",
+      "title": "Simplified Verification for Listed/Regulated Companies",
+      "description": "Optional simplified procedure for domestic listed public companies, their majority-owned subsidiaries, and Commonwealth/State/Territory regulated companies.",
+      "variant": "subprocess",
+      "subprocess-label": "Safe Harbour"
+    },
+    {
+      "id": "foreign-listed",
+      "title": "Foreign Listed Public Company Verification",
+      "description": "Optional risk-based procedure to verify foreign companies by confirming foreign listed public company status.",
+      "variant": "subprocess",
+      "subprocess-label": "Foreign Listed"
+    },
+    {
+      "id": "verification-methods",
+      "title": "Methods of Verification",
+      "description": "General verification standards and use of reliable independent sources.",
+      "variant": "main"
+    },
+    {
+      "id": "disclosure-certificates",
+      "title": "Disclosure Certificates for Foreign Companies",
+      "description": "Risk-based use of disclosure certificates when foreign company information is not otherwise reasonably available.",
+      "variant": "subprocess",
+      "subprocess-label": "Disclosure Cert"
+    },
+    {
+      "id": "discrepancy-handling",
+      "title": "Responding to Discrepancies",
+      "description": "Risk-based systems to respond to verification discrepancies.",
+      "variant": "main"
+    }
+  ],
+  "rules": [
+    {
+      "target": "4_3",
+      "scope": "4_1_4_2",
+      "effect": "SHOW",
+      "schema": {
+        "const": "Yes"
+      }
+    },
+    {
+      "target": "4_3_3_1",
+      "scope": "sub-domestic",
+      "effect": "SHOW",
+      "schema": {
+        "const": "Yes"
+      }
+    },
+    {
+      "target": "4_3_5_1",
+      "scope": "sub-domestic",
+      "effect": "SHOW",
+      "schema": {
+        "const": "Yes"
+      }
+    },
+    {
+      "target": "4_3_3_2",
+      "scope": "sub-reg-foreign",
+      "effect": "SHOW",
+      "schema": {
+        "const": "Yes"
+      }
+    },
+    {
+      "target": "4_3_5_2",
+      "scope": "sub-reg-foreign",
+      "effect": "SHOW",
+      "schema": {
+        "const": "Yes"
+      }
+    },
+    {
+      "target": "4_3_3_3",
+      "scope": "sub-unreg-foreign",
+      "effect": "SHOW",
+      "schema": {
+        "const": "Yes"
+      }
+    },
+    {
+      "target": "4_3_5_3",
+      "scope": "sub-unreg-foreign",
+      "effect": "SHOW",
+      "schema": {
+        "const": "Yes"
+      }
+    },
+    {
+      "target": "4_3_9_2",
+      "scope": "4_3_9_1",
+      "effect": "SHOW",
+      "schema": {
+        "const": "Yes"
+      }
+    },
+    {
+      "target": "4_3_13",
+      "scope": "4_3_12",
+      "effect": "SHOW",
+      "schema": {
+        "const": "Yes"
+      }
+    }
+  ],
+  "sub_scoping": [
+    {
+      "id": "sub-domestic",
+      "label": "Domestic Companies"
+    },
+    {
+      "id": "sub-reg-foreign",
+      "label": "Registered Foreign Companies"
+    },
+    {
+      "id": "sub-unreg-foreign",
+      "label": "Unregistered Foreign Companies"
+    }
+  ],
+  "form_links": []
+}

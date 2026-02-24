@@ -7,19 +7,20 @@ import { useComplianceStore } from "@/lib/compliance-store";
 import type { Regulation } from "@/lib/types/compliance";
 import { getProcessRating } from "@/lib/types/compliance";
 import { AssignOwnerModal } from "@/components/compliance/AssignOwnerModal";
-import { introductionData, SECTION_TO_PROCESS, PROCESS_GATED_BY } from "@/lib/process-forms";
 import MermaidDiagram from "@/components/compliance/MermaidDiagram";
+import type { IntroductionData, RegulationManifest } from "@/lib/types/regulation-content";
 
 // Build the set of process IDs visible for a given set of intro answers.
 // Returns null when there are no answers yet (= show everything).
 type ScopingEntry = { sections: string[]; processes: string[] };
 
-function getVisibleProcessIds(answers: Record<string, string>): Set<string> | null {
-  if (Object.keys(answers).length === 0) return null;
-  const scoping = (introductionData as unknown as { scoping: Record<string, ScopingEntry> }).scoping;
-  const alwaysActive = (introductionData as unknown as { alwaysActive: { processes: string[] } }).alwaysActive.processes;
-  const visible = new Set<string>(alwaysActive);
-  for (const [controlId, entry] of Object.entries(scoping)) {
+function getVisibleProcessIds(
+  answers: Record<string, string>,
+  intro: IntroductionData | null,
+): Set<string> | null {
+  if (!intro || Object.keys(answers).length === 0) return null;
+  const visible = new Set<string>(intro.alwaysActive.processes);
+  for (const [controlId, entry] of Object.entries(intro.scoping as Record<string, ScopingEntry>)) {
     if (answers[controlId] === "Yes") {
       for (const procId of entry.processes) visible.add(procId);
     }
@@ -44,8 +45,23 @@ const ratingConfig = {
   green: { dot: "bg-green-500", label: "Complete", text: "text-green-700", bg: "bg-green-50" },
 };
 
-// Derive 4_1_5_1 and 4_1_5_2 from selected customer types
-function deriveAnswers(base: Record<string, string>): Record<string, string> {
+// Generic: derive answers where "Yes" if any listed controls = "Yes"
+function deriveAnswers(
+  base: Record<string, string>,
+  intro: IntroductionData | null,
+): Record<string, string> {
+  if (!intro?.derived) return { ...base };
+  const derived = { ...base };
+  for (const [targetId, rule] of Object.entries(intro.derived)) {
+    if (rule.from.some((k) => derived[k] === "Yes")) {
+      derived[targetId] = "Yes";
+    }
+  }
+  return derived;
+}
+
+// AML-specific fallback derive (when intro has no `derived.from` structure)
+function deriveAnswersFallback(base: Record<string, string>): Record<string, string> {
   const derived = { ...base };
   const nonIndividual = ["4_1_4_2", "4_1_4_3", "4_1_4_4", "4_1_4_5", "4_1_4_6", "4_1_4_7"];
   const anyCustomer = ["4_1_4_1", ...nonIndividual];
@@ -54,12 +70,15 @@ function deriveAnswers(base: Record<string, string>): Record<string, string> {
   return derived;
 }
 
-// Determines if a section is unlocked based on intro answers
-function isSectionUnlocked(sectionId: string, introAnswers: Record<string, string>): boolean {
-  const slug = SECTION_TO_PROCESS[sectionId];
-  if (!slug) return true;
-  const gate = PROCESS_GATED_BY[slug];
-  if (!gate) return true;
+// Determines if a section is unlocked based on intro answers and manifest gating
+function isSectionUnlocked(
+  sectionId: string,
+  introAnswers: Record<string, string>,
+  manifest: RegulationManifest | null,
+): boolean {
+  if (!manifest) return true;
+  const gate = manifest.sectionGating[sectionId];
+  if (gate === undefined || gate === null) return true;
   return introAnswers[gate] === "Yes";
 }
 
@@ -87,6 +106,11 @@ export default function RegulationDetailPage() {
   const [showActivationForm, setShowActivationForm] = useState(false);
   const [assignModal, setAssignModal] = useState<{ processId: string; processName: string } | null>(null);
 
+  // Dynamically fetched regulation content
+  const [introData, setIntroData] = useState<IntroductionData | null>(null);
+  const [manifest, setManifest] = useState<RegulationManifest | null>(null);
+  const [contentLoading, setContentLoading] = useState(true);
+
   useEffect(() => {
     if (regulations.length === 0) {
       fetchRegulations();
@@ -97,9 +121,26 @@ export default function RegulationDetailPage() {
     setRegulation(regulations.find((l) => l.id === id));
   }, [regulations, id]);
 
+  // Fetch introduction and manifest in parallel
+  useEffect(() => {
+    setContentLoading(true);
+    Promise.all([
+      fetch(`/api/compliance/regulations/${id}/introduction`).then((r) =>
+        r.ok ? r.json() : null,
+      ),
+      fetch(`/api/compliance/regulations/${id}/manifest`).then((r) =>
+        r.ok ? r.json() : null,
+      ),
+    ]).then(([intro, mf]) => {
+      setIntroData(intro ?? null);
+      setManifest(mf ?? null);
+      setContentLoading(false);
+    });
+  }, [id]);
+
   const active = getActiveRegulation(id);
 
-  if (!regulation) {
+  if (!regulation || contentLoading) {
     return (
       <div className="px-4 py-12">
         <div className="mx-auto max-w-7xl">
@@ -117,7 +158,11 @@ export default function RegulationDetailPage() {
 
   function handleActivate(e: React.FormEvent) {
     e.preventDefault();
-    const fullAnswers = deriveAnswers(introAnswers);
+    // Use generic derive if intro has `derived` structure, otherwise use AML-specific fallback
+    const hasGenericDerived = introData?.derived && Object.values(introData.derived).some((v) => "from" in v);
+    const fullAnswers = hasGenericDerived
+      ? deriveAnswers(introAnswers, introData)
+      : deriveAnswersFallback(introAnswers);
     activateRegulation(
       id,
       {
@@ -150,7 +195,12 @@ export default function RegulationDetailPage() {
 
   const activeIntroAnswers = active
     ? active.sectionAnswers["4_1"] ?? {}
-    : deriveAnswers(introAnswers);
+    : (() => {
+        const hasGenericDerived = introData?.derived && Object.values(introData.derived).some((v) => "from" in v);
+        return hasGenericDerived
+          ? deriveAnswers(introAnswers, introData)
+          : deriveAnswersFallback(introAnswers);
+      })();
 
   const processes = regulation.processes ?? [];
 
@@ -186,7 +236,7 @@ export default function RegulationDetailPage() {
               <form onSubmit={handleActivate} className="space-y-6">
                 <div className="flex items-center justify-between">
                   <div>
-                    <h2 className="text-lg font-semibold text-gray-900">Begin Compliance Assessment</h2>
+                    <h2 className="text-lg font-semibold text-gray-900">Begin Compliance Self-Assessment</h2>
                     <p className="mt-0.5 text-sm text-gray-600">
                       Complete your business profile and scoping questions to activate compliance tracking.
                     </p>
@@ -272,16 +322,22 @@ export default function RegulationDetailPage() {
                   </div>
                 </div>
 
-                {/* Introduction / Scoping form */}
-                <div className="rounded-xl border border-gray-200 bg-white p-6">
-                  <h3 className="text-base font-semibold text-gray-900">Scoping Questions</h3>
-                  <p className="mt-1 text-sm text-gray-600">
-                    {introductionData.groups[0]?.description}
-                  </p>
-                  <div className="mt-4">
-                    <IntroForm answers={introAnswers} onChange={setIntroAnswers} />
+                {/* Introduction / Scoping form — only shown if regulation has one */}
+                {introData && manifest?.hasIntroductionForm && (
+                  <div className="rounded-xl border border-gray-200 bg-white p-6">
+                    <h3 className="text-base font-semibold text-gray-900">Scoping Questions</h3>
+                    <p className="mt-1 text-sm text-gray-600">
+                      {introData.groups[0]?.description}
+                    </p>
+                    <div className="mt-4">
+                      <IntroForm
+                        introData={introData}
+                        answers={introAnswers}
+                        onChange={setIntroAnswers}
+                      />
+                    </div>
                   </div>
-                </div>
+                )}
 
                 <button
                   type="submit"
@@ -298,7 +354,7 @@ export default function RegulationDetailPage() {
                     onClick={() => setShowActivationForm(true)}
                     className="w-full rounded-lg bg-indigo-600 px-4 py-3 text-sm font-semibold text-white hover:bg-indigo-500"
                   >
-                    Begin Compliance Assessment
+                    Begin Compliance Self-Assessment
                   </button>
                 ) : (
                   <>
@@ -314,13 +370,13 @@ export default function RegulationDetailPage() {
                       </div>
                     </div>
 
-                    <h3 className="text-lg font-semibold text-gray-900">Chapter 4 Sections</h3>
+                    <h3 className="text-lg font-semibold text-gray-900">Sections</h3>
                     <p className="text-sm text-gray-600">
                       Click a section to review and answer its compliance questions.
                     </p>
                     <div className="space-y-3">
                       {regulation.sections.map((section) => {
-                        const unlocked = isSectionUnlocked(section.id, activeIntroAnswers);
+                        const unlocked = isSectionUnlocked(section.id, activeIntroAnswers, manifest);
                         const rating = unlocked ? getSectionStatus(section.id) : null;
                         const config = rating ? ratingConfig[rating] : ratingConfig.red;
                         const { answered, total } = getSectionCompletion(section.id);
@@ -381,8 +437,10 @@ export default function RegulationDetailPage() {
                   </>
                 )}
 
-                {/* Mermaid Flowchart */}
-                <MermaidDiagram />
+                {/* Mermaid Flowchart — only shown if manifest provides diagram */}
+                {manifest?.mermaidDiagram && (
+                  <MermaidDiagram content={manifest.mermaidDiagram} />
+                )}
 
                 {/* Business Processes */}
                 <div className="space-y-3">
@@ -394,7 +452,7 @@ export default function RegulationDetailPage() {
                   </div>
 
                   {(() => {
-                    const visibleIds = getVisibleProcessIds(activeIntroAnswers);
+                    const visibleIds = getVisibleProcessIds(activeIntroAnswers, introData);
                     const topLevel = processes.filter((p) => !p.parentId);
 
                     const visibleTopLevel = topLevel.filter((proc) => {
@@ -484,17 +542,19 @@ export default function RegulationDetailPage() {
             )}
           </div>
 
-          {/* Right column — regulation source PDF */}
-          <div className="hidden lg:block">
-            <div className="sticky top-8">
-              <p className="mb-2 text-xs font-medium text-gray-500">Regulation Source Document</p>
-              <iframe
-                src="/chapter4.pdf"
-                title="AML/CTF Chapter 4 Rules"
-                className="h-[calc(100vh-6rem)] w-full rounded-xl border border-gray-200 bg-gray-50"
-              />
+          {/* Right column — regulation source PDF (only if manifest provides a URL) */}
+          {manifest?.pdfUrl && (
+            <div className="hidden lg:block">
+              <div className="sticky top-8">
+                <p className="mb-2 text-xs font-medium text-gray-500">Regulation Source Document</p>
+                <iframe
+                  src={manifest.pdfUrl}
+                  title="Regulation Source Document"
+                  className="h-[calc(100vh-6rem)] w-full rounded-xl border border-gray-200 bg-gray-50"
+                />
+              </div>
             </div>
-          </div>
+          )}
         </div>
       </div>
     </div>
@@ -502,7 +562,7 @@ export default function RegulationDetailPage() {
 }
 
 // ── Introduction / Scoping Form ──────────────────────────────────────────────
-// Renders the buttonGroups from data/introduction.json as toggle buttons.
+// Renders the buttonGroups from IntroductionData as toggle buttons.
 // Produces answers like { "4_1_4_1": "Yes", "4_1_4_2": "Yes", "4_1_8": "Yes" }
 
 type ButtonGroupDef = {
@@ -512,13 +572,15 @@ type ButtonGroupDef = {
 };
 
 function IntroForm({
+  introData,
   answers,
   onChange,
 }: {
+  introData: IntroductionData;
   answers: Record<string, string>;
   onChange: (data: Record<string, string>) => void;
 }) {
-  const buttonGroups = introductionData.buttonGroups as Record<string, ButtonGroupDef>;
+  const buttonGroups = introData.buttonGroups as Record<string, ButtonGroupDef>;
 
   function toggle(controlId: string) {
     const next = { ...answers };
@@ -533,7 +595,7 @@ function IntroForm({
   return (
     <div className="space-y-6">
       {Object.entries(buttonGroups).map(([groupId, group]) => {
-        const groupDef = introductionData.groups.find((g) => g.id === groupId);
+        const groupDef = introData.groups.find((g) => g.id === groupId);
         return (
           <div key={groupId} className="rounded-xl border border-gray-200 bg-white p-5">
             {groupDef && (
@@ -544,14 +606,14 @@ function IntroForm({
             <p className="mb-3 text-sm font-medium text-gray-800">{group.label}</p>
             <div className="flex flex-wrap gap-2">
               {group.options.map((opt) => {
-                const active = answers[opt.controlId] === "Yes";
+                const isActive = answers[opt.controlId] === "Yes";
                 return (
                   <button
                     key={opt.key}
                     type="button"
                     onClick={() => toggle(opt.controlId)}
                     className={`rounded-full border px-4 py-1.5 text-sm font-medium transition-colors ${
-                      active
+                      isActive
                         ? "border-indigo-600 bg-indigo-600 text-white"
                         : "border-gray-300 bg-white text-gray-700 hover:border-indigo-400 hover:text-indigo-700"
                     }`}

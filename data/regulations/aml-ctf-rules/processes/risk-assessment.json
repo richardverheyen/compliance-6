@@ -1,0 +1,192 @@
+{
+  "controls": [
+    {
+      "id": "4_1_3",
+      "group": "risk-assessment-factors",
+      "label": "Have you identified and documented the ML/TF risk factors relevant to your business as required by Rule 4.1.3?",
+      "detail-required": true,
+      "detail-label": "Describe your ML/TF risk identification process and the factors you have assessed.",
+      "correct-option": "Yes",
+      "process-id": "PROC-AML-002c",
+      "source-rules": [
+        "4.1.3"
+      ],
+      "mapping-confidence": 0.95
+    },
+    {
+      "id": "4_1_3_1",
+      "group": "risk-assessment-factors",
+      "label": "Have you assessed customer types (including beneficial owners and PEPs) as part of your ML/TF risk identification?",
+      "detail-required": false,
+      "correct-option": "Yes",
+      "process-id": "PROC-AML-002c",
+      "source-rules": [
+        "4.1.3(1)",
+        "4.1.3(1)(a)",
+        "4.1.3(1)(b)"
+      ],
+      "mapping-confidence": 0.95
+    },
+    {
+      "id": "4_1_3_2",
+      "group": "risk-assessment-factors",
+      "label": "Have you assessed customers' sources of funds and wealth as part of your ML/TF risk identification?",
+      "detail-required": false,
+      "correct-option": "Yes",
+      "process-id": "PROC-AML-002c",
+      "source-rules": [
+        "4.1.3(2)"
+      ],
+      "mapping-confidence": 0.95
+    },
+    {
+      "id": "4_1_3_3",
+      "group": "risk-assessment-factors",
+      "label": "Have you assessed the nature and purpose of business relationships with customers as part of your ML/TF risk identification?",
+      "detail-required": true,
+      "detail-label": "Describe how you collect and assess information about the nature and purpose of customer relationships.",
+      "correct-option": "Yes",
+      "process-id": "PROC-AML-002c",
+      "source-rules": [
+        "4.1.3(3)"
+      ],
+      "mapping-confidence": 0.9
+    },
+    {
+      "id": "4_1_3_4",
+      "group": "risk-assessment-factors",
+      "label": "Have you assessed the control structure of non-individual customers as part of your ML/TF risk identification?",
+      "detail-required": false,
+      "correct-option": "Yes",
+      "process-id": "PROC-AML-002c",
+      "source-rules": [
+        "4.1.3(4)"
+      ],
+      "mapping-confidence": 0.95
+    },
+    {
+      "id": "4_1_3_5",
+      "group": "risk-assessment-factors",
+      "label": "Have you assessed the types of designated services you provide as part of your ML/TF risk identification?",
+      "detail-required": false,
+      "correct-option": "Yes",
+      "process-id": "PROC-AML-002c",
+      "source-rules": [
+        "4.1.3(5)"
+      ],
+      "mapping-confidence": 0.95
+    },
+    {
+      "id": "4_1_3_6",
+      "group": "risk-assessment-factors",
+      "label": "Have you assessed the methods by which you deliver designated services as part of your ML/TF risk identification?",
+      "detail-required": false,
+      "correct-option": "Yes",
+      "process-id": "PROC-AML-002c",
+      "source-rules": [
+        "4.1.3(6)"
+      ],
+      "mapping-confidence": 0.95
+    },
+    {
+      "id": "4_1_3_7",
+      "group": "risk-assessment-factors",
+      "label": "Have you assessed the foreign jurisdictions with which you deal as part of your ML/TF risk identification?",
+      "detail-required": false,
+      "correct-option": "Yes",
+      "process-id": "PROC-AML-002c",
+      "source-rules": [
+        "4.1.3(7)"
+      ],
+      "mapping-confidence": 0.95
+    },
+    {
+      "id": "4_1_6",
+      "group": "risk-assessment-application",
+      "label": "If you have customers who became customers after 1 June 2014, have you applied the enhanced requirements for beneficial owners (Part 4.12) and PEPs (Part 4.13) to those customers?",
+      "detail-required": true,
+      "detail-label": "Describe how you determine customer commencement dates and apply enhanced requirements to post-1 June 2014 customers.",
+      "correct-option": "Yes",
+      "process-id": "PROC-AML-002c",
+      "source-rules": [
+        "4.1.6"
+      ],
+      "mapping-confidence": 0.85
+    }
+  ],
+  "groups": [
+    {
+      "id": "risk-assessment-factors",
+      "title": "ML/TF Risk Identification Factors",
+      "description": "Assessment of the key risk factors a reporting entity must consider when identifying, managing and mitigating money laundering or terrorism financing risk.",
+      "variant": "main"
+    },
+    {
+      "id": "risk-assessment-application",
+      "title": "Application of Enhanced Requirements",
+      "description": "Special application rules for customers acquired after transition dates and the applicability of enhanced due diligence requirements.",
+      "variant": "main"
+    }
+  ],
+  "rules": [],
+  "sub_scoping": [],
+  "form_links": [],
+  "_review_metadata": {
+    "form_id": "risk-assessment",
+    "last_updated": "2026-02-21T22:03:30.009Z",
+    "control_notes": {
+      "4.1.1": {
+        "comment": "Good, we infer that all processes are for post-commencement customers through our visual diagrams.",
+        "severity": "approved"
+      },
+      "4.1.2": {
+        "comment": "Good, we infer that all processes are for post-commencement customers through our visual diagrams.",
+        "severity": "approved"
+      },
+      "4.1.4(1)": {
+        "comment": "No need to display this as it is covered in the introduction and in the Individuals process",
+        "severity": "error"
+      },
+      "4.1.4(2)": {
+        "comment": "No need to display this as it is covered in the introduction and in the companies process",
+        "severity": "error"
+      },
+      "4.1.4(3)": {
+        "comment": "No need to display this as it is covered in the introduction and in the Trustee process",
+        "severity": "error"
+      },
+      "4.1.4(4)": {
+        "comment": "No need to display this as it is covered in the introduction and in the Partnership process",
+        "severity": "error"
+      },
+      "4.1.4(5)": {
+        "comment": "No need to display this as it is covered in the introduction and in the Associations process",
+        "severity": "error"
+      },
+      "4.1.4(6)": {
+        "comment": "No need to display this as it is covered in the introduction and in the Co-operatives process",
+        "severity": "error"
+      },
+      "4.1.4(7)": {
+        "comment": "No need to display this as it is covered in the introduction and in the Governments process",
+        "severity": "error"
+      },
+      "4.1.5(1)": {
+        "comment": "No need to show this, it's covered by the Beneficial Owners process",
+        "severity": "error"
+      },
+      "4.1.5(2)": {
+        "comment": "No need to show this as it's covered by the PEP process",
+        "severity": "error"
+      },
+      "4.1.7": {
+        "comment": "No need to show this as it is covered by the Document and Electronic-based verification sub-processes",
+        "severity": "error"
+      },
+      "4.1.8": {
+        "comment": "no need to show this as it is covered by the introduction form's reference to Agents",
+        "severity": "error"
+      }
+    }
+  }
+}

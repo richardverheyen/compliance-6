@@ -1,0 +1,148 @@
+{
+  "controls": [
+    {
+      "id": "4_13_1",
+      "group": "pep-determination",
+      "label": "Do you have appropriate risk-management systems in place to determine whether a customer or beneficial owner is a politically exposed person?",
+      "detail-required": true,
+      "detail-label": "Describe your PEP determination systems and when they are applied.",
+      "correct-option": "Yes",
+      "process-id": "PROC-AML-003b",
+      "source-rules": [
+        "4.13.1"
+      ],
+      "mapping-confidence": 0.95
+    },
+    {
+      "id": "4_13_2",
+      "group": "domestic-pep-procedures",
+      "label": "For domestic PEPs and international organisation PEPs, do you identify and comply with beneficial owner identification requirements (as per 4.2.3 to 4.2.9)?",
+      "detail-required": true,
+      "detail-label": "Explain how you treat PEP beneficial owners as customers for identification purposes.",
+      "correct-option": "Yes",
+      "process-id": "PROC-AML-003a",
+      "source-rules": [
+        "4.13.2(1)"
+      ],
+      "mapping-confidence": 0.95
+    },
+    {
+      "id": "4_13_3",
+      "group": "foreign-pep-procedures",
+      "label": "For foreign PEPs and high ML/TF risk organisation PEPs, do you identify and comply with beneficial owner identification requirements (as per 4.2.3 to 4.2.9)?",
+      "detail-required": true,
+      "detail-label": "Explain how you treat foreign PEP beneficial owners as customers for identification purposes.",
+      "correct-option": "Yes",
+      "process-id": "PROC-AML-003a",
+      "source-rules": [
+        "4.13.3(1)"
+      ],
+      "mapping-confidence": 0.95
+    },
+    {
+      "id": "4_13_3_2",
+      "group": "foreign-pep-procedures",
+      "label": "Do you obtain senior management approval before establishing or continuing a business relationship with foreign PEPs or high-risk organisation PEPs?",
+      "detail-required": true,
+      "detail-label": "Describe your senior management approval process and documentation requirements.",
+      "correct-option": "Yes",
+      "process-id": "PROC-AML-003",
+      "source-rules": [
+        "4.13.3(2)"
+      ],
+      "mapping-confidence": 0.95
+    },
+    {
+      "id": "4_13_3_3",
+      "group": "foreign-pep-procedures",
+      "label": "Do you take reasonable measures to establish a foreign PEP's or high-risk organisation PEP's source of wealth and source of funds?",
+      "detail-required": true,
+      "detail-label": "Describe the reasonable measures you take to establish source of wealth and source of funds.",
+      "correct-option": "Yes",
+      "process-id": "PROC-AML-003",
+      "source-rules": [
+        "4.13.3(3)"
+      ],
+      "mapping-confidence": 0.95
+    },
+    {
+      "id": "4_13_3_4",
+      "group": "foreign-pep-procedures",
+      "label": "Do you comply with Chapter 15 obligations (ongoing monitoring) for foreign PEPs and high-risk organisation PEPs?",
+      "detail-required": true,
+      "detail-label": "Describe how you comply with Chapter 15 ongoing customer due diligence requirements.",
+      "correct-option": "Yes",
+      "process-id": "PROC-AML-003c",
+      "source-rules": [
+        "4.13.3(4)"
+      ],
+      "mapping-confidence": 0.9
+    },
+    {
+      "id": "4_13_4",
+      "group": "discrepancy-response",
+      "label": "Do you have risk-based systems and controls to respond to discrepancies that arise when verifying PEP information?",
+      "detail-required": true,
+      "detail-label": "Describe your processes for identifying, investigating, and resolving verification discrepancies for PEPs.",
+      "correct-option": "Yes",
+      "process-id": "PROC-AML-003b",
+      "source-rules": [
+        "4.13.4"
+      ],
+      "mapping-confidence": 0.95
+    }
+  ],
+  "groups": [
+    {
+      "id": "pep-determination",
+      "title": "PEP Determination",
+      "description": "Risk-management systems to identify whether a customer or beneficial owner is a politically exposed person, and timing of determination.",
+      "variant": "main"
+    },
+    {
+      "id": "domestic-pep-procedures",
+      "title": "Domestic PEP and International Organisation PEP Procedures",
+      "description": "Identification, beneficial owner compliance, and ML/TF risk assessment for domestic and international organisation PEPs.",
+      "variant": "main"
+    },
+    {
+      "id": "high-risk-pep-procedures",
+      "title": "High ML/TF Risk Domestic PEP Enhanced Actions",
+      "description": "Enhanced due diligence for domestic PEPs determined to be of high ML/TF risk.",
+      "variant": "subprocess",
+      "subprocess-label": "High-Risk Domestic PEP"
+    },
+    {
+      "id": "foreign-pep-procedures",
+      "title": "Foreign PEP and High ML/TF Risk Organisation PEP Procedures",
+      "description": "Enhanced identification, senior management approval, source of wealth/funds, and ongoing monitoring for foreign PEPs and high-risk organisation PEPs.",
+      "variant": "main"
+    },
+    {
+      "id": "discrepancy-response",
+      "title": "PEP Verification Discrepancy Response",
+      "description": "Systems and controls to respond to discrepancies in verifying PEP information.",
+      "variant": "main"
+    }
+  ],
+  "rules": [
+    {
+      "target": "4_13",
+      "scope": "4_1_5_2",
+      "effect": "SHOW",
+      "schema": {
+        "const": "Yes"
+      }
+    },
+    {
+      "target": "high-risk-pep-procedures",
+      "scope": "4_13_2_risk",
+      "effect": "SHOW",
+      "schema": {
+        "const": "Yes"
+      }
+    }
+  ],
+  "sub_scoping": [],
+  "form_links": []
+}

@@ -1,0 +1,190 @@
+{
+  "controls": [
+    {
+      "id": "4_15_1",
+      "group": "alternative-proofing-gatekeeping",
+      "label": "Is the customer unable to establish identity using standard customer identification requirements under Chapter 4?",
+      "detail-required": true,
+      "detail-label": "Describe the reason why standard identification requirements cannot be met",
+      "correct-option": "Yes",
+      "process-id": "PROC-AML-002",
+      "source-rules": [
+        "4.15.1"
+      ],
+      "mapping-confidence": 0.95
+    },
+    {
+      "id": "4_15_1_a",
+      "group": "alternative-proofing-gatekeeping",
+      "label": "Is the customer unable to produce or provide necessary identity evidence due to COVID-19 Pandemic measures?",
+      "detail-required": true,
+      "detail-label": "Describe which COVID-19 measures are preventing identity evidence provision",
+      "correct-option": "Yes",
+      "process-id": "PROC-AML-002",
+      "source-rules": [
+        "4.15.1A"
+      ],
+      "mapping-confidence": 0.95
+    },
+    {
+      "id": "4_15_2",
+      "group": "self-attestation-process",
+      "label": "Are you accepting a self-attestation from the customer certifying that identity information provided is true and correct?",
+      "detail-required": true,
+      "detail-label": "Describe your process for obtaining and documenting customer self-attestation",
+      "correct-option": "Yes",
+      "process-id": "PROC-AML-002b",
+      "source-rules": [
+        "4.15.2"
+      ],
+      "mapping-confidence": 0.95
+    },
+    {
+      "id": "4_15_3",
+      "group": "self-attestation-risk-management",
+      "label": "Are you applying appropriate levels of ongoing customer due diligence to identify, mitigate and manage ML/TF risks associated with self-attested identities?",
+      "detail-required": true,
+      "detail-label": "Describe your ongoing due diligence procedures for self-attested customers",
+      "correct-option": "Yes",
+      "process-id": "PROC-AML-003c",
+      "source-rules": [
+        "4.15.3"
+      ],
+      "mapping-confidence": 0.95
+    },
+    {
+      "id": "4_15_4",
+      "group": "self-attestation-validation",
+      "label": "Do you have controls to ensure you do not rely on a self-attestation if you know or have reason to believe it is incorrect or misleading?",
+      "detail-required": true,
+      "detail-label": "Describe your verification and validation controls for self-attestations",
+      "correct-option": "Yes",
+      "process-id": "PROC-AML-002b",
+      "source-rules": [
+        "4.15.4"
+      ],
+      "mapping-confidence": 0.95
+    },
+    {
+      "id": "4_15_5",
+      "group": "alternative-verification-covid",
+      "label": "Are you accepting copies of documents (rather than originals or certified copies) due to COVID-19 Pandemic measures when verification based on originals or certified copies cannot be completed?",
+      "detail-required": true,
+      "detail-label": "Describe your risk-based systems and controls for accepting document copies during COVID-19 measures",
+      "correct-option": "Yes",
+      "process-id": "PROC-AML-002b",
+      "source-rules": [
+        "4.15.5"
+      ],
+      "mapping-confidence": 0.95
+    },
+    {
+      "id": "4_15_6",
+      "group": "covid-measures-definition",
+      "label": "Do you have documented criteria defining what constitutes 'COVID-19 Pandemic measures' for your organisation?",
+      "detail-required": true,
+      "detail-label": "Describe your definition and scope of COVID-19 Pandemic measures (including government measures, your own reasonable measures, and third-party measures)",
+      "correct-option": "Yes",
+      "process-id": "PROC-AML-002",
+      "source-rules": [
+        "4.15.6",
+        "4.15.6(1)",
+        "4.15.6(2)",
+        "4.15.6(3)"
+      ],
+      "mapping-confidence": 0.9
+    }
+  ],
+  "groups": [
+    {
+      "id": "alternative-proofing-gatekeeping",
+      "title": "Gatekeeping: Standard Identification Unable to be Established",
+      "description": "Determine whether conditions are met to use alternative identity proofing processes under rules 4.15.1 or 4.15.1A.",
+      "variant": "main"
+    },
+    {
+      "id": "alternative-verification-process",
+      "title": "Alternative Verification Processes",
+      "description": "Select and apply alternative identity proofing methods in accordance with risk-based systems and controls.",
+      "variant": "main"
+    },
+    {
+      "id": "self-attestation-process",
+      "title": "Self-Attestation Documentation",
+      "description": "Process for accepting and documenting customer self-attestation when alternative proofing processes cannot establish identity.",
+      "variant": "subprocess",
+      "subprocess-label": "Self-Attestation"
+    },
+    {
+      "id": "self-attestation-risk-management",
+      "title": "Ongoing Due Diligence for Self-Attested Identities",
+      "description": "Apply appropriate ongoing customer due diligence to identify, mitigate and manage ML/TF risks where customer identity was established via self-attestation.",
+      "variant": "subprocess",
+      "subprocess-label": "Self-Attestation Risk Management"
+    },
+    {
+      "id": "self-attestation-validation",
+      "title": "Self-Attestation Validation Controls",
+      "description": "Implement controls to reject or cease reliance on self-attestations if known or reasonably believed to be incorrect or misleading.",
+      "variant": "subprocess",
+      "subprocess-label": "Self-Attestation Validation"
+    },
+    {
+      "id": "alternative-verification-covid",
+      "title": "Document Verification Flexibility During COVID-19",
+      "description": "Accept document copies instead of originals or certified copies where COVID-19 Pandemic measures prevent standard verification.",
+      "variant": "subprocess",
+      "subprocess-label": "COVID-19 Flexibility"
+    },
+    {
+      "id": "covid-measures-definition",
+      "title": "Definition of COVID-19 Pandemic Measures",
+      "description": "Document and apply the definition of 'COVID-19 Pandemic measures' including government measures, your reasonable measures, and third-party reasonable measures.",
+      "variant": "main"
+    }
+  ],
+  "rules": [
+    {
+      "target": "self-attestation-process",
+      "scope": "4_15_1",
+      "effect": "SHOW",
+      "schema": {
+        "const": "Yes"
+      }
+    },
+    {
+      "target": "self-attestation-process",
+      "scope": "4_15_1_a",
+      "effect": "SHOW",
+      "schema": {
+        "const": "Yes"
+      }
+    },
+    {
+      "target": "self-attestation-risk-management",
+      "scope": "4_15_2",
+      "effect": "SHOW",
+      "schema": {
+        "const": "Yes"
+      }
+    },
+    {
+      "target": "self-attestation-validation",
+      "scope": "4_15_2",
+      "effect": "SHOW",
+      "schema": {
+        "const": "Yes"
+      }
+    },
+    {
+      "target": "alternative-verification-covid",
+      "scope": "4_15_1_a",
+      "effect": "SHOW",
+      "schema": {
+        "const": "Yes"
+      }
+    }
+  ],
+  "sub_scoping": [],
+  "form_links": []
+}

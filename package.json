@@ -15,6 +15,7 @@
     "@jsonforms/core": "^3.7.0",
     "@jsonforms/react": "^3.7.0",
     "@jsonforms/vanilla-renderers": "^3.7.0",
+    "mermaid": "^11.12.3",
     "msw": "^2.12.9",
     "next": "16.1.6",
     "react": "19.2.3",

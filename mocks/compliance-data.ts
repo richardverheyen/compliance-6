@@ -9,31 +9,34 @@ import type {
 } from "@/lib/types/compliance";
 import type { SectionData, FormField } from "@/lib/compliance-forms";
 import { getFieldStatus } from "@/lib/compliance-forms";
-import { getProcessFormForSection, SECTION_TO_PROCESS, getProcessTitle } from "@/lib/process-forms";
+import {
+  amlCTFContent,
+  AML_SECTION_TO_PROCESS,
+  AML_PROCESS_TITLES,
+} from "./regulation-content/aml-ctf-rules";
 
-// Get section data from process form
+// Get section data from process form (AML/CTF only — other regulations have no forms yet)
 export function getSectionData(sectionId: string): SectionData {
-  try {
-    const form = getProcessFormForSection(sectionId);
-    return {
-      fields: form.controls as unknown as FormField[],
-      groups: form.groups,
-      rules: form.rules,
-    };
-  } catch {
-    return { fields: [], groups: [], rules: [] };
-  }
+  const form = amlCTFContent.sectionForms[sectionId];
+  if (!form) return { fields: [], groups: [], rules: [] };
+  return {
+    fields: form.controls as unknown as FormField[],
+    groups: form.groups,
+    rules: form.rules,
+  };
 }
 
-// Build sections catalog from process forms
-export const amlCtfSections: RegulationSection[] = Object.entries(SECTION_TO_PROCESS).map(
+// Build sections catalog from regulation content registry
+export const amlCtfSections: RegulationSection[] = Object.entries(AML_SECTION_TO_PROCESS).map(
   ([sectionId, slug]) => {
-    const { title, description } = getProcessTitle(slug);
+    const form = amlCTFContent.sectionForms[sectionId];
+    const title = AML_PROCESS_TITLES[slug] ?? slug;
+    const mainGroup = form?.groups.find((g) => g.variant === "main") ?? form?.groups[0];
     return {
       id: sectionId,
       partNumber: sectionId.replace(/_/g, "."),
       title,
-      description,
+      description: mainGroup?.description,
     };
   },
 );

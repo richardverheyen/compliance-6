@@ -1,0 +1,276 @@
+{
+  "controls": [
+    {
+      "id": "4_2_2",
+      "group": "general-cdd-obligation",
+      "label": "Do you have appropriate risk-based systems and controls designed to enable you to be reasonably satisfied that individual customers are who they claim to be?",
+      "detail-required": true,
+      "detail-label": "Describe your risk-based systems and controls for establishing reasonable satisfaction of customer identity",
+      "correct-option": "Yes",
+      "process-id": "PROC-AML-002",
+      "source-rules": [
+        "4.2.2"
+      ],
+      "mapping-confidence": 1.0
+    },
+    {
+      "id": "4_2_3",
+      "group": "collection-kyc",
+      "label": "Do you collect the minimum KYC information for individuals (full name, date of birth, residential address)?",
+      "detail-required": false,
+      "correct-option": "Yes",
+      "process-id": "PROC-AML-002a",
+      "source-rules": [
+        "4.2.3",
+        "4.2.3(1)",
+        "4.2.3(2)",
+        "4.2.3(3)"
+      ],
+      "mapping-confidence": 1.0,
+      "checklist-items": [
+        {
+          "label": "Full name"
+        },
+        {
+          "label": "Date of birth"
+        },
+        {
+          "label": "Residential address"
+        }
+      ]
+    },
+    {
+      "id": "4_2_4",
+      "group": "collection-kyc",
+      "label": "Do you collect the minimum KYC information for sole traders (full name, date of birth, business name, principal place of business or residential address, ABN)?",
+      "detail-required": false,
+      "correct-option": "Yes",
+      "process-id": "PROC-AML-002a",
+      "source-rules": [
+        "4.2.4",
+        "4.2.4(1)",
+        "4.2.4(2)",
+        "4.2.4(3)",
+        "4.2.4(4)",
+        "4.2.4(5)"
+      ],
+      "mapping-confidence": 1.0,
+      "checklist-items": [
+        {
+          "label": "Full name"
+        },
+        {
+          "label": "Date of birth"
+        },
+        {
+          "label": "Business name"
+        },
+        {
+          "type": "or-group",
+          "items": [
+            {
+              "label": "Principal place of business address"
+            },
+            {
+              "label": "Residential address"
+            }
+          ]
+        },
+        {
+          "label": "ABN"
+        }
+      ]
+    },
+    {
+      "id": "4_2_5",
+      "group": "additional-kyc-assessment",
+      "label": "Do you have appropriate risk-based systems and controls to determine whether to collect additional KYC information beyond the minimum requirements?",
+      "detail-required": true,
+      "detail-label": "Describe your risk-based process for determining when to collect additional KYC information",
+      "correct-option": "Yes",
+      "process-id": "PROC-AML-002c",
+      "source-rules": [
+        "4.2.5"
+      ],
+      "mapping-confidence": 1.0
+    },
+    {
+      "id": "4_2_6",
+      "group": "verification",
+      "label": "Do you verify the customer's full name and either their date of birth or residential address?",
+      "detail-required": false,
+      "correct-option": "Yes",
+      "process-id": "PROC-AML-002b",
+      "source-rules": [
+        "4.2.6",
+        "4.2.6(1)",
+        "4.2.6(2)",
+        "4.2.6(2)(a)",
+        "4.2.6(2)(b)"
+      ],
+      "mapping-confidence": 1.0,
+      "checklist-items": [
+        {
+          "label": "Full name"
+        },
+        {
+          "type": "or-group",
+          "items": [
+            {
+              "label": "Date of birth"
+            },
+            {
+              "label": "Residential address"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "4_2_7",
+      "group": "verification",
+      "label": "Is your verification of customer information based on reliable and independent documentation, reliable and independent electronic data, or a combination of both?",
+      "detail-required": true,
+      "detail-label": "Describe the sources you use for verification (documentation, electronic data, or both)",
+      "correct-option": "Yes",
+      "process-id": "PROC-AML-002b",
+      "source-rules": [
+        "4.2.7",
+        "4.2.7(1)",
+        "4.2.7(2)",
+        "4.2.7(3)"
+      ],
+      "mapping-confidence": 1.0
+    },
+    {
+      "id": "4_2_10",
+      "group": "verification",
+      "label": "For medium or lower ML/TF risk customers, do you use the documentation-based safe harbour verification procedure?",
+      "detail-required": false,
+      "correct-option": "N/A",
+      "process-id": "PROC-AML-002b",
+      "source-rules": [
+        "4.2.10"
+      ],
+      "mapping-confidence": 1.0
+    },
+    {
+      "id": "4_2_12",
+      "group": "verification",
+      "label": "For medium or lower ML/TF risk customers, do you use the electronic-based safe harbour verification procedure?",
+      "detail-required": false,
+      "correct-option": "N/A",
+      "process-id": "PROC-AML-002b",
+      "source-rules": [
+        "4.2.12"
+      ],
+      "mapping-confidence": 1.0
+    },
+    {
+      "id": "4_2_8",
+      "group": "additional-kyc-assessment",
+      "label": "Do you have appropriate risk-based systems and controls to determine whether to verify additional KYC information beyond the minimum requirements?",
+      "detail-required": true,
+      "detail-label": "Describe your risk-based process for determining when to verify additional KYC information",
+      "correct-option": "Yes",
+      "process-id": "PROC-AML-002c",
+      "source-rules": [
+        "4.2.8"
+      ],
+      "mapping-confidence": 1.0
+    },
+    {
+      "id": "4_2_9",
+      "group": "discrepancy-handling",
+      "label": "Do you have appropriate risk-based systems and controls to respond to discrepancies that arise during verification, enabling you to determine whether you are reasonably satisfied the customer is who they claim to be?",
+      "detail-required": true,
+      "detail-label": "Describe your process for handling verification discrepancies",
+      "correct-option": "Yes",
+      "process-id": "PROC-AML-002b",
+      "source-rules": [
+        "4.2.9"
+      ],
+      "mapping-confidence": 1.0
+    }
+  ],
+  "groups": [
+    {
+      "id": "general-cdd-obligation",
+      "title": "General CDD Obligation",
+      "description": "Top-level risk-based obligation to verify customer identity.",
+      "variant": "main"
+    },
+    {
+      "id": "collection-kyc",
+      "title": "Collection of KYC Information",
+      "description": "Minimum and additional information that must be collected about individual customers.",
+      "variant": "main"
+    },
+    {
+      "id": "verification",
+      "title": "Verification of Information",
+      "description": "How to verify KYC information collected about the customer.",
+      "variant": "main"
+    },
+    {
+      "id": "additional-kyc-assessment",
+      "title": "Additional KYC Assessment",
+      "description": "Risk-based decisions on collecting and verifying additional customer information beyond minimum requirements.",
+      "variant": "main"
+    },
+    {
+      "id": "discrepancy-handling",
+      "title": "Discrepancy Handling",
+      "description": "Responding to verification issues and inconsistencies in customer information.",
+      "variant": "main"
+    }
+  ],
+  "rules": [
+    {
+      "target": "4_2",
+      "scope": "4_1_4_1",
+      "effect": "SHOW",
+      "schema": {
+        "const": "Yes"
+      }
+    },
+    {
+      "target": "4_2_3",
+      "scope": "sub-individual",
+      "effect": "SHOW",
+      "schema": {
+        "const": "Yes"
+      }
+    },
+    {
+      "target": "4_2_4",
+      "scope": "sub-sole-trader",
+      "effect": "SHOW",
+      "schema": {
+        "const": "Yes"
+      }
+    }
+  ],
+  "sub_scoping": [
+    {
+      "id": "sub-individual",
+      "label": "Individuals"
+    },
+    {
+      "id": "sub-sole-trader",
+      "label": "Sole Traders"
+    }
+  ],
+  "form_links": [
+    {
+      "target": "verification-documents",
+      "label": "Documentary Safe Harbour",
+      "gated_by": "4_2_10"
+    },
+    {
+      "target": "verification-electronic",
+      "label": "Electronic Safe Harbour",
+      "gated_by": "4_2_12"
+    }
+  ]
+}

@@ -12,15 +12,22 @@ export interface IntroductionData {
   derived?: Record<string, { from: string[] }>;
 }
 
+export interface ProcessListEntry {
+  id: string;           // process slug (e.g. "risk-assessment")
+  title: string;
+  description?: string;
+  gatedBy?: string | null; // controlId that gates visibility (null = always visible)
+}
+
 export interface RegulationManifest {
   pdfUrl: string | null;
   mermaidDiagram: string | null;
   hasIntroductionForm: boolean;
-  sectionGating: Record<string, string | null>; // sectionId → gating controlId (null = always visible)
+  processList: ProcessListEntry[];   // ordered list of process forms
 }
 
 export interface RegulationContent {
   introduction: IntroductionData | null;
-  sectionForms: Record<string, ProcessForm>;
+  processForms: Record<string, ProcessForm>;  // keyed by process slug
   manifest: RegulationManifest;
 }

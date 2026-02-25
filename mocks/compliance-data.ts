@@ -5,19 +5,14 @@ import type {
   ComplianceRating,
   TeamMember,
   ComplianceEvent,
-  RegulationSection,
 } from "@/lib/types/compliance";
 import type { SectionData, FormField } from "@/lib/compliance-forms";
 import { getFieldStatus } from "@/lib/compliance-forms";
-import {
-  amlCTFContent,
-  AML_SECTION_TO_PROCESS,
-  AML_PROCESS_TITLES,
-} from "./regulation-content/aml-ctf-rules";
+import { amlCTFContent } from "./regulation-content/aml-ctf-rules";
 
-// Get section data from process form (AML/CTF only — other regulations have no forms yet)
-export function getSectionData(sectionId: string): SectionData {
-  const form = amlCTFContent.sectionForms[sectionId];
+// Get form field data for a process slug (AML/CTF only — other regulations have no forms yet)
+export function getSectionData(processSlug: string): SectionData {
+  const form = amlCTFContent.processForms[processSlug];
   if (!form) return { fields: [], groups: [], rules: [] };
   return {
     fields: form.controls as unknown as FormField[],
@@ -25,21 +20,6 @@ export function getSectionData(sectionId: string): SectionData {
     rules: form.rules,
   };
 }
-
-// Build sections catalog from regulation content registry
-export const amlCtfSections: RegulationSection[] = Object.entries(AML_SECTION_TO_PROCESS).map(
-  ([sectionId, slug]) => {
-    const form = amlCTFContent.sectionForms[sectionId];
-    const title = AML_PROCESS_TITLES[slug] ?? slug;
-    const mainGroup = form?.groups.find((g) => g.variant === "main") ?? form?.groups[0];
-    return {
-      id: sectionId,
-      partNumber: sectionId.replace(/_/g, "."),
-      title,
-      description: mainGroup?.description,
-    };
-  },
-);
 
 export const amlCtfProcesses: RegulationProcess[] = [
   // ── Customer Agents (Part 4.11) ──
@@ -215,22 +195,6 @@ export const amlCtfProcesses: RegulationProcess[] = [
   },
 ];
 
-export const privacyActSections: RegulationSection[] = [
-  { id: "APP1", partNumber: "APP 1", title: "Open and Transparent Management", description: "Manage personal information in an open and transparent way, including maintaining an up-to-date privacy policy." },
-  { id: "APP2", partNumber: "APP 2", title: "Anonymity and Pseudonymity", description: "Give individuals the option to interact anonymously or by pseudonym where lawful and practicable." },
-  { id: "APP3", partNumber: "APP 3", title: "Collection of Solicited Personal Information", description: "Only collect personal information that is reasonably necessary for one or more of the entity's functions or activities." },
-  { id: "APP4", partNumber: "APP 4", title: "Dealing with Unsolicited Personal Information", description: "Determine whether unsolicited personal information could have been collected under APP 3, and destroy or de-identify it if not." },
-  { id: "APP5", partNumber: "APP 5", title: "Notification of Collection", description: "At or before the time of collection, notify individuals of key matters including the entity's identity, purposes, and how they can access their information." },
-  { id: "APP6", partNumber: "APP 6", title: "Use or Disclosure", description: "Use or disclose personal information only for the primary purpose of collection or a permitted secondary purpose." },
-  { id: "APP7", partNumber: "APP 7", title: "Direct Marketing", description: "Do not use or disclose personal information for direct marketing unless specific conditions are met, and always provide an opt-out mechanism." },
-  { id: "APP8", partNumber: "APP 8", title: "Cross-border Disclosure", description: "Before disclosing personal information to an overseas recipient, take reasonable steps to ensure the recipient complies with the APPs." },
-  { id: "APP9", partNumber: "APP 9", title: "Government Related Identifiers", description: "Do not adopt, use, or disclose a government related identifier of an individual as your own identifier, except in permitted circumstances." },
-  { id: "APP10", partNumber: "APP 10", title: "Quality of Personal Information", description: "Take reasonable steps to ensure personal information is accurate, up-to-date, and complete before use or disclosure." },
-  { id: "APP11", partNumber: "APP 11", title: "Security of Personal Information", description: "Take reasonable steps to protect personal information from misuse, interference, loss, and unauthorised access, modification, or disclosure." },
-  { id: "APP12", partNumber: "APP 12", title: "Access to Personal Information", description: "On request, give individuals access to their personal information held by the entity within a reasonable timeframe." },
-  { id: "APP13", partNumber: "APP 13", title: "Correction of Personal Information", description: "Take reasonable steps to correct personal information to ensure it is accurate, up-to-date, complete, relevant, and not misleading." },
-];
-
 export const privacyActProcesses: RegulationProcess[] = [
   {
     id: "PROC-PRIV-001",
@@ -358,7 +322,6 @@ export const regulationsCatalog: Regulation[] = [
       "Insurance",
       "Superannuation",
     ],
-    sections: amlCtfSections,
     processes: amlCtfProcesses,
   },
   {
@@ -379,18 +342,17 @@ export const regulationsCatalog: Regulation[] = [
       "Technology",
       "Financial Planning",
     ],
-    sections: privacyActSections,
     processes: privacyActProcesses,
   },
 ];
 
-// Compute real processes from form answers
+// Compute compliance statuses from saved form answers (keyed by process slug)
 export function computeProcessesFromAnswers(
   sectionAnswers: Record<string, Record<string, string>>,
 ): BusinessProcess[] {
-  return amlCtfSections.map((section) => {
-    const data = getSectionData(section.id);
-    const answers = sectionAnswers[section.id] || {};
+  return Object.keys(amlCTFContent.processForms).map((slug) => {
+    const data = getSectionData(slug);
+    const answers = sectionAnswers[slug] || {};
 
     const steps = data.fields.map((field) => {
       const status = getFieldStatus(field, answers);
@@ -398,7 +360,7 @@ export function computeProcessesFromAnswers(
       if (status === "success") rating = "green";
       else if (status === "error") rating = "red";
       else if (status === "warning") rating = "yellow";
-      else rating = "red"; // pending = red (not yet answered)
+      else rating = "red"; // pending = not yet answered
 
       return {
         id: field.id,
@@ -407,9 +369,11 @@ export function computeProcessesFromAnswers(
       };
     });
 
+    const entry = amlCTFContent.manifest.processList.find((p) => p.id === slug);
+
     return {
-      id: section.id,
-      title: section.title,
+      id: slug,
+      title: entry?.title ?? slug,
       steps,
       lastUpdated: new Date().toISOString(),
     };

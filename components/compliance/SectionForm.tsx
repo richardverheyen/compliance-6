@@ -4,7 +4,6 @@ import { useEffect, useState } from "react";
 import { useComplianceStore } from "@/lib/compliance-store";
 import type { ProcessForm as ProcessFormData, FeedbackData } from "@/lib/types/process-form";
 import { ProcessForm } from "@/components/compliance/ProcessForm";
-import { getProcessToSection } from "@/mocks/regulation-content/index";
 
 interface SectionFormProps {
   regulationId: string;
@@ -20,7 +19,7 @@ export function SectionForm({ regulationId, sectionId, onSave }: SectionFormProp
 
   useEffect(() => {
     setLoading(true);
-    fetch(`/api/compliance/regulations/${regulationId}/sections/${sectionId}/schema`)
+    fetch(`/api/compliance/regulations/${regulationId}/processes/${sectionId}/schema`)
       .then((r) => (r.ok ? r.json() : null))
       .then((data) => {
         if (!data) {
@@ -57,14 +56,14 @@ export function SectionForm({ regulationId, sectionId, onSave }: SectionFormProp
   if (!form) {
     return (
       <div className="py-8 text-center text-sm text-gray-500">
-        No form available for this section.
+        No form available for this process.
       </div>
     );
   }
 
   const initialAnswers = getSectionAnswers(regulationId, sectionId);
-  const introAnswers = getSectionAnswers(regulationId, "4_1");
-  const processToSection = getProcessToSection(regulationId);
+  // Intro/scoping answers are stored under the risk-assessment process slug for AML
+  const introAnswers = getSectionAnswers(regulationId, "risk-assessment");
 
   function handleAnswersChange(answers: Record<string, string>) {
     saveSectionAnswers(regulationId, sectionId, answers);
@@ -80,7 +79,6 @@ export function SectionForm({ regulationId, sectionId, onSave }: SectionFormProp
       regulationId={regulationId}
       sectionId={sectionId}
       formId={sectionId}
-      processToSection={processToSection}
       onAnswersChange={handleAnswersChange}
     />
   );

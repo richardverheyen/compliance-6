@@ -2,11 +2,11 @@ import type { RegulationContent } from "@/lib/types/regulation-content";
 
 export const privacyActContent: RegulationContent = {
   introduction: null,
-  sectionForms: {},
+  processForms: {},
   manifest: {
     pdfUrl: null,
     mermaidDiagram: null,
     hasIntroductionForm: false,
-    sectionGating: {},
+    processList: [],
   },
 };

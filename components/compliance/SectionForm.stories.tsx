@@ -67,12 +67,12 @@ async function waitForFormLoaded(canvasElement: HTMLElement) {
 }
 
 /**
- * Default: renders Section 4.1 (Risk Assessment) form.
+ * Default: renders the ML/TF Risk Assessment form.
  */
 export const Default: Story = {
   args: {
     regulationId: "aml-ctf-rules",
-    sectionId: "4_1",
+    sectionId: "risk-assessment",
   },
   play: async ({ canvasElement }) => {
     await waitForFormLoaded(canvasElement);
@@ -84,12 +84,12 @@ export const Default: Story = {
 };
 
 /**
- * Interactive play test: fills out Section 4.1 (Risk Assessment) with realistic answers.
+ * Interactive play test: fills out the ML/TF Risk Assessment form with realistic answers.
  */
 export const FillRiskAssessmentForm: Story = {
   args: {
     regulationId: "aml-ctf-rules",
-    sectionId: "4_1",
+    sectionId: "risk-assessment",
   },
   play: async ({ canvasElement }) => {
     await waitForFormLoaded(canvasElement);
@@ -113,12 +113,12 @@ export const FillRiskAssessmentForm: Story = {
 };
 
 /**
- * Verifies sub-type chip selector renders for Section 4.2 (CDD - Individuals).
+ * Verifies sub-type chip selector renders for the CDD — Individuals form.
  */
 export const SubTypeChips: Story = {
   args: {
     regulationId: "aml-ctf-rules",
-    sectionId: "4_2",
+    sectionId: "cdd-individuals",
   },
   play: async ({ canvasElement }) => {
     await waitForFormLoaded(canvasElement);
@@ -134,12 +134,12 @@ export const SubTypeChips: Story = {
 };
 
 /**
- * Renders Section 4.2 (CDD - Individuals) and fills out key controls.
+ * Renders the CDD — Individuals form and fills out key controls.
  */
-export const Section4_2: Story = {
+export const CddIndividuals: Story = {
   args: {
     regulationId: "aml-ctf-rules",
-    sectionId: "4_2",
+    sectionId: "cdd-individuals",
   },
   play: async ({ canvasElement }) => {
     await waitForFormLoaded(canvasElement);

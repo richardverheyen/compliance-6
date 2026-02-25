@@ -14,13 +14,6 @@ export interface BusinessProcess {
   lastUpdated: string;
 }
 
-export interface RegulationSection {
-  id: string;
-  partNumber: string;
-  title: string;
-  description?: string;
-}
-
 export interface RegulationProcess {
   id: string;
   name: string;
@@ -42,7 +35,6 @@ export interface Regulation {
   jurisdiction: string;
   description: string;
   applicableServices: string[];
-  sections: RegulationSection[];
   processes: RegulationProcess[];
 }
 

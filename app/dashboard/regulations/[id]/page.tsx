@@ -8,11 +8,17 @@ import type { Regulation } from "@/lib/types/compliance";
 import { getProcessRating } from "@/lib/types/compliance";
 import { AssignOwnerModal } from "@/components/compliance/AssignOwnerModal";
 import MermaidDiagram from "@/components/compliance/MermaidDiagram";
-import type { IntroductionData, RegulationManifest } from "@/lib/types/regulation-content";
+import type { IntroductionData, RegulationManifest, ProcessListEntry } from "@/lib/types/regulation-content";
 
 // Build the set of process IDs visible for a given set of intro answers.
 // Returns null when there are no answers yet (= show everything).
 type ScopingEntry = { sections: string[]; processes: string[] };
+
+// Returns true when a process form entry is visible given scoping answers.
+function isProcessUnlocked(entry: ProcessListEntry, introAnswers: Record<string, string>): boolean {
+  if (!entry.gatedBy) return true;
+  return introAnswers[entry.gatedBy] === "Yes";
+}
 
 function getVisibleProcessIds(
   answers: Record<string, string>,
@@ -70,17 +76,6 @@ function deriveAnswersFallback(base: Record<string, string>): Record<string, str
   return derived;
 }
 
-// Determines if a section is unlocked based on intro answers and manifest gating
-function isSectionUnlocked(
-  sectionId: string,
-  introAnswers: Record<string, string>,
-  manifest: RegulationManifest | null,
-): boolean {
-  if (!manifest) return true;
-  const gate = manifest.sectionGating[sectionId];
-  if (gate === undefined || gate === null) return true;
-  return introAnswers[gate] === "Yes";
-}
 
 export default function RegulationDetailPage() {
   const params = useParams();
@@ -194,7 +189,7 @@ export default function RegulationDetailPage() {
   }
 
   const activeIntroAnswers = active
-    ? active.sectionAnswers["4_1"] ?? {}
+    ? active.sectionAnswers["risk-assessment"] ?? {}
     : (() => {
         const hasGenericDerived = introData?.derived && Object.values(introData.derived).some((v) => "from" in v);
         return hasGenericDerived
@@ -370,28 +365,28 @@ export default function RegulationDetailPage() {
                       </div>
                     </div>
 
-                    <h3 className="text-lg font-semibold text-gray-900">Sections</h3>
+                    <h3 className="text-lg font-semibold text-gray-900">Business Processes</h3>
                     <p className="text-sm text-gray-600">
-                      Click a section to review and answer its compliance questions.
+                      Click a business process to review and answer its compliance questions.
                     </p>
                     <div className="space-y-3">
-                      {regulation.sections.map((section) => {
-                        const unlocked = isSectionUnlocked(section.id, activeIntroAnswers, manifest);
-                        const rating = unlocked ? getSectionStatus(section.id) : null;
+                      {manifest.processList.map((entry) => {
+                        const unlocked = isProcessUnlocked(entry, activeIntroAnswers);
+                        const rating = unlocked ? getSectionStatus(entry.id) : null;
                         const config = rating ? ratingConfig[rating] : ratingConfig.red;
-                        const { answered, total } = getSectionCompletion(section.id);
+                        const { answered, total } = getSectionCompletion(entry.id);
 
                         if (!unlocked) {
                           return (
                             <div
-                              key={section.id}
+                              key={entry.id}
                               className="flex items-center gap-4 rounded-xl border border-gray-100 bg-gray-50 p-4 opacity-60"
                             >
                               <svg className="h-4 w-4 shrink-0 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                                 <path strokeLinecap="round" strokeLinejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
                               </svg>
                               <div className="flex-1 min-w-0">
-                                <h3 className="text-sm font-medium text-gray-500">{section.title}</h3>
+                                <h3 className="text-sm font-medium text-gray-500">{entry.title}</h3>
                               </div>
                               <span className="text-xs text-gray-400">Not applicable</span>
                             </div>
@@ -400,17 +395,17 @@ export default function RegulationDetailPage() {
 
                         return (
                           <Link
-                            key={section.id}
-                            href={`/dashboard/regulations/${id}/sections/${section.id}`}
+                            key={entry.id}
+                            href={`/dashboard/regulations/${id}/processes/${entry.id}`}
                             className="group flex items-center gap-4 rounded-xl border border-gray-200 bg-white p-4 transition-shadow hover:shadow-md"
                           >
                             <span className={`h-3 w-3 shrink-0 rounded-full ${config.dot}`} />
                             <div className="flex-1 min-w-0">
                               <h3 className="text-sm font-medium text-gray-900 group-hover:text-indigo-600">
-                                {section.title}
+                                {entry.title}
                               </h3>
-                              {section.description && (
-                                <p className="text-xs text-gray-500 truncate">{section.description}</p>
+                              {entry.description && (
+                                <p className="text-xs text-gray-500 truncate">{entry.description}</p>
                               )}
                             </div>
                             <div className="flex items-center gap-3">

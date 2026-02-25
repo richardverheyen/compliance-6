@@ -82,7 +82,7 @@ export const useComplianceStore = create<ComplianceState>()(
 
       activateRegulation: (id, profile, introAnswers) => {
         const sectionAnswers: Record<string, Record<string, string>> = {
-          "4_1": introAnswers,
+          "risk-assessment": introAnswers,
         };
         const newActive: ActiveRegulation = {
           regulationId: id,

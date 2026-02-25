@@ -18,8 +18,6 @@ interface ProcessFormProps {
   sectionId: string;
   /** formId used as the key for feedback API calls (defaults to sectionId) */
   formId?: string;
-  /** slug → sectionId map for resolving form link targets */
-  processToSection?: Record<string, string>;
   onAnswersChange: (answers: Answers) => void;
 }
 
@@ -397,14 +395,13 @@ function ChecklistControl({ ctrl, answers, rules, introAnswers, controlNotes, on
   );
 }
 
-function FormLinkBlock({ link, answers, controlNotes, introAnswers, onPillClick, regulationId, processToSection }: {
+function FormLinkBlock({ link, answers, controlNotes, introAnswers, onPillClick, regulationId }: {
   link: NonNullable<ProcessFormData["form_links"]>[number];
   answers: Answers;
   controlNotes: Record<string, ControlNote>;
   introAnswers: Answers;
   onPillClick: (ruleCode: string, rect: DOMRect) => void;
   regulationId: string;
-  processToSection?: Record<string, string>;
 }) {
   const [open, setOpen] = useState(false);
   const [linkedForm, setLinkedForm] = useState<ProcessFormData | null>(null);
@@ -413,15 +410,13 @@ function FormLinkBlock({ link, answers, controlNotes, introAnswers, onPillClick,
   const isVisible = !link.gated_by || answers[link.gated_by] === "Yes";
   if (!isVisible) return null;
 
-  const targetSectionId = processToSection?.[link.target];
-
   async function handleToggle() {
     const next = !open;
     setOpen(next);
-    if (next && !linkedForm && targetSectionId) {
+    if (next && !linkedForm) {
       try {
         const res = await fetch(
-          `/api/compliance/regulations/${regulationId}/sections/${targetSectionId}/schema`,
+          `/api/compliance/regulations/${regulationId}/processes/${link.target}/schema`,
         );
         if (res.ok) {
           const data = await res.json();
@@ -454,15 +449,13 @@ function FormLinkBlock({ link, answers, controlNotes, introAnswers, onPillClick,
           </span>
         </div>
         <div className="flex items-center gap-2">
-          {targetSectionId && (
-            <Link
-              href={`/dashboard/regulations/${regulationId}/sections/${targetSectionId}`}
-              onClick={(e) => e.stopPropagation()}
-              className="text-xs text-green-700 hover:text-green-900 underline"
-            >
-              Open section
-            </Link>
-          )}
+          <Link
+            href={`/dashboard/regulations/${regulationId}/processes/${link.target}`}
+            onClick={(e) => e.stopPropagation()}
+            className="text-xs text-green-700 hover:text-green-900 underline"
+          >
+            Open process
+          </Link>
           <svg
             className={`w-3 h-3 text-green-600 transition-transform ${open ? "rotate-90" : ""}`}
             fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}
@@ -494,7 +487,6 @@ function FormLinkBlock({ link, answers, controlNotes, introAnswers, onPillClick,
                   onAnswer={(k, v) => setLinkedAnswers((prev) => ({ ...prev, [k]: v }))}
                   onPillClick={onPillClick}
                   regulationId={regulationId}
-                  processToSection={processToSection}
                 />
               );
             })
@@ -505,7 +497,7 @@ function FormLinkBlock({ link, answers, controlNotes, introAnswers, onPillClick,
   );
 }
 
-function GroupCard({ group, controls, allControls, rules, answers, introAnswers, controlNotes, formLinks, onAnswer, onPillClick, regulationId, processToSection }: {
+function GroupCard({ group, controls, allControls, rules, answers, introAnswers, controlNotes, formLinks, onAnswer, onPillClick, regulationId }: {
   group: ProcessFormData["groups"][number];
   controls: ProcessControl[];
   allControls: ProcessControl[];
@@ -517,7 +509,6 @@ function GroupCard({ group, controls, allControls, rules, answers, introAnswers,
   onAnswer: (k: string, v: string) => void;
   onPillClick: (ruleCode: string, rect: DOMRect) => void;
   regulationId: string;
-  processToSection?: Record<string, string>;
 }) {
   const [collapsed, setCollapsed] = useState(false);
 
@@ -608,7 +599,6 @@ function GroupCard({ group, controls, allControls, rules, answers, introAnswers,
                       introAnswers={introAnswers}
                       onPillClick={onPillClick}
                       regulationId={regulationId}
-                      processToSection={processToSection}
                     />
                   ))}
                 </div>
@@ -727,7 +717,6 @@ export function ProcessForm({
   regulationId,
   sectionId,
   formId,
-  processToSection,
   onAnswersChange,
 }: ProcessFormProps) {
   const [answers, setAnswers] = useState<Answers>(initialAnswers);
@@ -858,7 +847,6 @@ export function ProcessForm({
               onAnswer={handleAnswer}
               onPillClick={handlePillClick}
               regulationId={regulationId}
-              processToSection={processToSection}
             />
           ))}
 
@@ -890,7 +878,6 @@ export function ProcessForm({
                 introAnswers={introAnswers}
                 onPillClick={handlePillClick}
                 regulationId={regulationId}
-                processToSection={processToSection}
               />
             ))}
         </>

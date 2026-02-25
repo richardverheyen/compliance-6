@@ -18,6 +18,13 @@ import pepScreening from "@/data/regulations/aml-ctf-rules/processes/pep-screeni
 import recordKeeping from "@/data/regulations/aml-ctf-rules/processes/record-keeping.json";
 import alternativeId from "@/data/regulations/aml-ctf-rules/processes/alternative-id.json";
 
+type GroupJson = { variant?: string; description?: string };
+
+function mainDesc(form: { groups?: GroupJson[] }): string | undefined {
+  const g = form.groups?.find((g) => g.variant === "main") ?? form.groups?.[0];
+  return g?.description;
+}
+
 const MERMAID_DIAGRAM = `flowchart TD
     A[Customer Targeting]
     B@{ shape: procs, label: "Onboarding"}
@@ -53,86 +60,43 @@ const MERMAID_DIAGRAM = `flowchart TD
 
 export const amlCTFContent: RegulationContent = {
   introduction: introductionJson as unknown as RegulationContent["introduction"],
-  sectionForms: {
-    "4_1":  riskAssessment as unknown as ProcessForm,
-    "4_2":  cddIndividuals as unknown as ProcessForm,
-    "4_3":  cddCompanies as unknown as ProcessForm,
-    "4_4":  cddTrusts as unknown as ProcessForm,
-    "4_5":  cddPartnerships as unknown as ProcessForm,
-    "4_6":  cddAssociations as unknown as ProcessForm,
-    "4_7":  cddCooperatives as unknown as ProcessForm,
-    "4_8":  cddGovernment as unknown as ProcessForm,
-    "4_9":  verificationDocuments as unknown as ProcessForm,
-    "4_10": verificationElectronic as unknown as ProcessForm,
-    "4_11": agentManagement as unknown as ProcessForm,
-    "4_12": beneficialOwnership as unknown as ProcessForm,
-    "4_13": pepScreening as unknown as ProcessForm,
-    "4_14": recordKeeping as unknown as ProcessForm,
-    "4_15": alternativeId as unknown as ProcessForm,
+  processForms: {
+    "risk-assessment":         riskAssessment as unknown as ProcessForm,
+    "cdd-individuals":         cddIndividuals as unknown as ProcessForm,
+    "cdd-companies":           cddCompanies as unknown as ProcessForm,
+    "cdd-trusts":              cddTrusts as unknown as ProcessForm,
+    "cdd-partnerships":        cddPartnerships as unknown as ProcessForm,
+    "cdd-associations":        cddAssociations as unknown as ProcessForm,
+    "cdd-cooperatives":        cddCooperatives as unknown as ProcessForm,
+    "cdd-government":          cddGovernment as unknown as ProcessForm,
+    "verification-documents":  verificationDocuments as unknown as ProcessForm,
+    "verification-electronic": verificationElectronic as unknown as ProcessForm,
+    "agent-management":        agentManagement as unknown as ProcessForm,
+    "beneficial-ownership":    beneficialOwnership as unknown as ProcessForm,
+    "pep-screening":           pepScreening as unknown as ProcessForm,
+    "record-keeping":          recordKeeping as unknown as ProcessForm,
+    "alternative-id":          alternativeId as unknown as ProcessForm,
   },
   manifest: {
     pdfUrl: "/chapter4.pdf",
     mermaidDiagram: MERMAID_DIAGRAM,
     hasIntroductionForm: true,
-    sectionGating: {
-      "4_1":  null,
-      "4_2":  "4_1_4_1",
-      "4_3":  "4_1_4_2",
-      "4_4":  "4_1_4_3",
-      "4_5":  "4_1_4_4",
-      "4_6":  "4_1_4_5",
-      "4_7":  "4_1_4_6",
-      "4_8":  "4_1_4_7",
-      "4_9":  null,
-      "4_10": null,
-      "4_11": "4_1_8",
-      "4_12": "4_1_5_1",
-      "4_13": "4_1_5_2",
-      "4_14": null,
-      "4_15": null,
-    },
+    processList: [
+      { id: "risk-assessment",         title: "ML/TF Risk Assessment",                    description: mainDesc(riskAssessment),         gatedBy: null },
+      { id: "cdd-individuals",         title: "Customer Due Diligence — Individuals",      description: mainDesc(cddIndividuals),         gatedBy: "4_1_4_1" },
+      { id: "cdd-companies",           title: "Customer Due Diligence — Companies",         description: mainDesc(cddCompanies),           gatedBy: "4_1_4_2" },
+      { id: "cdd-trusts",              title: "Customer Due Diligence — Trusts",            description: mainDesc(cddTrusts),              gatedBy: "4_1_4_3" },
+      { id: "cdd-partnerships",        title: "Customer Due Diligence — Partnerships",      description: mainDesc(cddPartnerships),        gatedBy: "4_1_4_4" },
+      { id: "cdd-associations",        title: "Customer Due Diligence — Associations",      description: mainDesc(cddAssociations),        gatedBy: "4_1_4_5" },
+      { id: "cdd-cooperatives",        title: "Customer Due Diligence — Co-operatives",     description: mainDesc(cddCooperatives),        gatedBy: "4_1_4_6" },
+      { id: "cdd-government",          title: "Customer Due Diligence — Government Bodies", description: mainDesc(cddGovernment),          gatedBy: "4_1_4_7" },
+      { id: "verification-documents",  title: "Verification Standards — Documents",         description: mainDesc(verificationDocuments),  gatedBy: null },
+      { id: "verification-electronic", title: "Verification Standards — Electronic",        description: mainDesc(verificationElectronic), gatedBy: null },
+      { id: "agent-management",        title: "Agent Management",                           description: mainDesc(agentManagement),        gatedBy: "4_1_8" },
+      { id: "beneficial-ownership",    title: "Beneficial Ownership",                       description: mainDesc(beneficialOwnership),    gatedBy: "4_1_5_1" },
+      { id: "pep-screening",           title: "PEP Screening",                              description: mainDesc(pepScreening),           gatedBy: "4_1_5_2" },
+      { id: "record-keeping",          title: "Record Keeping",                             description: mainDesc(recordKeeping),          gatedBy: null },
+      { id: "alternative-id",          title: "Alternative Identity Proofing",              description: mainDesc(alternativeId),          gatedBy: null },
+    ],
   },
-};
-
-// Section ID → process slug mapping (used for feedback lookup)
-export const AML_SECTION_TO_PROCESS: Record<string, string> = {
-  "4_1":  "risk-assessment",
-  "4_2":  "cdd-individuals",
-  "4_3":  "cdd-companies",
-  "4_4":  "cdd-trusts",
-  "4_5":  "cdd-partnerships",
-  "4_6":  "cdd-associations",
-  "4_7":  "cdd-cooperatives",
-  "4_8":  "cdd-government",
-  "4_9":  "verification-documents",
-  "4_10": "verification-electronic",
-  "4_11": "agent-management",
-  "4_12": "beneficial-ownership",
-  "4_13": "pep-screening",
-  "4_14": "record-keeping",
-  "4_15": "alternative-id",
-};
-
-// Process slug → section ID (reverse of AML_SECTION_TO_PROCESS)
-export const AML_PROCESS_TO_SECTION: Record<string, string> = Object.fromEntries(
-  Object.entries(AML_SECTION_TO_PROCESS).map(([sectionId, slug]) => [slug, sectionId]),
-);
-
-// Canonical process titles
-export const AML_PROCESS_TITLES: Record<string, string> = {
-  "risk-assessment":         "ML/TF Risk Assessment",
-  "cdd-individuals":         "Customer Due Diligence — Individuals",
-  "cdd-companies":           "Customer Due Diligence — Companies",
-  "cdd-trusts":              "Customer Due Diligence — Trusts",
-  "cdd-partnerships":        "Customer Due Diligence — Partnerships",
-  "cdd-associations":        "Customer Due Diligence — Associations",
-  "cdd-cooperatives":        "Customer Due Diligence — Co-operatives",
-  "cdd-government":          "Customer Due Diligence — Government Bodies",
-  "verification-documents":  "Verification Standards — Documents",
-  "verification-electronic": "Verification Standards — Electronic",
-  "agent-management":        "Agent Management",
-  "beneficial-ownership":    "Beneficial Ownership",
-  "pep-screening":           "PEP Screening",
-  "record-keeping":          "Record Keeping",
-  "alternative-id":          "Alternative Identity Proofing",
 };

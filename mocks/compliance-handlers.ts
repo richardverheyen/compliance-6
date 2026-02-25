@@ -8,20 +8,14 @@ import type { TeamMember } from "@/lib/types/compliance";
 import type { FeedbackData } from "@/lib/types/process-form";
 import { compileProcess } from "@/lib/process-forms";
 import { getRegulationContent } from "./regulation-content/index";
-import { AML_SECTION_TO_PROCESS } from "./regulation-content/aml-ctf-rules";
 
-// Seed in-memory feedback store from copied JSON files
+// Seed in-memory feedback store keyed by process slug
 import cddIndividualsFeedback from "@/data/feedback/cdd-individuals.json";
 import riskAssessmentFeedback from "@/data/feedback/risk-assessment.json";
 
 const feedbackStore: Record<string, FeedbackData> = {
   "cdd-individuals": cddIndividualsFeedback as FeedbackData,
   "risk-assessment": riskAssessmentFeedback as FeedbackData,
-};
-
-// Per-regulation section→process slug mappings (for feedback lookup)
-const SECTION_TO_PROCESS_BY_REGULATION: Record<string, Record<string, string>> = {
-  "aml-ctf-rules": AML_SECTION_TO_PROCESS,
 };
 
 let teamMembers = [...mockTeamMembers];
@@ -50,7 +44,7 @@ export const complianceHandlers = [
     return HttpResponse.json(content.introduction);
   }),
 
-  // Manifest (pdfUrl, mermaidDiagram, hasIntroductionForm, sectionGating)
+  // Manifest (pdfUrl, mermaidDiagram, hasIntroductionForm, processList)
   http.get("/api/compliance/regulations/:id/manifest", ({ params }) => {
     const content = getRegulationContent(params.id as string);
     if (!content) {
@@ -59,9 +53,9 @@ export const complianceHandlers = [
     return HttpResponse.json(content.manifest);
   }),
 
-  // Section schema (compiled from process forms)
+  // Process schema (compiled from process forms)
   http.get(
-    "/api/compliance/regulations/:id/sections/:sectionId/schema",
+    "/api/compliance/regulations/:id/processes/:processId/schema",
     ({ params }) => {
       const regulation = regulationsCatalog.find((l) => l.id === params.id);
       if (!regulation) {
@@ -69,20 +63,19 @@ export const complianceHandlers = [
       }
 
       const content = getRegulationContent(params.id as string);
-      const form = content?.sectionForms[params.sectionId as string];
+      const processId = params.processId as string;
+      const form = content?.processForms[processId];
       if (!form) {
-        return HttpResponse.json({ error: "Section not found" }, { status: 404 });
+        return HttpResponse.json({ error: "Process not found" }, { status: 404 });
       }
 
       const compiled = compileProcess(form);
 
-      // Attach any stored feedback as review metadata
-      const sectionToProcess = SECTION_TO_PROCESS_BY_REGULATION[params.id as string] ?? {};
-      const slug = sectionToProcess[params.sectionId as string];
-      const feedback = slug ? feedbackStore[slug] : undefined;
+      // Attach any stored feedback as review metadata (processId IS the slug)
+      const feedback = feedbackStore[processId];
       if (feedback && compiled._review_metadata === undefined) {
         compiled._review_metadata = {
-          form_id: slug,
+          form_id: processId,
           notes: feedback.notes,
           control_notes: feedback.control_notes,
           last_updated: feedback.last_updated,

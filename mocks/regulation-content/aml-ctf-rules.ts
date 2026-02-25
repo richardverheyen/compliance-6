@@ -74,7 +74,6 @@ export const amlCTFContent: RegulationContent = {
     "agent-management":        agentManagement as unknown as ProcessForm,
     "beneficial-ownership":    beneficialOwnership as unknown as ProcessForm,
     "pep-screening":           pepScreening as unknown as ProcessForm,
-    "record-keeping":          recordKeeping as unknown as ProcessForm,
     "alternative-id":          alternativeId as unknown as ProcessForm,
   },
   manifest: {
@@ -95,7 +94,6 @@ export const amlCTFContent: RegulationContent = {
       { id: "agent-management",        title: "Agent Management",                           description: mainDesc(agentManagement),        gatedBy: "4_1_8" },
       { id: "beneficial-ownership",    title: "Beneficial Ownership",                       description: mainDesc(beneficialOwnership),    gatedBy: "4_1_5_1" },
       { id: "pep-screening",           title: "PEP Screening",                              description: mainDesc(pepScreening),           gatedBy: "4_1_5_2" },
-      { id: "record-keeping",          title: "Record Keeping",                             description: mainDesc(recordKeeping),          gatedBy: null },
       { id: "alternative-id",          title: "Alternative Identity Proofing",              description: mainDesc(alternativeId),          gatedBy: null },
     ],
   },

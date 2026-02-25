@@ -329,9 +329,8 @@ class TestProcessForms:
             assert form["gated_by"].startswith("4_1_4_"), f"{pid} gated_by should be a customer category control"
 
     def test_always_active_forms_not_gated(self):
-        """Forms like risk-assessment, verification, record-keeping should not be gated."""
-        ungated = ["risk-assessment", "verification-documents", "verification-electronic",
-                   "record-keeping", "alternative-id"]
+        """Forms like risk-assessment, verification should not be gated."""
+        ungated = ["risk-assessment", "verification-documents", "verification-electronic", "alternative-id"]
         for pid in ungated:
             assert PROCESS_FORMS[pid]["gated_by"] is None, f"{pid} should not be gated"
 

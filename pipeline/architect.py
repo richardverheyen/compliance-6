@@ -246,15 +246,6 @@ PROCESS_FORMS = {
             "This form is already gated externally. Do NOT generate a top-level scope gate question.",
         ],
     },
-    "record-keeping": {
-        "title": "Record Keeping",
-        "source_groups": ["4_14"],
-        "gated_by": None,
-        "sub_types": [],
-        "form_links": [],
-        "subprocess_groups": [],
-        "architect_notes": [],
-    },
     "alternative-id": {
         "title": "Alternative Identity Proofing",
         "source_groups": ["4_15"],

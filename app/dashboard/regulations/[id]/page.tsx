@@ -5,33 +5,14 @@ import { useParams, useRouter } from "next/navigation";
 import Link from "next/link";
 import { useComplianceStore } from "@/lib/compliance-store";
 import type { Regulation } from "@/lib/types/compliance";
-import { getProcessRating } from "@/lib/types/compliance";
 import { AssignOwnerModal } from "@/components/compliance/AssignOwnerModal";
 import MermaidDiagram from "@/components/compliance/MermaidDiagram";
 import type { IntroductionData, RegulationManifest, ProcessListEntry } from "@/lib/types/regulation-content";
-
-// Build the set of process IDs visible for a given set of intro answers.
-// Returns null when there are no answers yet (= show everything).
-type ScopingEntry = { sections: string[]; processes: string[] };
 
 // Returns true when a process form entry is visible given scoping answers.
 function isProcessUnlocked(entry: ProcessListEntry, introAnswers: Record<string, string>): boolean {
   if (!entry.gatedBy) return true;
   return introAnswers[entry.gatedBy] === "Yes";
-}
-
-function getVisibleProcessIds(
-  answers: Record<string, string>,
-  intro: IntroductionData | null,
-): Set<string> | null {
-  if (!intro || Object.keys(answers).length === 0) return null;
-  const visible = new Set<string>(intro.alwaysActive.processes);
-  for (const [controlId, entry] of Object.entries(intro.scoping as Record<string, ScopingEntry>)) {
-    if (answers[controlId] === "Yes") {
-      for (const procId of entry.processes) visible.add(procId);
-    }
-  }
-  return visible;
 }
 
 const locations = [
@@ -45,12 +26,6 @@ const locations = [
   "Australian Capital Territory",
 ];
 
-const ratingConfig = {
-  red: { dot: "bg-red-500", label: "Not Started", text: "text-red-700", bg: "bg-red-50" },
-  yellow: { dot: "bg-yellow-500", label: "In Progress", text: "text-yellow-700", bg: "bg-yellow-50" },
-  green: { dot: "bg-green-500", label: "Complete", text: "text-green-700", bg: "bg-green-50" },
-};
-
 // Generic: derive answers where "Yes" if any listed controls = "Yes"
 function deriveAnswers(
   base: Record<string, string>,
@@ -63,16 +38,6 @@ function deriveAnswers(
       derived[targetId] = "Yes";
     }
   }
-  return derived;
-}
-
-// AML-specific fallback derive (when intro has no `derived.from` structure)
-function deriveAnswersFallback(base: Record<string, string>): Record<string, string> {
-  const derived = { ...base };
-  const nonIndividual = ["4_1_4_2", "4_1_4_3", "4_1_4_4", "4_1_4_5", "4_1_4_6", "4_1_4_7"];
-  const anyCustomer = ["4_1_4_1", ...nonIndividual];
-  if (nonIndividual.some((k) => derived[k] === "Yes")) derived["4_1_5_1"] = "Yes";
-  if (anyCustomer.some((k) => derived[k] === "Yes")) derived["4_1_5_2"] = "Yes";
   return derived;
 }
 
@@ -154,11 +119,7 @@ export default function RegulationDetailPage() {
 
   function handleActivate(e: React.FormEvent) {
     e.preventDefault();
-    // Use generic derive if intro has `derived` structure, otherwise use AML-specific fallback
-    const hasGenericDerived = introData?.derived && Object.values(introData.derived).some((v) => "from" in v);
-    const fullAnswers = hasGenericDerived
-      ? deriveAnswers(introAnswers, introData)
-      : deriveAnswersFallback(introAnswers);
+    const fullAnswers = deriveAnswers(introAnswers, introData);
     activateRegulation(
       id,
       {
@@ -174,31 +135,7 @@ export default function RegulationDetailPage() {
     setShowActivationForm(false);
   }
 
-  function getSectionStatus(sectionId: string) {
-    if (!active) return null;
-    const process = active.processes.find((p) => p.id === sectionId);
-    if (!process) return null;
-    return getProcessRating(process);
-  }
-
-  function getSectionCompletion(sectionId: string) {
-    if (!active) return { answered: 0, total: 0 };
-    const process = active.processes.find((p) => p.id === sectionId);
-    if (!process) return { answered: 0, total: 0 };
-    const answered = process.steps.filter((s) => s.rating === "green").length;
-    return { answered, total: process.steps.length };
-  }
-
-  const activeIntroAnswers = active
-    ? active.sectionAnswers["risk-assessment"] ?? {}
-    : (() => {
-        const hasGenericDerived = introData?.derived && Object.values(introData.derived).some((v) => "from" in v);
-        return hasGenericDerived
-          ? deriveAnswers(introAnswers, introData)
-          : deriveAnswersFallback(introAnswers);
-      })();
-
-  const processes = regulation.processes ?? [];
+  const activeIntroAnswers = active?.sectionAnswers["risk-assessment"] ?? {};
 
   return (
     <div className="px-4 py-12">
@@ -353,124 +290,106 @@ export default function RegulationDetailPage() {
                     Begin Compliance Self-Assessment
                   </button>
                 ) : (
-                  <>
-                    <div className="rounded-xl border border-green-200 bg-green-50 p-4">
-                      <div className="flex items-center justify-between">
-                        <p className="font-medium text-green-800">Compliance tracking is active</p>
-                        <Link
-                          href="/dashboard"
-                          className="text-sm font-medium text-green-700 underline hover:text-green-600"
-                        >
-                          View Dashboard
-                        </Link>
-                      </div>
+                  <div className="rounded-xl border border-green-200 bg-green-50 p-4">
+                    <div className="flex items-center justify-between">
+                      <p className="font-medium text-green-800">Compliance tracking is active</p>
+                      <Link
+                        href="/dashboard"
+                        className="text-sm font-medium text-green-700 underline hover:text-green-600"
+                      >
+                        View Dashboard
+                      </Link>
                     </div>
-
-                    {/* Business Processes tree */}
-                    <div className="space-y-3">
-                      <div className="flex items-baseline gap-2">
-                        <h2 className="text-xl font-semibold text-gray-900">Business Processes</h2>
-                        <button
-                          onClick={() => setFilterActive((v) => !v)}
-                          className={`flex items-center gap-1.5 rounded-full px-2.5 py-1 text-xs font-medium transition-colors ${
-                            filterActive
-                              ? "bg-indigo-50 text-indigo-600 ring-1 ring-indigo-100"
-                              : "bg-gray-100 text-gray-500 hover:bg-gray-200"
-                          }`}
-                        >
-                          <span className={`h-1.5 w-1.5 rounded-full ${filterActive ? "bg-indigo-500" : "bg-gray-300"}`} />
-                          {filterActive ? "Filtered to your business" : "Show all"}
-                        </button>
-                      </div>
-
-                      {(() => {
-                        const visibleIds = getVisibleProcessIds(activeIntroAnswers, introData);
-                        const topLevel = processes.filter((p) => !p.parentId);
-
-                        const visibleTopLevel = topLevel.filter((proc) => {
-                          if (!filterActive || visibleIds === null) return true;
-                          if (visibleIds.has(proc.id)) return true;
-                          return processes.some((p) => p.parentId === proc.id && visibleIds.has(p.id));
-                        });
-
-                        if (visibleTopLevel.length === 0) {
-                          return (
-                            <p className="text-sm text-gray-400">
-                              No processes match your current scoping answers.
-                            </p>
-                          );
-                        }
-
-                        return visibleTopLevel.map((proc) => {
-                          const allSubProcs = processes.filter((p) => p.parentId === proc.id);
-                          const visibleSubProcs = !filterActive || visibleIds === null
-                            ? allSubProcs
-                            : allSubProcs.filter((s) => visibleIds.has(s.id));
-                          const ownerId = getRegulationProcessOwner(proc.id);
-                          const owner = ownerId ? getTeamMembersWithAuth().find((m) => m.id === ownerId) : undefined;
-
-                          return (
-                            <div key={proc.id} className="overflow-hidden rounded-xl border border-gray-200 bg-white">
-                              {/* Parent process row */}
-                              <div className="flex items-start gap-3 px-4 py-3">
-                                <div className="min-w-0 flex-1">
-                                  <div className="flex flex-wrap items-center gap-2">
-                                    <h3 className="text-sm font-semibold text-gray-900">{proc.name}</h3>
-                                    <span className="rounded-full bg-indigo-50 px-2 py-0.5 text-xs font-medium text-indigo-700">
-                                      {proc.frequencyLabel}
-                                    </span>
-                                  </div>
-                                  <p className="mt-1 line-clamp-2 text-xs text-gray-500">{proc.businessObjective}</p>
-                                </div>
-                                <div className="shrink-0 pt-0.5">
-                                  {owner ? (
-                                    <span className="text-xs text-gray-500">
-                                      <span className="font-medium text-gray-700">{owner.name}</span>
-                                    </span>
-                                  ) : (
-                                    <button
-                                      onClick={() => setAssignModal({ processId: proc.id, processName: proc.name })}
-                                      className="text-xs font-medium text-indigo-600 hover:text-indigo-500"
-                                    >
-                                      Assign owner
-                                    </button>
-                                  )}
-                                </div>
-                              </div>
-
-                              {/* Sub-processes — only visible ones */}
-                              {visibleSubProcs.length > 0 && (
-                                <div className="divide-y divide-gray-50 border-t border-gray-100">
-                                  {visibleSubProcs.map((sub) => (
-                                    <div key={sub.id} className="flex items-start gap-3 bg-gray-50/60 px-4 py-2.5">
-                                      <div className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-gray-300" />
-                                      <div className="min-w-0 flex-1">
-                                        <p className="text-xs font-medium text-gray-700">{sub.name}</p>
-                                        <p className="line-clamp-1 text-xs text-gray-400">{sub.businessObjective}</p>
-                                      </div>
-                                      <span className="shrink-0 rounded-full bg-white px-2 py-0.5 text-xs text-gray-400 ring-1 ring-gray-200">
-                                        {sub.frequencyLabel}
-                                      </span>
-                                    </div>
-                                  ))}
-                                </div>
-                              )}
-                            </div>
-                          );
-                        });
-                      })()}
-
-                      {assignModal && (
-                        <AssignOwnerModal
-                          processId={assignModal.processId}
-                          processName={assignModal.processName}
-                          isOpen
-                          onClose={() => setAssignModal(null)}
-                        />
-                      )}
-                    </div>
-                  </>
+                  </div>
                 )}
+
+                {/* Compliance Forms — driven by manifest.processList */}
+                <div className="space-y-3">
+                  <div className="flex items-baseline gap-2">
+                    <h2 className="text-xl font-semibold text-gray-900">Compliance Forms</h2>
+                    {active && (
+                      <button
+                        onClick={() => setFilterActive((v) => !v)}
+                        className={`flex items-center gap-1.5 rounded-full px-2.5 py-1 text-xs font-medium transition-colors ${
+                          filterActive
+                            ? "bg-indigo-50 text-indigo-600 ring-1 ring-indigo-100"
+                            : "bg-gray-100 text-gray-500 hover:bg-gray-200"
+                        }`}
+                      >
+                        <span className={`h-1.5 w-1.5 rounded-full ${filterActive ? "bg-indigo-500" : "bg-gray-300"}`} />
+                        {filterActive ? "Filtered to your business" : "Show all"}
+                      </button>
+                    )}
+                  </div>
+
+                  {manifest?.processList && (() => {
+                    const entries = manifest.processList;
+                    const visibleEntries = (!active || !filterActive)
+                      ? entries
+                      : entries.filter((e) => isProcessUnlocked(e, activeIntroAnswers));
+
+                    if (visibleEntries.length === 0) {
+                      return (
+                        <p className="text-sm text-gray-400">
+                          No forms match your current scoping answers.
+                        </p>
+                      );
+                    }
+
+                    return visibleEntries.map((entry) => {
+                      const formHref = `/dashboard/regulations/${id}/processes/${entry.id}`;
+                      const ownerId = active ? getRegulationProcessOwner(entry.id) : undefined;
+                      const owner = ownerId ? getTeamMembersWithAuth().find((m) => m.id === ownerId) : undefined;
+
+                      return (
+                        <div key={entry.id} className="overflow-hidden rounded-xl border border-gray-200 bg-white">
+                          {active ? (
+                            <Link href={formHref} className="group flex items-start gap-3 px-4 py-3 transition-colors hover:bg-gray-50">
+                              <div className="min-w-0 flex-1">
+                                <h3 className="text-sm font-semibold text-gray-900 group-hover:text-indigo-600">{entry.title}</h3>
+                                {entry.description && (
+                                  <p className="mt-1 line-clamp-2 text-xs text-gray-500">{entry.description}</p>
+                                )}
+                              </div>
+                              <div className="shrink-0 pt-0.5">
+                                {owner ? (
+                                  <span className="text-xs text-gray-500">
+                                    <span className="font-medium text-gray-700">{owner.name}</span>
+                                  </span>
+                                ) : (
+                                  <button
+                                    onClick={(e) => { e.preventDefault(); e.stopPropagation(); setAssignModal({ processId: entry.id, processName: entry.title }); }}
+                                    className="text-xs font-medium text-indigo-600 hover:text-indigo-500"
+                                  >
+                                    Assign owner
+                                  </button>
+                                )}
+                              </div>
+                            </Link>
+                          ) : (
+                            <div className="flex items-start gap-3 px-4 py-3">
+                              <div className="min-w-0 flex-1">
+                                <h3 className="text-sm font-semibold text-gray-900">{entry.title}</h3>
+                                {entry.description && (
+                                  <p className="mt-1 line-clamp-2 text-xs text-gray-500">{entry.description}</p>
+                                )}
+                              </div>
+                            </div>
+                          )}
+                        </div>
+                      );
+                    });
+                  })()}
+
+                  {assignModal && (
+                    <AssignOwnerModal
+                      processId={assignModal.processId}
+                      processName={assignModal.processName}
+                      isOpen
+                      onClose={() => setAssignModal(null)}
+                    />
+                  )}
+                </div>
 
                 {/* Mermaid Flowchart — only shown if manifest provides diagram */}
                 {manifest?.mermaidDiagram && (

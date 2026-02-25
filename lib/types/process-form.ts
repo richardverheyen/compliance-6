@@ -33,18 +33,6 @@ export interface FormLink {
   gated_by?: string;
 }
 
-export interface ControlNote {
-  comment: string;
-  severity: "approved" | "info" | "warning" | "error";
-}
-
-export interface ReviewMetadata {
-  form_id: string;
-  last_updated?: string;
-  notes?: string[];
-  control_notes?: Record<string, ControlNote>;
-}
-
 export interface ProcessForm {
   controls: ProcessControl[];
   groups: ProcessGroup[];
@@ -56,12 +44,4 @@ export interface ProcessForm {
   }>;
   sub_scoping?: SubType[];
   form_links?: FormLink[];
-  _review_metadata?: ReviewMetadata;
-}
-
-export interface FeedbackData {
-  form_id: string;
-  notes?: string[];
-  control_notes?: Record<string, ControlNote>;
-  last_updated?: string;
 }

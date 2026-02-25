@@ -5,18 +5,8 @@ import {
   complianceCalendarEvents,
 } from "./compliance-data";
 import type { TeamMember } from "@/lib/types/compliance";
-import type { FeedbackData } from "@/lib/types/process-form";
 import { compileProcess } from "@/lib/process-forms";
 import { getRegulationContent } from "./regulation-content/index";
-
-// Seed in-memory feedback store keyed by process slug
-import cddIndividualsFeedback from "@/data/feedback/cdd-individuals.json";
-import riskAssessmentFeedback from "@/data/feedback/risk-assessment.json";
-
-const feedbackStore: Record<string, FeedbackData> = {
-  "cdd-individuals": cddIndividualsFeedback as FeedbackData,
-  "risk-assessment": riskAssessmentFeedback as FeedbackData,
-};
 
 let teamMembers = [...mockTeamMembers];
 let nextTeamId = 6;
@@ -69,49 +59,9 @@ export const complianceHandlers = [
         return HttpResponse.json({ error: "Process not found" }, { status: 404 });
       }
 
-      const compiled = compileProcess(form);
-
-      // Attach any stored feedback as review metadata (processId IS the slug)
-      const feedback = feedbackStore[processId];
-      if (feedback && compiled._review_metadata === undefined) {
-        compiled._review_metadata = {
-          form_id: processId,
-          notes: feedback.notes,
-          control_notes: feedback.control_notes,
-          last_updated: feedback.last_updated,
-        };
-      }
-
-      return HttpResponse.json(compiled);
+      return HttpResponse.json(compileProcess(form));
     },
   ),
-
-  // Feedback — GET
-  http.get("/api/compliance/feedback/:formId", ({ params }) => {
-    const formId = params.formId as string;
-    const data = feedbackStore[formId] ?? { form_id: formId };
-    return HttpResponse.json(data);
-  }),
-
-  // Feedback — POST (merge-write)
-  http.post("/api/compliance/feedback/:formId", async ({ params, request }) => {
-    const formId = params.formId as string;
-    const incoming = (await request.json()) as Partial<FeedbackData>;
-    const existing = feedbackStore[formId] ?? { form_id: formId };
-
-    feedbackStore[formId] = {
-      ...existing,
-      ...incoming,
-      form_id: formId,
-      control_notes: {
-        ...(existing.control_notes ?? {}),
-        ...(incoming.control_notes ?? {}),
-      },
-      last_updated: new Date().toISOString(),
-    };
-
-    return HttpResponse.json(feedbackStore[formId]);
-  }),
 
   // Team
   http.get("/api/compliance/team", () => {

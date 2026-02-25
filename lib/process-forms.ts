@@ -1,4 +1,4 @@
-import type { ProcessForm, SubType, FormLink, ReviewMetadata } from "./types/process-form";
+import type { ProcessForm, SubType, FormLink } from "./types/process-form";
 import type { FormField, FormGroup, FormRule } from "./compliance-forms";
 
 // --- Compile ---
@@ -29,7 +29,6 @@ export interface CompiledProcess {
   rules: FormRule[];
   sub_scoping: SubType[];
   form_links: FormLink[];
-  _review_metadata?: ReviewMetadata;
 }
 
 export function compileProcess(form: ProcessForm): CompiledProcess {
@@ -135,6 +134,5 @@ export function compileProcess(form: ProcessForm): CompiledProcess {
     rules,
     sub_scoping: form.sub_scoping ?? [],
     form_links: form.form_links ?? [],
-    _review_metadata: form._review_metadata,
   };
 }

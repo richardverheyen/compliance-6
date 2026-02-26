@@ -509,20 +509,28 @@ export default function RegulationDetailPage() {
 
                 {/* Compliance Forms — driven by manifest.processList */}
                 <div className="space-y-3">
-                  <div className="flex items-baseline gap-2">
+                  <div className="flex items-center justify-between gap-2">
                     <h2 className="text-xl font-semibold text-gray-900">Compliance Forms</h2>
                     {active && (
-                      <button
-                        onClick={() => setFilterActive((v) => !v)}
-                        className={`flex items-center gap-1.5 rounded-full px-2.5 py-1 text-xs font-medium transition-colors ${
-                          filterActive
-                            ? "bg-indigo-50 text-indigo-600 ring-1 ring-indigo-100"
-                            : "bg-gray-100 text-gray-500 hover:bg-gray-200"
-                        }`}
-                      >
-                        <span className={`h-1.5 w-1.5 rounded-full ${filterActive ? "bg-indigo-500" : "bg-gray-300"}`} />
-                        {filterActive ? "Filtered to your business" : "Show all"}
-                      </button>
+                      <label className="flex cursor-pointer items-center gap-2.5 select-none">
+                        <span className={`text-xs font-medium transition-colors ${filterActive ? "text-indigo-700" : "text-gray-400"}`}>
+                          Relevant to me only
+                        </span>
+                        <button
+                          role="switch"
+                          aria-checked={filterActive}
+                          onClick={() => setFilterActive((v) => !v)}
+                          className={`relative inline-flex h-5 w-9 shrink-0 items-center rounded-full transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 focus-visible:ring-offset-2 ${
+                            filterActive ? "bg-indigo-600" : "bg-gray-200"
+                          }`}
+                        >
+                          <span
+                            className={`inline-block h-3.5 w-3.5 transform rounded-full bg-white shadow transition-transform ${
+                              filterActive ? "translate-x-[18px]" : "translate-x-[3px]"
+                            }`}
+                          />
+                        </button>
+                      </label>
                     )}
                   </div>
 
@@ -547,10 +555,20 @@ export default function RegulationDetailPage() {
                       const ownerId = active ? getRegulationProcessOwner(entry.id) : undefined;
                       const owner = ownerId ? getTeamMembersWithAuth().find((m) => m.id === ownerId) : undefined;
                       const completion = isClickable ? getEntryCompletion(entry) : "none";
+                      const relevant = !active || isProcessUnlocked(entry, currentIntroAnswers);
+                      // When showing all, non-relevant entries are visually de-emphasised
+                      const notApplicable = active && !filterActive && !relevant;
 
                       return (
-                        <div key={entry.id} className={`overflow-hidden rounded-xl border border-gray-200 bg-white ${!isClickable && active ? "opacity-70" : ""}`}>
-                          {isClickable ? (
+                        <div
+                          key={entry.id}
+                          className={`overflow-hidden rounded-xl border transition-opacity ${
+                            notApplicable
+                              ? "border-gray-100 bg-gray-50 opacity-50"
+                              : `border-gray-200 bg-white ${!isClickable && active ? "opacity-70" : ""}`
+                          }`}
+                        >
+                          {isClickable && relevant ? (
                             <Link href={formHref} className="group flex items-start gap-3 px-4 py-3 transition-colors hover:bg-gray-50">
                               <div className="min-w-0 flex-1">
                                 <h3 className="text-sm font-semibold text-gray-900 group-hover:text-indigo-600">{entry.title}</h3>
@@ -589,11 +607,16 @@ export default function RegulationDetailPage() {
                           ) : (
                             <div className="flex items-start gap-3 px-4 py-3">
                               <div className="min-w-0 flex-1">
-                                <h3 className="text-sm font-semibold text-gray-900">{entry.title}</h3>
+                                <h3 className={`text-sm font-semibold ${notApplicable ? "text-gray-400" : "text-gray-900"}`}>{entry.title}</h3>
                                 {entry.description && (
-                                  <p className="mt-1 line-clamp-2 text-xs text-gray-500">{entry.description}</p>
+                                  <p className="mt-1 line-clamp-2 text-xs text-gray-400">{entry.description}</p>
                                 )}
                               </div>
+                              {notApplicable && (
+                                <span className="shrink-0 rounded-full bg-gray-100 px-2 py-0.5 text-xs text-gray-400">
+                                  Not applicable
+                                </span>
+                              )}
                             </div>
                           )}
                         </div>

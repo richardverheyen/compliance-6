@@ -1,6 +1,15 @@
 {
   "controls": [
     {
+      "id": "process-exists",
+      "group": "process-existence",
+      "label": "Does your business have a Customer Due Diligence — Partnerships process?",
+      "detail-required": false,
+      "correct-option": "Yes",
+      "source-rules": [],
+      "mapping-confidence": 1
+    },
+    {
       "id": "4_5_2",
       "group": "general-cdd-obligation",
       "label": "Does your AML/CTF program include systems and controls to verify that the partnership exists?",
@@ -40,7 +49,7 @@
         "4.5.3",
         "4.5.3(1)"
       ],
-      "mapping-confidence": 1.0
+      "mapping-confidence": 1
     },
     {
       "id": "4_5_3_2",
@@ -53,7 +62,7 @@
         "4.5.3",
         "4.5.3(2)"
       ],
-      "mapping-confidence": 1.0
+      "mapping-confidence": 1
     },
     {
       "id": "4_5_3_3",
@@ -66,7 +75,7 @@
         "4.5.3",
         "4.5.3(3)"
       ],
-      "mapping-confidence": 1.0
+      "mapping-confidence": 1
     },
     {
       "id": "4_5_3_4",
@@ -211,6 +220,12 @@
     }
   ],
   "groups": [
+    {
+      "id": "process-existence",
+      "title": "Process Confirmation",
+      "description": "Before answering the detailed compliance questions, confirm whether your organisation operates this business process.",
+      "variant": "main"
+    },
     {
       "id": "general-cdd-obligation",
       "title": "General CDD Obligation",

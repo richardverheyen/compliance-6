@@ -1,6 +1,15 @@
 {
   "controls": [
     {
+      "id": "process-exists",
+      "group": "process-existence",
+      "label": "Does your business have an ML/TF Risk Assessment process?",
+      "detail-required": false,
+      "correct-option": "Yes",
+      "source-rules": [],
+      "mapping-confidence": 1
+    },
+    {
       "id": "4_1_3",
       "group": "risk-assessment-factors",
       "label": "Have you identified and documented the ML/TF risk factors relevant to your business as required by Rule 4.1.3?",
@@ -115,6 +124,12 @@
     }
   ],
   "groups": [
+    {
+      "id": "process-existence",
+      "title": "Process Confirmation",
+      "description": "Before answering the detailed compliance questions, confirm whether your organisation operates this business process.",
+      "variant": "main"
+    },
     {
       "id": "risk-assessment-factors",
       "title": "ML/TF Risk Identification Factors",

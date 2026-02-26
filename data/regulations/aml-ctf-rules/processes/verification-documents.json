@@ -1,6 +1,15 @@
 {
   "controls": [
     {
+      "id": "process-exists",
+      "group": "process-existence",
+      "label": "Does your business have a Verification Standards — Documents process?",
+      "detail-required": false,
+      "correct-option": "Yes",
+      "source-rules": [],
+      "mapping-confidence": 1
+    },
+    {
       "id": "4_9_1",
       "group": "document-verification-framework",
       "label": "Does your AML/CTF program provide for verification of KYC information about individuals using reliable and independent documentation?",
@@ -9,7 +18,7 @@
       "source-rules": [
         "4.9.1"
       ],
-      "mapping-confidence": 1.0
+      "mapping-confidence": 1
     },
     {
       "id": "4_9_2",
@@ -21,7 +30,7 @@
       "source-rules": [
         "4.9.2"
       ],
-      "mapping-confidence": 1.0,
+      "mapping-confidence": 1,
       "process-id": "PROC-AML-002b"
     },
     {
@@ -49,7 +58,7 @@
       "source-rules": [
         "4.9.3(3)"
       ],
-      "mapping-confidence": 1.0,
+      "mapping-confidence": 1,
       "process-id": "PROC-AML-002b"
     },
     {
@@ -62,7 +71,7 @@
       "source-rules": [
         "4.9.3(4)"
       ],
-      "mapping-confidence": 1.0,
+      "mapping-confidence": 1,
       "process-id": "PROC-AML-002b"
     },
     {
@@ -75,7 +84,7 @@
       "source-rules": [
         "4.9.3(5)"
       ],
-      "mapping-confidence": 1.0,
+      "mapping-confidence": 1,
       "process-id": "PROC-AML-002b"
     },
     {
@@ -88,7 +97,7 @@
       "source-rules": [
         "4.9.3(6)"
       ],
-      "mapping-confidence": 1.0,
+      "mapping-confidence": 1,
       "process-id": "PROC-AML-002b"
     },
     {
@@ -100,7 +109,7 @@
       "source-rules": [
         "4.9.4"
       ],
-      "mapping-confidence": 1.0
+      "mapping-confidence": 1
     },
     {
       "id": "4_9_5",
@@ -127,7 +136,7 @@
       "source-rules": [
         "4.9.5(3)"
       ],
-      "mapping-confidence": 1.0,
+      "mapping-confidence": 1,
       "process-id": "PROC-AML-002b"
     },
     {
@@ -140,7 +149,7 @@
       "source-rules": [
         "4.9.5(4)"
       ],
-      "mapping-confidence": 1.0,
+      "mapping-confidence": 1,
       "process-id": "PROC-AML-002b"
     },
     {
@@ -153,7 +162,7 @@
       "source-rules": [
         "4.9.5(5)"
       ],
-      "mapping-confidence": 1.0,
+      "mapping-confidence": 1,
       "process-id": "PROC-AML-002b"
     },
     {
@@ -166,11 +175,17 @@
       "source-rules": [
         "4.9.5(6)"
       ],
-      "mapping-confidence": 1.0,
+      "mapping-confidence": 1,
       "process-id": "PROC-AML-002b"
     }
   ],
   "groups": [
+    {
+      "id": "process-existence",
+      "title": "Process Confirmation",
+      "description": "Before answering the detailed compliance questions, confirm whether your organisation operates this business process.",
+      "variant": "main"
+    },
     {
       "id": "document-verification-framework",
       "title": "Document Verification Framework",

@@ -1,6 +1,15 @@
 {
   "controls": [
     {
+      "id": "process-exists",
+      "group": "process-existence",
+      "label": "Does your business have a Customer Due Diligence — Associations process?",
+      "detail-required": false,
+      "correct-option": "Yes",
+      "source-rules": [],
+      "mapping-confidence": 1
+    },
+    {
       "id": "4_6_2",
       "group": "general-cdd-obligation",
       "label": "Have you implemented risk-based systems and controls to verify that the association exists and that names of governing committee members have been provided?",
@@ -23,7 +32,7 @@
       "source-rules": [
         "4.6.3(1)(a)"
       ],
-      "mapping-confidence": 1.0
+      "mapping-confidence": 1
     },
     {
       "id": "4_6_3_1_b",
@@ -47,7 +56,7 @@
       "source-rules": [
         "4.6.3(1)(c)"
       ],
-      "mapping-confidence": 1.0
+      "mapping-confidence": 1
     },
     {
       "id": "4_6_3_1_d",
@@ -59,7 +68,7 @@
       "source-rules": [
         "4.6.3(1)(d)"
       ],
-      "mapping-confidence": 1.0
+      "mapping-confidence": 1
     },
     {
       "id": "4_6_3_2",
@@ -71,7 +80,7 @@
       "source-rules": [
         "4.6.3(2)(a)"
       ],
-      "mapping-confidence": 1.0
+      "mapping-confidence": 1
     },
     {
       "id": "4_6_3_2_b",
@@ -83,7 +92,7 @@
       "source-rules": [
         "4.6.3(2)(b)"
       ],
-      "mapping-confidence": 1.0
+      "mapping-confidence": 1
     },
     {
       "id": "4_6_3_2_c",
@@ -95,7 +104,7 @@
       "source-rules": [
         "4.6.3(2)(c)"
       ],
-      "mapping-confidence": 1.0
+      "mapping-confidence": 1
     },
     {
       "id": "4_6_3_2_d",
@@ -236,6 +245,12 @@
   ],
   "groups": [
     {
+      "id": "process-existence",
+      "title": "Process Confirmation",
+      "description": "Before answering the detailed compliance questions, confirm whether your organisation operates this business process.",
+      "variant": "main"
+    },
+    {
       "id": "general-cdd-obligation",
       "title": "General CDD Obligation for Associations",
       "description": "Risk-based systems and controls to verify that the association exists and that names of governing committee members have been provided.",
@@ -243,13 +258,13 @@
     },
     {
       "id": "collection-kyc-incorporated",
-      "title": "Collection of KYC Information \u2014 Incorporated Associations",
+      "title": "Collection of KYC Information — Incorporated Associations",
       "description": "Minimum KYC information to be collected about incorporated associations.",
       "variant": "main"
     },
     {
       "id": "collection-kyc-unincorporated",
-      "title": "Collection of KYC Information \u2014 Unincorporated Associations",
+      "title": "Collection of KYC Information — Unincorporated Associations",
       "description": "Minimum KYC information to be collected when a customer is a member of an unincorporated association.",
       "variant": "main"
     },
@@ -261,13 +276,13 @@
     },
     {
       "id": "verification-incorporated",
-      "title": "Verification of Information \u2014 Incorporated Associations",
+      "title": "Verification of Information — Incorporated Associations",
       "description": "Verification procedures for incorporated association information using regulatory registries and reliable sources.",
       "variant": "main"
     },
     {
       "id": "verification-unincorporated",
-      "title": "Verification of Information \u2014 Unincorporated Associations",
+      "title": "Verification of Information — Unincorporated Associations",
       "description": "Verification procedures for unincorporated association information using constitution, rules, and reliable sources.",
       "variant": "main"
     },

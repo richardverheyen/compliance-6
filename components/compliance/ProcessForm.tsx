@@ -509,6 +509,15 @@ export function ProcessForm({
   const anySubSelected = hasSubScoping && subScoping.some((s) => answers[s.id] === "Yes");
   const formLinks = form.form_links ?? [];
 
+  // Existence gate
+  const hasExistenceQuestion = form.controls.some((c) => c.id === "process-exists");
+  const processExists = !hasExistenceQuestion || answers["process-exists"] === "Yes";
+  const processDeclinedExistence = hasExistenceQuestion && answers["process-exists"] === "No";
+
+  // Split groups
+  const existenceGroup = form.groups.find((g) => g.id === "process-existence");
+  const mainGroups = form.groups.filter((g) => g.id !== "process-existence");
+
   // Build group → controls map (explicit group field, not prefix matching)
   const controlsByGroup: Record<string, ProcessControl[]> = {};
   form.groups.forEach((g) => { controlsByGroup[g.id] = []; });
@@ -522,9 +531,11 @@ export function ProcessForm({
   });
 
   // Overall form progress: count visible controls with any answer
+  // When process doesn't exist, only the existence control counts
   let totalControls = 0;
   let answeredControls = 0;
-  form.controls.forEach((ctrl) => {
+  const controlsToCount = processExists ? form.controls : form.controls.filter((c) => c.id === "process-exists");
+  controlsToCount.forEach((ctrl) => {
     if (!checkVisibility(ctrl.id, form.rules, answers, introAnswers)) return;
     totalControls++;
     if (getControlStatus(ctrl, answers) === "success") answeredControls++;
@@ -541,89 +552,117 @@ export function ProcessForm({
         </div>
       )}
 
-      {/* Sub-scoping panel */}
-      {hasSubScoping && (
-        <SubScopingPanel
-          subScoping={subScoping}
+      {/* Existence gate group — always shown when present */}
+      {existenceGroup && (
+        <GroupCard
+          key={existenceGroup.id}
+          group={existenceGroup}
+          controls={controlsByGroup[existenceGroup.id] ?? []}
+          rules={form.rules}
           answers={answers}
-          onToggle={handleSubTypeToggle}
+          introAnswers={introAnswers}
+          formLinks={[]}
+          onAnswer={handleAnswer}
+          regulationId={regulationId}
           readOnly={readOnly}
         />
       )}
 
-      {/* Gate prompt */}
-      {hasSubScoping && !anySubSelected ? (
-        <div className="text-center py-12 px-6 border-2 border-dashed border-blue-200 rounded-lg bg-blue-50/40 mt-2">
-          <span className="block text-2xl mb-2 text-blue-200">↑</span>
-          <p className="text-sm text-gray-500 leading-relaxed">
-            Select one or more sub-types above to view the relevant compliance questions.
-          </p>
+      {/* "No" banner */}
+      {processDeclinedExistence && (
+        <div className="mb-4 rounded-lg border border-gray-200 bg-gray-50 px-4 py-3 text-sm text-gray-600">
+          This process is not active for your organisation. No further questions are required.
         </div>
-      ) : (
-        <>
-          {/* Progress bar */}
-          {totalControls > 0 && (
-            <div className="mb-4 rounded-lg border border-gray-200 bg-white px-4 py-3">
-              <div className="flex items-center justify-between text-xs text-gray-500 mb-2">
-                <span>{answeredControls} of {totalControls} questions answered</span>
-                <span className={`font-semibold ${allAnswered ? "text-green-600" : "text-indigo-600"}`}>
-                  {progressPct}%
-                </span>
-              </div>
-              <div className="h-1.5 rounded-full bg-gray-100 overflow-hidden">
-                <div
-                  className={`h-full rounded-full transition-all duration-300 ${allAnswered ? "bg-green-500" : "bg-indigo-500"}`}
-                  style={{ width: `${progressPct}%` }}
-                />
-              </div>
-            </div>
-          )}
+      )}
 
-          {/* Groups */}
-          {form.groups.map((group) => (
-            <GroupCard
-              key={group.id}
-              group={group}
-              controls={controlsByGroup[group.id] ?? []}
-              rules={form.rules}
+      {/* Main content — only shown when processExists */}
+      {processExists && (
+        <>
+          {/* Sub-scoping panel */}
+          {hasSubScoping && (
+            <SubScopingPanel
+              subScoping={subScoping}
               answers={answers}
-              introAnswers={introAnswers}
-              formLinks={formLinks}
-              onAnswer={handleAnswer}
-              regulationId={regulationId}
+              onToggle={handleSubTypeToggle}
               readOnly={readOnly}
             />
-          ))}
-
-          {/* Ungrouped controls */}
-          {ungrouped.length > 0 && (
-            <div className="bg-white border border-gray-200 rounded-lg mb-3.5 overflow-hidden">
-              <div className="px-4 py-3 font-semibold text-sm border-b border-gray-200 bg-slate-50">
-                Other Controls
-              </div>
-              {ungrouped.map((ctrl) =>
-                ctrl["checklist-items"] ? (
-                  <ChecklistControl key={ctrl.id} ctrl={ctrl} answers={answers} rules={form.rules} introAnswers={introAnswers} onAnswer={handleAnswer} readOnly={readOnly} />
-                ) : (
-                  <ControlRow key={ctrl.id} ctrl={ctrl} answers={answers} rules={form.rules} introAnswers={introAnswers} onAnswer={handleAnswer} readOnly={readOnly} />
-                )
-              )}
-            </div>
           )}
 
-          {/* Form links not tied to a specific control */}
-          {formLinks
-            .filter((fl) => !fl.gated_by || !form.controls.find((c) => c.id === fl.gated_by))
-            .map((fl) => (
-              <FormLinkBlock
-                key={fl.target}
-                link={fl}
-                answers={answers}
-                introAnswers={introAnswers}
-                regulationId={regulationId}
-                readOnly={readOnly}
-              />
-            ))}
+          {/* Gate prompt */}
+          {hasSubScoping && !anySubSelected ? (
+            <div className="text-center py-12 px-6 border-2 border-dashed border-blue-200 rounded-lg bg-blue-50/40 mt-2">
+              <span className="block text-2xl mb-2 text-blue-200">↑</span>
+              <p className="text-sm text-gray-500 leading-relaxed">
+                Select one or more sub-types above to view the relevant compliance questions.
+              </p>
+            </div>
+          ) : (
+            <>
+              {/* Progress bar */}
+              {totalControls > 0 && (
+                <div className="mb-4 rounded-lg border border-gray-200 bg-white px-4 py-3">
+                  <div className="flex items-center justify-between text-xs text-gray-500 mb-2">
+                    <span>{answeredControls} of {totalControls} questions answered</span>
+                    <span className={`font-semibold ${allAnswered ? "text-green-600" : "text-indigo-600"}`}>
+                      {progressPct}%
+                    </span>
+                  </div>
+                  <div className="h-1.5 rounded-full bg-gray-100 overflow-hidden">
+                    <div
+                      className={`h-full rounded-full transition-all duration-300 ${allAnswered ? "bg-green-500" : "bg-indigo-500"}`}
+                      style={{ width: `${progressPct}%` }}
+                    />
+                  </div>
+                </div>
+              )}
+
+              {/* Main groups (excluding existence group) */}
+              {mainGroups.map((group) => (
+                <GroupCard
+                  key={group.id}
+                  group={group}
+                  controls={controlsByGroup[group.id] ?? []}
+                  rules={form.rules}
+                  answers={answers}
+                  introAnswers={introAnswers}
+                  formLinks={formLinks}
+                  onAnswer={handleAnswer}
+                  regulationId={regulationId}
+                  readOnly={readOnly}
+                />
+              ))}
+
+              {/* Ungrouped controls */}
+              {ungrouped.length > 0 && (
+                <div className="bg-white border border-gray-200 rounded-lg mb-3.5 overflow-hidden">
+                  <div className="px-4 py-3 font-semibold text-sm border-b border-gray-200 bg-slate-50">
+                    Other Controls
+                  </div>
+                  {ungrouped.map((ctrl) =>
+                    ctrl["checklist-items"] ? (
+                      <ChecklistControl key={ctrl.id} ctrl={ctrl} answers={answers} rules={form.rules} introAnswers={introAnswers} onAnswer={handleAnswer} readOnly={readOnly} />
+                    ) : (
+                      <ControlRow key={ctrl.id} ctrl={ctrl} answers={answers} rules={form.rules} introAnswers={introAnswers} onAnswer={handleAnswer} readOnly={readOnly} />
+                    )
+                  )}
+                </div>
+              )}
+
+              {/* Form links not tied to a specific control */}
+              {formLinks
+                .filter((fl) => !fl.gated_by || !form.controls.find((c) => c.id === fl.gated_by))
+                .map((fl) => (
+                  <FormLinkBlock
+                    key={fl.target}
+                    link={fl}
+                    answers={answers}
+                    introAnswers={introAnswers}
+                    regulationId={regulationId}
+                    readOnly={readOnly}
+                  />
+                ))}
+            </>
+          )}
         </>
       )}
 

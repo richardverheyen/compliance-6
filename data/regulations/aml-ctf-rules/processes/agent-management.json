@@ -1,6 +1,15 @@
 {
   "controls": [
     {
+      "id": "process-exists",
+      "group": "process-existence",
+      "label": "Does your business have an Agent Management process?",
+      "detail-required": false,
+      "correct-option": "Yes",
+      "source-rules": [],
+      "mapping-confidence": 1
+    },
+    {
       "id": "4_11_2_1",
       "group": "agent-collection-individual",
       "label": "Do you have a procedure to collect the full name of each individual who acts for or on behalf of the customer?",
@@ -11,7 +20,7 @@
       "source-rules": [
         "4.11.2(1)"
       ],
-      "mapping-confidence": 1.0
+      "mapping-confidence": 1
     },
     {
       "id": "4_11_2_2",
@@ -24,7 +33,7 @@
       "source-rules": [
         "4.11.2(2)"
       ],
-      "mapping-confidence": 1.0
+      "mapping-confidence": 1
     },
     {
       "id": "4_11_3",
@@ -37,7 +46,7 @@
       "source-rules": [
         "4.11.3"
       ],
-      "mapping-confidence": 1.0
+      "mapping-confidence": 1
     },
     {
       "id": "4_11_4",
@@ -50,7 +59,7 @@
       "source-rules": [
         "4.11.4"
       ],
-      "mapping-confidence": 1.0
+      "mapping-confidence": 1
     },
     {
       "id": "4_11_6_1",
@@ -63,7 +72,7 @@
       "source-rules": [
         "4.11.6(1)"
       ],
-      "mapping-confidence": 1.0
+      "mapping-confidence": 1
     },
     {
       "id": "4_11_6_2",
@@ -76,7 +85,7 @@
       "source-rules": [
         "4.11.6(2)"
       ],
-      "mapping-confidence": 1.0
+      "mapping-confidence": 1
     },
     {
       "id": "4_11_7",
@@ -89,7 +98,7 @@
       "source-rules": [
         "4.11.7"
       ],
-      "mapping-confidence": 1.0
+      "mapping-confidence": 1
     },
     {
       "id": "4_11_8",
@@ -102,7 +111,7 @@
       "source-rules": [
         "4.11.8"
       ],
-      "mapping-confidence": 1.0
+      "mapping-confidence": 1
     },
     {
       "id": "4_11_9",
@@ -114,7 +123,7 @@
       "source-rules": [
         "4.11.9"
       ],
-      "mapping-confidence": 1.0
+      "mapping-confidence": 1
     },
     {
       "id": "4_11_10_1",
@@ -152,7 +161,7 @@
       "source-rules": [
         "4.11.12(1)"
       ],
-      "mapping-confidence": 1.0
+      "mapping-confidence": 1
     },
     {
       "id": "4_11_12_2",
@@ -165,7 +174,7 @@
       "source-rules": [
         "4.11.12(2)"
       ],
-      "mapping-confidence": 1.0
+      "mapping-confidence": 1
     },
     {
       "id": "4_11_12_3",
@@ -178,7 +187,7 @@
       "source-rules": [
         "4.11.12(3)"
       ],
-      "mapping-confidence": 1.0
+      "mapping-confidence": 1
     },
     {
       "id": "4_11_12_4",
@@ -191,7 +200,7 @@
       "source-rules": [
         "4.11.12(4)"
       ],
-      "mapping-confidence": 1.0
+      "mapping-confidence": 1
     },
     {
       "id": "4_11_12_5",
@@ -205,7 +214,7 @@
         "4.11.12(5)(a)",
         "4.11.12(5)(b)"
       ],
-      "mapping-confidence": 1.0
+      "mapping-confidence": 1
     },
     {
       "id": "4_11_13_1",
@@ -218,7 +227,7 @@
       "source-rules": [
         "4.11.13(1)"
       ],
-      "mapping-confidence": 1.0
+      "mapping-confidence": 1
     },
     {
       "id": "4_11_13_2",
@@ -231,7 +240,7 @@
       "source-rules": [
         "4.11.13(2)"
       ],
-      "mapping-confidence": 1.0
+      "mapping-confidence": 1
     },
     {
       "id": "4_11_13_3",
@@ -244,7 +253,7 @@
       "source-rules": [
         "4.11.13(3)"
       ],
-      "mapping-confidence": 1.0
+      "mapping-confidence": 1
     },
     {
       "id": "4_11_13_4",
@@ -257,31 +266,37 @@
       "source-rules": [
         "4.11.13(4)"
       ],
-      "mapping-confidence": 1.0
+      "mapping-confidence": 1
     }
   ],
   "groups": [
     {
+      "id": "process-existence",
+      "title": "Process Confirmation",
+      "description": "Before answering the detailed compliance questions, confirm whether your organisation operates this business process.",
+      "variant": "main"
+    },
+    {
       "id": "agent-collection-individual",
-      "title": "Collection of Agent Information \u2014 Individual Customers",
+      "title": "Collection of Agent Information — Individual Customers",
       "description": "Procedures for collecting information about individuals authorised to act for individual customers in relation to designated services.",
       "variant": "main"
     },
     {
       "id": "agent-verification-individual",
-      "title": "Verification of Agent Identity \u2014 Individual Customers",
+      "title": "Verification of Agent Identity — Individual Customers",
       "description": "Risk-based systems and controls for verifying the identity of agents of individual customers, taking account of ML/TF risk.",
       "variant": "main"
     },
     {
       "id": "agent-collection-non-individual",
-      "title": "Collection of Agent Information \u2014 Non-Natural Customers",
+      "title": "Collection of Agent Information — Non-Natural Customers",
       "description": "Procedures for collecting information about individuals authorised to act for non-natural (corporate) customers in relation to designated services.",
       "variant": "main"
     },
     {
       "id": "agent-verification-non-individual",
-      "title": "Verification of Agent Identity \u2014 Non-Natural Customers",
+      "title": "Verification of Agent Identity — Non-Natural Customers",
       "description": "Risk-based systems and controls for verifying the identity of agents of non-natural customers, taking account of ML/TF risk.",
       "variant": "main"
     },

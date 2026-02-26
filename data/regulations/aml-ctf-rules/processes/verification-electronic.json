@@ -1,6 +1,15 @@
 {
   "controls": [
     {
+      "id": "process-exists",
+      "group": "process-existence",
+      "label": "Does your business have a Verification Standards — Electronic process?",
+      "detail-required": false,
+      "correct-option": "Yes",
+      "source-rules": [],
+      "mapping-confidence": 1
+    },
+    {
       "id": "4_10_1",
       "group": "electronic-verification-scope",
       "label": "Does your AML/CTF program provide for verification of KYC information by reliable and independent electronic data?",
@@ -157,6 +166,12 @@
     }
   ],
   "groups": [
+    {
+      "id": "process-existence",
+      "title": "Process Confirmation",
+      "description": "Before answering the detailed compliance questions, confirm whether your organisation operates this business process.",
+      "variant": "main"
+    },
     {
       "id": "electronic-verification-scope",
       "title": "Electronic Verification Scope",

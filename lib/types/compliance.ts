@@ -12,6 +12,7 @@ export interface BusinessProcess {
   steps: ComplianceStep[];
   ownerId?: string;
   lastUpdated: string;
+  confirmed?: boolean;
 }
 
 export interface RegulationProcess {

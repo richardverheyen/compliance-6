@@ -1,6 +1,15 @@
 {
   "controls": [
     {
+      "id": "process-exists",
+      "group": "process-existence",
+      "label": "Does your business have a Customer Due Diligence — Co-operatives process?",
+      "detail-required": false,
+      "correct-option": "Yes",
+      "source-rules": [],
+      "mapping-confidence": 1
+    },
+    {
       "id": "4_7_2",
       "group": "general-cdd-obligation",
       "label": "Does your AML/CTF program include appropriate risk-based systems and controls to verify that a registered co-operative exists when notified by the customer?",
@@ -39,7 +48,7 @@
         "4.7.3",
         "4.7.3(1)"
       ],
-      "mapping-confidence": 1.0,
+      "mapping-confidence": 1,
       "process-id": "PROC-AML-002a"
     },
     {
@@ -53,7 +62,7 @@
         "4.7.3",
         "4.7.3(2)"
       ],
-      "mapping-confidence": 1.0,
+      "mapping-confidence": 1,
       "process-id": "PROC-AML-002a"
     },
     {
@@ -67,7 +76,7 @@
         "4.7.3",
         "4.7.3(3)"
       ],
-      "mapping-confidence": 1.0,
+      "mapping-confidence": 1,
       "process-id": "PROC-AML-002a"
     },
     {
@@ -81,7 +90,7 @@
         "4.7.3",
         "4.7.3(4)"
       ],
-      "mapping-confidence": 1.0,
+      "mapping-confidence": 1,
       "process-id": "PROC-AML-002a"
     },
     {
@@ -108,7 +117,7 @@
         "4.7.5",
         "4.7.5(1)"
       ],
-      "mapping-confidence": 1.0,
+      "mapping-confidence": 1,
       "process-id": "PROC-AML-002b"
     },
     {
@@ -122,7 +131,7 @@
         "4.7.5",
         "4.7.5(2)"
       ],
-      "mapping-confidence": 1.0,
+      "mapping-confidence": 1,
       "process-id": "PROC-AML-002b"
     },
     {
@@ -187,6 +196,12 @@
     }
   ],
   "groups": [
+    {
+      "id": "process-existence",
+      "title": "Process Confirmation",
+      "description": "Before answering the detailed compliance questions, confirm whether your organisation operates this business process.",
+      "variant": "main"
+    },
     {
       "id": "general-cdd-obligation",
       "title": "General CDD Obligation",

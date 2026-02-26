@@ -1,6 +1,15 @@
 {
   "controls": [
     {
+      "id": "process-exists",
+      "group": "process-existence",
+      "label": "Does your business have a Customer Due Diligence — Trusts process?",
+      "detail-required": false,
+      "correct-option": "Yes",
+      "source-rules": [],
+      "mapping-confidence": 1
+    },
+    {
       "id": "4_4_2",
       "group": "general-cdd-obligation",
       "label": "Do you have risk-based systems and controls to ensure the trust exists and that trustee and beneficiary names (or class descriptions) have been provided?",
@@ -25,7 +34,7 @@
       "source-rules": [
         "4.4.3(1)"
       ],
-      "mapping-confidence": 1.0
+      "mapping-confidence": 1
     },
     {
       "id": "4_4_3_2",
@@ -37,7 +46,7 @@
       "source-rules": [
         "4.4.3(2)"
       ],
-      "mapping-confidence": 1.0
+      "mapping-confidence": 1
     },
     {
       "id": "4_4_3_3",
@@ -49,7 +58,7 @@
       "source-rules": [
         "4.4.3(3)"
       ],
-      "mapping-confidence": 1.0
+      "mapping-confidence": 1
     },
     {
       "id": "4_4_3_4",
@@ -61,7 +70,7 @@
       "source-rules": [
         "4.4.3(4)"
       ],
-      "mapping-confidence": 1.0
+      "mapping-confidence": 1
     },
     {
       "id": "4_4_3_5",
@@ -89,7 +98,7 @@
       "source-rules": [
         "4.4.3(6)"
       ],
-      "mapping-confidence": 1.0
+      "mapping-confidence": 1
     },
     {
       "id": "4_4_3_7",
@@ -101,7 +110,7 @@
       "source-rules": [
         "4.4.3(7)"
       ],
-      "mapping-confidence": 1.0
+      "mapping-confidence": 1
     },
     {
       "id": "4_4_3_8",
@@ -113,7 +122,7 @@
       "source-rules": [
         "4.4.3(8)"
       ],
-      "mapping-confidence": 1.0
+      "mapping-confidence": 1
     },
     {
       "id": "4_4_4",
@@ -126,7 +135,7 @@
       "source-rules": [
         "4.4.4"
       ],
-      "mapping-confidence": 1.0
+      "mapping-confidence": 1
     },
     {
       "id": "4_4_5_1",
@@ -138,7 +147,7 @@
       "source-rules": [
         "4.4.5(1)"
       ],
-      "mapping-confidence": 1.0
+      "mapping-confidence": 1
     },
     {
       "id": "4_4_5_2",
@@ -150,7 +159,7 @@
       "source-rules": [
         "4.4.5(2)"
       ],
-      "mapping-confidence": 1.0
+      "mapping-confidence": 1
     },
     {
       "id": "4_4_5_3",
@@ -162,7 +171,7 @@
       "source-rules": [
         "4.4.5(3)"
       ],
-      "mapping-confidence": 1.0
+      "mapping-confidence": 1
     },
     {
       "id": "4_4_5_4",
@@ -174,7 +183,7 @@
       "source-rules": [
         "4.4.5(4)"
       ],
-      "mapping-confidence": 1.0
+      "mapping-confidence": 1
     },
     {
       "id": "4_4_5_5",
@@ -203,7 +212,7 @@
       "source-rules": [
         "4.4.6"
       ],
-      "mapping-confidence": 1.0
+      "mapping-confidence": 1
     },
     {
       "id": "4_4_7",
@@ -216,7 +225,7 @@
       "source-rules": [
         "4.4.7"
       ],
-      "mapping-confidence": 1.0
+      "mapping-confidence": 1
     },
     {
       "id": "4_4_8",
@@ -247,7 +256,7 @@
       "source-rules": [
         "4.4.9(1)"
       ],
-      "mapping-confidence": 1.0,
+      "mapping-confidence": 1,
       "checklist-items": [
         {
           "label": "Full name of each trustee"
@@ -269,7 +278,7 @@
         "4.4.9(2)(a)",
         "4.4.9(2)(b)"
       ],
-      "mapping-confidence": 1.0,
+      "mapping-confidence": 1,
       "checklist-items": [
         {
           "type": "or-group",
@@ -295,7 +304,7 @@
       "source-rules": [
         "4.4.10"
       ],
-      "mapping-confidence": 1.0
+      "mapping-confidence": 1
     },
     {
       "id": "4_4_11",
@@ -308,7 +317,7 @@
       "source-rules": [
         "4.4.11"
       ],
-      "mapping-confidence": 1.0
+      "mapping-confidence": 1
     },
     {
       "id": "4_4_12",
@@ -321,7 +330,7 @@
       "source-rules": [
         "4.4.12"
       ],
-      "mapping-confidence": 1.0
+      "mapping-confidence": 1
     },
     {
       "id": "4_4_15",
@@ -338,7 +347,7 @@
         "4.4.15(3)",
         "4.4.15(4)"
       ],
-      "mapping-confidence": 1.0
+      "mapping-confidence": 1
     },
     {
       "id": "4_4_16",
@@ -366,7 +375,7 @@
       "source-rules": [
         "4.4.17"
       ],
-      "mapping-confidence": 1.0
+      "mapping-confidence": 1
     },
     {
       "id": "4_4_18",
@@ -389,6 +398,12 @@
     }
   ],
   "groups": [
+    {
+      "id": "process-existence",
+      "title": "Process Confirmation",
+      "description": "Before answering the detailed compliance questions, confirm whether your organisation operates this business process.",
+      "variant": "main"
+    },
     {
       "id": "general-cdd-obligation",
       "title": "General CDD Obligation",

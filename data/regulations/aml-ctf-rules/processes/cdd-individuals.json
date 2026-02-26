@@ -1,6 +1,15 @@
 {
   "controls": [
     {
+      "id": "process-exists",
+      "group": "process-existence",
+      "label": "Does your business have a Customer Due Diligence — Individuals process?",
+      "detail-required": false,
+      "correct-option": "Yes",
+      "source-rules": [],
+      "mapping-confidence": 1
+    },
+    {
       "id": "4_2_2",
       "group": "general-cdd-obligation",
       "label": "Do you have appropriate risk-based systems and controls designed to enable you to be reasonably satisfied that individual customers are who they claim to be?",
@@ -11,7 +20,7 @@
       "source-rules": [
         "4.2.2"
       ],
-      "mapping-confidence": 1.0
+      "mapping-confidence": 1
     },
     {
       "id": "4_2_3",
@@ -26,7 +35,7 @@
         "4.2.3(2)",
         "4.2.3(3)"
       ],
-      "mapping-confidence": 1.0,
+      "mapping-confidence": 1,
       "checklist-items": [
         {
           "label": "Full name"
@@ -54,7 +63,7 @@
         "4.2.4(4)",
         "4.2.4(5)"
       ],
-      "mapping-confidence": 1.0,
+      "mapping-confidence": 1,
       "checklist-items": [
         {
           "label": "Full name"
@@ -92,7 +101,7 @@
       "source-rules": [
         "4.2.5"
       ],
-      "mapping-confidence": 1.0
+      "mapping-confidence": 1
     },
     {
       "id": "4_2_6",
@@ -108,7 +117,7 @@
         "4.2.6(2)(a)",
         "4.2.6(2)(b)"
       ],
-      "mapping-confidence": 1.0,
+      "mapping-confidence": 1,
       "checklist-items": [
         {
           "label": "Full name"
@@ -140,7 +149,7 @@
         "4.2.7(2)",
         "4.2.7(3)"
       ],
-      "mapping-confidence": 1.0
+      "mapping-confidence": 1
     },
     {
       "id": "4_2_10",
@@ -152,7 +161,7 @@
       "source-rules": [
         "4.2.10"
       ],
-      "mapping-confidence": 1.0
+      "mapping-confidence": 1
     },
     {
       "id": "4_2_12",
@@ -164,7 +173,7 @@
       "source-rules": [
         "4.2.12"
       ],
-      "mapping-confidence": 1.0
+      "mapping-confidence": 1
     },
     {
       "id": "4_2_8",
@@ -177,7 +186,7 @@
       "source-rules": [
         "4.2.8"
       ],
-      "mapping-confidence": 1.0
+      "mapping-confidence": 1
     },
     {
       "id": "4_2_9",
@@ -190,10 +199,16 @@
       "source-rules": [
         "4.2.9"
       ],
-      "mapping-confidence": 1.0
+      "mapping-confidence": 1
     }
   ],
   "groups": [
+    {
+      "id": "process-existence",
+      "title": "Process Confirmation",
+      "description": "Before answering the detailed compliance questions, confirm whether your organisation operates this business process.",
+      "variant": "main"
+    },
     {
       "id": "general-cdd-obligation",
       "title": "General CDD Obligation",

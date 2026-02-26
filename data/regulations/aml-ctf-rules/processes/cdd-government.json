@@ -1,6 +1,15 @@
 {
   "controls": [
     {
+      "id": "process-exists",
+      "group": "process-existence",
+      "label": "Does your business have a Customer Due Diligence — Government Bodies process?",
+      "detail-required": false,
+      "correct-option": "Yes",
+      "source-rules": [],
+      "mapping-confidence": 1
+    },
+    {
       "id": "4_8_2",
       "group": "cdd-obligation",
       "label": "Does your AML/CTF program include risk-based systems and controls to verify that a government body customer exists and that beneficial ownership information (where applicable) has been provided?",
@@ -135,6 +144,12 @@
   ],
   "groups": [
     {
+      "id": "process-existence",
+      "title": "Process Confirmation",
+      "description": "Before answering the detailed compliance questions, confirm whether your organisation operates this business process.",
+      "variant": "main"
+    },
+    {
       "id": "cdd-obligation",
       "title": "Customer Due Diligence Obligation",
       "description": "Risk-based systems and controls to verify government body customer existence and beneficial ownership information.",
@@ -154,7 +169,7 @@
     },
     {
       "id": "beneficial-ownership-foreign",
-      "title": "Beneficial Ownership \u2014 Foreign Government Entities",
+      "title": "Beneficial Ownership — Foreign Government Entities",
       "description": "Risk-based determination and verification of ownership or control information for foreign government body customers.",
       "variant": "subprocess",
       "subprocess-label": "Foreign Government Entities"

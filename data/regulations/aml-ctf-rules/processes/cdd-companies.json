@@ -1,6 +1,15 @@
 {
   "controls": [
     {
+      "id": "process-exists",
+      "group": "process-existence",
+      "label": "Does your business have a Customer Due Diligence — Companies process?",
+      "detail-required": false,
+      "correct-option": "Yes",
+      "source-rules": [],
+      "mapping-confidence": 1
+    },
+    {
       "id": "4_3_2",
       "group": "general-obligation",
       "label": "Does your AML/CTF program include appropriate risk-based systems and controls to be reasonably satisfied that each company customer exists and that beneficial ownership obligations (Part 4.12) are met?",
@@ -177,7 +186,7 @@
       "source-rules": [
         "4.3.4"
       ],
-      "mapping-confidence": 1.0
+      "mapping-confidence": 1
     },
     {
       "id": "4_3_5_1",
@@ -280,7 +289,7 @@
       "source-rules": [
         "4.3.6"
       ],
-      "mapping-confidence": 1.0
+      "mapping-confidence": 1
     },
     {
       "id": "4_3_7",
@@ -292,7 +301,7 @@
       "source-rules": [
         "4.3.7"
       ],
-      "mapping-confidence": 1.0
+      "mapping-confidence": 1
     },
     {
       "id": "4_3_8",
@@ -340,7 +349,7 @@
       "source-rules": [
         "4.3.9(2)"
       ],
-      "mapping-confidence": 1.0
+      "mapping-confidence": 1
     },
     {
       "id": "4_3_10",
@@ -382,7 +391,7 @@
       "source-rules": [
         "4.3.13"
       ],
-      "mapping-confidence": 1.0
+      "mapping-confidence": 1
     },
     {
       "id": "4_3_14",
@@ -395,10 +404,16 @@
       "source-rules": [
         "4.3.14"
       ],
-      "mapping-confidence": 1.0
+      "mapping-confidence": 1
     }
   ],
   "groups": [
+    {
+      "id": "process-existence",
+      "title": "Process Confirmation",
+      "description": "Before answering the detailed compliance questions, confirm whether your organisation operates this business process.",
+      "variant": "main"
+    },
     {
       "id": "general-obligation",
       "title": "General CDD Obligation",

@@ -706,13 +706,46 @@ def call_process_architect(
     return None
 
 
-def inject_static_fields(result: dict, form_def: dict) -> dict:
-    """Inject statically-defined sub_scoping and form_links into the result."""
+def inject_process_existence(slug: str, form_def: dict, result: dict) -> dict:
+    """Prepend the standard process-existence gate group and control to the result."""
+    title = form_def["title"]
+    article = "an" if title[0].lower() in "aeiou" else "a"
+
+    existence_group = {
+        "id": "process-existence",
+        "title": "Process Confirmation",
+        "description": "Before answering the detailed compliance questions, confirm whether your organisation operates this business process.",
+        "variant": "main",
+    }
+    existence_control = {
+        "id": "process-exists",
+        "group": "process-existence",
+        "label": f"Does your business have {article} {title} process?",
+        "detail-required": False,
+        "correct-option": "Yes",
+        "source-rules": [],
+        "mapping-confidence": 1.0,
+    }
+
+    # Prepend (skip if already present)
+    if not any(g.get("id") == "process-existence" for g in result.get("groups", [])):
+        result["groups"] = [existence_group] + result.get("groups", [])
+    if not any(c.get("id") == "process-exists" for c in result.get("controls", [])):
+        result["controls"] = [existence_control] + result.get("controls", [])
+
+    return result
+
+
+def inject_static_fields(slug: str, result: dict, form_def: dict) -> dict:
+    """Inject statically-defined sub_scoping, form_links, and existence gate into the result."""
     # Sub-scoping: always comes from PROCESS_FORMS, not from LLM
     result["sub_scoping"] = form_def.get("sub_types", [])
 
     # Form links: always comes from PROCESS_FORMS, not from LLM
     result["form_links"] = form_def.get("form_links", [])
+
+    # Process existence gate
+    result = inject_process_existence(slug, form_def, result)
 
     return result
 
@@ -780,8 +813,8 @@ def run_process_architect(run_dir: str, single_process: str | None = None,
         if result is None:
             continue
 
-        # Inject static fields (sub_scoping, form_links)
-        result = inject_static_fields(result, form_def)
+        # Inject static fields (sub_scoping, form_links, existence gate)
+        result = inject_static_fields(process_id, result, form_def)
 
         # Apply feedback overrides (post-LLM, not sent to LLM)
         if feedback:

@@ -10,6 +10,29 @@ import type { SectionData, FormField } from "@/lib/compliance-forms";
 import { getFieldStatus } from "@/lib/compliance-forms";
 import { amlCTFContent } from "./regulation-content/aml-ctf-rules";
 
+// Maps RegulationProcess ID → form slug(s) that confirm it
+const PROCESS_FORM_MAP: Record<string, string | string[]> = {
+  "PROC-AML-001": "agent-management",
+  "PROC-AML-002": ["cdd-individuals","cdd-companies","cdd-trusts","cdd-partnerships","cdd-associations","cdd-cooperatives","cdd-government"],
+  "PROC-AML-002a": ["cdd-individuals","cdd-companies","cdd-trusts","cdd-partnerships","cdd-associations","cdd-cooperatives","cdd-government"],
+  "PROC-AML-002b": ["verification-documents","verification-electronic"],
+  "PROC-AML-002c": "risk-assessment",
+  "PROC-AML-003": ["beneficial-ownership","pep-screening"],
+  "PROC-AML-003a": "beneficial-ownership",
+  "PROC-AML-003b": "pep-screening",
+  "PROC-AML-003c": ["verification-documents","verification-electronic","alternative-id"],
+  "PROC-AML-004": "record-keeping",
+  "PROC-AML-004a": "record-keeping",
+  "PROC-AML-004b": "record-keeping",
+};
+
+export function isProcessConfirmed(processId: string, confirmedSlugs: Set<string>): boolean {
+  const mapped = PROCESS_FORM_MAP[processId];
+  if (!mapped) return true; // no form mapping = always show
+  const slugs = Array.isArray(mapped) ? mapped : [mapped];
+  return slugs.some(s => confirmedSlugs.has(s));
+}
+
 // Get form field data for a process slug (AML/CTF only — other regulations have no forms yet)
 export function getSectionData(processSlug: string): SectionData {
   const form = amlCTFContent.processForms[processSlug];
@@ -370,6 +393,7 @@ export function computeProcessesFromAnswers(
       id: slug,
       title: entry?.title ?? slug,
       steps,
+      confirmed: sectionAnswers[slug]?.["process-exists"] === "Yes",
       lastUpdated: new Date().toISOString(),
     };
   });

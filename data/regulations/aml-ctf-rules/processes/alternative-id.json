@@ -1,6 +1,15 @@
 {
   "controls": [
     {
+      "id": "process-exists",
+      "group": "process-existence",
+      "label": "Does your business have an Alternative Identity Proofing process?",
+      "detail-required": false,
+      "correct-option": "Yes",
+      "source-rules": [],
+      "mapping-confidence": 1
+    },
+    {
       "id": "4_15_1",
       "group": "alternative-proofing-gatekeeping",
       "label": "Is the customer unable to establish identity using standard customer identification requirements under Chapter 4?",
@@ -96,6 +105,12 @@
     }
   ],
   "groups": [
+    {
+      "id": "process-existence",
+      "title": "Process Confirmation",
+      "description": "Before answering the detailed compliance questions, confirm whether your organisation operates this business process.",
+      "variant": "main"
+    },
     {
       "id": "alternative-proofing-gatekeeping",
       "title": "Gatekeeping: Standard Identification Unable to be Established",

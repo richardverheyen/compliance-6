@@ -5,6 +5,7 @@ import { useComplianceStore } from "@/lib/compliance-store";
 import type { RegulationProcess } from "@/lib/types/compliance";
 import Link from "next/link";
 import { AssignOwnerModal } from "@/components/compliance/AssignOwnerModal";
+import { isProcessConfirmed } from "@/mocks/compliance-data";
 
 interface ProcessGroup {
   regulationId: string;
@@ -21,20 +22,29 @@ export default function ProcessesPage() {
     return regulations.find((l) => l.id === id)?.shortName ?? id;
   }
 
-  // Group processes by regulation
+  // Group processes by regulation, filtered to confirmed ones only
   const groups: ProcessGroup[] = [];
   for (const al of activeRegulations) {
     const leg = regulations.find((l) => l.id === al.regulationId);
-    if (leg?.processes && leg.processes.length > 0) {
-      groups.push({
-        regulationId: al.regulationId,
-        regulationName: getRegulationName(al.regulationId),
-        processes: leg.processes,
-      });
-    }
+    if (!leg?.processes || leg.processes.length === 0) continue;
+
+    const confirmedSlugs = new Set(
+      al.processes.filter((p) => p.confirmed).map((p) => p.id)
+    );
+    const visibleProcesses = leg.processes.filter((p) =>
+      isProcessConfirmed(p.id, confirmedSlugs)
+    );
+
+    groups.push({
+      regulationId: al.regulationId,
+      regulationName: getRegulationName(al.regulationId),
+      processes: visibleProcesses,
+    });
   }
 
   const hasProcesses = groups.some((g) => g.processes.length > 0);
+
+  const hasActiveRegulations = activeRegulations.length > 0;
 
   if (!hasProcesses) {
     return (
@@ -42,16 +52,33 @@ export default function ProcessesPage() {
         <div className="mx-auto max-w-7xl">
           <h1 className="text-3xl font-bold text-gray-900">Business Processes</h1>
           <div className="mt-8 rounded-xl border border-gray-200 p-8 text-center">
-            <h2 className="text-lg font-semibold text-gray-900">No active processes</h2>
-            <p className="mt-2 text-sm text-gray-600">
-              Activate a regulation to see your business processes here.
-            </p>
-            <Link
-              href="/dashboard/regulations"
-              className="mt-4 inline-block rounded-lg bg-indigo-600 px-4 py-2.5 text-sm font-semibold text-white hover:bg-indigo-500"
-            >
-              Browse Regulations
-            </Link>
+            {hasActiveRegulations ? (
+              <>
+                <h2 className="text-lg font-semibold text-gray-900">No processes confirmed yet</h2>
+                <p className="mt-2 text-sm text-gray-600">
+                  Complete your self-assessment forms to confirm which processes apply to your organisation.
+                </p>
+                <Link
+                  href="/dashboard/regulations"
+                  className="mt-4 inline-block rounded-lg bg-indigo-600 px-4 py-2.5 text-sm font-semibold text-white hover:bg-indigo-500"
+                >
+                  Go to Regulations
+                </Link>
+              </>
+            ) : (
+              <>
+                <h2 className="text-lg font-semibold text-gray-900">No active processes</h2>
+                <p className="mt-2 text-sm text-gray-600">
+                  Activate a regulation to see your business processes here.
+                </p>
+                <Link
+                  href="/dashboard/regulations"
+                  className="mt-4 inline-block rounded-lg bg-indigo-600 px-4 py-2.5 text-sm font-semibold text-white hover:bg-indigo-500"
+                >
+                  Browse Regulations
+                </Link>
+              </>
+            )}
           </div>
         </div>
       </div>

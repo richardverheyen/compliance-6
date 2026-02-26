@@ -1,6 +1,15 @@
 {
   "controls": [
     {
+      "id": "process-exists",
+      "group": "process-existence",
+      "label": "Does your business have a Beneficial Ownership process?",
+      "detail-required": false,
+      "correct-option": "Yes",
+      "source-rules": [],
+      "mapping-confidence": 1
+    },
+    {
       "id": "4_12_1",
       "group": "general-obligation",
       "label": "Does your AML/CTF program include appropriate systems and controls to determine the beneficial owner of each customer, and carry out collection and verification either before providing a designated service or as soon as practicable after?",
@@ -11,7 +20,7 @@
       "source-rules": [
         "4.12.1"
       ],
-      "mapping-confidence": 1.0
+      "mapping-confidence": 1
     },
     {
       "id": "4_12_2_1",
@@ -23,7 +32,7 @@
       "source-rules": [
         "4.12.2(1)"
       ],
-      "mapping-confidence": 1.0
+      "mapping-confidence": 1
     },
     {
       "id": "4_12_2_2",
@@ -54,7 +63,7 @@
         "4.12.1(1)",
         "4.12.1(1)(a)"
       ],
-      "mapping-confidence": 1.0
+      "mapping-confidence": 1
     },
     {
       "id": "4_12_1_1_b",
@@ -68,7 +77,7 @@
         "4.12.1(1)(b)",
         "4.12.1(1)(c)"
       ],
-      "mapping-confidence": 1.0,
+      "mapping-confidence": 1,
       "checklist-items": [
         {
           "type": "or-group",
@@ -94,7 +103,7 @@
       "source-rules": [
         "4.12.3"
       ],
-      "mapping-confidence": 1.0
+      "mapping-confidence": 1
     },
     {
       "id": "4_12_4",
@@ -110,7 +119,7 @@
         "4.12.4(2)",
         "4.12.4(3)"
       ],
-      "mapping-confidence": 1.0
+      "mapping-confidence": 1
     },
     {
       "id": "4_12_6",
@@ -122,7 +131,7 @@
       "source-rules": [
         "4.12.6"
       ],
-      "mapping-confidence": 1.0
+      "mapping-confidence": 1
     },
     {
       "id": "4_12_7_1",
@@ -135,7 +144,7 @@
         "4.12.7",
         "4.12.7(1)"
       ],
-      "mapping-confidence": 1.0
+      "mapping-confidence": 1
     },
     {
       "id": "4_12_7_2",
@@ -180,7 +189,7 @@
       "source-rules": [
         "4.12.7(3)"
       ],
-      "mapping-confidence": 1.0
+      "mapping-confidence": 1
     },
     {
       "id": "4_12_7_4",
@@ -193,7 +202,7 @@
       "source-rules": [
         "4.12.7(4)"
       ],
-      "mapping-confidence": 1.0,
+      "mapping-confidence": 1,
       "checklist-items": [
         {
           "label": "Full name"
@@ -222,7 +231,7 @@
       "source-rules": [
         "4.12.8"
       ],
-      "mapping-confidence": 1.0
+      "mapping-confidence": 1
     },
     {
       "id": "4_12_9",
@@ -250,7 +259,7 @@
         "4.12.9(1)(a)",
         "4.12.9(1)(b)"
       ],
-      "mapping-confidence": 1.0
+      "mapping-confidence": 1
     },
     {
       "id": "4_12_9_2",
@@ -263,7 +272,7 @@
       "source-rules": [
         "4.12.9(2)"
       ],
-      "mapping-confidence": 1.0
+      "mapping-confidence": 1
     },
     {
       "id": "4_12_9_3",
@@ -279,10 +288,16 @@
         "4.12.9(3)(b)",
         "4.12.9(3)(c)"
       ],
-      "mapping-confidence": 1.0
+      "mapping-confidence": 1
     }
   ],
   "groups": [
+    {
+      "id": "process-existence",
+      "title": "Process Confirmation",
+      "description": "Before answering the detailed compliance questions, confirm whether your organisation operates this business process.",
+      "variant": "main"
+    },
     {
       "id": "general-obligation",
       "title": "General Beneficial Ownership Obligation",
@@ -323,7 +338,7 @@
     {
       "id": "fallback-procedure",
       "title": "Unable to Determine Beneficial Owner",
-      "description": "Fallback procedures when beneficial owner cannot be ascertained\u2014identify and verify individuals meeting specified thresholds or holding key positions.",
+      "description": "Fallback procedures when beneficial owner cannot be ascertained—identify and verify individuals meeting specified thresholds or holding key positions.",
       "variant": "main"
     }
   ],

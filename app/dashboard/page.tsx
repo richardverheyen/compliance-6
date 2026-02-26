@@ -1,6 +1,7 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+import dynamic from "next/dynamic";
 import Link from "next/link";
 import { useAuthStore } from "@/lib/auth-store";
 import { useComplianceStore } from "@/lib/compliance-store";
@@ -8,6 +9,11 @@ import { getProcessRating } from "@/lib/types/compliance";
 import type { ActiveRegulation, RegulationProcess, SelfAssessment } from "@/lib/types/compliance";
 import { ProcessTable } from "@/components/compliance/ProcessTable";
 import { ComplianceCalendar } from "@/components/compliance/ComplianceCalendar";
+
+const ReportModal = dynamic(
+  () => import("@/components/reports/ReportModal").then((m) => m.ReportModal),
+  { ssr: false },
+);
 
 function formatDate(isoString: string): string {
   return new Date(isoString).toLocaleDateString("en-AU", {
@@ -74,6 +80,7 @@ export default function DashboardPage() {
     getActiveAssessment,
     getLastCompletedAssessment,
   } = useComplianceStore();
+  const [reportModalOpen, setReportModalOpen] = useState(false);
 
   useEffect(() => {
     if (teamMembers.length === 0) {
@@ -104,10 +111,31 @@ export default function DashboardPage() {
   return (
     <div className="px-4 py-12">
       <div className="mx-auto max-w-7xl">
-        <h1 className="text-3xl font-bold text-gray-900">Dashboard</h1>
-        <p className="mt-2 text-gray-600">
-          Welcome back{user?.name ? `, ${user.name}` : ""}!
-        </p>
+        <div className="flex items-start justify-between">
+          <div>
+            <h1 className="text-3xl font-bold text-gray-900">Dashboard</h1>
+            <p className="mt-2 text-gray-600">
+              Welcome back{user?.name ? `, ${user.name}` : ""}!
+            </p>
+          </div>
+          {activeRegulations.length > 0 && (
+            <button
+              type="button"
+              onClick={() => setReportModalOpen(true)}
+              className="flex items-center gap-2 rounded-lg bg-indigo-600 px-4 py-2.5 text-sm font-semibold text-white hover:bg-indigo-500"
+            >
+              <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+                />
+              </svg>
+              Generate Report
+            </button>
+          )}
+        </div>
 
         {activeRegulations.length === 0 ? (
           <div className="mt-8 rounded-xl border border-gray-200 p-8 text-center">
@@ -197,6 +225,11 @@ export default function DashboardPage() {
           </div>
         )}
       </div>
+
+      <ReportModal
+        isOpen={reportModalOpen}
+        onClose={() => setReportModalOpen(false)}
+      />
     </div>
   );
 }

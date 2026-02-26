@@ -2,34 +2,34 @@ import Link from "next/link";
 
 const features = [
   {
-    title: "Regulatory Tracking",
+    title: "Regulation Self Assessments",
     description:
-      "Monitor regulatory changes across 50+ jurisdictions in real time. Get alerts when new rules affect your business.",
+      "Conduct structured self-assessments against Australian regulatory frameworks. Each assessment guides you through your obligations section by section, so nothing gets missed.",
   },
   {
-    title: "Automated Audits",
+    title: "Regulation Library",
     description:
-      "Schedule and run compliance audits automatically. Generate detailed audit trails and reports with one click.",
+      "Pre-built assessment frameworks for key Australian regulations including the AML-CTF Rules and the Privacy Act 1988, maintained by our compliance experts.",
   },
   {
-    title: "Risk Assessment",
+    title: "Business Process Management",
     description:
-      "AI-powered risk scoring identifies your highest-priority compliance gaps and recommends remediation steps.",
+      "Define and document the business processes relevant to your regulatory obligations. Link processes to specific regulations to keep your compliance posture clear.",
   },
   {
-    title: "Policy Management",
+    title: "PDF Report Generation",
     description:
-      "Centralize all compliance policies. Track versions, approvals, and attestations in one place.",
+      "Generate a professional Executive Summary or a detailed Audit Report at the click of a button. Share with your board, auditors, or regulators with confidence.",
   },
   {
-    title: "Team Collaboration",
+    title: "Compliance Dashboard",
     description:
-      "Assign tasks, track progress, and collaborate across legal, engineering, and operations teams.",
+      "See the status of all your active regulations in one view. Track in-progress assessments, review completed ones, and understand your overall compliance position.",
   },
   {
-    title: "Reporting & Analytics",
+    title: "Assessment History",
     description:
-      "Executive dashboards and exportable reports for board meetings, auditors, and regulators.",
+      "Keep a full record of past assessments. Compare results over time to demonstrate continuous improvement and maintain a defensible compliance trail.",
   },
 ];
 
@@ -40,7 +40,7 @@ export default function FeaturesPage() {
         <div className="text-center">
           <h1 className="text-4xl font-bold text-gray-900">Features</h1>
           <p className="mx-auto mt-4 max-w-2xl text-gray-600">
-            Everything your team needs to stay compliant, in one platform.
+            Purpose-built tools to help Australian businesses manage their regulatory compliance with confidence.
           </p>
         </div>
         <div className="mt-16 grid gap-8 sm:grid-cols-2 lg:grid-cols-3">

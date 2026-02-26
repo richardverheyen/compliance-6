@@ -4,18 +4,27 @@ const plans = [
   {
     name: "Starter",
     price: "$99",
-    description: "For small teams getting started with compliance.",
-    features: ["Up to 5 users", "Basic regulatory tracking", "Monthly audit reports", "Email support"],
+    description: "For small teams beginning their compliance journey.",
+    features: [
+      "Up to 5 users",
+      "1 active regulation",
+      "Self assessment workflows",
+      "Business process management",
+      "PDF report generation",
+      "Email support",
+    ],
   },
   {
     name: "Professional",
     price: "$299",
-    description: "For growing teams that need more control.",
+    description: "For growing teams managing multiple regulatory obligations.",
     features: [
       "Up to 25 users",
-      "Advanced regulatory tracking",
-      "Weekly audit reports",
-      "Risk assessment dashboard",
+      "Up to 5 active regulations",
+      "Self assessment workflows",
+      "Business process management",
+      "PDF report generation",
+      "Assessment history & comparison",
       "Priority support",
     ],
     highlighted: true,
@@ -23,14 +32,17 @@ const plans = [
   {
     name: "Enterprise",
     price: "Custom",
-    description: "For large organizations with complex needs.",
+    description: "For larger organisations with complex compliance needs.",
     features: [
       "Unlimited users",
-      "Custom integrations",
-      "Real-time audit monitoring",
+      "Unlimited regulations",
+      "Self assessment workflows",
+      "Business process management",
+      "PDF report generation",
+      "Assessment history & comparison",
       "Dedicated account manager",
+      "Custom regulation frameworks",
       "SLA guarantee",
-      "SSO & SAML",
     ],
   },
 ];
@@ -81,7 +93,7 @@ export default function PricingPage() {
                     : "border border-gray-300 text-gray-700 hover:bg-gray-50"
                 }`}
               >
-                {plan.price === "Custom" ? "Contact Sales" : "Get Started"}
+                {plan.price === "Custom" ? "Contact Us" : "Get Started"}
               </Link>
             </div>
           ))}

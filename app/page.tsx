@@ -2,9 +2,9 @@ import Link from "next/link";
 
 const features = [
   {
-    title: "Regulatory Tracking",
+    title: "Regulation Self Assessments",
     description:
-      "Stay on top of changing regulations across jurisdictions with real-time monitoring and alerts.",
+      "Step through structured, guided assessments mapped directly to regulatory frameworks. Know exactly where you stand against each obligation.",
     icon: (
       <svg className="h-8 w-8 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" />
@@ -12,48 +12,48 @@ const features = [
     ),
   },
   {
-    title: "Automated Audits",
+    title: "Business Process Management",
     description:
-      "Run continuous compliance audits automatically and receive detailed reports without manual effort.",
+      "Document and manage the business processes tied to your compliance obligations. Keep your team aligned and your processes audit-ready.",
+    icon: (
+      <svg className="h-8 w-8 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zm10 0a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zm10 0a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" />
+      </svg>
+    ),
+  },
+  {
+    title: "Instant Compliance Reports",
+    description:
+      "Generate professional Executive Summaries and detailed Audit Reports as PDFs the moment your assessment is complete.",
     icon: (
       <svg className="h-8 w-8 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
       </svg>
     ),
   },
-  {
-    title: "Risk Assessment",
-    description:
-      "Identify and prioritize compliance risks with AI-powered analysis and actionable recommendations.",
-    icon: (
-      <svg className="h-8 w-8 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4.5c-.77-.833-2.694-.833-3.464 0L3.34 16.5c-.77.833.192 2.5 1.732 2.5z" />
-      </svg>
-    ),
-  },
 ];
 
 const steps = [
-  { step: "1", title: "Connect", description: "Integrate your existing systems and data sources in minutes." },
-  { step: "2", title: "Scan", description: "Our engine continuously scans for compliance gaps and violations." },
-  { step: "3", title: "Report", description: "Get actionable reports and remediation steps delivered to your team." },
+  { step: "1", title: "Activate a Regulation", description: "Select the regulations applicable to your business from our pre-built library of Australian compliance frameworks." },
+  { step: "2", title: "Complete Your Assessment", description: "Work through each business process with guided questions. Your answers are saved as you go." },
+  { step: "3", title: "Generate Your Report", description: "Export a professional Executive Summary or detailed Audit Report PDF instantly when your assessment is done." },
 ];
 
 const testimonials = [
   {
-    quote: "Valour Compliance cut our audit preparation time by 70%. It's a game-changer for our legal team.",
-    name: "Sarah Chen",
-    title: "VP of Compliance, Meridian Financial",
+    quote: "Valour Compliance gave us a clear, structured way to assess our AML-CTF obligations. What used to take weeks of back-and-forth now takes hours.",
+    name: "Michelle Tran",
+    title: "Chief Compliance Officer, Harbour Capital",
   },
   {
-    quote: "We went from quarterly manual checks to continuous monitoring overnight. The ROI was immediate.",
-    name: "James Rodriguez",
-    title: "CTO, Apex Healthcare",
+    quote: "The ability to generate a polished audit report the moment we finish our assessment has been invaluable for our board reporting cycle.",
+    name: "David Okafor",
+    title: "Head of Risk, Pacific Lending Group",
   },
   {
-    quote: "Finally, a compliance tool that developers and compliance officers both love using.",
-    name: "Emily Nakamura",
-    title: "Head of Engineering, Stratos Inc.",
+    quote: "Our compliance team finally has a single place to manage processes and track assessments. It's exactly what we needed.",
+    name: "Sophie Marshall",
+    title: "Legal & Compliance Manager, Crestview Financial",
   },
 ];
 
@@ -64,12 +64,12 @@ export default function Home() {
       <section className="bg-gradient-to-b from-indigo-50 to-white px-4 py-24 text-center sm:py-32">
         <div className="mx-auto max-w-3xl">
           <h1 className="text-4xl font-bold tracking-tight text-gray-900 sm:text-6xl">
-            Compliance validation,{" "}
-            <span className="text-indigo-600">simplified</span>
+            Compliance self-assessments,{" "}
+            <span className="text-indigo-600">done right</span>
           </h1>
           <p className="mt-6 text-lg leading-8 text-gray-600">
-            Automate regulatory tracking, continuous audits, and risk assessment.
-            Stay compliant without the manual burden.
+            Assess your business against Australian regulatory frameworks, manage your
+            compliance processes, and generate audit-ready reports — all in one place.
           </p>
           <div className="mt-10 flex items-center justify-center gap-4">
             <Link
@@ -79,10 +79,10 @@ export default function Home() {
               Get Started
             </Link>
             <Link
-              href="/signup"
+              href="/features"
               className="rounded-lg border border-indigo-600 px-6 py-3 text-sm font-semibold text-indigo-600 hover:bg-indigo-50"
             >
-              Request a Demo
+              See How It Works
             </Link>
           </div>
         </div>
@@ -92,10 +92,10 @@ export default function Home() {
       <section className="px-4 py-20">
         <div className="mx-auto max-w-7xl">
           <h2 className="text-center text-3xl font-bold text-gray-900">
-            Everything you need for compliance
+            Everything you need to stay compliant
           </h2>
           <p className="mx-auto mt-4 max-w-2xl text-center text-gray-600">
-            Purpose-built tools that make compliance manageable for teams of any size.
+            Built by Australian compliance experts for Australian businesses.
           </p>
           <div className="mt-16 grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
             {features.map((f) => (
@@ -136,7 +136,7 @@ export default function Home() {
       <section className="px-4 py-20">
         <div className="mx-auto max-w-7xl">
           <h2 className="text-center text-3xl font-bold text-gray-900">
-            Trusted by compliance teams everywhere
+            Trusted by compliance teams across Australia
           </h2>
           <div className="mt-16 grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
             {testimonials.map((t) => (
@@ -159,10 +159,10 @@ export default function Home() {
       <section className="bg-indigo-600 px-4 py-20 text-center">
         <div className="mx-auto max-w-3xl">
           <h2 className="text-3xl font-bold text-white">
-            Ready to streamline your compliance?
+            Ready to take control of your compliance?
           </h2>
           <p className="mt-4 text-indigo-100">
-            Join hundreds of teams that trust Valour Compliance to keep them compliant.
+            Join Australian businesses using Valour Compliance to simplify their regulatory obligations.
           </p>
           <div className="mt-8 flex items-center justify-center gap-4">
             <Link
@@ -172,10 +172,10 @@ export default function Home() {
               Get Started Free
             </Link>
             <Link
-              href="/signup"
+              href="/about"
               className="rounded-lg border border-white px-6 py-3 text-sm font-semibold text-white hover:bg-indigo-700"
             >
-              Request a Demo
+              Learn About Us
             </Link>
           </div>
         </div>

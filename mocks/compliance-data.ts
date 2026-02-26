@@ -355,13 +355,8 @@ export function computeProcessesFromAnswers(
     const answers = sectionAnswers[slug] || {};
 
     const steps = data.fields.map((field) => {
-      const status = getFieldStatus(field, answers);
-      let rating: ComplianceRating;
-      if (status === "success") rating = "green";
-      else if (status === "error") rating = "red";
-      else if (status === "warning") rating = "yellow";
-      else rating = "red"; // pending = not yet answered
-
+      const rating: ComplianceRating =
+        getFieldStatus(field, answers) === "success" ? "green" : "red";
       return {
         id: field.id,
         title: field.label,

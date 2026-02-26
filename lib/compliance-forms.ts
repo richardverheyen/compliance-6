@@ -73,15 +73,7 @@ export function getFieldStatus(
   data: Record<string, string>,
 ): FieldStatus {
   const answer = data[field.id];
-  const detail = data[`${field.id}_detail`];
-
-  if (answer === undefined || answer === "") return "pending";
-  if (!field["correct-option"] || field["correct-option"] === "N/A")
-    return "success";
-  if (answer !== field["correct-option"]) return "error";
-  if (field["detail-required"] && (!detail || detail.trim() === ""))
-    return "warning";
-  return "success";
+  return answer !== undefined && answer !== "" ? "success" : "pending";
 }
 
 export function getGroupMetrics(
@@ -130,7 +122,6 @@ export function computeSectionRating(
 
   let totalFields = 0;
   let greenFields = 0;
-  let hasError = false;
 
   for (const root of rootGroups) {
     const metrics = getGroupMetrics(
@@ -147,23 +138,11 @@ export function computeSectionRating(
   // Fallback: no groups at all
   if (rootGroups.length === 0) {
     sectionData.fields.forEach((f) => {
-      const status = getFieldStatus(f, answers);
       totalFields++;
-      if (status === "success") greenFields++;
-      if (status === "error") hasError = true;
+      if (getFieldStatus(f, answers) === "success") greenFields++;
     });
   }
 
-  // Check for any errors
-  for (const field of sectionData.fields) {
-    const status = getFieldStatus(field, answers);
-    if (status === "error") {
-      hasError = true;
-      break;
-    }
-  }
-
-  if (hasError) return "red";
   if (totalFields === 0) return "green";
   const score = greenFields / totalFields;
   if (score >= 1) return "green";

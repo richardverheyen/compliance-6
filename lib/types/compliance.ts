@@ -46,12 +46,23 @@ export interface BusinessProfile {
   services: string[];
 }
 
+export interface SelfAssessment {
+  id: string;
+  regulationId: string;
+  status: "in_progress" | "completed";
+  startedAt: string;
+  completedAt?: string;
+  completedBy?: string;
+  sectionAnswers: Record<string, Record<string, string>>;
+}
+
 export interface ActiveRegulation {
   regulationId: string;
   activatedAt: string;
   businessProfile: BusinessProfile;
-  sectionAnswers: Record<string, Record<string, string>>;
   processes: BusinessProcess[];
+  selfAssessments: SelfAssessment[];
+  activeAssessmentId: string | null;
 }
 
 export interface TeamMember {

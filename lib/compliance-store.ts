@@ -3,6 +3,7 @@ import { persist } from "zustand/middleware";
 import type {
   Regulation,
   ActiveRegulation,
+  SelfAssessment,
   BusinessProfile,
   TeamMember,
   ComplianceEvent,
@@ -29,6 +30,12 @@ interface ComplianceState {
   getSectionAnswers: (regulationId: string, sectionId: string) => Record<string, string>;
   clearSectionAnswers: (regulationId: string, sectionId: string) => void;
 
+  // Self assessment actions
+  startSelfAssessment: (regulationId: string, introAnswers: Record<string, string>) => void;
+  completeSelfAssessment: (regulationId: string, completedBy: string) => void;
+  getActiveAssessment: (regulationId: string) => SelfAssessment | undefined;
+  getLastCompletedAssessment: (regulationId: string) => SelfAssessment | undefined;
+
   // Team
   fetchTeam: () => Promise<void>;
   addTeamMember: (member: { name: string; email: string; role: string }) => Promise<void>;
@@ -45,10 +52,20 @@ interface ComplianceState {
   getRegulationProcessOwner: (processId: string) => string | undefined;
 }
 
+function getAssessmentSectionAnswers(al: ActiveRegulation): Record<string, Record<string, string>> {
+  const active = al.selfAssessments.find((s) => s.id === al.activeAssessmentId);
+  if (active) return active.sectionAnswers;
+  const completed = [...al.selfAssessments]
+    .filter((s) => s.status === "completed")
+    .sort((a, b) => (b.completedAt ?? "").localeCompare(a.completedAt ?? ""));
+  return completed[0]?.sectionAnswers ?? {};
+}
+
 function recomputeProcesses(al: ActiveRegulation): ActiveRegulation {
+  const sectionAnswers = getAssessmentSectionAnswers(al);
   return {
     ...al,
-    processes: computeProcessesFromAnswers(al.sectionAnswers).map((p) => {
+    processes: computeProcessesFromAnswers(sectionAnswers).map((p) => {
       // Preserve existing owner assignments
       const existing = al.processes.find((ep) => ep.id === p.id);
       return existing ? { ...p, ownerId: existing.ownerId } : p;
@@ -81,15 +98,20 @@ export const useComplianceStore = create<ComplianceState>()(
       hasActiveRegulations: () => get().activeRegulations.length > 0,
 
       activateRegulation: (id, profile, introAnswers) => {
-        const sectionAnswers: Record<string, Record<string, string>> = {
-          "risk-assessment": introAnswers,
+        const firstAssessment: SelfAssessment = {
+          id: Date.now().toString(),
+          regulationId: id,
+          status: "in_progress",
+          startedAt: new Date().toISOString(),
+          sectionAnswers: { "risk-assessment": introAnswers },
         };
         const newActive: ActiveRegulation = {
           regulationId: id,
           activatedAt: new Date().toISOString(),
           businessProfile: profile,
-          sectionAnswers,
-          processes: computeProcessesFromAnswers(sectionAnswers),
+          selfAssessments: [firstAssessment],
+          activeAssessmentId: firstAssessment.id,
+          processes: computeProcessesFromAnswers({ "risk-assessment": introAnswers }),
         };
         set((state) => ({
           activeRegulations: [
@@ -103,34 +125,97 @@ export const useComplianceStore = create<ComplianceState>()(
         set((state) => ({
           activeRegulations: state.activeRegulations.map((al) => {
             if (al.regulationId !== regulationId) return al;
-            const updated = {
-              ...al,
-              sectionAnswers: {
-                ...al.sectionAnswers,
-                [sectionId]: answers,
-              },
-            };
+            if (!al.activeAssessmentId) return al;
+            const updatedAssessments = al.selfAssessments.map((s) => {
+              if (s.id !== al.activeAssessmentId) return s;
+              return { ...s, sectionAnswers: { ...s.sectionAnswers, [sectionId]: answers } };
+            });
+            const updated = { ...al, selfAssessments: updatedAssessments };
             return recomputeProcesses(updated);
           }),
         }));
       },
 
       getSectionAnswers: (regulationId, sectionId) => {
-        const al = get().activeRegulations.find(
-          (a) => a.regulationId === regulationId,
-        );
-        return al?.sectionAnswers?.[sectionId] || {};
+        const al = get().activeRegulations.find((a) => a.regulationId === regulationId);
+        if (!al) return {};
+        return getAssessmentSectionAnswers(al)[sectionId] ?? {};
       },
 
       clearSectionAnswers: (regulationId, sectionId) => {
         set((state) => ({
           activeRegulations: state.activeRegulations.map((al) => {
             if (al.regulationId !== regulationId) return al;
-            const { [sectionId]: _, ...rest } = al.sectionAnswers;
-            const updated = { ...al, sectionAnswers: rest };
+            if (!al.activeAssessmentId) return al;
+            const updatedAssessments = al.selfAssessments.map((s) => {
+              if (s.id !== al.activeAssessmentId) return s;
+              const { [sectionId]: _, ...rest } = s.sectionAnswers;
+              return { ...s, sectionAnswers: rest };
+            });
+            const updated = { ...al, selfAssessments: updatedAssessments };
             return recomputeProcesses(updated);
           }),
         }));
+      },
+
+      startSelfAssessment: (regulationId, introAnswers) => {
+        set((state) => ({
+          activeRegulations: state.activeRegulations.map((al) => {
+            if (al.regulationId !== regulationId) return al;
+            const newAssessment: SelfAssessment = {
+              id: Date.now().toString(),
+              regulationId,
+              status: "in_progress",
+              startedAt: new Date().toISOString(),
+              sectionAnswers: { "risk-assessment": introAnswers },
+            };
+            const updated = {
+              ...al,
+              selfAssessments: [...al.selfAssessments, newAssessment],
+              activeAssessmentId: newAssessment.id,
+            };
+            return recomputeProcesses(updated);
+          }),
+        }));
+      },
+
+      completeSelfAssessment: (regulationId, completedBy) => {
+        set((state) => ({
+          activeRegulations: state.activeRegulations.map((al) => {
+            if (al.regulationId !== regulationId) return al;
+            if (!al.activeAssessmentId) return al;
+            const updatedAssessments = al.selfAssessments.map((s) => {
+              if (s.id !== al.activeAssessmentId) return s;
+              return {
+                ...s,
+                status: "completed" as const,
+                completedAt: new Date().toISOString(),
+                completedBy,
+              };
+            });
+            const updated = {
+              ...al,
+              selfAssessments: updatedAssessments,
+              activeAssessmentId: null,
+            };
+            return recomputeProcesses(updated);
+          }),
+        }));
+      },
+
+      getActiveAssessment: (regulationId) => {
+        const al = get().activeRegulations.find((a) => a.regulationId === regulationId);
+        if (!al || !al.activeAssessmentId) return undefined;
+        return al.selfAssessments.find((s) => s.id === al.activeAssessmentId);
+      },
+
+      getLastCompletedAssessment: (regulationId) => {
+        const al = get().activeRegulations.find((a) => a.regulationId === regulationId);
+        if (!al) return undefined;
+        const completed = [...al.selfAssessments]
+          .filter((s) => s.status === "completed")
+          .sort((a, b) => (b.completedAt ?? "").localeCompare(a.completedAt ?? ""));
+        return completed[0];
       },
 
       fetchTeam: async () => {
@@ -209,6 +294,6 @@ export const useComplianceStore = create<ComplianceState>()(
 
       getRegulationProcessOwner: (processId) => get().processAssignments[processId],
     }),
-    { name: "compliance-storage" },
+    { name: "compliance-storage-v2" },
   ),
 );

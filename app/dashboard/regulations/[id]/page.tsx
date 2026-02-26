@@ -4,7 +4,9 @@ import { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import Link from "next/link";
 import { useComplianceStore } from "@/lib/compliance-store";
+import { useAuthStore } from "@/lib/auth-store";
 import type { Regulation } from "@/lib/types/compliance";
+import { getProcessRating } from "@/lib/types/compliance";
 import { AssignOwnerModal } from "@/components/compliance/AssignOwnerModal";
 import MermaidDiagram from "@/components/compliance/MermaidDiagram";
 import type { IntroductionData, RegulationManifest, ProcessListEntry } from "@/lib/types/regulation-content";
@@ -41,11 +43,21 @@ function deriveAnswers(
   return derived;
 }
 
+function formatDate(isoString: string): string {
+  return new Date(isoString).toLocaleDateString("en-AU", {
+    day: "numeric",
+    month: "short",
+    year: "numeric",
+  });
+}
+
 
 export default function RegulationDetailPage() {
   const params = useParams();
   const router = useRouter();
   const id = params.id as string;
+
+  const { user } = useAuthStore();
 
   const {
     regulations,
@@ -54,6 +66,10 @@ export default function RegulationDetailPage() {
     activateRegulation,
     getRegulationProcessOwner,
     getTeamMembersWithAuth,
+    getActiveAssessment,
+    getLastCompletedAssessment,
+    startSelfAssessment,
+    completeSelfAssessment,
   } = useComplianceStore();
 
   const [regulation, setRegulation] = useState<Regulation | undefined>();
@@ -66,6 +82,11 @@ export default function RegulationDetailPage() {
   const [showActivationForm, setShowActivationForm] = useState(false);
   const [filterActive, setFilterActive] = useState(true);
   const [assignModal, setAssignModal] = useState<{ processId: string; processName: string } | null>(null);
+
+  // Self-assessment UI state
+  const [showScopingForm, setShowScopingForm] = useState(false);
+  const [scopingAnswers, setScopingAnswers] = useState<Record<string, string>>({});
+  const [completedMessage, setCompletedMessage] = useState(false);
 
   // Dynamically fetched regulation content
   const [introData, setIntroData] = useState<IntroductionData | null>(null);
@@ -100,6 +121,38 @@ export default function RegulationDetailPage() {
   }, [id]);
 
   const active = getActiveRegulation(id);
+  const activeAssessment = active ? getActiveAssessment(id) : undefined;
+  const lastCompleted = active ? getLastCompletedAssessment(id) : undefined;
+
+  // Intro answers from the current or last completed assessment
+  const currentIntroAnswers =
+    activeAssessment?.sectionAnswers["risk-assessment"] ??
+    lastCompleted?.sectionAnswers["risk-assessment"] ??
+    {};
+
+  // Completion computation for State B
+  const assessmentVisibleEntries = (manifest?.processList ?? []).filter((e) =>
+    isProcessUnlocked(e, currentIntroAnswers),
+  );
+  const incompleteCount = activeAssessment
+    ? assessmentVisibleEntries.filter((e) => {
+        const bp = active?.processes.find((p) => p.id === e.id);
+        return !bp || getProcessRating(bp) !== "green";
+      }).length
+    : 0;
+  const allAssessmentComplete =
+    !!activeAssessment && assessmentVisibleEntries.length > 0 && incompleteCount === 0;
+
+  // Per-entry completion rating (only meaningful in state B)
+  function getEntryCompletion(entry: ProcessListEntry): "none" | "in-progress" | "green" {
+    if (!activeAssessment) return "none";
+    const entryAnswers = activeAssessment.sectionAnswers[entry.id];
+    const hasAnyAnswers = entryAnswers && Object.keys(entryAnswers).length > 0;
+    if (!hasAnyAnswers) return "none";
+    const bp = active?.processes.find((p) => p.id === entry.id);
+    if (!bp) return "none";
+    return getProcessRating(bp) === "green" ? "green" : "in-progress";
+  }
 
   if (!regulation || contentLoading) {
     return (
@@ -135,7 +188,19 @@ export default function RegulationDetailPage() {
     setShowActivationForm(false);
   }
 
-  const activeIntroAnswers = active?.sectionAnswers["risk-assessment"] ?? {};
+  function handleStartAssessment(e: React.FormEvent) {
+    e.preventDefault();
+    const fullAnswers = deriveAnswers(scopingAnswers, introData);
+    startSelfAssessment(id, fullAnswers);
+    setShowScopingForm(false);
+    setScopingAnswers({});
+    setCompletedMessage(false);
+  }
+
+  function handleCompleteAssessment() {
+    completeSelfAssessment(id, user?.name ?? "Unknown");
+    setCompletedMessage(true);
+  }
 
   return (
     <div className="px-4 py-12">
@@ -281,25 +346,164 @@ export default function RegulationDetailPage() {
               </form>
             ) : (
               <>
-                {/* CTA or active status */}
-                {!active ? (
+                {/* ── State A: not yet activated ── */}
+                {!active && (
                   <button
                     onClick={() => setShowActivationForm(true)}
                     className="w-full rounded-lg bg-indigo-600 px-4 py-3 text-sm font-semibold text-white hover:bg-indigo-500"
                   >
                     Begin Compliance Self-Assessment
                   </button>
-                ) : (
-                  <div className="rounded-xl border border-green-200 bg-green-50 p-4">
-                    <div className="flex items-center justify-between">
-                      <p className="font-medium text-green-800">Compliance tracking is active</p>
-                      <Link
-                        href="/dashboard"
-                        className="text-sm font-medium text-green-700 underline hover:text-green-600"
-                      >
-                        View Dashboard
-                      </Link>
+                )}
+
+                {/* ── State B: active + assessment in progress ── */}
+                {active && activeAssessment && (
+                  <div className="rounded-xl border border-indigo-200 bg-indigo-50 p-4">
+                    <div className="flex flex-wrap items-start justify-between gap-3">
+                      <div className="flex items-center gap-2">
+                        <span className="rounded-full bg-indigo-600 px-2.5 py-0.5 text-xs font-semibold text-white">
+                          Assessment in progress
+                        </span>
+                        <span className="text-xs text-indigo-700">
+                          Started {formatDate(activeAssessment.startedAt)}
+                        </span>
+                      </div>
+                      {allAssessmentComplete ? (
+                        <button
+                          onClick={handleCompleteAssessment}
+                          className="rounded-lg bg-green-600 px-4 py-1.5 text-sm font-semibold text-white hover:bg-green-500"
+                        >
+                          Complete Assessment
+                        </button>
+                      ) : (
+                        <span className="text-xs text-indigo-600">
+                          {incompleteCount} form{incompleteCount !== 1 ? "s" : ""} remaining
+                        </span>
+                      )}
                     </div>
+                  </div>
+                )}
+
+                {/* ── State C: active, no assessment, no history ── */}
+                {active && !activeAssessment && !lastCompleted && (
+                  <div className="space-y-4">
+                    {showScopingForm ? (
+                      <form onSubmit={handleStartAssessment} className="space-y-4">
+                        <div className="flex items-center justify-between">
+                          <h2 className="text-lg font-semibold text-gray-900">Start Your First Self Assessment</h2>
+                          <button
+                            type="button"
+                            onClick={() => { setShowScopingForm(false); setScopingAnswers({}); }}
+                            className="text-sm text-gray-500 hover:text-gray-700"
+                          >
+                            Cancel
+                          </button>
+                        </div>
+                        {introData && manifest?.hasIntroductionForm && (
+                          <div className="rounded-xl border border-gray-200 bg-white p-6">
+                            <h3 className="text-base font-semibold text-gray-900">Scoping Questions</h3>
+                            <p className="mt-1 text-sm text-gray-600">
+                              {introData.groups[0]?.description}
+                            </p>
+                            <div className="mt-4">
+                              <IntroForm
+                                introData={introData}
+                                answers={scopingAnswers}
+                                onChange={setScopingAnswers}
+                              />
+                            </div>
+                          </div>
+                        )}
+                        <button
+                          type="submit"
+                          className="w-full rounded-lg bg-indigo-600 px-4 py-2.5 text-sm font-semibold text-white hover:bg-indigo-500"
+                        >
+                          Start Assessment
+                        </button>
+                      </form>
+                    ) : (
+                      <div className="rounded-xl border border-dashed border-indigo-300 bg-indigo-50 p-6 text-center">
+                        <p className="text-sm font-medium text-indigo-900">No assessments yet</p>
+                        <p className="mt-1 text-xs text-indigo-700">
+                          Complete a self assessment to track your compliance over time.
+                        </p>
+                        <button
+                          onClick={() => setShowScopingForm(true)}
+                          className="mt-4 rounded-lg bg-indigo-600 px-4 py-2 text-sm font-semibold text-white hover:bg-indigo-500"
+                        >
+                          Start your first Self Assessment
+                        </button>
+                      </div>
+                    )}
+                  </div>
+                )}
+
+                {/* ── State D: active, no assessment, has history ── */}
+                {active && !activeAssessment && lastCompleted && (
+                  <div className="space-y-4">
+                    {completedMessage && (
+                      <div className="rounded-lg border border-green-200 bg-green-50 px-4 py-3 text-sm text-green-800">
+                        Assessment completed and recorded.
+                      </div>
+                    )}
+                    {showScopingForm ? (
+                      <form onSubmit={handleStartAssessment} className="space-y-4">
+                        <div className="flex items-center justify-between">
+                          <h2 className="text-lg font-semibold text-gray-900">New Self Assessment</h2>
+                          <button
+                            type="button"
+                            onClick={() => { setShowScopingForm(false); setScopingAnswers({}); }}
+                            className="text-sm text-gray-500 hover:text-gray-700"
+                          >
+                            Cancel
+                          </button>
+                        </div>
+                        {introData && manifest?.hasIntroductionForm && (
+                          <div className="rounded-xl border border-gray-200 bg-white p-6">
+                            <h3 className="text-base font-semibold text-gray-900">Scoping Questions</h3>
+                            <p className="mt-1 text-sm text-gray-600">
+                              {introData.groups[0]?.description}
+                            </p>
+                            <div className="mt-4">
+                              <IntroForm
+                                introData={introData}
+                                answers={scopingAnswers}
+                                onChange={setScopingAnswers}
+                              />
+                            </div>
+                          </div>
+                        )}
+                        <button
+                          type="submit"
+                          className="w-full rounded-lg bg-indigo-600 px-4 py-2.5 text-sm font-semibold text-white hover:bg-indigo-500"
+                        >
+                          Start Assessment
+                        </button>
+                      </form>
+                    ) : (
+                      <div className="rounded-xl border border-gray-200 bg-white p-4">
+                        <div className="flex flex-wrap items-center justify-between gap-3">
+                          <div>
+                            <p className="text-sm font-medium text-gray-900">
+                              Last assessed: {formatDate(lastCompleted.completedAt!)}
+                              {lastCompleted.completedBy && (
+                                <span className="text-gray-500"> · {lastCompleted.completedBy}</span>
+                              )}
+                            </p>
+                            <p className="mt-0.5 text-xs text-gray-500">
+                              {active.selfAssessments.filter((s) => s.status === "completed").length} assessment
+                              {active.selfAssessments.filter((s) => s.status === "completed").length !== 1 ? "s" : ""} completed
+                            </p>
+                          </div>
+                          <button
+                            onClick={() => setShowScopingForm(true)}
+                            className="rounded-lg bg-indigo-600 px-4 py-2 text-sm font-semibold text-white hover:bg-indigo-500"
+                          >
+                            Start New Self Assessment
+                          </button>
+                        </div>
+                      </div>
+                    )}
                   </div>
                 )}
 
@@ -326,7 +530,7 @@ export default function RegulationDetailPage() {
                     const entries = manifest.processList;
                     const visibleEntries = (!active || !filterActive)
                       ? entries
-                      : entries.filter((e) => isProcessUnlocked(e, activeIntroAnswers));
+                      : entries.filter((e) => isProcessUnlocked(e, currentIntroAnswers));
 
                     if (visibleEntries.length === 0) {
                       return (
@@ -336,14 +540,17 @@ export default function RegulationDetailPage() {
                       );
                     }
 
+                    const isClickable = !!active && !!activeAssessment;
+
                     return visibleEntries.map((entry) => {
                       const formHref = `/dashboard/regulations/${id}/processes/${entry.id}`;
                       const ownerId = active ? getRegulationProcessOwner(entry.id) : undefined;
                       const owner = ownerId ? getTeamMembersWithAuth().find((m) => m.id === ownerId) : undefined;
+                      const completion = isClickable ? getEntryCompletion(entry) : "none";
 
                       return (
-                        <div key={entry.id} className="overflow-hidden rounded-xl border border-gray-200 bg-white">
-                          {active ? (
+                        <div key={entry.id} className={`overflow-hidden rounded-xl border border-gray-200 bg-white ${!isClickable && active ? "opacity-70" : ""}`}>
+                          {isClickable ? (
                             <Link href={formHref} className="group flex items-start gap-3 px-4 py-3 transition-colors hover:bg-gray-50">
                               <div className="min-w-0 flex-1">
                                 <h3 className="text-sm font-semibold text-gray-900 group-hover:text-indigo-600">{entry.title}</h3>
@@ -351,7 +558,20 @@ export default function RegulationDetailPage() {
                                   <p className="mt-1 line-clamp-2 text-xs text-gray-500">{entry.description}</p>
                                 )}
                               </div>
-                              <div className="shrink-0 pt-0.5">
+                              <div className="flex shrink-0 items-center gap-2 pt-0.5">
+                                {/* Completion indicator */}
+                                {completion === "green" && (
+                                  <svg className="h-4 w-4 text-green-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+                                    <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                                  </svg>
+                                )}
+                                {completion === "in-progress" && (
+                                  <span className="h-2 w-2 rounded-full bg-yellow-400" />
+                                )}
+                                {completion === "none" && (
+                                  <span className="h-2 w-2 rounded-full bg-gray-300" />
+                                )}
+                                {/* Owner */}
                                 {owner ? (
                                   <span className="text-xs text-gray-500">
                                     <span className="font-medium text-gray-700">{owner.name}</span>

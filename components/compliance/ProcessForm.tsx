@@ -15,6 +15,7 @@ interface ProcessFormProps {
   introAnswers: Answers;
   regulationId: string;
   sectionId: string;
+  readOnly?: boolean;
   onAnswersChange: (answers: Answers) => void;
 }
 
@@ -39,56 +40,26 @@ function getChecklistStatus(ctrl: ProcessControl, answers: Answers): "pending" |
   for (let i = 0; i < items.length; i++) {
     const item = items[i];
     if (item.type === "or-group" && item.items) {
-      const anyChecked = item.items.some((_, j) => answers[`${ctrl.id}__ci_${i}_${j}`] === "true");
-      if (!anyChecked) return "pending";
+      if (item.items.some((_, j) => answers[`${ctrl.id}__ci_${i}_${j}`] === "true")) return "success";
     } else if (!("note" in item)) {
-      if (answers[`${ctrl.id}__ci_${i}`] !== "true") return "pending";
+      if (answers[`${ctrl.id}__ci_${i}`] === "true") return "success";
     }
   }
-  return "success";
+  return "pending";
 }
 
 function getControlStatus(ctrl: ProcessControl, answers: Answers): Status {
   if (ctrl["checklist-items"]) return getChecklistStatus(ctrl, answers);
-  const answer = answers[ctrl.id];
-  const detail = answers[`${ctrl.id}_detail`];
-  if (!answer) return "pending";
-  if (!ctrl["correct-option"] || ctrl["correct-option"] === "N/A") return "success";
-  if (answer !== ctrl["correct-option"]) return "error";
-  if (ctrl["detail-required"] && (!detail || !detail.trim())) return "warning";
-  return "success";
-}
-
-function getGroupScore(
-  groupId: string,
-  controls: ProcessControl[],
-  rules: ProcessFormData["rules"],
-  answers: Answers,
-  introAnswers: Answers,
-) {
-  const groupControls = controls.filter((c) => c.group === groupId);
-  let total = 0, green = 0;
-  groupControls.forEach((c) => {
-    if (!checkVisibility(c.id, rules, answers, introAnswers)) return;
-    total++;
-    if (getControlStatus(c, answers) === "success") green++;
-  });
-  return { score: total === 0 ? 1 : green / total, total, green };
-}
-
-function scoreClasses(score: number, total: number) {
-  if (total === 0) return "text-gray-400 bg-gray-100";
-  if (score >= 1)  return "text-green-700 bg-green-50";
-  if (score >= 0.5) return "text-yellow-700 bg-yellow-50";
-  return "text-orange-700 bg-orange-50";
+  return answers[ctrl.id] ? "success" : "pending";
 }
 
 // ─── Sub-components ───────────────────────────────────────────────────────────
 
-function SubScopingPanel({ subScoping, answers, onToggle }: {
+function SubScopingPanel({ subScoping, answers, onToggle, readOnly }: {
   subScoping: NonNullable<ProcessFormData["sub_scoping"]>;
   answers: Answers;
   onToggle: (id: string) => void;
+  readOnly?: boolean;
 }) {
   return (
     <div className="bg-white border border-blue-200 rounded-lg mb-3.5 overflow-hidden">
@@ -107,8 +78,13 @@ function SubScopingPanel({ subScoping, answers, onToggle }: {
             <button
               key={sub.id}
               type="button"
-              onClick={() => onToggle(sub.id)}
+              onClick={() => !readOnly && onToggle(sub.id)}
+              disabled={readOnly}
               className={`text-sm px-4 py-1.5 border-2 rounded font-medium transition-colors ${
+                readOnly
+                  ? "opacity-60 cursor-not-allowed"
+                  : ""
+              } ${
                 selected
                   ? "border-blue-500 bg-blue-100 text-blue-900"
                   : "border-blue-100 bg-white text-gray-700 hover:bg-blue-50 hover:border-blue-300"
@@ -131,12 +107,13 @@ function SourceRulePill({ ruleCode }: { ruleCode: string }) {
   );
 }
 
-function ControlRow({ ctrl, answers, rules, introAnswers, onAnswer }: {
+function ControlRow({ ctrl, answers, rules, introAnswers, onAnswer, readOnly }: {
   ctrl: ProcessControl;
   answers: Answers;
   rules: ProcessFormData["rules"];
   introAnswers: Answers;
   onAnswer: (key: string, val: string) => void;
+  readOnly?: boolean;
 }) {
   const visible = checkVisibility(ctrl.id, rules, answers, introAnswers);
   const answer = answers[ctrl.id];
@@ -160,7 +137,9 @@ function ControlRow({ ctrl, answers, rules, introAnswers, onAnswer }: {
           {(["Yes", "No"] as const).map((val) => (
             <label
               key={val}
-              className={`text-sm px-3.5 py-1 border rounded cursor-pointer transition-colors select-none ${
+              className={`text-sm px-3.5 py-1 border rounded transition-colors select-none ${
+                readOnly ? "pointer-events-none opacity-70" : "cursor-pointer"
+              } ${
                 answer === val
                   ? val === "Yes"
                     ? "bg-green-100 border-green-500 text-green-900 font-medium"
@@ -174,6 +153,7 @@ function ControlRow({ ctrl, answers, rules, introAnswers, onAnswer }: {
                 value={val}
                 checked={answer === val}
                 onChange={() => onAnswer(ctrl.id, val)}
+                disabled={readOnly}
                 className="sr-only"
               />
               {val}
@@ -192,7 +172,8 @@ function ControlRow({ ctrl, answers, rules, introAnswers, onAnswer }: {
             value={answers[`${ctrl.id}_detail`] ?? ""}
             onChange={(e) => onAnswer(`${ctrl.id}_detail`, e.target.value)}
             placeholder="Enter details…"
-            className="w-full px-2.5 py-1.5 border border-gray-200 rounded text-sm resize-y min-h-[60px] font-sans focus:outline-none focus:border-blue-400"
+            readOnly={readOnly}
+            className={`w-full px-2.5 py-1.5 border border-gray-200 rounded text-sm resize-y min-h-[60px] font-sans focus:outline-none focus:border-blue-400 ${readOnly ? "bg-gray-50 text-gray-500" : ""}`}
           />
         </div>
       )}
@@ -200,12 +181,13 @@ function ControlRow({ ctrl, answers, rules, introAnswers, onAnswer }: {
   );
 }
 
-function ChecklistControl({ ctrl, answers, rules, introAnswers, onAnswer }: {
+function ChecklistControl({ ctrl, answers, rules, introAnswers, onAnswer, readOnly }: {
   ctrl: ProcessControl;
   answers: Answers;
   rules: ProcessFormData["rules"];
   introAnswers: Answers;
   onAnswer: (key: string, val: string) => void;
+  readOnly?: boolean;
 }) {
   const visible = checkVisibility(ctrl.id, rules, answers, introAnswers);
   const items = ctrl["checklist-items"] ?? [];
@@ -239,11 +221,12 @@ function ChecklistControl({ ctrl, answers, rules, introAnswers, onAnswer }: {
                         <div className="flex-1 h-px bg-green-200" />
                       </div>
                     )}
-                    <label className="flex items-center gap-2.5 cursor-pointer">
+                    <label className={`flex items-center gap-2.5 ${readOnly ? "pointer-events-none" : "cursor-pointer"}`}>
                       <input
                         type="checkbox"
                         checked={answers[`${ctrl.id}__ci_${i}_${j}`] === "true"}
                         onChange={(e) => onAnswer(`${ctrl.id}__ci_${i}_${j}`, e.target.checked ? "true" : "false")}
+                        disabled={readOnly}
                         className="w-3.5 h-3.5 rounded accent-green-600 cursor-pointer shrink-0"
                       />
                       <span className="text-sm">{sub.label}</span>
@@ -254,11 +237,12 @@ function ChecklistControl({ ctrl, answers, rules, introAnswers, onAnswer }: {
             );
           }
           return (
-            <label key={i} className="flex items-start gap-2.5 py-1 border-b border-slate-50 last:border-b-0 cursor-pointer">
+            <label key={i} className={`flex items-start gap-2.5 py-1 border-b border-slate-50 last:border-b-0 ${readOnly ? "pointer-events-none" : "cursor-pointer"}`}>
               <input
                 type="checkbox"
                 checked={answers[`${ctrl.id}__ci_${i}`] === "true"}
                 onChange={(e) => onAnswer(`${ctrl.id}__ci_${i}`, e.target.checked ? "true" : "false")}
+                disabled={readOnly}
                 className="w-3.5 h-3.5 rounded accent-blue-600 cursor-pointer shrink-0 mt-0.5"
               />
               <span className="text-sm leading-snug">{item.label}</span>
@@ -273,7 +257,8 @@ function ChecklistControl({ ctrl, answers, rules, introAnswers, onAnswer }: {
             value={answers[`${ctrl.id}__other`] ?? ""}
             onChange={(e) => onAnswer(`${ctrl.id}__other`, e.target.value)}
             placeholder="Add any additional items your procedure covers…"
-            className="w-full px-2.5 py-1.5 border border-gray-200 rounded text-sm resize-y min-h-[34px] font-sans focus:outline-none focus:border-blue-400"
+            readOnly={readOnly}
+            className={`w-full px-2.5 py-1.5 border border-gray-200 rounded text-sm resize-y min-h-[34px] font-sans focus:outline-none focus:border-blue-400 ${readOnly ? "bg-gray-50 text-gray-500" : ""}`}
           />
         </div>
       </div>
@@ -281,11 +266,12 @@ function ChecklistControl({ ctrl, answers, rules, introAnswers, onAnswer }: {
   );
 }
 
-function FormLinkBlock({ link, answers, introAnswers, regulationId }: {
+function FormLinkBlock({ link, answers, introAnswers, regulationId, readOnly }: {
   link: NonNullable<ProcessFormData["form_links"]>[number];
   answers: Answers;
   introAnswers: Answers;
   regulationId: string;
+  readOnly?: boolean;
 }) {
   const [open, setOpen] = useState(false);
   const [linkedForm, setLinkedForm] = useState<ProcessFormData | null>(null);
@@ -362,13 +348,13 @@ function FormLinkBlock({ link, answers, introAnswers, regulationId }: {
                   key={group.id}
                   group={group}
                   controls={groupControls}
-                  allControls={linkedForm.controls}
                   rules={linkedForm.rules}
                   answers={linkedAnswers}
                   introAnswers={introAnswers}
                   formLinks={[]}
                   onAnswer={(k, v) => setLinkedAnswers((prev) => ({ ...prev, [k]: v }))}
                   regulationId={regulationId}
+                  readOnly={readOnly}
                 />
               );
             })
@@ -379,16 +365,16 @@ function FormLinkBlock({ link, answers, introAnswers, regulationId }: {
   );
 }
 
-function GroupCard({ group, controls, allControls, rules, answers, introAnswers, formLinks, onAnswer, regulationId }: {
+function GroupCard({ group, controls, rules, answers, introAnswers, formLinks, onAnswer, regulationId, readOnly }: {
   group: ProcessFormData["groups"][number];
   controls: ProcessControl[];
-  allControls: ProcessControl[];
   rules: ProcessFormData["rules"];
   answers: Answers;
   introAnswers: Answers;
   formLinks: NonNullable<ProcessFormData["form_links"]>;
   onAnswer: (k: string, v: string) => void;
   regulationId: string;
+  readOnly?: boolean;
 }) {
   const [collapsed, setCollapsed] = useState(false);
 
@@ -398,7 +384,6 @@ function GroupCard({ group, controls, allControls, rules, answers, introAnswers,
   if (!visible || (controls.length > 0 && !anyControlVisible)) return null;
 
   const isSubprocess = group.variant === "subprocess";
-  const { score, total, green } = getGroupScore(group.id, allControls, rules, answers, introAnswers);
 
   return (
     <div className={`bg-white border border-gray-200 rounded-lg mb-3.5 overflow-hidden ${
@@ -425,11 +410,6 @@ function GroupCard({ group, controls, allControls, rules, answers, introAnswers,
             </span>
           )}
         </div>
-        {total > 0 && (
-          <span className={`text-xs font-bold px-2.5 py-0.5 rounded-full ${scoreClasses(score, total)}`}>
-            {green}/{total}
-          </span>
-        )}
       </button>
 
       {!collapsed && (
@@ -450,6 +430,7 @@ function GroupCard({ group, controls, allControls, rules, answers, introAnswers,
                   rules={rules}
                   introAnswers={introAnswers}
                   onAnswer={onAnswer}
+                  readOnly={readOnly}
                 />
               ) : (
                 <ControlRow
@@ -459,6 +440,7 @@ function GroupCard({ group, controls, allControls, rules, answers, introAnswers,
                   rules={rules}
                   introAnswers={introAnswers}
                   onAnswer={onAnswer}
+                  readOnly={readOnly}
                 />
               );
               // Render form-link blocks gated by this control inline after it
@@ -473,6 +455,7 @@ function GroupCard({ group, controls, allControls, rules, answers, introAnswers,
                       answers={answers}
                       introAnswers={introAnswers}
                       regulationId={regulationId}
+                      readOnly={readOnly}
                     />
                   ))}
                 </div>
@@ -492,6 +475,7 @@ export function ProcessForm({
   introAnswers,
   regulationId,
   sectionId,
+  readOnly,
   onAnswersChange,
 }: ProcessFormProps) {
   const [answers, setAnswers] = useState<Answers>(initialAnswers);
@@ -537,14 +521,33 @@ export function ProcessForm({
     }
   });
 
+  // Overall form progress: count visible controls with any answer
+  let totalControls = 0;
+  let answeredControls = 0;
+  form.controls.forEach((ctrl) => {
+    if (!checkVisibility(ctrl.id, form.rules, answers, introAnswers)) return;
+    totalControls++;
+    if (getControlStatus(ctrl, answers) === "success") answeredControls++;
+  });
+  const progressPct = totalControls === 0 ? 0 : Math.round((answeredControls / totalControls) * 100);
+  const allAnswered = totalControls > 0 && answeredControls === totalControls;
+
   return (
     <div>
+      {/* Read-only banner */}
+      {readOnly && (
+        <div className="mb-4 rounded-lg border border-amber-200 bg-amber-50 px-4 py-2.5 text-sm text-amber-800">
+          Read-only — no assessment in progress. Answers cannot be changed.
+        </div>
+      )}
+
       {/* Sub-scoping panel */}
       {hasSubScoping && (
         <SubScopingPanel
           subScoping={subScoping}
           answers={answers}
           onToggle={handleSubTypeToggle}
+          readOnly={readOnly}
         />
       )}
 
@@ -558,19 +561,37 @@ export function ProcessForm({
         </div>
       ) : (
         <>
+          {/* Progress bar */}
+          {totalControls > 0 && (
+            <div className="mb-4 rounded-lg border border-gray-200 bg-white px-4 py-3">
+              <div className="flex items-center justify-between text-xs text-gray-500 mb-2">
+                <span>{answeredControls} of {totalControls} questions answered</span>
+                <span className={`font-semibold ${allAnswered ? "text-green-600" : "text-indigo-600"}`}>
+                  {progressPct}%
+                </span>
+              </div>
+              <div className="h-1.5 rounded-full bg-gray-100 overflow-hidden">
+                <div
+                  className={`h-full rounded-full transition-all duration-300 ${allAnswered ? "bg-green-500" : "bg-indigo-500"}`}
+                  style={{ width: `${progressPct}%` }}
+                />
+              </div>
+            </div>
+          )}
+
           {/* Groups */}
           {form.groups.map((group) => (
             <GroupCard
               key={group.id}
               group={group}
               controls={controlsByGroup[group.id] ?? []}
-              allControls={form.controls}
               rules={form.rules}
               answers={answers}
               introAnswers={introAnswers}
               formLinks={formLinks}
               onAnswer={handleAnswer}
               regulationId={regulationId}
+              readOnly={readOnly}
             />
           ))}
 
@@ -582,9 +603,9 @@ export function ProcessForm({
               </div>
               {ungrouped.map((ctrl) =>
                 ctrl["checklist-items"] ? (
-                  <ChecklistControl key={ctrl.id} ctrl={ctrl} answers={answers} rules={form.rules} introAnswers={introAnswers} onAnswer={handleAnswer} />
+                  <ChecklistControl key={ctrl.id} ctrl={ctrl} answers={answers} rules={form.rules} introAnswers={introAnswers} onAnswer={handleAnswer} readOnly={readOnly} />
                 ) : (
-                  <ControlRow key={ctrl.id} ctrl={ctrl} answers={answers} rules={form.rules} introAnswers={introAnswers} onAnswer={handleAnswer} />
+                  <ControlRow key={ctrl.id} ctrl={ctrl} answers={answers} rules={form.rules} introAnswers={introAnswers} onAnswer={handleAnswer} readOnly={readOnly} />
                 )
               )}
             </div>
@@ -600,20 +621,23 @@ export function ProcessForm({
                 answers={answers}
                 introAnswers={introAnswers}
                 regulationId={regulationId}
+                readOnly={readOnly}
               />
             ))}
         </>
       )}
 
-      {/* Save button */}
-      <div className="mt-4 flex justify-end">
-        <button
-          onClick={() => onAnswersChange(answers)}
-          className="rounded-lg bg-indigo-600 px-6 py-2.5 text-sm font-semibold text-white hover:bg-indigo-500"
-        >
-          Save Progress
-        </button>
-      </div>
+      {/* Save button — hidden when read-only */}
+      {!readOnly && (
+        <div className="mt-4 flex justify-end">
+          <button
+            onClick={() => onAnswersChange(answers)}
+            className="rounded-lg bg-indigo-600 px-6 py-2.5 text-sm font-semibold text-white hover:bg-indigo-500"
+          >
+            Save Progress
+          </button>
+        </div>
+      )}
     </div>
   );
 }

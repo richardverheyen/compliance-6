@@ -8,10 +8,11 @@ import { ProcessForm } from "@/components/compliance/ProcessForm";
 interface SectionFormProps {
   regulationId: string;
   sectionId: string;
+  readOnly?: boolean;
   onSave?: () => void;
 }
 
-export function SectionForm({ regulationId, sectionId, onSave }: SectionFormProps) {
+export function SectionForm({ regulationId, sectionId, readOnly, onSave }: SectionFormProps) {
   const { getSectionAnswers, saveSectionAnswers } = useComplianceStore();
   const [form, setForm] = useState<ProcessFormData | null>(null);
   const [loading, setLoading] = useState(true);
@@ -59,8 +60,10 @@ export function SectionForm({ regulationId, sectionId, onSave }: SectionFormProp
   const introAnswers = getSectionAnswers(regulationId, "risk-assessment");
 
   function handleAnswersChange(answers: Record<string, string>) {
-    saveSectionAnswers(regulationId, sectionId, answers);
-    onSave?.();
+    if (!readOnly) {
+      saveSectionAnswers(regulationId, sectionId, answers);
+      onSave?.();
+    }
   }
 
   return (
@@ -70,6 +73,7 @@ export function SectionForm({ regulationId, sectionId, onSave }: SectionFormProp
       introAnswers={introAnswers}
       regulationId={regulationId}
       sectionId={sectionId}
+      readOnly={readOnly}
       onAnswersChange={handleAnswersChange}
     />
   );

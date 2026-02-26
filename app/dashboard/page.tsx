@@ -5,14 +5,75 @@ import Link from "next/link";
 import { useAuthStore } from "@/lib/auth-store";
 import { useComplianceStore } from "@/lib/compliance-store";
 import { getProcessRating } from "@/lib/types/compliance";
-import type { RegulationProcess } from "@/lib/types/compliance";
+import type { ActiveRegulation, RegulationProcess, SelfAssessment } from "@/lib/types/compliance";
 import { ProcessTable } from "@/components/compliance/ProcessTable";
 import { ComplianceCalendar } from "@/components/compliance/ComplianceCalendar";
 
+function formatDate(isoString: string): string {
+  return new Date(isoString).toLocaleDateString("en-AU", {
+    day: "numeric",
+    month: "short",
+    year: "numeric",
+  });
+}
+
+function SelfAssessmentCard({
+  al,
+  regulationShortName,
+  regulationAgency,
+  activeAssessment,
+  lastCompleted,
+}: {
+  al: ActiveRegulation;
+  regulationShortName: string;
+  regulationAgency: string;
+  activeAssessment: SelfAssessment | undefined;
+  lastCompleted: SelfAssessment | undefined;
+}) {
+  const href = `/dashboard/regulations/${al.regulationId}`;
+
+  return (
+    <div className="flex items-center justify-between rounded-xl border border-gray-200 bg-white px-5 py-4">
+      <div className="min-w-0">
+        <div className="flex items-center gap-2">
+          <span className="text-sm font-semibold text-gray-900">{regulationShortName}</span>
+          <span className="rounded-full bg-indigo-50 px-2 py-0.5 text-xs font-medium text-indigo-700">
+            {regulationAgency}
+          </span>
+        </div>
+        <p className="mt-1 text-xs text-gray-500">
+          {activeAssessment ? (
+            <>Assessment in progress since {formatDate(activeAssessment.startedAt)}</>
+          ) : lastCompleted ? (
+            <>
+              Last assessed: {formatDate(lastCompleted.completedAt!)}
+              {lastCompleted.completedBy && <> · {lastCompleted.completedBy}</>}
+            </>
+          ) : (
+            <>No assessments completed yet</>
+          )}
+        </p>
+      </div>
+      <Link
+        href={href}
+        className="ml-4 shrink-0 rounded-lg border border-gray-200 px-3 py-1.5 text-xs font-medium text-gray-700 hover:bg-gray-50"
+      >
+        {activeAssessment ? "Continue →" : lastCompleted ? "Start New ↗" : "Start First ↗"}
+      </Link>
+    </div>
+  );
+}
+
 export default function DashboardPage() {
   const { user } = useAuthStore();
-  const { activeRegulations, regulations, teamMembers, fetchTeam } =
-    useComplianceStore();
+  const {
+    activeRegulations,
+    regulations,
+    teamMembers,
+    fetchTeam,
+    getActiveAssessment,
+    getLastCompletedAssessment,
+  } = useComplianceStore();
 
   useEffect(() => {
     if (teamMembers.length === 0) {
@@ -87,6 +148,29 @@ export default function DashboardPage() {
                     {compliantProcesses.length} of {allComputedProcesses.length} sections
                     fully compliant
                   </p>
+                </div>
+              </div>
+
+              {/* Self Assessments */}
+              <div>
+                <h2 className="text-lg font-semibold text-gray-900">Self Assessments</h2>
+                <p className="mt-1 text-sm text-gray-500">
+                  Periodic compliance reviews across your active regulations
+                </p>
+                <div className="mt-3 space-y-3">
+                  {activeRegulations.map((al) => {
+                    const reg = regulations.find((l) => l.id === al.regulationId);
+                    return (
+                      <SelfAssessmentCard
+                        key={al.regulationId}
+                        al={al}
+                        regulationShortName={reg?.shortName ?? al.regulationId}
+                        regulationAgency={reg?.agency ?? ""}
+                        activeAssessment={getActiveAssessment(al.regulationId)}
+                        lastCompleted={getLastCompletedAssessment(al.regulationId)}
+                      />
+                    );
+                  })}
                 </div>
               </div>
 

@@ -13,7 +13,7 @@ export default function ProcessFormPage() {
   const regulationId = params.id as string;
   const processId = params.processId as string;
 
-  const { regulations, fetchRegulations } = useComplianceStore();
+  const { regulations, fetchRegulations, getActiveAssessment } = useComplianceStore();
   const [regulation, setRegulation] = useState<Regulation | undefined>();
   const [manifest, setManifest] = useState<RegulationManifest | null>(null);
 
@@ -30,6 +30,9 @@ export default function ProcessFormPage() {
       .then((r) => (r.ok ? r.json() : null))
       .then(setManifest);
   }, [regulationId]);
+
+  const activeAssessment = getActiveAssessment(regulationId);
+  const isReadOnly = !activeAssessment;
 
   const processList: ProcessListEntry[] = manifest?.processList ?? [];
   const currentProcess = processList.find((p) => p.id === processId);
@@ -76,11 +79,27 @@ export default function ProcessFormPage() {
           <p className="mt-2 text-gray-600">{currentProcess.description}</p>
         )}
 
+        {/* Read-only banner */}
+        {isReadOnly && (
+          <div className="mt-4 flex items-center justify-between rounded-lg border border-yellow-200 bg-yellow-50 px-4 py-3">
+            <p className="text-sm text-yellow-800">
+              No assessment in progress — answers are read-only.
+            </p>
+            <Link
+              href={`/dashboard/regulations/${regulationId}`}
+              className="text-sm font-medium text-yellow-700 underline hover:text-yellow-600"
+            >
+              Start New Assessment ↗
+            </Link>
+          </div>
+        )}
+
         {/* Form */}
         <div className="mt-6">
           <SectionForm
             regulationId={regulationId}
             sectionId={processId}
+            readOnly={isReadOnly}
           />
         </div>
 

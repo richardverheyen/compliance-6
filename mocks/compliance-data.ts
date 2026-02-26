@@ -10,6 +10,35 @@ import type { SectionData, FormField } from "@/lib/compliance-forms";
 import { getFieldStatus } from "@/lib/compliance-forms";
 import { amlCTFContent } from "./regulation-content/aml-ctf-rules";
 
+// Maps form slug → primary RegulationProcess ID
+const FORM_TO_PROCESS_MAP: Record<string, string> = {
+  "agent-management":        "PROC-AML-001",
+  "cdd-individuals":         "PROC-AML-002a",
+  "cdd-companies":           "PROC-AML-002a",
+  "cdd-trusts":              "PROC-AML-002a",
+  "cdd-partnerships":        "PROC-AML-002a",
+  "cdd-associations":        "PROC-AML-002a",
+  "cdd-cooperatives":        "PROC-AML-002a",
+  "cdd-government":          "PROC-AML-002a",
+  "verification-documents":  "PROC-AML-002b",
+  "verification-electronic": "PROC-AML-002b",
+  "risk-assessment":         "PROC-AML-002c",
+  "beneficial-ownership":    "PROC-AML-003a",
+  "pep-screening":           "PROC-AML-003b",
+  "alternative-id":          "PROC-AML-003c",
+};
+
+export function getRegulationProcessForSlug(slug: string, regulationId: string): RegulationProcess | undefined {
+  const processId = FORM_TO_PROCESS_MAP[slug];
+  if (!processId) return undefined;
+  const regulation = regulationsCatalog.find((r) => r.id === regulationId);
+  return regulation?.processes.find((p) => p.id === processId);
+}
+
+export function getProcessIdForSlug(slug: string): string | undefined {
+  return FORM_TO_PROCESS_MAP[slug];
+}
+
 // Maps RegulationProcess ID → form slug(s) that confirm it
 const PROCESS_FORM_MAP: Record<string, string | string[]> = {
   "PROC-AML-001": "agent-management",

@@ -1,84 +1,198 @@
 "use client";
 
-import { useState } from "react";
-import { useComplianceStore } from "@/lib/compliance-store";
-import type { RegulationProcess } from "@/lib/types/compliance";
+import { useEffect, useState, useMemo } from "react";
 import Link from "next/link";
+import { useComplianceStore } from "@/lib/compliance-store";
 import { AssignOwnerModal } from "@/components/compliance/AssignOwnerModal";
-import { isProcessConfirmed } from "@/mocks/compliance-data";
+import {
+  getRegulationProcessForSlug,
+  getProcessIdForSlug,
+} from "@/mocks/compliance-data";
+import type { RegulationManifest } from "@/lib/types/regulation-content";
 
-interface ProcessGroup {
+interface ConfirmedProcess {
+  slug: string;
+  title: string;
   regulationId: string;
-  regulationName: string;
-  processes: RegulationProcess[];
+  agency: string;
+  jurisdiction: string;
+  businessObjective: string;
+  frequencyLabel: string;
+  processId: string;
 }
 
 export default function ProcessesPage() {
-  const { activeRegulations, regulations, getRegulationProcessOwner, getTeamMembersWithAuth } = useComplianceStore();
-  const [expandedProcess, setExpandedProcess] = useState<string | null>(null);
+  const {
+    activeRegulations,
+    regulations,
+    getSectionAnswers,
+    getRegulationProcessOwner,
+    getTeamMembersWithAuth,
+  } = useComplianceStore();
+
+  const [manifests, setManifests] = useState<Record<string, RegulationManifest>>({});
+  const [loadingManifests, setLoadingManifests] = useState(true);
   const [assignModal, setAssignModal] = useState<{ processId: string; processName: string } | null>(null);
 
-  function getRegulationName(id: string) {
-    return regulations.find((l) => l.id === id)?.shortName ?? id;
-  }
+  // Filters
+  const [search, setSearch] = useState("");
+  const [filterAgency, setFilterAgency] = useState("all");
+  const [filterJurisdiction, setFilterJurisdiction] = useState("all");
+  const [sort, setSort] = useState<"az" | "za" | "regulator">("az");
 
-  // Group processes by regulation, filtered to confirmed ones only
-  const groups: ProcessGroup[] = [];
-  for (const al of activeRegulations) {
-    const leg = regulations.find((l) => l.id === al.regulationId);
-    if (!leg?.processes || leg.processes.length === 0) continue;
-
-    const confirmedSlugs = new Set(
-      al.processes.filter((p) => p.confirmed).map((p) => p.id)
-    );
-    const visibleProcesses = leg.processes.filter((p) =>
-      isProcessConfirmed(p.id, confirmedSlugs)
-    );
-
-    groups.push({
-      regulationId: al.regulationId,
-      regulationName: getRegulationName(al.regulationId),
-      processes: visibleProcesses,
+  // Fetch manifests for all active regulations
+  useEffect(() => {
+    if (activeRegulations.length === 0) {
+      setLoadingManifests(false);
+      return;
+    }
+    setLoadingManifests(true);
+    Promise.all(
+      activeRegulations.map((al) =>
+        fetch(`/api/compliance/regulations/${al.regulationId}/manifest`)
+          .then((r) => (r.ok ? r.json() : null))
+          .then((data): [string, RegulationManifest | null] => [al.regulationId, data])
+      )
+    ).then((results) => {
+      const map: Record<string, RegulationManifest> = {};
+      for (const [id, manifest] of results) {
+        if (manifest) map[id] = manifest;
+      }
+      setManifests(map);
+      setLoadingManifests(false);
     });
-  }
+  }, [activeRegulations]);
 
-  const hasProcesses = groups.some((g) => g.processes.length > 0);
+  // Build confirmed process list
+  const confirmedProcesses = useMemo<ConfirmedProcess[]>(() => {
+    const list: ConfirmedProcess[] = [];
+    for (const al of activeRegulations) {
+      const manifest = manifests[al.regulationId];
+      if (!manifest) continue;
+      const regulation = regulations.find((r) => r.id === al.regulationId);
+      if (!regulation) continue;
+
+      for (const entry of manifest.processList) {
+        const answers = getSectionAnswers(al.regulationId, entry.id);
+        if (answers["process-exists"] !== "Yes") continue;
+
+        const regProcess = getRegulationProcessForSlug(entry.id, al.regulationId);
+        const processId = getProcessIdForSlug(entry.id);
+        if (!processId) continue;
+
+        list.push({
+          slug: entry.id,
+          title: entry.title,
+          regulationId: al.regulationId,
+          agency: regulation.agency,
+          jurisdiction: regulation.jurisdiction,
+          businessObjective: regProcess?.businessObjective ?? "",
+          frequencyLabel: regProcess?.frequencyLabel ?? "",
+          processId,
+        });
+      }
+    }
+    return list;
+  }, [activeRegulations, manifests, regulations, getSectionAnswers]);
+
+  // Filter options
+  const agencies = useMemo(
+    () => [...new Set(confirmedProcesses.map((p) => p.agency))].sort(),
+    [confirmedProcesses]
+  );
+  const jurisdictions = useMemo(
+    () => [...new Set(confirmedProcesses.map((p) => p.jurisdiction))].sort(),
+    [confirmedProcesses]
+  );
+
+  // Filtered + sorted list
+  const displayedProcesses = useMemo(() => {
+    let list = confirmedProcesses;
+
+    if (search.trim()) {
+      const q = search.toLowerCase();
+      list = list.filter((p) => p.title.toLowerCase().includes(q));
+    }
+    if (filterAgency !== "all") {
+      list = list.filter((p) => p.agency === filterAgency);
+    }
+    if (filterJurisdiction !== "all") {
+      list = list.filter((p) => p.jurisdiction === filterJurisdiction);
+    }
+
+    if (sort === "az") {
+      list = [...list].sort((a, b) => a.title.localeCompare(b.title));
+    } else if (sort === "za") {
+      list = [...list].sort((a, b) => b.title.localeCompare(a.title));
+    } else {
+      list = [...list].sort((a, b) => a.agency.localeCompare(b.agency) || a.title.localeCompare(b.title));
+    }
+
+    return list;
+  }, [confirmedProcesses, search, filterAgency, filterJurisdiction, sort]);
 
   const hasActiveRegulations = activeRegulations.length > 0;
+  const filtersActive = search.trim() || filterAgency !== "all" || filterJurisdiction !== "all";
 
-  if (!hasProcesses) {
+  function clearFilters() {
+    setSearch("");
+    setFilterAgency("all");
+    setFilterJurisdiction("all");
+  }
+
+  // Empty states
+  if (loadingManifests) {
+    return (
+      <div className="px-4 py-12">
+        <div className="mx-auto max-w-7xl">
+          <h1 className="text-3xl font-bold text-gray-900">Business Processes</h1>
+          <div className="mt-8 flex items-center justify-center py-12">
+            <div className="h-6 w-6 animate-spin rounded-full border-2 border-indigo-600 border-t-transparent" />
+            <span className="ml-3 text-sm text-gray-500">Loading processes…</span>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  if (!hasActiveRegulations) {
     return (
       <div className="px-4 py-12">
         <div className="mx-auto max-w-7xl">
           <h1 className="text-3xl font-bold text-gray-900">Business Processes</h1>
           <div className="mt-8 rounded-xl border border-gray-200 p-8 text-center">
-            {hasActiveRegulations ? (
-              <>
-                <h2 className="text-lg font-semibold text-gray-900">No processes confirmed yet</h2>
-                <p className="mt-2 text-sm text-gray-600">
-                  Complete your self-assessment forms to confirm which processes apply to your organisation.
-                </p>
-                <Link
-                  href="/dashboard/regulations"
-                  className="mt-4 inline-block rounded-lg bg-indigo-600 px-4 py-2.5 text-sm font-semibold text-white hover:bg-indigo-500"
-                >
-                  Go to Regulations
-                </Link>
-              </>
-            ) : (
-              <>
-                <h2 className="text-lg font-semibold text-gray-900">No active processes</h2>
-                <p className="mt-2 text-sm text-gray-600">
-                  Activate a regulation to see your business processes here.
-                </p>
-                <Link
-                  href="/dashboard/regulations"
-                  className="mt-4 inline-block rounded-lg bg-indigo-600 px-4 py-2.5 text-sm font-semibold text-white hover:bg-indigo-500"
-                >
-                  Browse Regulations
-                </Link>
-              </>
-            )}
+            <h2 className="text-lg font-semibold text-gray-900">No active processes</h2>
+            <p className="mt-2 text-sm text-gray-600">
+              Activate a regulation to see your business processes here.
+            </p>
+            <Link
+              href="/dashboard/regulations"
+              className="mt-4 inline-block rounded-lg bg-indigo-600 px-4 py-2.5 text-sm font-semibold text-white hover:bg-indigo-500"
+            >
+              Browse Regulations
+            </Link>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  if (confirmedProcesses.length === 0) {
+    return (
+      <div className="px-4 py-12">
+        <div className="mx-auto max-w-7xl">
+          <h1 className="text-3xl font-bold text-gray-900">Business Processes</h1>
+          <div className="mt-8 rounded-xl border border-gray-200 p-8 text-center">
+            <h2 className="text-lg font-semibold text-gray-900">No processes confirmed yet</h2>
+            <p className="mt-2 text-sm text-gray-600">
+              Complete your self-assessment forms to confirm which processes apply to your organisation.
+            </p>
+            <Link
+              href="/dashboard/regulations"
+              className="mt-4 inline-block rounded-lg bg-indigo-600 px-4 py-2.5 text-sm font-semibold text-white hover:bg-indigo-500"
+            >
+              Go to Regulations
+            </Link>
           </div>
         </div>
       </div>
@@ -90,272 +204,183 @@ export default function ProcessesPage() {
       <div className="mx-auto max-w-7xl">
         <h1 className="text-3xl font-bold text-gray-900">Business Processes</h1>
         <p className="mt-2 text-gray-600">
-          View and manage compliance processes across your active regulations.
+          View and manage your confirmed compliance processes.
         </p>
 
-        {groups.map((group) => {
-          const topLevel = group.processes.filter((p) => !p.parentId);
-          const childrenOf = (parentId: string) => group.processes.filter((p) => p.parentId === parentId);
+        {/* Filter / sort bar */}
+        <div className="mt-6 flex flex-wrap items-center gap-3">
+          {/* Text search */}
+          <div className="relative flex-1 min-w-48">
+            <svg
+              className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+              strokeWidth={2}
+            >
+              <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-4.35-4.35M17 11A6 6 0 1 1 5 11a6 6 0 0 1 12 0z" />
+            </svg>
+            <input
+              type="text"
+              placeholder="Search processes…"
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              className="block w-full rounded-lg border border-gray-300 py-2 pl-9 pr-3 text-sm focus:border-indigo-500 focus:ring-indigo-500 focus:outline-none"
+            />
+          </div>
 
-          return (
-            <div key={group.regulationId} className="mt-8">
-              {groups.length > 1 && (
-                <h2 className="mb-4 text-lg font-semibold text-gray-900">
-                  {group.regulationName}
-                </h2>
-              )}
+          {/* Regulator filter */}
+          <select
+            value={filterAgency}
+            onChange={(e) => setFilterAgency(e.target.value)}
+            className="rounded-lg border border-gray-300 py-2 pl-3 pr-8 text-sm focus:border-indigo-500 focus:ring-indigo-500 focus:outline-none"
+          >
+            <option value="all">All Regulators</option>
+            {agencies.map((a) => (
+              <option key={a} value={a}>{a}</option>
+            ))}
+          </select>
 
-              <div className="space-y-4">
-                {topLevel.map((proc) => {
-                  const children = childrenOf(proc.id);
+          {/* Jurisdiction filter */}
+          <select
+            value={filterJurisdiction}
+            onChange={(e) => setFilterJurisdiction(e.target.value)}
+            className="rounded-lg border border-gray-300 py-2 pl-3 pr-8 text-sm focus:border-indigo-500 focus:ring-indigo-500 focus:outline-none"
+          >
+            <option value="all">All Jurisdictions</option>
+            {jurisdictions.map((j) => (
+              <option key={j} value={j}>{j}</option>
+            ))}
+          </select>
 
-                  return (
-                    <ProcessCard
-                      key={proc.id}
-                      process={proc}
-                      children={children}
-                      expandedProcess={expandedProcess}
-                      onToggle={(id) => setExpandedProcess(expandedProcess === id ? null : id)}
-                      onAssign={(id, name) => setAssignModal({ processId: id, processName: name })}
-                      getRegulationProcessOwner={getRegulationProcessOwner}
-                      getTeamMembersWithAuth={getTeamMembersWithAuth}
-                    />
-                  );
-                })}
-              </div>
+          {/* Sort */}
+          <select
+            value={sort}
+            onChange={(e) => setSort(e.target.value as "az" | "za" | "regulator")}
+            className="rounded-lg border border-gray-300 py-2 pl-3 pr-8 text-sm focus:border-indigo-500 focus:ring-indigo-500 focus:outline-none"
+          >
+            <option value="az">A–Z</option>
+            <option value="za">Z–A</option>
+            <option value="regulator">By Regulator</option>
+          </select>
+        </div>
+
+        {/* Process list */}
+        {displayedProcesses.length === 0 ? (
+          <div className="mt-6 rounded-xl border border-gray-200 p-8 text-center">
+            <p className="text-sm text-gray-500">No processes match your filters.</p>
+            {filtersActive && (
+              <button
+                onClick={clearFilters}
+                className="mt-3 text-sm font-medium text-indigo-600 hover:text-indigo-500"
+              >
+                Clear filters
+              </button>
+            )}
+          </div>
+        ) : (
+          <div className="mt-4 overflow-hidden rounded-xl border border-gray-200 bg-white">
+            {/* Table header */}
+            <div className="hidden grid-cols-[1fr_auto_auto_auto_auto] gap-4 border-b border-gray-100 bg-gray-50 px-5 py-3 text-xs font-medium uppercase tracking-wider text-gray-500 sm:grid">
+              <span>Process</span>
+              <span className="w-24 text-left">Regulator</span>
+              <span className="w-36 text-left">Frequency</span>
+              <span className="w-36 text-left">Owner</span>
+              <span className="w-4" />
             </div>
-          );
-        })}
 
-        {assignModal && (
-          <AssignOwnerModal
-            processId={assignModal.processId}
-            processName={assignModal.processName}
-            isOpen
-            onClose={() => setAssignModal(null)}
-          />
+            <div className="divide-y divide-gray-100">
+              {displayedProcesses.map((proc) => (
+                <ProcessRow
+                  key={`${proc.regulationId}-${proc.slug}`}
+                  process={proc}
+                  getRegulationProcessOwner={getRegulationProcessOwner}
+                  getTeamMembersWithAuth={getTeamMembersWithAuth}
+                  onAssign={(processId, processName) =>
+                    setAssignModal({ processId, processName })
+                  }
+                />
+              ))}
+            </div>
+          </div>
         )}
       </div>
+
+      {assignModal && (
+        <AssignOwnerModal
+          processId={assignModal.processId}
+          processName={assignModal.processName}
+          isOpen
+          onClose={() => setAssignModal(null)}
+        />
+      )}
     </div>
   );
 }
 
-function ProcessCard({
+function ProcessRow({
   process,
-  children,
-  expandedProcess,
-  onToggle,
-  onAssign,
   getRegulationProcessOwner,
   getTeamMembersWithAuth,
+  onAssign,
 }: {
-  process: RegulationProcess;
-  children: RegulationProcess[];
-  expandedProcess: string | null;
-  onToggle: (id: string) => void;
-  onAssign: (id: string, name: string) => void;
+  process: ConfirmedProcess;
   getRegulationProcessOwner: (id: string) => string | undefined;
   getTeamMembersWithAuth: () => { id: string; name: string; role: string }[];
+  onAssign: (processId: string, processName: string) => void;
 }) {
-  const expanded = expandedProcess === process.id;
-  const ownerId = getRegulationProcessOwner(process.id);
-  const owner = ownerId ? getTeamMembersWithAuth().find((m) => m.id === ownerId) : undefined;
-  const hasChildren = children.length > 0;
+  const ownerId = getRegulationProcessOwner(process.processId);
+  const owner = ownerId
+    ? getTeamMembersWithAuth().find((m) => m.id === ownerId)
+    : undefined;
 
   return (
-    <div className="rounded-xl border border-gray-200 bg-white">
+    <Link
+      href={`/dashboard/processes/${process.slug}`}
+      className="group grid grid-cols-1 gap-1 px-5 py-4 transition-colors hover:bg-gray-50 sm:grid-cols-[1fr_auto_auto_auto_auto] sm:items-center sm:gap-4"
+    >
+      <div className="min-w-0">
+        <p className="font-medium text-gray-900 group-hover:text-indigo-600">
+          {process.title}
+        </p>
+      </div>
+
+      <span className="hidden w-24 rounded-full bg-indigo-50 px-2 py-0.5 text-center text-xs font-medium text-indigo-700 sm:inline-block">
+        {process.agency}
+      </span>
+
+      <span className="hidden w-36 text-sm text-gray-600 sm:block">
+        {process.frequencyLabel || "—"}
+      </span>
+
       <div
-        className="flex cursor-pointer items-center gap-4 p-5"
-        onClick={() => onToggle(process.id)}
+        className="hidden w-36 sm:block"
+        onClick={(e) => {
+          if (!owner) {
+            e.preventDefault();
+            e.stopPropagation();
+            onAssign(process.processId, process.title);
+          }
+        }}
       >
-        <div className="flex-1 min-w-0">
-          <div className="flex items-center gap-2">
-            <h3 className="font-medium text-gray-900">{process.name}</h3>
-            {hasChildren && !expanded && (
-              <span className="rounded-full bg-gray-100 px-2 py-0.5 text-xs text-gray-500">
-                {children.length} sub-process{children.length !== 1 ? "es" : ""}
-              </span>
-            )}
-          </div>
-          <p className="text-xs text-gray-500">
-            {owner ? (
-              <>{owner.name} &middot; {owner.role}</>
-            ) : (
-              <button
-                onClick={(e) => { e.stopPropagation(); onAssign(process.id, process.name); }}
-                className="font-medium text-indigo-600 hover:text-indigo-500"
-              >
-                Unassigned
-              </button>
-            )}
-          </p>
-        </div>
-        <div className="hidden items-center gap-4 sm:flex">
-          <span className="rounded-full bg-gray-100 px-2.5 py-0.5 text-xs font-medium text-gray-700">
-            {process.frequencyLabel}
+        {owner ? (
+          <span className="text-sm text-gray-700">{owner.name}</span>
+        ) : (
+          <span className="text-sm font-medium text-indigo-600 hover:text-indigo-500">
+            Unassigned
           </span>
-        </div>
-        <svg
-          className={`h-5 w-5 shrink-0 text-gray-400 transition-transform ${expanded ? "rotate-180" : ""}`}
-          fill="none"
-          viewBox="0 0 24 24"
-          stroke="currentColor"
-          strokeWidth={2}
-        >
-          <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
-        </svg>
+        )}
       </div>
 
-      {expanded && (
-        <div className="border-t border-gray-100 px-5 pb-5 pt-4 space-y-4">
-          <div>
-            <p className="text-xs font-medium uppercase tracking-wider text-gray-500">Description</p>
-            <p className="mt-1 text-sm text-gray-700">{process.description}</p>
-          </div>
-          <div>
-            <p className="text-xs font-medium uppercase tracking-wider text-gray-500">Business Objective</p>
-            <p className="mt-1 text-sm text-gray-700">{process.businessObjective}</p>
-          </div>
-          <div className="flex flex-wrap gap-6">
-            <div>
-              <p className="text-xs font-medium uppercase tracking-wider text-gray-500">Frequency</p>
-              <p className="mt-1 text-sm text-gray-700 capitalize">{process.frequency} &middot; per {process.frequencyPer}</p>
-            </div>
-            <div>
-              <p className="text-xs font-medium uppercase tracking-wider text-gray-500">Owner</p>
-              <p className="mt-1 text-sm text-gray-700">
-                {owner ? (
-                  <>{owner.name} &middot; {owner.role}</>
-                ) : (
-                  <button
-                    onClick={() => onAssign(process.id, process.name)}
-                    className="font-medium text-indigo-600 hover:text-indigo-500"
-                  >
-                    Unassigned &mdash; click to assign
-                  </button>
-                )}
-              </p>
-            </div>
-          </div>
-          <div>
-            <p className="text-xs font-medium uppercase tracking-wider text-gray-500">Frequency Detail</p>
-            <p className="mt-1 text-sm text-gray-700">{process.frequencyDetail}</p>
-          </div>
-
-          {hasChildren && (
-            <div className="mt-2 pt-4 border-t border-gray-100">
-              <p className="text-xs font-medium uppercase tracking-wider text-gray-500 mb-3">Sub-Processes</p>
-              <div className="space-y-3 pl-4 border-l-2 border-indigo-100">
-                {children.map((child) => (
-                  <SubProcessCard
-                    key={child.id}
-                    process={child}
-                    expanded={expandedProcess === child.id}
-                    onToggle={() => onToggle(child.id)}
-                    onAssign={() => onAssign(child.id, child.name)}
-                    getRegulationProcessOwner={getRegulationProcessOwner}
-                    getTeamMembersWithAuth={getTeamMembersWithAuth}
-                  />
-                ))}
-              </div>
-            </div>
-          )}
-        </div>
-      )}
-    </div>
-  );
-}
-
-function SubProcessCard({
-  process,
-  expanded,
-  onToggle,
-  onAssign,
-  getRegulationProcessOwner,
-  getTeamMembersWithAuth,
-}: {
-  process: RegulationProcess;
-  expanded: boolean;
-  onToggle: () => void;
-  onAssign: () => void;
-  getRegulationProcessOwner: (id: string) => string | undefined;
-  getTeamMembersWithAuth: () => { id: string; name: string; role: string }[];
-}) {
-  const ownerId = getRegulationProcessOwner(process.id);
-  const owner = ownerId ? getTeamMembersWithAuth().find((m) => m.id === ownerId) : undefined;
-
-  return (
-    <div className="rounded-lg border border-gray-150 bg-white">
-      <div
-        className="flex cursor-pointer items-center gap-3 px-4 py-3"
-        onClick={onToggle}
+      <svg
+        className="hidden h-4 w-4 shrink-0 text-gray-400 group-hover:text-gray-600 sm:block"
+        fill="none"
+        viewBox="0 0 24 24"
+        stroke="currentColor"
+        strokeWidth={2}
       >
-        <div className="flex-1 min-w-0">
-          <h4 className="text-sm font-medium text-gray-800">{process.name}</h4>
-          <p className="text-xs text-gray-500">
-            {owner ? (
-              <>{owner.name}</>
-            ) : (
-              <button
-                onClick={(e) => { e.stopPropagation(); onAssign(); }}
-                className="font-medium text-indigo-600 hover:text-indigo-500"
-              >
-                Unassigned
-              </button>
-            )}
-          </p>
-        </div>
-        <span className="hidden rounded-full bg-gray-100 px-2 py-0.5 text-xs font-medium text-gray-600 sm:inline-block">
-          {process.frequencyLabel}
-        </span>
-        <svg
-          className={`h-4 w-4 shrink-0 text-gray-400 transition-transform ${expanded ? "rotate-180" : ""}`}
-          fill="none"
-          viewBox="0 0 24 24"
-          stroke="currentColor"
-          strokeWidth={2}
-        >
-          <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
-        </svg>
-      </div>
-
-      {expanded && (
-        <div className="border-t border-gray-100 px-4 pb-4 pt-3 space-y-3">
-          <div>
-            <p className="text-xs font-medium uppercase tracking-wider text-gray-500">Description</p>
-            <p className="mt-1 text-sm text-gray-700">{process.description}</p>
-          </div>
-          <div>
-            <p className="text-xs font-medium uppercase tracking-wider text-gray-500">Business Objective</p>
-            <p className="mt-1 text-sm text-gray-700">{process.businessObjective}</p>
-          </div>
-          <div className="flex flex-wrap gap-6">
-            <div>
-              <p className="text-xs font-medium uppercase tracking-wider text-gray-500">Frequency</p>
-              <p className="mt-1 text-sm text-gray-700 capitalize">{process.frequency} &middot; per {process.frequencyPer}</p>
-            </div>
-            <div>
-              <p className="text-xs font-medium uppercase tracking-wider text-gray-500">Owner</p>
-              <p className="mt-1 text-sm text-gray-700">
-                {owner ? (
-                  <>{owner.name} &middot; {owner.role}</>
-                ) : (
-                  <button
-                    onClick={onAssign}
-                    className="font-medium text-indigo-600 hover:text-indigo-500"
-                  >
-                    Unassigned &mdash; click to assign
-                  </button>
-                )}
-              </p>
-            </div>
-          </div>
-          <div>
-            <p className="text-xs font-medium uppercase tracking-wider text-gray-500">Frequency Detail</p>
-            <p className="mt-1 text-sm text-gray-700">{process.frequencyDetail}</p>
-          </div>
-        </div>
-      )}
-    </div>
+        <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
+      </svg>
+    </Link>
   );
 }

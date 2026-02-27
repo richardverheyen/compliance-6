@@ -5,6 +5,7 @@ import type {
   ComplianceRating,
   TeamMember,
   ComplianceEvent,
+  RegulationKeyDate,
 } from "@/lib/types/compliance";
 import type { SectionData, FormField } from "@/lib/compliance-forms";
 import { getFieldStatus } from "@/lib/compliance-forms";
@@ -365,7 +366,7 @@ export const regulationsCatalog: Regulation[] = [
     agency: "AUSTRAC",
     jurisdiction: "Australia",
     description:
-      "Rules governing the obligations of reporting entities under the AML/CTF Act, including customer identification, ongoing due diligence, and suspicious matter reporting.",
+      "Governs AML/CTF obligations for designated service providers in Australia, covering customer identification programs, ongoing due diligence, transaction monitoring, and suspicious matter reporting to AUSTRAC. Extended to Tranche 2 entities — including real estate agents, lawyers, and accountants — from 1 July 2026.",
     applicableServices: [
       "Banking",
       "Remittance",
@@ -431,6 +432,63 @@ export function computeProcessesFromAnswers(
 export const mockTeamMembers: TeamMember[] = [
   { id: "tm-1", name: "Sarah Jenkins", email: "sarah.jenkins@company.com", role: "Compliance Officer", avatarColor: "bg-indigo-500" },
 ];
+
+export const regulationKeyDates: Record<string, RegulationKeyDate[]> = {
+  "aml-ctf-rules": [
+    {
+      id: "aml-annual-report",
+      title: "Annual Compliance Report",
+      description:
+        "Submit the Annual Compliance Report to AUSTRAC covering the preceding calendar year. All reporting entities must complete this via AUSTRAC Online by 31 March each year.",
+      isoDate: "2026-03-31",
+      recurrence: "annual",
+      isCountdownPrimary: true,
+    },
+    {
+      id: "aml-tranche2-start",
+      title: "Tranche 2 Obligations Commence",
+      description:
+        "Extended AML/CTF obligations apply to real estate agents and developers, lawyers, conveyancers, accountants, and trust & company service providers from this date.",
+      isoDate: "2026-07-01",
+      recurrence: "once",
+    },
+    {
+      id: "aml-program-review",
+      title: "AML/CTF Program Annual Review",
+      description:
+        "Complete the mandatory annual review and update of the AML/CTF Program, including risk assessments, Part A and Part B controls, and board sign-off.",
+      isoDate: "2026-12-31",
+      recurrence: "annual",
+    },
+  ],
+  "privacy-act-1988": [
+    {
+      id: "priv-compliance-review",
+      title: "Annual Privacy Compliance Review",
+      description:
+        "Conduct the annual privacy compliance review: audit personal information holdings, update the privacy policy, verify staff training records, and review PIA outcomes.",
+      isoDate: "2026-06-30",
+      recurrence: "annual",
+      isCountdownPrimary: true,
+    },
+    {
+      id: "priv-pia-review",
+      title: "Privacy Impact Assessment Review",
+      description:
+        "Review privacy impact assessments for all active projects and systems that handle personal information, and remediate any identified privacy risks.",
+      isoDate: "2026-09-30",
+      recurrence: "annual",
+    },
+    {
+      id: "priv-staff-training",
+      title: "Staff Privacy Training",
+      description:
+        "Complete annual privacy awareness training for all staff with access to personal information. Record completion for audit purposes.",
+      isoDate: "2026-11-30",
+      recurrence: "annual",
+    },
+  ],
+};
 
 export const complianceCalendarEvents: ComplianceEvent[] = [
   { date: "MAR 31", title: "Annual AML Compliance Report", agency: "AUSTRAC", description: "Mandatory 2025/26 Review" },

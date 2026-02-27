@@ -3,6 +3,7 @@ import {
   regulationsCatalog,
   mockTeamMembers,
   complianceCalendarEvents,
+  regulationKeyDates,
 } from "./compliance-data";
 import type { TeamMember } from "@/lib/types/compliance";
 import { compileProcess } from "@/lib/process-forms";
@@ -99,6 +100,15 @@ export const complianceHandlers = [
     }
     teamMembers.splice(idx, 1);
     return HttpResponse.json({ ok: true });
+  }),
+
+  // Key dates per regulation
+  http.get("/api/compliance/regulations/:id/key-dates", ({ params }) => {
+    const dates = regulationKeyDates[params.id as string];
+    if (!dates) {
+      return HttpResponse.json({ error: "Not found" }, { status: 404 });
+    }
+    return HttpResponse.json(dates);
   }),
 
   // Calendar

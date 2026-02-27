@@ -17,7 +17,7 @@ export default function RegulationLayout({ children }: { children: React.ReactNo
   const isProcessView = pathname.includes("/processes/");
 
   const [pdfUrl, setPdfUrl] = useState<string | null>(null);
-  const [pdfVisible, setPdfVisible] = useState(true);
+  const [pdfVisible, setPdfVisible] = useState(false);
   const iframeRef = useRef<HTMLIFrameElement>(null);
 
   useEffect(() => {
@@ -26,9 +26,10 @@ export default function RegulationLayout({ children }: { children: React.ReactNo
       .then((mf) => { if (mf?.pdfUrl) setPdfUrl(mf.pdfUrl); });
   }, [id]);
 
+  // Reset to hidden on every route change within this layout
   useEffect(() => {
-    setPdfVisible(!isProcessView);
-  }, [isProcessView]);
+    setPdfVisible(false);
+  }, [pathname]);
 
   const togglePdf = useCallback(() => setPdfVisible((v) => !v), []);
 
@@ -198,7 +199,9 @@ export default function RegulationLayout({ children }: { children: React.ReactNo
       <div className="flex h-[calc(100vh-4rem)] overflow-hidden">
         {/* Content — scrolls normally */}
         <div className="flex-1 min-w-0 overflow-y-auto px-4 py-12">
-          {children}
+          <div className="mx-auto max-w-7xl">
+            {children}
+          </div>
         </div>
 
         {/* PDF panel — full height, animated width */}
@@ -206,7 +209,7 @@ export default function RegulationLayout({ children }: { children: React.ReactNo
           <div
             className="hidden lg:block shrink-0 overflow-hidden"
             style={{
-              width: pdfVisible ? "45vw" : "0",
+              width: pdfVisible ? "38vw" : "0",
               opacity: pdfVisible ? 1 : 0,
               transition: "width 500ms ease-in-out, opacity 300ms ease-in-out",
             }}

@@ -81,6 +81,17 @@ export interface ComplianceEvent {
   description: string;
 }
 
+export interface RegulationKeyDate {
+  id: string;
+  title: string;
+  description: string;
+  /** ISO date string for the next (or only) occurrence, e.g. "2026-03-31" */
+  isoDate: string;
+  recurrence: "annual" | "once";
+  /** The date that gets the large countdown at the top of the widget */
+  isCountdownPrimary?: boolean;
+}
+
 export function getProcessRating(process: BusinessProcess): ComplianceRating {
   if (process.steps.some((s) => s.rating === "red")) return "red";
   if (process.steps.some((s) => s.rating === "yellow")) return "yellow";

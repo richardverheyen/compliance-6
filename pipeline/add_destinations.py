@@ -29,11 +29,17 @@ OUTPUT_PDF = "chapter4_linked.pdf"
 TOP_PADDING = 10.0
 
 
-def find_y_for_node(page, node_text: str, x_indent: float, page_height: float) -> float | None:
+def find_y_for_node(
+    page, node_text: str, x_indent: float, page_height: float, min_top: float = 0.0
+) -> tuple[float, float] | None:
     """
     Search the pdfplumber page for the start of node_text and return
-    the PDF y-coordinate (bottom-left origin) of the first match.
-    Falls back to None if not found.
+    (pdf_y, plumber_top) where pdf_y is the PDF y-coordinate (bottom-left origin)
+    and plumber_top is the distance from the page top (used for ordering).
+
+    min_top: only consider matches with plumber top >= min_top, so that when two
+    rules share an identical text prefix the earlier rule's position isn't reused
+    for the later one. Falls back to all results if no candidates pass the filter.
     """
     # Use first 40 chars, stopping at any newline, to stay within a single line
     snippet = node_text[:40].split("\n")[0].strip()
@@ -49,11 +55,18 @@ def find_y_for_node(page, node_text: str, x_indent: float, page_height: float) -
     if not results:
         return None
 
-    # If multiple hits, pick the one whose x0 is closest to x_indent
-    best = min(results, key=lambda r: abs(r["x0"] - x_indent))
+    # When multiple hits share the same x-indent (identical leading text), use
+    # min_top to skip positions already claimed by an earlier rule on this page.
+    # Strictly greater: the next rule must appear *below* the previous one.
+    candidates = [r for r in results if r["top"] > min_top]
+    if not candidates:
+        candidates = results  # fallback: use all
+
+    # Among candidates, pick the one whose x0 is closest to x_indent
+    best = min(candidates, key=lambda r: abs(r["x0"] - x_indent))
     # Convert pdfplumber top (from page top) → PDF y (from page bottom)
     pdf_y = page_height - best["top"] + TOP_PADDING
-    return pdf_y
+    return (pdf_y, best["top"])
 
 
 def escape_pdf_string(s: str) -> str:
@@ -89,20 +102,31 @@ def main():
     rule_nodes = [n for n in nodes if n.get("rule_code")]
     print(f"Found {len(rule_nodes)} rule nodes")
 
+    # Sort by (page, y_indent desc) to process in document order so that the
+    # min_top disambiguation works correctly for same-page duplicate text snippets.
+    rule_nodes.sort(key=lambda n: (n.get("page", 0), -n.get("y_indent", n.get("top", 0))))
+
     # --- Step 1: find y-coordinates via pdfplumber ---
     destinations: list[tuple[str, int, float, float]] = []  # (rule_code, page_0idx, x, pdf_y)
     misses: list[dict] = []
+    # Track the last plumber-top assigned per page to avoid reusing the same
+    # text match for two rules that share an identical text prefix.
+    page_last_top: dict[int, float] = {}
 
     with pdfplumber.open(args.input) as pdf:
         for node in rule_nodes:
             page_0idx = node["page"] - 1
             page = pdf.pages[page_0idx]
             page_height = float(page.height)
+            min_top = page_last_top.get(page_0idx, 0.0)
 
-            pdf_y = find_y_for_node(page, node["text"], node.get("x_indent", 0), page_height)
+            result = find_y_for_node(page, node["text"], node.get("x_indent", 0), page_height, min_top)
 
-            if pdf_y is not None:
+            if result is not None:
+                pdf_y, plumber_top = result
                 destinations.append((node["rule_code"], page_0idx, node.get("x_indent", 0), pdf_y))
+                # Advance the pointer: next rule on this page must appear strictly below this one
+                page_last_top[page_0idx] = plumber_top
             else:
                 # Fallback: top of page
                 destinations.append((node["rule_code"], page_0idx, 0.0, page_height))

@@ -42,6 +42,9 @@ export default function RegulationLayout({ children }: { children: React.ReactNo
       const app = getApp();
       if (!app?.initialized) return false;
 
+      // Remove stale highlight immediately so it doesn't linger while we navigate
+      iframeRef.current?.contentWindow?.document.getElementById("rule-hl")?.remove();
+
       // 1. Jump to named destination
       await app.pdfLinkService.goToDestination(ruleCode);
 
@@ -151,9 +154,6 @@ export default function RegulationLayout({ children }: { children: React.ReactNo
               hlWidth  = Math.ceil(35 * vp.scale) + 4;
               hlHeight = lineH + 4;
             }
-
-            // Remove any previous highlight
-            doc.getElementById("rule-hl")?.remove();
 
             const hl = doc.createElement("div");
             hl.id = "rule-hl";

@@ -47,7 +47,7 @@ export default function ProcessFormPage() {
   }
 
   return (
-    <div className="max-w-3xl">
+    <div className="mx-auto max-w-3xl">
       {/* Breadcrumb + PDF toggle */}
       <div className="flex items-center justify-between gap-4">
         <div className="flex items-center gap-2 text-sm text-gray-500">

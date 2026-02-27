@@ -41,138 +41,156 @@ export default function RegulationLayout({ children }: { children: React.ReactNo
 
     const doNavigate = async (): Promise<boolean> => {
       const app = getApp();
-      if (!app?.initialized) return false;
+      if (!app?.initialized || !app?.pdfDocument) return false;
 
       // Remove stale highlight immediately so it doesn't linger while we navigate
       iframeRef.current?.contentWindow?.document.getElementById("rule-hl")?.remove();
 
-      // 1. Jump to named destination
-      await app.pdfLinkService.goToDestination(ruleCode);
-
-      // 2. Wait for PDF.js scroll to settle, then vertically centre the destination
-      await new Promise<void>((r) => setTimeout(r, 120));
-      const container: HTMLElement = app.pdfViewer.container;
-      container.scrollTop = Math.max(0, container.scrollTop - container.clientHeight / 2);
-
-      // 3. Draw a highlight rectangle around the rule code text (best-effort)
+      // 1. Resolve named destination → [pageRef, {name:'XYZ'}, pdfX, pdfY, zoom]
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      let destArray: any[];
       try {
-        // Resolve named destination → [pageRef, {name:'XYZ'}, pdfX, pdfY, zoom]
+        destArray = await app.pdfDocument.getDestination(ruleCode);
+      } catch {
+        return false;
+      }
+      if (!Array.isArray(destArray) || destArray.length < 2) return false;
+
+      const pageIndex: number = await app.pdfDocument.getPageIndex(destArray[0]);
+      const pdfPageView = app.pdfViewer._pages[pageIndex];
+      if (!pdfPageView) return false;
+
+      const container: HTMLElement = app.pdfViewer.container;
+      const pageDiv = pdfPageView.div as HTMLDivElement;
+
+      // 2. Compute the final centred scroll target in one step — no intermediate
+      //    jump. getBoundingClientRect gives the page's current on-screen position
+      //    relative to the container, from which we derive the absolute offset.
+      const containerRect = container.getBoundingClientRect();
+      const pageRect = pageDiv.getBoundingClientRect();
+      const pageTopInContainer = pageRect.top - containerRect.top + container.scrollTop;
+
+      const destX: number = destArray[2] ?? 0;
+      const destY: number = destArray[3] ?? 0;
+      let destYinPage = 0;
+      if (pdfPageView.viewport) {
+        const [, vy] = pdfPageView.viewport.convertToViewportPoint(destX, destY);
+        destYinPage = vy;
+      }
+
+      // Single smooth scroll — eliminates the double-jump flash
+      const targetScrollTop = Math.max(0, pageTopInContainer + destYinPage - container.clientHeight / 2);
+      container.scrollTo({ top: targetScrollTop, behavior: "smooth" });
+
+      // 3. Draw a highlight rectangle around the rule code text (best-effort).
+      //    The highlight is position:absolute inside pageDiv so it stays correct
+      //    regardless of where the smooth scroll has reached.
+      try {
+        const vp = pdfPageView.viewport;
+        const doc = iframeRef.current!.contentWindow!.document;
+
+        // Search the page's text content for the exact rule code item so we
+        // can use its precise bounding box rather than estimating from the
+        // named destination coordinates (which have padding baked in).
+        const pdfPage = await app.pdfDocument.getPage(pageIndex + 1);
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        const destArray: any[] = await app.pdfDocument.getDestination(ruleCode);
-        if (Array.isArray(destArray) && destArray.length >= 2) {
-          const pageIndex: number = await app.pdfDocument.getPageIndex(destArray[0]);
-          const pdfPageView = app.pdfViewer._pages[pageIndex];
+        const textContent = await pdfPage.getTextContent();
 
-          if (pdfPageView) {
-            const vp = pdfPageView.viewport;
-            const pageDiv = pdfPageView.div as HTMLDivElement;
-            const doc = iframeRef.current!.contentWindow!.document;
+        // For indented rules like "4.2.7(3)" the PDF only shows the
+        // sub-item suffix "(3)" in the visible text, so extract it for
+        // use as a fallback match pattern.
+        const subItemMatch = ruleCode.match(/(\([^)]+\))$/);
+        const subItemCode: string | null = subItemMatch ? subItemMatch[1] : null;
 
-            // Search the page's text content for the exact rule code item so we
-            // can use its precise bounding box rather than estimating from the
-            // named destination coordinates (which have padding baked in).
-            const pdfPage = await app.pdfDocument.getPage(pageIndex + 1);
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            const textContent = await pdfPage.getTextContent();
-
-            const destX: number = destArray[2] ?? 0;
-            const destY: number = destArray[3] ?? 0;
-
-            // For indented rules like "4.2.7(3)" the PDF only shows the
-            // sub-item suffix "(3)" in the visible text, so extract it for
-            // use as a fallback match pattern.
-            const subItemMatch = ruleCode.match(/(\([^)]+\))$/);
-            const subItemCode: string | null = subItemMatch ? subItemMatch[1] : null;
-
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            let bestItem: any = null;
-            let bestDist = Infinity;
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            for (const item of textContent.items as any[]) {
-              const s: string = (item.str ?? "").trim();
-              if (!s) continue;
-              // Match the rule code exactly, or when it appears with trailing
-              // space, paren, or dash (e.g. the rule code is part of a run).
-              // Also match the sub-item suffix alone (e.g. "(3)") since
-              // indented rules show only the suffix in the PDF text.
-              const matches =
-                s === ruleCode ||
-                s.startsWith(ruleCode + " ") ||
-                s.startsWith(ruleCode + "(") ||
-                s.startsWith(ruleCode + "\u2014") ||
-                s.startsWith(ruleCode + "\u2013") ||
-                (subItemCode !== null && (
-                  s === subItemCode ||
-                  s.startsWith(subItemCode + " ") ||
-                  s.startsWith(subItemCode + "\u2014") ||
-                  s.startsWith(subItemCode + "\u2013")
-                ));
-              if (!matches) continue;
-              // Prefer the item closest (in PDF space) to the named destination
-              const dy = Math.abs(item.transform[5] - destY);
-              const dx = Math.abs(item.transform[4] - destX);
-              const dist = dy * 3 + dx;
-              if (dist < bestDist) { bestDist = dist; bestItem = item; }
-            }
-
-            let hlLeft: number, hlTop: number, hlWidth: number, hlHeight: number;
-
-            if (bestItem) {
-              // Exact bounds: transform[4/5] = PDF (x, baseline-y), width/height in user space
-              const tx: number = bestItem.transform[4];
-              const ty: number = bestItem.transform[5]; // baseline
-              const iw: number = bestItem.width;
-              const ih: number = bestItem.height || Math.abs(bestItem.transform[3]);
-              // PDF y increases upward; viewport y increases downward.
-              // (tx, ty)      → bottom-left of glyph box in CSS
-              // (tx+iw, ty+ih) → top-right of glyph box in CSS
-              const [vx1, vy1] = vp.convertToViewportPoint(tx,      ty);
-              const [vx2, vy2] = vp.convertToViewportPoint(tx + iw, ty + ih);
-              hlLeft   = Math.min(vx1, vx2) - 2;
-              hlTop    = Math.min(vy1, vy2) - 2;
-              // If the text item contains more than just the rule code (e.g.
-              // the marker is followed by paragraph text in the same run),
-              // proportion the width down to cover only the code's characters.
-              const matchStr = (bestItem.str ?? "").trim();
-              const displayCode = matchStr.startsWith(ruleCode)
-                ? ruleCode
-                : (subItemCode && matchStr.startsWith(subItemCode) ? subItemCode : matchStr);
-              const wFrac = matchStr.length > displayCode.length
-                ? displayCode.length / matchStr.length : 1;
-              hlWidth  = Math.abs(vx2 - vx1) * wFrac + 4;
-              hlHeight = Math.abs(vy2 - vy1) + 4;
-            } else {
-              // Fallback: use destination coords with a rough rule-code size estimate.
-              // destY is the PDF y of the viewport top, which add_destinations.py sets
-              // to TOP_PADDING (10 pts) above the text top. convertToViewportPoint
-              // therefore gives a CSS y that is (10 * scale) px above the text top,
-              // so we shift down by that amount to align the highlight with the text.
-              const [sx, sy] = vp.convertToViewportPoint(destX, destY);
-              const lineH   = Math.ceil(12 * vp.scale);
-              const topPad  = Math.ceil(10 * vp.scale); // matches TOP_PADDING in add_destinations.py
-              hlLeft   = Math.floor(sx) - 2;
-              hlTop    = Math.floor(sy) + topPad - 2;
-              hlWidth  = Math.ceil(35 * vp.scale) + 4;
-              hlHeight = lineH + 4;
-            }
-
-            const hl = doc.createElement("div");
-            hl.id = "rule-hl";
-            hl.style.cssText = [
-              "position:absolute",
-              `left:${hlLeft}px`,
-              `top:${hlTop}px`,
-              `width:${hlWidth}px`,
-              `height:${hlHeight}px`,
-              "border:2px solid #f59e0b",
-              "background:rgba(245,158,11,0.10)",
-              "border-radius:3px",
-              "pointer-events:none",
-              "z-index:5",
-            ].join(";");
-            pageDiv.appendChild(hl);
-          }
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        let bestItem: any = null;
+        let bestDist = Infinity;
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        for (const item of textContent.items as any[]) {
+          const s: string = (item.str ?? "").trim();
+          if (!s) continue;
+          // Match the rule code exactly, or when it appears with trailing
+          // space, paren, or dash (e.g. the rule code is part of a run).
+          // Also match the sub-item suffix alone (e.g. "(3)") since
+          // indented rules show only the suffix in the PDF text.
+          const matches =
+            s === ruleCode ||
+            s.startsWith(ruleCode + " ") ||
+            s.startsWith(ruleCode + "(") ||
+            s.startsWith(ruleCode + "\u2014") ||
+            s.startsWith(ruleCode + "\u2013") ||
+            (subItemCode !== null && (
+              s === subItemCode ||
+              s.startsWith(subItemCode + " ") ||
+              s.startsWith(subItemCode + "\u2014") ||
+              s.startsWith(subItemCode + "\u2013")
+            ));
+          if (!matches) continue;
+          // Prefer the item closest (in PDF space) to the named destination
+          const dy = Math.abs(item.transform[5] - destY);
+          const dx = Math.abs(item.transform[4] - destX);
+          const dist = dy * 3 + dx;
+          if (dist < bestDist) { bestDist = dist; bestItem = item; }
         }
+
+        let hlLeft: number, hlTop: number, hlWidth: number, hlHeight: number;
+
+        if (bestItem && vp) {
+          // Exact bounds: transform[4/5] = PDF (x, baseline-y), width/height in user space
+          const tx: number = bestItem.transform[4];
+          const ty: number = bestItem.transform[5]; // baseline
+          const iw: number = bestItem.width;
+          const ih: number = bestItem.height || Math.abs(bestItem.transform[3]);
+          // PDF y increases upward; viewport y increases downward.
+          // (tx, ty)      → bottom-left of glyph box in CSS
+          // (tx+iw, ty+ih) → top-right of glyph box in CSS
+          const [vx1, vy1] = vp.convertToViewportPoint(tx,      ty);
+          const [vx2, vy2] = vp.convertToViewportPoint(tx + iw, ty + ih);
+          hlLeft   = Math.min(vx1, vx2) - 2;
+          hlTop    = Math.min(vy1, vy2) - 2;
+          // If the text item contains more than just the rule code (e.g.
+          // the marker is followed by paragraph text in the same run),
+          // proportion the width down to cover only the code's characters.
+          const matchStr = (bestItem.str ?? "").trim();
+          const displayCode = matchStr.startsWith(ruleCode)
+            ? ruleCode
+            : (subItemCode && matchStr.startsWith(subItemCode) ? subItemCode : matchStr);
+          const wFrac = matchStr.length > displayCode.length
+            ? displayCode.length / matchStr.length : 1;
+          hlWidth  = Math.abs(vx2 - vx1) * wFrac + 4;
+          hlHeight = Math.abs(vy2 - vy1) + 4;
+        } else if (vp) {
+          // Fallback: use destination coords with a rough rule-code size estimate.
+          // destY is the PDF y of the viewport top, which add_destinations.py sets
+          // to TOP_PADDING (10 pts) above the text top. convertToViewportPoint
+          // therefore gives a CSS y that is (10 * scale) px above the text top,
+          // so we shift down by that amount to align the highlight with the text.
+          const [sx, sy] = vp.convertToViewportPoint(destX, destY);
+          const lineH   = Math.ceil(12 * vp.scale);
+          const topPad  = Math.ceil(10 * vp.scale); // matches TOP_PADDING in add_destinations.py
+          hlLeft   = Math.floor(sx) - 2;
+          hlTop    = Math.floor(sy) + topPad - 2;
+          hlWidth  = Math.ceil(35 * vp.scale) + 4;
+          hlHeight = lineH + 4;
+        } else {
+          return true; // viewport not ready, skip highlight (scroll already dispatched)
+        }
+
+        const hl = doc.createElement("div");
+        hl.id = "rule-hl";
+        hl.style.cssText = [
+          "position:absolute",
+          `left:${hlLeft}px`,
+          `top:${hlTop}px`,
+          `width:${hlWidth}px`,
+          `height:${hlHeight}px`,
+          "border:2px solid #f59e0b",
+          "background:rgba(245,158,11,0.10)",
+          "border-radius:3px",
+          "pointer-events:none",
+          "z-index:5",
+        ].join(";");
+        pageDiv.appendChild(hl);
       } catch {
         // Highlight is best-effort; silently ignore failures
       }

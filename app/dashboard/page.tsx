@@ -5,10 +5,10 @@ import dynamic from "next/dynamic";
 import Link from "next/link";
 import { useAuthStore } from "@/lib/auth-store";
 import { useComplianceStore } from "@/lib/compliance-store";
-import { getProcessRating } from "@/lib/types/compliance";
 import type { ActiveRegulation, RegulationProcess, SelfAssessment } from "@/lib/types/compliance";
 import { ProcessTable } from "@/components/compliance/ProcessTable";
 import { ComplianceCalendar } from "@/components/compliance/ComplianceCalendar";
+import { AgencyLogo } from "@/components/compliance/AgencyLogo";
 
 const ReportModal = dynamic(
   () => import("@/components/reports/ReportModal").then((m) => m.ReportModal),
@@ -23,49 +23,69 @@ function formatDate(isoString: string): string {
   });
 }
 
-function SelfAssessmentCard({
+
+function RegulationTile({
   al,
+  regulationName,
   regulationShortName,
   regulationAgency,
   activeAssessment,
   lastCompleted,
 }: {
   al: ActiveRegulation;
+  regulationName: string;
   regulationShortName: string;
   regulationAgency: string;
   activeAssessment: SelfAssessment | undefined;
   lastCompleted: SelfAssessment | undefined;
 }) {
   const href = `/dashboard/regulations/${al.regulationId}`;
+  const inProgress = !!activeAssessment;
 
   return (
-    <div className="flex items-center justify-between rounded-xl border border-gray-200 bg-white px-5 py-4">
-      <div className="min-w-0">
-        <div className="flex items-center gap-2">
-          <span className="text-sm font-semibold text-gray-900">{regulationShortName}</span>
-          <span className="rounded-full bg-indigo-50 px-2 py-0.5 text-xs font-medium text-indigo-700">
-            {regulationAgency}
-          </span>
+    <div
+      className={`flex flex-col gap-4 rounded-xl border bg-white p-6 ${
+        inProgress
+          ? "border-indigo-200 shadow-sm ring-1 ring-indigo-100"
+          : "border-gray-200"
+      }`}
+    >
+      <div className="flex items-start gap-4">
+        <AgencyLogo agency={regulationAgency} />
+        <div className="min-w-0">
+          <h3 className="font-semibold text-gray-900 leading-tight">
+            {regulationShortName}
+          </h3>
+          <p className="mt-0.5 text-sm text-gray-500">{regulationAgency}</p>
         </div>
-        <p className="mt-1 text-xs text-gray-500">
-          {activeAssessment ? (
-            <>Assessment in progress since {formatDate(activeAssessment.startedAt)}</>
-          ) : lastCompleted ? (
-            <>
-              Last assessed: {formatDate(lastCompleted.completedAt!)}
-              {lastCompleted.completedBy && <> · {lastCompleted.completedBy}</>}
-            </>
-          ) : (
-            <>No assessments completed yet</>
-          )}
-        </p>
       </div>
-      <Link
-        href={href}
-        className="ml-4 shrink-0 rounded-lg border border-gray-200 px-3 py-1.5 text-xs font-medium text-gray-700 hover:bg-gray-50"
-      >
-        {activeAssessment ? "Continue →" : lastCompleted ? "Start New ↗" : "Start First ↗"}
-      </Link>
+
+      <p className={`text-sm ${inProgress ? "text-amber-700" : "text-gray-500"}`}>
+        {inProgress ? (
+          <>Assessment in progress since {formatDate(activeAssessment.startedAt)}</>
+        ) : lastCompleted ? (
+          <>Last assessed: {formatDate(lastCompleted.completedAt!)}</>
+        ) : (
+          <>No assessments completed yet</>
+        )}
+      </p>
+
+      <div>
+        <Link
+          href={href}
+          className={`inline-flex items-center gap-1.5 rounded-lg px-4 py-2 text-sm font-semibold ${
+            inProgress
+              ? "bg-indigo-600 text-white hover:bg-indigo-500"
+              : "border border-gray-200 text-gray-700 hover:bg-gray-50"
+          }`}
+        >
+          {inProgress
+            ? "Continue Self Assessment →"
+            : lastCompleted
+            ? "Start New Assessment →"
+            : "Start First Assessment →"}
+        </Link>
+      </div>
     </div>
   );
 }
@@ -87,17 +107,6 @@ export default function DashboardPage() {
       fetchTeam();
     }
   }, [teamMembers.length, fetchTeam]);
-
-  // Calculate health KPI across all computed processes (from form answers)
-  const allComputedProcesses = activeRegulations.flatMap((al) => al.processes);
-  const compliantProcesses = allComputedProcesses.filter(
-    (p) => getProcessRating(p) === "green",
-  );
-  const healthScore =
-    allComputedProcesses.length > 0
-      ? Math.round((compliantProcesses.length / allComputedProcesses.length) * 100)
-      : 0;
-  const healthPass = healthScore > 70;
 
   // Collect RegulationProcess items from parent Regulation for each active regulation
   const allRegulationProcesses: RegulationProcess[] = [];
@@ -154,75 +163,52 @@ export default function DashboardPage() {
             </Link>
           </div>
         ) : (
-          <div className="mt-8 grid gap-8 lg:grid-cols-[1fr_320px]">
-            {/* Left column */}
-            <div className="space-y-8">
-              {/* Health KPI */}
-              <div className="flex items-center gap-6 rounded-xl border border-gray-200 bg-white p-6">
-                <div
-                  className={`flex h-20 w-20 shrink-0 items-center justify-center rounded-full border-4 ${
-                    healthPass
-                      ? "border-green-500 text-green-600"
-                      : "border-red-500 text-red-600"
-                  }`}
-                >
-                  <span className="text-2xl font-bold">{healthScore}%</span>
-                </div>
-                <div>
-                  <h2 className="text-lg font-semibold text-gray-900">
-                    Overall Compliance Health
-                  </h2>
-                  <p className="text-sm text-gray-500">
-                    {compliantProcesses.length} of {allComputedProcesses.length} sections
-                    fully compliant
-                  </p>
-                </div>
+          <>
+            {/* Regulation tiles — full width */}
+            <div className="mt-8">
+              <div className="grid gap-4 sm:grid-cols-2">
+                {activeRegulations.map((al) => {
+                  const reg = regulations.find((l) => l.id === al.regulationId);
+                  return (
+                    <RegulationTile
+                      key={al.regulationId}
+                      al={al}
+                      regulationName={reg?.name ?? al.regulationId}
+                      regulationShortName={reg?.shortName ?? al.regulationId}
+                      regulationAgency={reg?.agency ?? ""}
+                      activeAssessment={getActiveAssessment(al.regulationId)}
+                      lastCompleted={getLastCompletedAssessment(al.regulationId)}
+                    />
+                  );
+                })}
               </div>
+            </div>
 
-              {/* Self Assessments */}
+            {/* Two-column: Business Processes | Calendar */}
+            <div className="mt-8 grid gap-8 lg:grid-cols-[1fr_320px]">
+              {/* Left column */}
               <div>
-                <h2 className="text-lg font-semibold text-gray-900">Self Assessments</h2>
-                <p className="mt-1 text-sm text-gray-500">
-                  Periodic compliance reviews across your active regulations
-                </p>
-                <div className="mt-3 space-y-3">
-                  {activeRegulations.map((al) => {
-                    const reg = regulations.find((l) => l.id === al.regulationId);
-                    return (
-                      <SelfAssessmentCard
-                        key={al.regulationId}
-                        al={al}
-                        regulationShortName={reg?.shortName ?? al.regulationId}
-                        regulationAgency={reg?.agency ?? ""}
-                        activeAssessment={getActiveAssessment(al.regulationId)}
-                        lastCompleted={getLastCompletedAssessment(al.regulationId)}
-                      />
-                    );
-                  })}
-                </div>
+                {allRegulationProcesses.length > 0 && (
+                  <div>
+                    <h2 className="text-lg font-semibold text-gray-900">
+                      Business Processes
+                    </h2>
+                    <p className="mt-1 text-sm text-gray-500">
+                      Key processes across your active regulations
+                    </p>
+                    <div className="mt-3">
+                      <ProcessTable processes={allRegulationProcesses} />
+                    </div>
+                  </div>
+                )}
               </div>
 
-              {/* Business Processes table */}
-              {allRegulationProcesses.length > 0 && (
-                <div>
-                  <h2 className="text-lg font-semibold text-gray-900">
-                    Business Processes
-                  </h2>
-                  <p className="mt-1 text-sm text-gray-500">
-                    Key processes across your active regulations
-                  </p>
-                  <div className="mt-3">
-                    <ProcessTable processes={allRegulationProcesses} />
-                  </div>
-                </div>
-              )}
+              {/* Right column */}
+              <div>
+                <ComplianceCalendar />
+              </div>
             </div>
-
-            {/* Right column */}
-            <div>
-              <ComplianceCalendar />
-            </div>
-          </div>
+          </>
         )}
       </div>
 

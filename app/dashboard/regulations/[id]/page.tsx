@@ -8,6 +8,7 @@ import { useAuthStore } from "@/lib/auth-store";
 import type { Regulation, SelfAssessment } from "@/lib/types/compliance";
 import { getProcessRating } from "@/lib/types/compliance";
 import { AssignOwnerModal } from "@/components/compliance/AssignOwnerModal";
+import { AgencyLogo } from "@/components/compliance/AgencyLogo";
 import MermaidDiagram from "@/components/compliance/MermaidDiagram";
 import { KeyDatesWidget } from "@/components/compliance/KeyDatesWidget";
 import type { IntroductionData, RegulationManifest, ProcessListEntry } from "@/lib/types/regulation-content";
@@ -233,16 +234,19 @@ export default function RegulationDetailPage() {
         )}
       </div>
 
-      <h1 className="mt-4 text-3xl font-bold text-gray-900">
-        {regulation.name}
-      </h1>
-      <div className="mt-2 flex gap-3">
-        <span className="rounded-full bg-indigo-50 px-2.5 py-0.5 text-xs font-medium text-indigo-700">
-          {regulation.agency}
-        </span>
-        <span className="rounded-full bg-gray-100 px-2.5 py-0.5 text-xs font-medium text-gray-700">
-          {regulation.jurisdiction}
-        </span>
+      <div className="mt-4 flex items-center gap-4">
+        <AgencyLogo agency={regulation.agency} size={56} />
+        <div>
+          <h1 className="text-3xl font-bold text-gray-900">{regulation.name}</h1>
+          <div className="mt-1.5 flex gap-3">
+            <span className="rounded-full bg-indigo-50 px-2.5 py-0.5 text-xs font-medium text-indigo-700">
+              {regulation.agency}
+            </span>
+            <span className="rounded-full bg-gray-100 px-2.5 py-0.5 text-xs font-medium text-gray-700">
+              {regulation.jurisdiction}
+            </span>
+          </div>
+        </div>
       </div>
       <p className="mt-4 text-sm text-gray-600">{regulation.description}</p>
       {active && active.businessProfile.services.length > 0 && (

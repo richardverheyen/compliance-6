@@ -3,6 +3,7 @@
 import { useEffect } from "react";
 import Link from "next/link";
 import { useComplianceStore } from "@/lib/compliance-store";
+import { AgencyLogo } from "@/components/compliance/AgencyLogo";
 
 export default function RegulationsPage() {
   const { regulations, activeRegulations, isLoading, fetchRegulations } =
@@ -42,18 +43,23 @@ export default function RegulationsPage() {
                 className="group rounded-xl border border-gray-200 p-6 transition-shadow hover:shadow-md"
               >
                 <div className="flex items-start justify-between">
-                  <h3 className="text-lg font-semibold text-gray-900 group-hover:text-indigo-600">
-                    {leg.shortName}
-                  </h3>
+                  <div className="flex items-start gap-3">
+                    <AgencyLogo agency={leg.agency} size={40} />
+                    <div>
+                      <h3 className="text-base font-semibold text-gray-900 group-hover:text-indigo-600">
+                        {leg.shortName}
+                      </h3>
+                      <span className="mt-0.5 inline-block text-xs text-gray-500">
+                        {leg.agency}
+                      </span>
+                    </div>
+                  </div>
                   {isActive && (
                     <span className="rounded-full bg-green-100 px-2.5 py-0.5 text-xs font-medium text-green-700">
                       Active
                     </span>
                   )}
                 </div>
-                <span className="mt-1 inline-block rounded-full bg-indigo-50 px-2.5 py-0.5 text-xs font-medium text-indigo-700">
-                  {leg.agency}
-                </span>
                 <p className="mt-3 text-sm text-gray-600 line-clamp-3">
                   {leg.description}
                 </p>

@@ -13,6 +13,7 @@ export default function RegulationLayout({ children }: { children: React.ReactNo
 
   const [pdfUrl, setPdfUrl] = useState<string | null>(null);
   const [pdfVisible, setPdfVisible] = useState(true);
+  const [pdfDestination, setPdfDestination] = useState<string | null>(null);
 
   // Fetch manifest once to get pdfUrl
   useEffect(() => {
@@ -23,19 +24,31 @@ export default function RegulationLayout({ children }: { children: React.ReactNo
       });
   }, [id]);
 
-  // Auto-collapse PDF when entering a process view; auto-expand on overview
+  // Auto-collapse PDF when entering a process view; auto-expand on overview.
+  // Reset destination when leaving process view so overview gets clean PDF.
   useEffect(() => {
     if (isProcessView) {
       setPdfVisible(false);
     } else {
       setPdfVisible(true);
+      setPdfDestination(null);
     }
   }, [isProcessView]);
 
   const togglePdf = useCallback(() => setPdfVisible((v) => !v), []);
 
+  const navigateToPdfDestination = useCallback((ruleCode: string) => {
+    setPdfDestination(ruleCode);
+    setPdfVisible(true);
+  }, []);
+
+  // Append named destination fragment when navigating to a specific rule
+  const effectivePdfSrc = pdfDestination
+    ? `${pdfUrl}#nameddest=${encodeURIComponent(pdfDestination)}`
+    : pdfUrl;
+
   return (
-    <PdfPanelContext.Provider value={{ pdfVisible, togglePdf, pdfUrl }}>
+    <PdfPanelContext.Provider value={{ pdfVisible, togglePdf, pdfUrl, navigateToPdfDestination }}>
       <div className="px-4 py-12">
         <div className="mx-auto max-w-7xl">
           <div className="flex items-start">
@@ -59,7 +72,8 @@ export default function RegulationLayout({ children }: { children: React.ReactNo
                     Regulation Source Document
                   </p>
                   <iframe
-                    src={pdfUrl}
+                    key={effectivePdfSrc ?? ""}
+                    src={effectivePdfSrc ?? undefined}
                     title="Regulation Source Document"
                     className="h-[calc(100vh-6rem)] w-full rounded-xl border border-gray-200 bg-gray-50"
                   />

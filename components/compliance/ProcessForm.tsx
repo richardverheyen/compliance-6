@@ -3,6 +3,7 @@
 import { useState, useRef, useEffect, useCallback } from "react";
 import Link from "next/link";
 import type { ProcessForm as ProcessFormData, ProcessControl } from "@/lib/types/process-form";
+import { usePdfPanel } from "@/app/dashboard/regulations/[id]/_context";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -100,10 +101,16 @@ function SubScopingPanel({ subScoping, answers, onToggle, readOnly }: {
 }
 
 function SourceRulePill({ ruleCode }: { ruleCode: string }) {
+  const { navigateToPdfDestination } = usePdfPanel();
   return (
-    <span className="inline-flex items-center text-[0.6rem] bg-yellow-50 text-yellow-800 border border-yellow-200 px-1 py-0.5 rounded ml-0.5">
+    <button
+      type="button"
+      onClick={() => navigateToPdfDestination(ruleCode)}
+      className="inline-flex items-center text-[0.6rem] bg-yellow-50 text-yellow-800 border border-yellow-200 px-1 py-0.5 rounded ml-0.5 hover:bg-yellow-100 hover:border-yellow-300 cursor-pointer transition-colors hidden lg:inline-flex"
+      title={`Jump to rule ${ruleCode} in source PDF`}
+    >
       {ruleCode}
-    </span>
+    </button>
   );
 }
 

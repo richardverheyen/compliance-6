@@ -74,7 +74,7 @@ export const amlCTFContent: RegulationContent = {
     "alternative-id":          alternativeId as unknown as ProcessForm,
   },
   manifest: {
-    pdfUrl: "/chapter4.pdf",
+    pdfUrl: "/chapter4_linked.pdf",
     mermaidDiagram: MERMAID_DIAGRAM,
     hasIntroductionForm: true,
     processList: [

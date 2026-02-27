@@ -74,6 +74,12 @@ export default function RegulationLayout({ children }: { children: React.ReactNo
             const destX: number = destArray[2] ?? 0;
             const destY: number = destArray[3] ?? 0;
 
+            // For indented rules like "4.2.7(3)" the PDF only shows the
+            // sub-item suffix "(3)" in the visible text, so extract it for
+            // use as a fallback match pattern.
+            const subItemMatch = ruleCode.match(/(\([^)]+\))$/);
+            const subItemCode: string | null = subItemMatch ? subItemMatch[1] : null;
+
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
             let bestItem: any = null;
             let bestDist = Infinity;
@@ -82,13 +88,21 @@ export default function RegulationLayout({ children }: { children: React.ReactNo
               const s: string = (item.str ?? "").trim();
               if (!s) continue;
               // Match the rule code exactly, or when it appears with trailing
-              // space, paren, or dash (e.g. the rule code is part of a run)
+              // space, paren, or dash (e.g. the rule code is part of a run).
+              // Also match the sub-item suffix alone (e.g. "(3)") since
+              // indented rules show only the suffix in the PDF text.
               const matches =
                 s === ruleCode ||
                 s.startsWith(ruleCode + " ") ||
                 s.startsWith(ruleCode + "(") ||
                 s.startsWith(ruleCode + "\u2014") ||
-                s.startsWith(ruleCode + "\u2013");
+                s.startsWith(ruleCode + "\u2013") ||
+                (subItemCode !== null && (
+                  s === subItemCode ||
+                  s.startsWith(subItemCode + " ") ||
+                  s.startsWith(subItemCode + "\u2014") ||
+                  s.startsWith(subItemCode + "\u2013")
+                ));
               if (!matches) continue;
               // Prefer the item closest (in PDF space) to the named destination
               const dy = Math.abs(item.transform[5] - destY);
@@ -112,14 +126,28 @@ export default function RegulationLayout({ children }: { children: React.ReactNo
               const [vx2, vy2] = vp.convertToViewportPoint(tx + iw, ty + ih);
               hlLeft   = Math.min(vx1, vx2) - 2;
               hlTop    = Math.min(vy1, vy2) - 2;
-              hlWidth  = Math.abs(vx2 - vx1) + 4;
+              // If the text item contains more than just the rule code (e.g.
+              // the marker is followed by paragraph text in the same run),
+              // proportion the width down to cover only the code's characters.
+              const matchStr = (bestItem.str ?? "").trim();
+              const displayCode = matchStr.startsWith(ruleCode)
+                ? ruleCode
+                : (subItemCode && matchStr.startsWith(subItemCode) ? subItemCode : matchStr);
+              const wFrac = matchStr.length > displayCode.length
+                ? displayCode.length / matchStr.length : 1;
+              hlWidth  = Math.abs(vx2 - vx1) * wFrac + 4;
               hlHeight = Math.abs(vy2 - vy1) + 4;
             } else {
-              // Fallback: use destination coords with a rough rule-code size estimate
+              // Fallback: use destination coords with a rough rule-code size estimate.
+              // destY is the PDF y of the viewport top, which add_destinations.py sets
+              // to TOP_PADDING (10 pts) above the text top. convertToViewportPoint
+              // therefore gives a CSS y that is (10 * scale) px above the text top,
+              // so we shift down by that amount to align the highlight with the text.
               const [sx, sy] = vp.convertToViewportPoint(destX, destY);
-              const lineH = Math.ceil(12 * vp.scale);
+              const lineH   = Math.ceil(12 * vp.scale);
+              const topPad  = Math.ceil(10 * vp.scale); // matches TOP_PADDING in add_destinations.py
               hlLeft   = Math.floor(sx) - 2;
-              hlTop    = Math.floor(sy) - lineH - 2;
+              hlTop    = Math.floor(sy) + topPad - 2;
               hlWidth  = Math.ceil(35 * vp.scale) + 4;
               hlHeight = lineH + 4;
             }

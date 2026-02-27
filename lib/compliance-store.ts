@@ -7,6 +7,7 @@ import type {
   BusinessProfile,
   TeamMember,
   ComplianceEvent,
+  Reminder,
 } from "@/lib/types/compliance";
 import { computeProcessesFromAnswers } from "@/mocks/compliance-data";
 import { useAuthStore } from "@/lib/auth-store";
@@ -50,6 +51,12 @@ interface ComplianceState {
   assignRegulationProcessOwner: (processId: string, teamMemberId: string) => void;
   unassignRegulationProcessOwner: (processId: string) => void;
   getRegulationProcessOwner: (processId: string) => string | undefined;
+
+  // Reminders
+  reminders: Reminder[];
+  addReminder: (r: Omit<Reminder, "id">) => void;
+  deleteReminder: (id: string) => void;
+  getRemindersForKeyDate: (keyDateId: string) => Reminder[];
 }
 
 function getAssessmentSectionAnswers(al: ActiveRegulation): Record<string, Record<string, string>> {
@@ -82,6 +89,7 @@ export const useComplianceStore = create<ComplianceState>()(
       calendarEvents: [],
       isLoading: false,
       processAssignments: {},
+      reminders: [],
 
       fetchRegulations: async () => {
         set({ isLoading: true });
@@ -293,6 +301,18 @@ export const useComplianceStore = create<ComplianceState>()(
       },
 
       getRegulationProcessOwner: (processId) => get().processAssignments[processId],
+
+      addReminder: (r) => {
+        const reminder: Reminder = { ...r, id: Date.now().toString() };
+        set((state) => ({ reminders: [...state.reminders, reminder] }));
+      },
+
+      deleteReminder: (id) => {
+        set((state) => ({ reminders: state.reminders.filter((r) => r.id !== id) }));
+      },
+
+      getRemindersForKeyDate: (keyDateId) =>
+        get().reminders.filter((r) => r.keyDateId === keyDateId),
     }),
     { name: "compliance-storage-v2" },
   ),

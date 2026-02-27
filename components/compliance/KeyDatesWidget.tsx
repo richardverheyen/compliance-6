@@ -1,7 +1,9 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { useComplianceStore } from "@/lib/compliance-store";
 import type { RegulationKeyDate } from "@/lib/types/compliance";
+import { ReminderModal } from "@/components/compliance/ReminderModal";
 
 /** Annual dates roll to next year once they've passed. */
 function nextOccurrence(isoDate: string, recurrence: "annual" | "once"): string {
@@ -36,9 +38,41 @@ interface ResolvedDate extends RegulationKeyDate {
   days: number;
 }
 
+interface ModalTarget {
+  keyDateId: string;
+  keyDateTitle: string;
+  dueDate: string;
+}
+
+function BellIconSmall({ active }: { active: boolean }) {
+  if (active) {
+    return (
+      <svg className="h-3.5 w-3.5 text-indigo-600" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+        <path d="M10 2a6 6 0 00-6 6v3.586l-.707.707A1 1 0 004 14h12a1 1 0 00.707-1.707L16 11.586V8a6 6 0 00-6-6zM10 18a3 3 0 01-2.83-2h5.66A3 3 0 0110 18z" />
+        <circle cx="15" cy="4" r="3" fill="#ef4444" />
+      </svg>
+    );
+  }
+  return (
+    <svg
+      className="h-3.5 w-3.5 text-gray-400"
+      viewBox="0 0 20 20"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.5"
+      aria-hidden="true"
+    >
+      <path strokeLinecap="round" strokeLinejoin="round" d="M15 10.586V8a5 5 0 00-10 0v2.586l-.707.707A1 1 0 005 13h10a1 1 0 00.707-1.707L15 10.586z" />
+      <path strokeLinecap="round" strokeLinejoin="round" d="M10 17a2 2 0 01-2-2h4a2 2 0 01-2 2z" />
+    </svg>
+  );
+}
+
 export function KeyDatesWidget({ regulationId }: { regulationId: string }) {
+  const { getRemindersForKeyDate } = useComplianceStore();
   const [dates, setDates] = useState<ResolvedDate[]>([]);
   const [loading, setLoading] = useState(true);
+  const [modal, setModal] = useState<ModalTarget | null>(null);
 
   useEffect(() => {
     fetch(`/api/compliance/regulations/${regulationId}/key-dates`)
@@ -71,66 +105,125 @@ export function KeyDatesWidget({ regulationId }: { regulationId: string }) {
   const numColor = isOverdue ? "text-red-700" : isUrgent ? "text-amber-700" : "text-indigo-700";
   const labelColor = isOverdue ? "text-red-500" : isUrgent ? "text-amber-500" : "text-indigo-500";
 
-  return (
-    <div className="space-y-2">
-      <h2 className="text-sm font-semibold uppercase tracking-wider text-gray-500">Key Dates</h2>
+  const primaryHasReminder = getRemindersForKeyDate(primary.id).length > 0;
 
-      {/* Primary countdown */}
-      <div className={`rounded-xl border bg-gradient-to-b ${cardBorder} to-white px-4 py-4 text-center`}>
-        <p className={`text-[11px] font-semibold uppercase tracking-wide ${labelColor} leading-tight`}>
-          {primary.title}
-        </p>
-        <p className={`mt-2 text-5xl font-bold tabular-nums leading-none ${numColor}`}>
-          {isOverdue ? Math.abs(primary.days) : primary.days}
-        </p>
-        <p className={`mt-1 text-xs font-medium ${labelColor}`}>
-          {isOverdue
-            ? `day${Math.abs(primary.days) !== 1 ? "s" : ""} overdue`
-            : `day${primary.days !== 1 ? "s" : ""} remaining`}
-        </p>
-        <p className="mt-2.5 text-[11px] text-gray-400">Due {fmtShort(primary.resolvedDate)}</p>
-        {primary.recurrence === "annual" && (
-          <span className="mt-2 inline-block rounded-full bg-white/80 px-2 py-0.5 text-[10px] text-gray-400">
-            Annual
-          </span>
+  function openModal(date: ResolvedDate) {
+    setModal({
+      keyDateId: date.id,
+      keyDateTitle: date.title,
+      dueDate: fmtShort(date.resolvedDate),
+    });
+  }
+
+  return (
+    <>
+      <div className="space-y-2">
+        <h2 className="text-sm font-semibold uppercase tracking-wider text-gray-500">Key Dates</h2>
+
+        {/* Primary countdown */}
+        <div className={`rounded-xl border bg-gradient-to-b ${cardBorder} to-white px-4 py-4 text-center`}>
+          <p className={`text-[11px] font-semibold uppercase tracking-wide ${labelColor} leading-tight`}>
+            {primary.title}
+          </p>
+          <p className={`mt-2 text-5xl font-bold tabular-nums leading-none ${numColor}`}>
+            {isOverdue ? Math.abs(primary.days) : primary.days}
+          </p>
+          <p className={`mt-1 text-xs font-medium ${labelColor}`}>
+            {isOverdue
+              ? `day${Math.abs(primary.days) !== 1 ? "s" : ""} overdue`
+              : `day${primary.days !== 1 ? "s" : ""} remaining`}
+          </p>
+          <p className="mt-2.5 text-[11px] text-gray-400">Due {fmtShort(primary.resolvedDate)}</p>
+          {/* Full reminder button on the large primary card */}
+          <button
+            onClick={() => openModal(primary)}
+            className={`mt-3 inline-flex items-center gap-1.5 rounded-lg border px-3 py-1.5 text-xs font-medium transition-colors ${
+              primaryHasReminder
+                ? "border-indigo-200 bg-indigo-50 text-indigo-700 hover:bg-indigo-100"
+                : "border-gray-200 bg-white text-gray-600 hover:border-gray-300 hover:bg-gray-50"
+            }`}
+          >
+            <svg
+              className={`h-3.5 w-3.5 ${primaryHasReminder ? "text-indigo-600" : "text-gray-400"}`}
+              viewBox="0 0 20 20"
+              fill={primaryHasReminder ? "currentColor" : "none"}
+              stroke={primaryHasReminder ? "none" : "currentColor"}
+              strokeWidth="1.5"
+              aria-hidden="true"
+            >
+              {primaryHasReminder ? (
+                <path d="M10 2a6 6 0 00-6 6v3.586l-.707.707A1 1 0 004 14h12a1 1 0 00.707-1.707L16 11.586V8a6 6 0 00-6-6zM10 18a3 3 0 01-2.83-2h5.66A3 3 0 0110 18z" />
+              ) : (
+                <>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M15 10.586V8a5 5 0 00-10 0v2.586l-.707.707A1 1 0 005 13h10a1 1 0 00.707-1.707L15 10.586z" />
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M10 17a2 2 0 01-2-2h4a2 2 0 01-2 2z" />
+                </>
+              )}
+            </svg>
+            {primaryHasReminder ? "Reminder set" : "Send me a reminder"}
+          </button>
+        </div>
+
+        {/* Remaining dates */}
+        {rest.length > 0 && (
+          <div className="overflow-hidden rounded-xl border border-gray-200 bg-white divide-y divide-gray-100">
+            {rest.map((date) => {
+              const over = date.days < 0;
+              const urgent = !over && date.days <= 30;
+              const hasReminder = getRemindersForKeyDate(date.id).length > 0;
+              return (
+                <div key={date.id} className="flex items-center gap-2.5 px-3 py-2.5">
+                  {/* Calendar tile */}
+                  <div className="flex h-8 w-8 shrink-0 flex-col items-center justify-center rounded-md border border-gray-100 bg-gray-50">
+                    <span className="text-xs font-bold leading-none text-gray-800">
+                      {new Date(date.resolvedDate).getDate()}
+                    </span>
+                    <span className="text-[9px] font-medium uppercase leading-tight text-gray-500">
+                      {new Date(date.resolvedDate).toLocaleDateString("en-AU", { month: "short" })}
+                    </span>
+                  </div>
+                  {/* Title + date */}
+                  <div className="min-w-0 flex-1">
+                    <p className="truncate text-xs font-medium text-gray-900">{date.title}</p>
+                    <p className="text-[10px] text-gray-400">{fmtShort(date.resolvedDate)}</p>
+                  </div>
+                  {/* Countdown */}
+                  <span
+                    className={`shrink-0 text-xs font-semibold tabular-nums ${
+                      over ? "text-red-600" : urgent ? "text-amber-600" : "text-gray-500"
+                    }`}
+                  >
+                    {over ? `-${Math.abs(date.days)}d` : `${date.days}d`}
+                  </span>
+                  {/* Bell icon — compact trigger */}
+                  <button
+                    onClick={() => openModal(date)}
+                    title={hasReminder ? "Reminder set — click to manage" : "Set a reminder"}
+                    className={`shrink-0 rounded p-0.5 transition-colors ${
+                      hasReminder
+                        ? "text-indigo-600 hover:bg-indigo-50"
+                        : "text-gray-400 hover:text-gray-600"
+                    }`}
+                  >
+                    <BellIconSmall active={hasReminder} />
+                    <span className="sr-only">{hasReminder ? "Manage reminder" : "Set reminder"}</span>
+                  </button>
+                </div>
+              );
+            })}
+          </div>
         )}
       </div>
 
-      {/* Remaining dates */}
-      {rest.length > 0 && (
-        <div className="overflow-hidden rounded-xl border border-gray-200 bg-white divide-y divide-gray-100">
-          {rest.map((date) => {
-            const over = date.days < 0;
-            const urgent = !over && date.days <= 30;
-            return (
-              <div key={date.id} className="flex items-center gap-2.5 px-3 py-2.5">
-                {/* Calendar tile */}
-                <div className="flex h-8 w-8 shrink-0 flex-col items-center justify-center rounded-md border border-gray-100 bg-gray-50">
-                  <span className="text-xs font-bold leading-none text-gray-800">
-                    {new Date(date.resolvedDate).getDate()}
-                  </span>
-                  <span className="text-[9px] font-medium uppercase leading-tight text-gray-500">
-                    {new Date(date.resolvedDate).toLocaleDateString("en-AU", { month: "short" })}
-                  </span>
-                </div>
-                {/* Title + date */}
-                <div className="min-w-0 flex-1">
-                  <p className="truncate text-xs font-medium text-gray-900">{date.title}</p>
-                  <p className="text-[10px] text-gray-400">{fmtShort(date.resolvedDate)}</p>
-                </div>
-                {/* Countdown */}
-                <span
-                  className={`shrink-0 text-xs font-semibold tabular-nums ${
-                    over ? "text-red-600" : urgent ? "text-amber-600" : "text-gray-500"
-                  }`}
-                >
-                  {over ? `-${Math.abs(date.days)}d` : `${date.days}d`}
-                </span>
-              </div>
-            );
-          })}
-        </div>
+      {modal && (
+        <ReminderModal
+          keyDateId={modal.keyDateId}
+          regulationId={regulationId}
+          keyDateTitle={modal.keyDateTitle}
+          dueDate={modal.dueDate}
+          onClose={() => setModal(null)}
+        />
       )}
-    </div>
+    </>
   );
 }

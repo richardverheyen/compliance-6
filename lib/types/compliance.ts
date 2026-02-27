@@ -92,6 +92,19 @@ export interface RegulationKeyDate {
   isCountdownPrimary?: boolean;
 }
 
+export type ReminderChannel = "email" | "text";
+export type ReminderTiming = "1d" | "1w" | "1m" | "custom";
+
+export interface Reminder {
+  id: string;
+  keyDateId: string;
+  regulationId: string;
+  channel: ReminderChannel;
+  timing: ReminderTiming;
+  /** ISO date string — only set when timing === "custom" */
+  customDate?: string;
+}
+
 export function getProcessRating(process: BusinessProcess): ComplianceRating {
   if (process.steps.some((s) => s.rating === "red")) return "red";
   if (process.steps.some((s) => s.rating === "yellow")) return "yellow";

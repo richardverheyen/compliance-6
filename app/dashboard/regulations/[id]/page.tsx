@@ -155,13 +155,7 @@ export default function RegulationDetailPage() {
   }
 
   if (!regulation || contentLoading) {
-    return (
-      <div className="px-4 py-12">
-        <div className="mx-auto max-w-7xl">
-          <p className="text-sm text-gray-500">Loading...</p>
-        </div>
-      </div>
-    );
+    return <p className="text-sm text-gray-500">Loading...</p>;
   }
 
   function toggleService(service: string) {
@@ -203,32 +197,28 @@ export default function RegulationDetailPage() {
   }
 
   return (
-    <div className="px-4 py-12">
-      <div className="mx-auto max-w-7xl">
-        <Link
-          href="/dashboard/regulations"
-          className="text-sm text-indigo-600 hover:text-indigo-500"
-        >
-          &larr; Back to Regulations
-        </Link>
+    <>
+      <Link
+        href="/dashboard/regulations"
+        className="text-sm text-indigo-600 hover:text-indigo-500"
+      >
+        &larr; Back to Regulations
+      </Link>
 
-        <h1 className="mt-4 text-3xl font-bold text-gray-900">
-          {regulation.name}
-        </h1>
-        <div className="mt-2 flex gap-3">
-          <span className="rounded-full bg-indigo-50 px-2.5 py-0.5 text-xs font-medium text-indigo-700">
-            {regulation.agency}
-          </span>
-          <span className="rounded-full bg-gray-100 px-2.5 py-0.5 text-xs font-medium text-gray-700">
-            {regulation.jurisdiction}
-          </span>
-        </div>
-        <p className="mt-4 text-gray-600">{regulation.description}</p>
+      <h1 className="mt-4 text-3xl font-bold text-gray-900">
+        {regulation.name}
+      </h1>
+      <div className="mt-2 flex gap-3">
+        <span className="rounded-full bg-indigo-50 px-2.5 py-0.5 text-xs font-medium text-indigo-700">
+          {regulation.agency}
+        </span>
+        <span className="rounded-full bg-gray-100 px-2.5 py-0.5 text-xs font-medium text-gray-700">
+          {regulation.jurisdiction}
+        </span>
+      </div>
+      <p className="mt-4 text-gray-600">{regulation.description}</p>
 
-        {/* 2-column layout */}
-        <div className="mt-8 grid gap-8 lg:grid-cols-2">
-          {/* Left column */}
-          <div className="space-y-6">
+      <div className="mt-8 space-y-6">
             {showActivationForm ? (
               /* ── Activation form — replaces the entire left column ── */
               <form onSubmit={handleActivate} className="space-y-6">
@@ -641,24 +631,8 @@ export default function RegulationDetailPage() {
 
               </>
             )}
-          </div>
-
-          {/* Right column — regulation source PDF (only if manifest provides a URL) */}
-          {manifest?.pdfUrl && (
-            <div className="hidden lg:block">
-              <div className="sticky top-8">
-                <p className="mb-2 text-xs font-medium text-gray-500">Regulation Source Document</p>
-                <iframe
-                  src={manifest.pdfUrl}
-                  title="Regulation Source Document"
-                  className="h-[calc(100vh-6rem)] w-full rounded-xl border border-gray-200 bg-gray-50"
-                />
-              </div>
-            </div>
-          )}
-        </div>
       </div>
-    </div>
+    </>
   );
 }
 

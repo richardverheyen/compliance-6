@@ -5,6 +5,7 @@ import { useParams } from "next/navigation";
 import Link from "next/link";
 import { useComplianceStore } from "@/lib/compliance-store";
 import { SectionForm } from "@/components/compliance/SectionForm";
+import { usePdfPanel } from "../../_context";
 import type { Regulation } from "@/lib/types/compliance";
 import type { RegulationManifest, ProcessListEntry } from "@/lib/types/regulation-content";
 
@@ -13,6 +14,7 @@ export default function ProcessFormPage() {
   const regulationId = params.id as string;
   const processId = params.processId as string;
 
+  const { pdfVisible, togglePdf, pdfUrl } = usePdfPanel();
   const { regulations, fetchRegulations, getActiveAssessment } = useComplianceStore();
   const [regulation, setRegulation] = useState<Regulation | undefined>();
   const [manifest, setManifest] = useState<RegulationManifest | null>(null);
@@ -41,19 +43,13 @@ export default function ProcessFormPage() {
   const nextProcess = currentIdx < processList.length - 1 ? processList[currentIdx + 1] : null;
 
   if (!regulation) {
-    return (
-      <div className="px-4 py-12">
-        <div className="mx-auto max-w-7xl">
-          <p className="text-sm text-gray-500">Loading...</p>
-        </div>
-      </div>
-    );
+    return <p className="text-sm text-gray-500">Loading...</p>;
   }
 
   return (
-    <div className="px-4 py-12">
-      <div className="mx-auto max-w-4xl">
-        {/* Breadcrumb */}
+    <div className="max-w-3xl">
+      {/* Breadcrumb + PDF toggle */}
+      <div className="flex items-center justify-between gap-4">
         <div className="flex items-center gap-2 text-sm text-gray-500">
           <Link
             href="/dashboard/regulations"
@@ -71,6 +67,18 @@ export default function ProcessFormPage() {
           <span>/</span>
           <span className="text-gray-900">{currentProcess?.title ?? processId}</span>
         </div>
+        {pdfUrl && (
+          <button
+            onClick={togglePdf}
+            className="hidden lg:flex shrink-0 items-center gap-1.5 rounded-lg border border-gray-200 px-3 py-1.5 text-xs font-medium text-gray-600 hover:border-gray-300 hover:text-gray-900"
+          >
+            <svg className="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+              <path strokeLinecap="round" strokeLinejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+            </svg>
+            {pdfVisible ? "Hide source" : "Show source"}
+          </button>
+        )}
+      </div>
 
         <h1 className="mt-4 text-2xl font-bold text-gray-900">
           {currentProcess?.title ?? processId}
@@ -132,7 +140,7 @@ export default function ProcessFormPage() {
             <span />
           )}
         </div>
-      </div>
     </div>
   );
 }
+

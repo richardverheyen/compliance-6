@@ -27,35 +27,32 @@ function mainDesc(form: { groups?: GroupJson[] }): string | undefined {
 
 const MERMAID_DIAGRAM = `flowchart TD
     A[Customer Targeting]
-    B@{ shape: procs, label: "Onboarding"}
-    C@{ shape: procs, label: "Verification"}
+    B@{ shape: procs, label: "Customer Onboarding"}
+    C@{ shape: procs, label: "Customer Verification"}
     D[Beneficial Owner Assessment]
     E[Politically Exposed Person Assessment]
-    F[AML CTF Risk Assessment]
     G[Provision of Services]
-    I[AML CTF Risk Assessment]
-    J[High Value Transaction Reporting]
-    K[Suspicious Matter Reporting]
+    I{AML CTF Risk Assessment}
+    J[High Value Transaction Report to AUSTRAC]
+    K[Suspicious Matter Report to AUSTRAC]
 
     A -->|Service Commencement| B
     subgraph Z[Extended CDD]
-      D
-      E
+      J
+      K
     end
     subgraph Y[Customer Due Diligence]
       B
       C
-      F
+      B --> D
+      B --> E
     end
     subgraph H[Ongoing CDD]
-      I
-      J
-      K
+      G --> I
     end
-    B --> C --> F
-    Y ---->|conditional| Z
-    F --> G
-    G --> H
+    Y ----> H
+    B --> C
+    I -->|High-Risk Events| Z
 `;
 
 export const amlCTFContent: RegulationContent = {

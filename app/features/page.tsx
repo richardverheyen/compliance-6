@@ -4,17 +4,17 @@ const features = [
   {
     title: "Regulation Self Assessments",
     description:
-      "Conduct structured self-assessments against Australian regulatory frameworks. Each assessment guides you through your obligations section by section, so nothing gets missed.",
+      "Complete guided assessments with the source regulation document always at hand. Every question maps directly to a real obligation, so you can assess with confidence and evidence, not guesswork.",
   },
   {
-    title: "Regulation Library",
+    title: "Never Miss a Deadline",
     description:
-      "Pre-built assessment frameworks for key Australian regulations including the AML-CTF Rules and the Privacy Act 1988, maintained by our compliance experts.",
+      "Track every obligation on a unified calendar, set reminders via email or text, and get notified before deadlines arrive. So when compliance is taken care of, you can get back to running your business.",
   },
   {
     title: "Business Process Management",
     description:
-      "Define and document the business processes relevant to your regulatory obligations. Link processes to specific regulations to keep your compliance posture clear.",
+      "Document the business processes relevant to your obligations and assign owners to keep accountability clear. Everyone on your team knows what they're responsible for.",
   },
   {
     title: "PDF Report Generation",

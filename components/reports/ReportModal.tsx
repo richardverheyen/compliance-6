@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { useComplianceStore } from "@/lib/compliance-store";
-import { useAuthStore } from "@/lib/auth-store";
+import { useUser } from "@clerk/nextjs";
 import { getProcessRating } from "@/lib/types/compliance";
 import type { ExecutiveSummaryData } from "./ExecutiveSummaryDoc";
 import type { AuditReportData } from "./AuditReportDoc";
@@ -20,7 +20,14 @@ export function ReportModal({ isOpen, onClose }: ReportModalProps) {
   const [generating, setGenerating] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const { user } = useAuthStore();
+  const { user: clerkUser } = useUser();
+  const user = clerkUser
+    ? {
+        id: clerkUser.id,
+        email: clerkUser.emailAddresses[0]?.emailAddress ?? "",
+        name: clerkUser.fullName ?? clerkUser.firstName ?? "",
+      }
+    : null;
   const {
     activeRegulations,
     regulations,

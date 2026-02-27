@@ -1,9 +1,8 @@
 "use client";
 
-import { useEffect } from "react";
-import { useRouter, usePathname } from "next/navigation";
+import { usePathname } from "next/navigation";
 import Link from "next/link";
-import { useAuthStore } from "@/lib/auth-store";
+import { UserButton } from "@clerk/nextjs";
 
 const navItems = [
   { href: "/dashboard", label: "Dashboard" },
@@ -13,33 +12,12 @@ const navItems = [
 ];
 
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
-  const { user, logout } = useAuthStore();
-  const router = useRouter();
   const pathname = usePathname();
-
-  useEffect(() => {
-    if (!user) {
-      router.push("/login");
-    }
-  }, [user, router]);
-
-  if (!user) {
-    return (
-      <div className="flex min-h-screen items-center justify-center">
-        <p className="text-sm text-gray-500">Redirecting to login...</p>
-      </div>
-    );
-  }
 
   function isActive(href: string) {
     if (href === "/dashboard") return pathname === "/dashboard";
     return pathname.startsWith(href);
   }
-
-  const handleLogout = async () => {
-    await logout();
-    router.push("/");
-  };
 
   return (
     <div className="flex min-h-screen flex-col">
@@ -67,13 +45,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
           </div>
 
           <div className="hidden items-center gap-3 md:flex">
-            <span className="text-sm text-gray-600">{user.name}</span>
-            <button
-              onClick={handleLogout}
-              className="rounded-lg border border-gray-300 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50"
-            >
-              Logout
-            </button>
+            <UserButton />
           </div>
         </div>
 

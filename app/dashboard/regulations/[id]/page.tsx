@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import Link from "next/link";
 import { useComplianceStore } from "@/lib/compliance-store";
-import { useAuthStore } from "@/lib/auth-store";
+import { useUser } from "@clerk/nextjs";
 import type { Regulation, SelfAssessment } from "@/lib/types/compliance";
 import { getProcessRating } from "@/lib/types/compliance";
 import { AssignOwnerModal } from "@/components/compliance/AssignOwnerModal";
@@ -61,7 +61,7 @@ export default function RegulationDetailPage() {
   const id = params.id as string;
 
   const { pdfVisible, togglePdf, pdfUrl } = usePdfPanel();
-  const { user } = useAuthStore();
+  const { user } = useUser();
 
   const {
     regulations,
@@ -208,7 +208,7 @@ export default function RegulationDetailPage() {
   }
 
   function handleCompleteAssessment() {
-    completeSelfAssessment(id, user?.name ?? "Unknown");
+    completeSelfAssessment(id, user?.fullName ?? user?.firstName ?? "Unknown");
     setCompletedMessage(true);
   }
 

@@ -1,22 +1,15 @@
 "use client";
 
 import Link from "next/link";
-import { useAuthStore } from "@/lib/auth-store";
-import { useRouter, usePathname } from "next/navigation";
+import { usePathname } from "next/navigation";
 import { useState } from "react";
+import { SignedIn, SignedOut, UserButton } from "@clerk/nextjs";
 
 export default function Navbar() {
-  const { user, logout } = useAuthStore();
-  const router = useRouter();
   const pathname = usePathname();
   const [mobileOpen, setMobileOpen] = useState(false);
 
   if (pathname.startsWith("/dashboard")) return null;
-
-  const handleLogout = async () => {
-    await logout();
-    router.push("/");
-  };
 
   return (
     <nav className="sticky top-0 z-50 border-b border-gray-200 bg-white/80 backdrop-blur-md">
@@ -39,31 +32,23 @@ export default function Navbar() {
         </div>
 
         <div className="hidden items-center gap-3 md:flex">
-          {user ? (
-            <>
-              <Link href="/dashboard" className="text-sm font-medium text-gray-600 hover:text-gray-900">
-                Dashboard
-              </Link>
-              <button
-                onClick={handleLogout}
-                className="rounded-lg border border-gray-300 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50"
-              >
-                Logout
-              </button>
-            </>
-          ) : (
-            <>
-              <Link href="/login" className="text-sm font-medium text-gray-600 hover:text-gray-900">
-                Login
-              </Link>
-              <Link
-                href="/signup"
-                className="rounded-lg bg-indigo-600 px-4 py-2 text-sm font-medium text-white hover:bg-indigo-700"
-              >
-                Get Started
-              </Link>
-            </>
-          )}
+          <SignedIn>
+            <Link href="/dashboard" className="text-sm font-medium text-gray-600 hover:text-gray-900">
+              Dashboard
+            </Link>
+            <UserButton />
+          </SignedIn>
+          <SignedOut>
+            <Link href="/sign-in" className="text-sm font-medium text-gray-600 hover:text-gray-900">
+              Login
+            </Link>
+            <Link
+              href="/sign-up"
+              className="rounded-lg bg-indigo-600 px-4 py-2 text-sm font-medium text-white hover:bg-indigo-700"
+            >
+              Get Started
+            </Link>
+          </SignedOut>
         </div>
 
         <button
@@ -87,17 +72,14 @@ export default function Navbar() {
             <Link href="/features" className="text-sm font-medium text-gray-600" onClick={() => setMobileOpen(false)}>Features</Link>
             <Link href="/pricing" className="text-sm font-medium text-gray-600" onClick={() => setMobileOpen(false)}>Pricing</Link>
             <Link href="/about" className="text-sm font-medium text-gray-600" onClick={() => setMobileOpen(false)}>About</Link>
-            {user ? (
-              <>
-                <Link href="/dashboard" className="text-sm font-medium text-gray-600" onClick={() => setMobileOpen(false)}>Dashboard</Link>
-                <button onClick={handleLogout} className="text-left text-sm font-medium text-gray-600">Logout</button>
-              </>
-            ) : (
-              <>
-                <Link href="/login" className="text-sm font-medium text-gray-600" onClick={() => setMobileOpen(false)}>Login</Link>
-                <Link href="/signup" className="text-sm font-medium text-indigo-600" onClick={() => setMobileOpen(false)}>Get Started</Link>
-              </>
-            )}
+            <SignedIn>
+              <Link href="/dashboard" className="text-sm font-medium text-gray-600" onClick={() => setMobileOpen(false)}>Dashboard</Link>
+              <UserButton />
+            </SignedIn>
+            <SignedOut>
+              <Link href="/sign-in" className="text-sm font-medium text-gray-600" onClick={() => setMobileOpen(false)}>Login</Link>
+              <Link href="/sign-up" className="text-sm font-medium text-indigo-600" onClick={() => setMobileOpen(false)}>Get Started</Link>
+            </SignedOut>
           </div>
         </div>
       )}

@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import dynamic from "next/dynamic";
 import Link from "next/link";
-import { useAuthStore } from "@/lib/auth-store";
+import { useUser } from "@clerk/nextjs";
 import { useComplianceStore } from "@/lib/compliance-store";
 import type { ActiveRegulation, RegulationProcess, SelfAssessment } from "@/lib/types/compliance";
 import { ProcessTable } from "@/components/compliance/ProcessTable";
@@ -91,7 +91,7 @@ function RegulationTile({
 }
 
 export default function DashboardPage() {
-  const { user } = useAuthStore();
+  const { user } = useUser();
   const {
     activeRegulations,
     regulations,
@@ -124,7 +124,7 @@ export default function DashboardPage() {
           <div>
             <h1 className="text-3xl font-bold text-gray-900">Dashboard</h1>
             <p className="mt-2 text-gray-600">
-              Welcome back{user?.name ? `, ${user.name}` : ""}!
+              Welcome back{user?.firstName ? `, ${user.firstName}` : ""}!
             </p>
           </div>
           {activeRegulations.length > 0 && (

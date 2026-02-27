@@ -15,6 +15,7 @@
     "test:e2e:headed": "playwright test --headed"
   },
   "dependencies": {
+    "@clerk/nextjs": "^6.39.0",
     "@jsonforms/core": "^3.7.0",
     "@jsonforms/react": "^3.7.0",
     "@jsonforms/vanilla-renderers": "^3.7.0",

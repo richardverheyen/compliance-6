@@ -10,7 +10,6 @@ import type {
   Reminder,
 } from "@/lib/types/compliance";
 import { computeProcessesFromAnswers } from "@/mocks/compliance-data";
-import { useAuthStore } from "@/lib/auth-store";
 
 interface ComplianceState {
   regulations: Regulation[];
@@ -252,19 +251,7 @@ export const useComplianceStore = create<ComplianceState>()(
       getTeamMember: (id) => get().teamMembers.find((m) => m.id === id),
 
       getTeamMembersWithAuth: () => {
-        const members = get().teamMembers;
-        const user = useAuthStore.getState().user;
-        if (!user || members.some((m) => m.email === user.email)) {
-          return members;
-        }
-        const authMember: TeamMember = {
-          id: `auth-${user.id}`,
-          name: user.name,
-          email: user.email,
-          role: "Account Owner",
-          avatarColor: "bg-violet-500",
-        };
-        return [...members, authMember];
+        return get().teamMembers;
       },
 
       fetchCalendarEvents: async () => {

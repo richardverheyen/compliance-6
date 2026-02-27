@@ -26,7 +26,6 @@ export async function clearAppStorage(page: Page) {
   await page.addInitScript(() => {
     if (!sessionStorage.getItem("_e2e_cleared")) {
       sessionStorage.setItem("_e2e_cleared", "1");
-      localStorage.removeItem("auth-storage");
       localStorage.removeItem("compliance-storage-v2");
     }
   });
@@ -34,17 +33,25 @@ export async function clearAppStorage(page: Page) {
 
 // ─── Auth helpers ─────────────────────────────────────────────────────────────
 
-/** Sign up via the /signup page and wait for the /dashboard redirect. */
+/**
+ * Sign up via Clerk's hosted sign-up page and wait for the /dashboard redirect.
+ * NOTE: This requires a real Clerk test account. For automated E2E tests,
+ * use @clerk/testing/playwright with setupClerkTestingToken() instead.
+ */
 export async function signUp(
   page: Page,
   name: string,
   email: string,
   password: string,
 ) {
-  await page.goto("/signup");
-  await page.fill("#name", name);
-  await page.fill("#email", email);
-  await page.fill("#password", password);
+  await page.goto("/sign-up");
+  await page.waitForURL(/sign-up/, { timeout: 15_000 });
+  // Clerk's sign-up form fields — adjust selectors based on your Clerk UI config
+  const [firstName, ...rest] = name.split(" ");
+  await page.fill('input[name="firstName"]', firstName);
+  if (rest.length > 0) await page.fill('input[name="lastName"]', rest.join(" "));
+  await page.fill('input[name="emailAddress"]', email);
+  await page.fill('input[name="password"]', password);
   await page.click('button[type="submit"]');
   await page.waitForURL("/dashboard", { timeout: 15_000 });
 }

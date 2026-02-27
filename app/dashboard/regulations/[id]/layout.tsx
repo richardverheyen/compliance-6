@@ -1,8 +1,17 @@
 "use client";
 
-import { useEffect, useState, useCallback } from "react";
+import { useEffect, useState, useCallback, useRef } from "react";
 import { useParams, usePathname } from "next/navigation";
 import { PdfPanelContext } from "./_context";
+
+// PDF.js viewer hosted in public/pdfjs/web/viewer.html
+// Parameters:
+//   file=<encoded PDF URL>  — which PDF to load
+//   pagemode=none           — hide the sidebar on load
+
+function viewerSrc(pdfUrl: string): string {
+  return `/pdfjs/web/viewer.html?file=${encodeURIComponent(pdfUrl)}#pagemode=none`;
+}
 
 export default function RegulationLayout({ children }: { children: React.ReactNode }) {
   const params = useParams();
@@ -13,7 +22,7 @@ export default function RegulationLayout({ children }: { children: React.ReactNo
 
   const [pdfUrl, setPdfUrl] = useState<string | null>(null);
   const [pdfVisible, setPdfVisible] = useState(true);
-  const [pdfDestination, setPdfDestination] = useState<string | null>(null);
+  const iframeRef = useRef<HTMLIFrameElement>(null);
 
   // Fetch manifest once to get pdfUrl
   useEffect(() => {
@@ -25,27 +34,41 @@ export default function RegulationLayout({ children }: { children: React.ReactNo
   }, [id]);
 
   // Auto-collapse PDF when entering a process view; auto-expand on overview.
-  // Reset destination when leaving process view so overview gets clean PDF.
   useEffect(() => {
     if (isProcessView) {
       setPdfVisible(false);
     } else {
       setPdfVisible(true);
-      setPdfDestination(null);
     }
   }, [isProcessView]);
 
   const togglePdf = useCallback(() => setPdfVisible((v) => !v), []);
 
+  // Navigate to a named destination inside the already-loaded PDF.js viewer
+  // without touching the iframe src (zero-reload).
   const navigateToPdfDestination = useCallback((ruleCode: string) => {
-    setPdfDestination(ruleCode);
     setPdfVisible(true);
-  }, []);
 
-  // Append named destination fragment when navigating to a specific rule
-  const effectivePdfSrc = pdfDestination
-    ? `${pdfUrl}#nameddest=${encodeURIComponent(pdfDestination)}`
-    : pdfUrl;
+    const tryNavigate = () => {
+      const app =
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        (iframeRef.current?.contentWindow as any)?.PDFViewerApplication;
+      if (app?.initialized) {
+        app.pdfLinkService.navigateTo(ruleCode);
+        return true;
+      }
+      return false;
+    };
+
+    // If viewer is already loaded, navigate immediately; otherwise poll until ready.
+    if (!tryNavigate()) {
+      const interval = setInterval(() => {
+        if (tryNavigate()) clearInterval(interval);
+      }, 100);
+      // Give up after 10 s to avoid leaking the interval
+      setTimeout(() => clearInterval(interval), 10_000);
+    }
+  }, []);
 
   return (
     <PdfPanelContext.Provider value={{ pdfVisible, togglePdf, pdfUrl, navigateToPdfDestination }}>
@@ -72,8 +95,8 @@ export default function RegulationLayout({ children }: { children: React.ReactNo
                     Regulation Source Document
                   </p>
                   <iframe
-                    key={effectivePdfSrc ?? ""}
-                    src={effectivePdfSrc ?? undefined}
+                    ref={iframeRef}
+                    src={viewerSrc(pdfUrl)}
                     title="Regulation Source Document"
                     className="h-[calc(100vh-6rem)] w-full rounded-xl border border-gray-200 bg-gray-50"
                   />

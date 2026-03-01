@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useComplianceStore } from "@/lib/compliance-store";
-import type { RegulationKeyDate } from "@/lib/types/compliance";
+import type { RegulationKeyDate, Reminder } from "@/lib/types/compliance";
 import { ReminderModal } from "@/components/compliance/ReminderModal";
 
 function nextOccurrence(isoDate: string, recurrence: "annual" | "once"): string {
@@ -30,6 +30,20 @@ function fmtDisplay(isoDate: string): string {
     month: "short",
     year: "numeric",
   });
+}
+
+function reminderDisplayDate(reminder: Reminder, resolvedDate: string): string {
+  if (reminder.timing === "custom" && reminder.customDate) {
+    return fmtDisplay(reminder.customDate);
+  }
+  const [y, m, d] = resolvedDate.split("-").map(Number);
+  const date = new Date(y, m - 1, d);
+  if (reminder.timing === "1d") date.setDate(date.getDate() - 1);
+  else if (reminder.timing === "1w") date.setDate(date.getDate() - 7);
+  else if (reminder.timing === "1m") date.setMonth(date.getMonth() - 1);
+  return fmtDisplay(
+    `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}-${String(date.getDate()).padStart(2, "0")}`
+  );
 }
 
 interface ObligationDate extends RegulationKeyDate {
@@ -130,7 +144,8 @@ export function ComplianceCalendar() {
                 .toLocaleDateString("en-AU", { month: "short" })
                 .toUpperCase();
               const label = `${mon} ${String(d).padStart(2, "0")}`;
-              const hasReminder = getRemindersForKeyDate(date.id).length > 0;
+              const reminders = getRemindersForKeyDate(date.id);
+              const hasReminder = reminders.length > 0;
               return (
                 <div
                   key={date.id}
@@ -148,6 +163,13 @@ export function ComplianceCalendar() {
                         {date.regulationShortName}
                       </span>
                     </p>
+                    {hasReminder && (
+                      <p className="mt-0.5 text-xs text-indigo-500 sm:hidden">
+                        {reminders.length === 1
+                          ? `Reminder Scheduled ${reminderDisplayDate(reminders[0], date.resolvedDate)}`
+                          : `${reminders.length} Reminders Scheduled`}
+                      </p>
+                    )}
                   </div>
                   <span
                     className={`shrink-0 text-xs font-semibold tabular-nums ${

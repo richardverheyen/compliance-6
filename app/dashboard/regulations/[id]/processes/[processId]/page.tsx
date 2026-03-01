@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import Link from "next/link";
 import { useComplianceStore } from "@/lib/compliance-store";
 import { SectionForm } from "@/components/compliance/SectionForm";
@@ -11,6 +11,7 @@ import type { RegulationManifest, ProcessListEntry } from "@/lib/types/regulatio
 
 export default function ProcessFormPage() {
   const params = useParams();
+  const router = useRouter();
   const regulationId = params.id as string;
   const processId = params.processId as string;
 
@@ -104,6 +105,7 @@ export default function ProcessFormPage() {
             regulationId={regulationId}
             sectionId={processId}
             readOnly={isReadOnly}
+            onSave={() => router.push(`/dashboard/regulations/${regulationId}`)}
           />
         </div>
 

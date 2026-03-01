@@ -5,28 +5,34 @@ import { useComplianceStore } from "@/lib/compliance-store";
 import type { RegulationKeyDate } from "@/lib/types/compliance";
 import { ReminderModal } from "@/components/compliance/ReminderModal";
 
+/** Parse a YYYY-MM-DD string as a local date (avoids UTC-offset shifting). */
+function parseLocalDate(isoDate: string): Date {
+  const [y, m, d] = isoDate.split("-").map(Number);
+  return new Date(y, m - 1, d);
+}
+
 /** Annual dates roll to next year once they've passed. */
 function nextOccurrence(isoDate: string, recurrence: "annual" | "once"): string {
   const today = new Date();
   today.setHours(0, 0, 0, 0);
-  const d = new Date(isoDate);
-  d.setHours(0, 0, 0, 0);
+  const d = parseLocalDate(isoDate);
   if (recurrence === "annual" && d < today) {
     d.setFullYear(d.getFullYear() + 1);
   }
-  return d.toISOString().split("T")[0];
+  const mm = String(d.getMonth() + 1).padStart(2, "0");
+  const dd = String(d.getDate()).padStart(2, "0");
+  return `${d.getFullYear()}-${mm}-${dd}`;
 }
 
 function daysUntil(isoDate: string): number {
   const today = new Date();
   today.setHours(0, 0, 0, 0);
-  const target = new Date(isoDate);
-  target.setHours(0, 0, 0, 0);
+  const target = parseLocalDate(isoDate);
   return Math.round((target.getTime() - today.getTime()) / (1000 * 60 * 60 * 24));
 }
 
 function fmtShort(isoDate: string): string {
-  return new Date(isoDate).toLocaleDateString("en-AU", {
+  return parseLocalDate(isoDate).toLocaleDateString("en-AU", {
     day: "numeric",
     month: "short",
     year: "numeric",
@@ -176,10 +182,10 @@ export function KeyDatesWidget({ regulationId }: { regulationId: string }) {
                   {/* Calendar tile */}
                   <div className="flex h-8 w-8 shrink-0 flex-col items-center justify-center rounded-md border border-gray-100 bg-gray-50">
                     <span className="text-xs font-bold leading-none text-gray-800">
-                      {new Date(date.resolvedDate).getDate()}
+                      {parseLocalDate(date.resolvedDate).getDate()}
                     </span>
                     <span className="text-[9px] font-medium uppercase leading-tight text-gray-500">
-                      {new Date(date.resolvedDate).toLocaleDateString("en-AU", { month: "short" })}
+                      {parseLocalDate(date.resolvedDate).toLocaleDateString("en-AU", { month: "short" })}
                     </span>
                   </div>
                   {/* Title + date */}

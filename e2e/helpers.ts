@@ -34,26 +34,39 @@ export async function clearAppStorage(page: Page) {
 // ─── Auth helpers ─────────────────────────────────────────────────────────────
 
 /**
- * Sign up via Clerk's hosted sign-up page and wait for the /dashboard redirect.
- * NOTE: This requires a real Clerk test account. For automated E2E tests,
- * use @clerk/testing/playwright with setupClerkTestingToken() instead.
+ * Sign up via Clerk's hosted sign-up page, complete onboarding (org creation),
+ * and wait for the /dashboard redirect.
+ *
+ * Flow: /sign-up → /onboarding (CreateOrganization) → /dashboard
+ *
+ * NOTE: This requires a real Clerk dev account with email verification disabled.
+ * For CI, use @clerk/testing/playwright with setupClerkTestingToken() instead.
  */
 export async function signUp(
   page: Page,
   name: string,
   email: string,
   password: string,
+  orgName = "E2E Test Org",
 ) {
   await page.goto("/sign-up");
   await page.waitForURL(/sign-up/, { timeout: 15_000 });
-  // Clerk's sign-up form fields — adjust selectors based on your Clerk UI config
   const [firstName, ...rest] = name.split(" ");
   await page.fill('input[name="firstName"]', firstName);
   if (rest.length > 0) await page.fill('input[name="lastName"]', rest.join(" "));
   await page.fill('input[name="emailAddress"]', email);
   await page.fill('input[name="password"]', password);
   await page.click('button[type="submit"]');
-  await page.waitForURL("/dashboard", { timeout: 15_000 });
+
+  // New flow: sign-up redirects to /onboarding for org creation
+  await page.waitForURL(/onboarding/, { timeout: 20_000 });
+  await page.waitForLoadState("networkidle");
+
+  // Clerk's <CreateOrganization> renders an "Organization name" input
+  await page.getByLabel(/organization name/i).fill(orgName);
+  await page.getByRole("button", { name: /create organization/i }).click();
+
+  await page.waitForURL("/dashboard", { timeout: 20_000 });
 }
 
 // ─── Regulation helpers ───────────────────────────────────────────────────────

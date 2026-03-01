@@ -1,6 +1,5 @@
 "use client";
 
-import { useState } from "react";
 import { useComplianceStore } from "@/lib/compliance-store";
 
 interface AssignOwnerModalProps {
@@ -16,16 +15,10 @@ export function AssignOwnerModal({ processId, processName, isOpen, onClose }: As
     getRegulationProcessOwner,
     assignRegulationProcessOwner,
     unassignRegulationProcessOwner,
-    addTeamMember,
   } = useComplianceStore();
 
   const members = getTeamMembersWithAuth();
   const currentOwnerId = getRegulationProcessOwner(processId);
-
-  const [showAddForm, setShowAddForm] = useState(false);
-  const [newName, setNewName] = useState("");
-  const [newEmail, setNewEmail] = useState("");
-  const [newRole, setNewRole] = useState("");
 
   if (!isOpen) return null;
 
@@ -35,22 +28,6 @@ export function AssignOwnerModal({ processId, processName, isOpen, onClose }: As
     } else {
       assignRegulationProcessOwner(processId, memberId);
     }
-    onClose();
-  }
-
-  async function handleAddAndAssign(e: React.FormEvent) {
-    e.preventDefault();
-    await addTeamMember({ name: newName, email: newEmail, role: newRole });
-    // After adding, find the new member and assign
-    const updated = useComplianceStore.getState().teamMembers;
-    const newMember = updated.find((m) => m.email === newEmail);
-    if (newMember) {
-      assignRegulationProcessOwner(processId, newMember.id);
-    }
-    setNewName("");
-    setNewEmail("");
-    setNewRole("");
-    setShowAddForm(false);
     onClose();
   }
 
@@ -93,6 +70,15 @@ export function AssignOwnerModal({ processId, processName, isOpen, onClose }: As
           </button>
 
           {/* Team members */}
+          {members.length === 0 && (
+            <p className="px-3 py-4 text-sm text-gray-500">
+              No team members yet. Invite members from the{" "}
+              <a href="/dashboard/team" className="text-indigo-600 hover:underline">
+                Team page
+              </a>
+              .
+            </p>
+          )}
           {members.map((member) => (
             <button
               key={member.id}
@@ -117,64 +103,6 @@ export function AssignOwnerModal({ processId, processName, isOpen, onClose }: As
               )}
             </button>
           ))}
-        </div>
-
-        {/* Add new member */}
-        <div className="border-t border-gray-200 p-3">
-          {!showAddForm ? (
-            <button
-              onClick={() => setShowAddForm(true)}
-              className="flex w-full items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium text-indigo-600 hover:bg-indigo-50"
-            >
-              <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                <path strokeLinecap="round" strokeLinejoin="round" d="M12 4v16m8-8H4" />
-              </svg>
-              Add New Member
-            </button>
-          ) : (
-            <form onSubmit={handleAddAndAssign} className="space-y-3">
-              <p className="text-sm font-medium text-gray-900">Add New Member</p>
-              <input
-                type="text"
-                required
-                placeholder="Name"
-                value={newName}
-                onChange={(e) => setNewName(e.target.value)}
-                className="block w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-indigo-500 focus:ring-indigo-500 focus:outline-none"
-              />
-              <input
-                type="email"
-                required
-                placeholder="Email"
-                value={newEmail}
-                onChange={(e) => setNewEmail(e.target.value)}
-                className="block w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-indigo-500 focus:ring-indigo-500 focus:outline-none"
-              />
-              <input
-                type="text"
-                required
-                placeholder="Role"
-                value={newRole}
-                onChange={(e) => setNewRole(e.target.value)}
-                className="block w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-indigo-500 focus:ring-indigo-500 focus:outline-none"
-              />
-              <div className="flex gap-2">
-                <button
-                  type="submit"
-                  className="rounded-lg bg-indigo-600 px-3 py-1.5 text-sm font-medium text-white hover:bg-indigo-500"
-                >
-                  Add & Assign
-                </button>
-                <button
-                  type="button"
-                  onClick={() => setShowAddForm(false)}
-                  className="rounded-lg border border-gray-300 px-3 py-1.5 text-sm font-medium text-gray-700 hover:bg-gray-50"
-                >
-                  Cancel
-                </button>
-              </div>
-            </form>
-          )}
         </div>
       </div>
     </div>

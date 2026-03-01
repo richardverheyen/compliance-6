@@ -1,40 +1,91 @@
 /**
- * Auth E2E tests — Clerk migration
+ * Auth E2E tests — Clerk + org onboarding
  *
- * Authentication is now handled by Clerk. These tests need to be rewritten
- * using @clerk/testing/playwright with setupClerkTestingToken() for
- * programmatic authentication in E2E tests.
+ * Tests the authentication and onboarding flow:
+ * - Unauthenticated redirects
+ * - Sign-up → /onboarding → org creation → /dashboard
+ * - /onboarding accessible only when authenticated
  *
- * See: https://clerk.com/docs/testing/playwright/overview
- *
- * TODO: Install @clerk/testing and configure CLERK_SECRET_KEY + test user
- * credentials to re-enable these tests.
+ * NOTE: sign-up tests require a Clerk dev account with email verification
+ * disabled (or a passwordless/magic-link flow bypassed). For full CI coverage
+ * use @clerk/testing/playwright with setupClerkTestingToken().
  */
 import { test, expect } from "@playwright/test";
-import { clearAppStorage } from "./helpers";
+import { clearAppStorage, signUp, uniqueEmail } from "./helpers";
 
-test.describe("Auth (Clerk)", () => {
+test.describe("Auth — unauthenticated redirects", () => {
   test.beforeEach(async ({ page }) => {
     await clearAppStorage(page);
   });
 
-  test("unauthenticated user is redirected to sign-in when visiting /dashboard", async ({ page }) => {
+  test("unauthenticated user visiting /dashboard is redirected to sign-in", async ({ page }) => {
     await page.goto("/dashboard");
     await page.waitForURL(/sign-in/, { timeout: 15_000 });
     expect(page.url()).toContain("sign-in");
   });
 
-  test("sign-in page is accessible", async ({ page }) => {
+  test("unauthenticated user visiting /onboarding is redirected to sign-in", async ({ page }) => {
+    await page.goto("/onboarding");
+    await page.waitForURL(/sign-in/, { timeout: 15_000 });
+    expect(page.url()).toContain("sign-in");
+  });
+
+  test("sign-in page renders a form", async ({ page }) => {
     await page.goto("/sign-in");
     await page.waitForLoadState("networkidle");
-    // Clerk renders a sign-in form
     await expect(page.locator("form").first()).toBeVisible();
   });
 
-  test("sign-up page is accessible", async ({ page }) => {
+  test("sign-up page renders a form", async ({ page }) => {
     await page.goto("/sign-up");
     await page.waitForLoadState("networkidle");
-    // Clerk renders a sign-up form
     await expect(page.locator("form").first()).toBeVisible();
+  });
+});
+
+test.describe("Auth — sign-up and onboarding flow", () => {
+  test.beforeEach(async ({ page }) => {
+    await clearAppStorage(page);
+  });
+
+  test("new sign-up redirects to /onboarding before /dashboard", async ({ page }) => {
+    const email = uniqueEmail();
+    await page.goto("/sign-up");
+    await page.waitForURL(/sign-up/, { timeout: 15_000 });
+
+    await page.fill('input[name="firstName"]', "Test");
+    await page.fill('input[name="emailAddress"]', email);
+    await page.fill('input[name="password"]', "password123");
+    await page.click('button[type="submit"]');
+
+    // Should land on /onboarding — NOT /dashboard directly
+    await page.waitForURL(/onboarding/, { timeout: 20_000 });
+    expect(page.url()).toContain("onboarding");
+  });
+
+  test("/onboarding shows the CreateOrganization form", async ({ page }) => {
+    const email = uniqueEmail();
+    await page.goto("/sign-up");
+    await page.waitForURL(/sign-up/, { timeout: 15_000 });
+
+    await page.fill('input[name="firstName"]', "Test");
+    await page.fill('input[name="emailAddress"]', email);
+    await page.fill('input[name="password"]', "password123");
+    await page.click('button[type="submit"]');
+
+    await page.waitForURL(/onboarding/, { timeout: 20_000 });
+    await page.waitForLoadState("networkidle");
+
+    // Clerk's <CreateOrganization> renders an org name input
+    await expect(page.getByLabel(/organization name/i)).toBeVisible();
+    await expect(page.getByRole("button", { name: /create organization/i })).toBeVisible();
+  });
+
+  test("completing org creation at /onboarding redirects to /dashboard", async ({ page }) => {
+    const email = uniqueEmail();
+    await signUp(page, "Onboarding User", email, "password123");
+
+    // signUp() completes the full flow — should end at /dashboard
+    await expect(page).toHaveURL("/dashboard");
   });
 });

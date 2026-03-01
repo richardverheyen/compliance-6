@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { auth, clerkClient } from "@clerk/nextjs/server";
+import type { OrganizationMembership, OrganizationInvitation } from "@clerk/backend";
 import { createSupabaseClient } from "@/lib/supabase";
 
 const AVATAR_COLORS = [
@@ -22,7 +23,7 @@ export async function GET() {
 
   const [memberships, invitations] = await Promise.all([
     clerk.organizations.getOrganizationMembershipList({ organizationId: orgId, limit: 100 }),
-    clerk.organizations.getPendingOrganizationInvitationList({ organizationId: orgId, limit: 100 }),
+    clerk.organizations.getOrganizationInvitationList({ organizationId: orgId, limit: 100, status: ["pending"] }),
   ]);
 
   const supabase = createSupabaseClient();
@@ -31,15 +32,15 @@ export async function GET() {
     .select("id, role, avatar_color")
     .eq("org_id", orgId);
 
-  const dbMap = new Map((dbRows ?? []).map((r) => [r.id, r]));
+  const dbMap = new Map((dbRows ?? []).map((r) => [r.id as string, r]));
 
   // Lazy upsert: create team_members record for any Clerk member not yet in DB
   const memberUserIds = memberships.data
-    .map((m) => m.publicUserData?.userId)
+    .map((m: OrganizationMembership) => m.publicUserData?.userId)
     .filter((id): id is string => Boolean(id));
-  const missingIds = memberUserIds.filter((id) => !dbMap.has(id));
+  const missingIds = memberUserIds.filter((id: string) => !dbMap.has(id));
   if (missingIds.length > 0) {
-    const inserts = missingIds.map((id) => ({
+    const inserts = missingIds.map((id: string) => ({
       id,
       org_id: orgId,
       avatar_color: AVATAR_COLORS[Math.floor(Math.random() * AVATAR_COLORS.length)],
@@ -48,24 +49,24 @@ export async function GET() {
       .from("team_members")
       .upsert(inserts, { onConflict: "id" })
       .select("id, role, avatar_color");
-    (newRows ?? []).forEach((r) => dbMap.set(r.id, r));
+    (newRows ?? []).forEach((r) => dbMap.set(r.id as string, r));
   }
 
-  const members = memberships.data.map((m) => {
+  const members = memberships.data.map((m: OrganizationMembership) => {
     const uid = m.publicUserData?.userId ?? "";
     const dbRow = dbMap.get(uid);
     const firstName = m.publicUserData?.firstName ?? "";
     const lastName = m.publicUserData?.lastName ?? "";
     return {
       id: uid,
-      name: [firstName, lastName].filter(Boolean).join(" ") || m.publicUserData?.identifier ?? uid,
+      name: ([firstName, lastName].filter(Boolean).join(" ")) || (m.publicUserData?.identifier ?? uid),
       email: m.publicUserData?.identifier ?? "",
       role: dbRow?.role ?? "",
-      avatarColor: dbRow?.avatar_color ?? AVATAR_COLORS[0],
+      avatarColor: (dbRow?.avatar_color ?? AVATAR_COLORS[0]) as string,
     };
   });
 
-  const pending = invitations.data.map((inv) => ({
+  const pending = invitations.data.map((inv: OrganizationInvitation) => ({
     id: inv.id,
     email: inv.emailAddress,
     createdAt: new Date(inv.createdAt).toISOString(),

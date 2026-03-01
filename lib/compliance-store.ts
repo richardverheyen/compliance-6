@@ -5,6 +5,7 @@ import type {
   SelfAssessment,
   BusinessProfile,
   TeamMember,
+  PendingInvitation,
   ComplianceEvent,
   Reminder,
 } from "@/lib/types/compliance";
@@ -14,6 +15,7 @@ interface ComplianceState {
   regulations: Regulation[];
   activeRegulations: ActiveRegulation[];
   teamMembers: TeamMember[];
+  pendingInvitations: PendingInvitation[];
   calendarEvents: ComplianceEvent[];
   isLoading: boolean;
   processAssignments: Record<string, string>; // processId -> teamMemberId
@@ -39,7 +41,7 @@ interface ComplianceState {
   getLastCompletedAssessment: (regulationId: string) => SelfAssessment | undefined;
 
   // Team
-  addTeamMember: (member: { name: string; email: string; role: string }) => Promise<void>;
+  addTeamMember: (member: { email: string; role?: string }) => Promise<void>;
   removeTeamMember: (id: string) => Promise<void>;
   getTeamMember: (id: string) => TeamMember | undefined;
   getTeamMembersWithAuth: () => TeamMember[];
@@ -82,6 +84,7 @@ export const useComplianceStore = create<ComplianceState>()(
     regulations: [],
     activeRegulations: [],
     teamMembers: [],
+    pendingInvitations: [],
     calendarEvents: [],
     isLoading: false,
     processAssignments: {},
@@ -99,11 +102,11 @@ export const useComplianceStore = create<ComplianceState>()(
           fetch("/api/compliance/reminders"),
         ]);
 
-        const [regulations, activeRegulationsRaw, teamMembers, calendarEvents, processAssignments, reminders] =
+        const [regulations, activeRegulationsRaw, teamData, calendarEvents, processAssignments, reminders] =
           await Promise.all([
             regsRes.ok ? regsRes.json() : [],
             arRes.ok ? arRes.json() : [],
-            teamRes.ok ? teamRes.json() : [],
+            teamRes.ok ? teamRes.json() : { members: [], pending: [] },
             calRes.ok ? calRes.json() : [],
             paRes.ok ? paRes.json() : {},
             remRes.ok ? remRes.json() : [],
@@ -117,7 +120,8 @@ export const useComplianceStore = create<ComplianceState>()(
         set({
           regulations,
           activeRegulations,
-          teamMembers,
+          teamMembers: teamData.members ?? [],
+          pendingInvitations: teamData.pending ?? [],
           calendarEvents,
           processAssignments,
           reminders,
@@ -355,15 +359,21 @@ export const useComplianceStore = create<ComplianceState>()(
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(member),
       });
-      const newMember: TeamMember = await res.json();
-      set((state) => ({ teamMembers: [...state.teamMembers, newMember] }));
+      const newInvitation: PendingInvitation = await res.json();
+      set((state) => ({ pendingInvitations: [...state.pendingInvitations, newInvitation] }));
     },
 
     removeTeamMember: async (id) => {
       await fetch(`/api/compliance/team/${id}`, { method: "DELETE" });
-      set((state) => ({
-        teamMembers: state.teamMembers.filter((m) => m.id !== id),
-      }));
+      if (id.startsWith("orginv_")) {
+        set((state) => ({
+          pendingInvitations: state.pendingInvitations.filter((inv) => inv.id !== id),
+        }));
+      } else {
+        set((state) => ({
+          teamMembers: state.teamMembers.filter((m) => m.id !== id),
+        }));
+      }
     },
 
     getTeamMember: (id) => get().teamMembers.find((m) => m.id === id),

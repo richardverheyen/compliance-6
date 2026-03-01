@@ -74,6 +74,12 @@ export interface TeamMember {
   avatarColor: string;
 }
 
+export interface PendingInvitation {
+  id: string;
+  email: string;
+  createdAt: string;
+}
+
 export interface ComplianceEvent {
   date: string;
   title: string;

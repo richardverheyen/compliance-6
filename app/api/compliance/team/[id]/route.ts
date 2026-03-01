@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { auth } from "@clerk/nextjs/server";
+import { auth, clerkClient } from "@clerk/nextjs/server";
 import { createSupabaseClient } from "@/lib/supabase";
 
 export async function PUT(
@@ -13,12 +13,15 @@ export async function PUT(
   }
 
   const { id } = await params;
-  const updates = await req.json() as { name?: string; email?: string; role?: string };
+  const updates = await req.json() as { role?: string; avatarColor?: string };
 
   const supabase = createSupabaseClient();
   const { data, error } = await supabase
     .from("team_members")
-    .update({ name: updates.name, email: updates.email, role: updates.role })
+    .update({
+      ...(updates.role !== undefined && { role: updates.role }),
+      ...(updates.avatarColor !== undefined && { avatar_color: updates.avatarColor }),
+    })
     .eq("id", id)
     .eq("org_id", tenantId)
     .select()
@@ -30,8 +33,6 @@ export async function PUT(
 
   return NextResponse.json({
     id: data.id,
-    name: data.name,
-    email: data.email,
     role: data.role ?? "",
     avatarColor: data.avatar_color ?? "",
   });
@@ -42,21 +43,30 @@ export async function DELETE(
   { params }: { params: Promise<{ id: string }> },
 ) {
   const { orgId, userId } = await auth();
-  const tenantId = orgId ?? userId;
-  if (!tenantId) {
-    return NextResponse.json({ error: "Unauthenticated" }, { status: 401 });
+  if (!orgId || !userId) {
+    return NextResponse.json({ error: "Organization required" }, { status: 400 });
   }
 
   const { id } = await params;
-  const supabase = createSupabaseClient();
-  const { error } = await supabase
-    .from("team_members")
-    .delete()
-    .eq("id", id)
-    .eq("org_id", tenantId);
+  const clerk = await clerkClient();
 
-  if (error) {
-    return NextResponse.json({ error: error.message }, { status: 500 });
+  if (id.startsWith("orginv_")) {
+    await clerk.organizations.revokeOrganizationInvitation({
+      organizationId: orgId,
+      invitationId: id,
+      requestingUserId: userId,
+    });
+  } else {
+    await clerk.organizations.deleteOrganizationMembership({
+      organizationId: orgId,
+      userId: id,
+    });
+    const supabase = createSupabaseClient();
+    await supabase
+      .from("team_members")
+      .delete()
+      .eq("id", id)
+      .eq("org_id", orgId);
   }
 
   return NextResponse.json({ ok: true });

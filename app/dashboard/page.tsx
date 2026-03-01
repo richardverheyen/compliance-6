@@ -1,12 +1,13 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect, useMemo } from "react";
 import dynamic from "next/dynamic";
 import Link from "next/link";
 import { useUser } from "@clerk/nextjs";
 import { useComplianceStore } from "@/lib/compliance-store";
-import type { ActiveRegulation, RegulationProcess, SelfAssessment } from "@/lib/types/compliance";
-import { ProcessTable } from "@/components/compliance/ProcessTable";
+import type { ActiveRegulation, SelfAssessment } from "@/lib/types/compliance";
+import type { RegulationManifest } from "@/lib/types/regulation-content";
+import { getRegulationProcessForSlug, getProcessIdForSlug } from "@/lib/process-computation";
 import { ComplianceCalendar } from "@/components/compliance/ComplianceCalendar";
 import { AgencyLogo } from "@/components/compliance/AgencyLogo";
 
@@ -90,24 +91,72 @@ function RegulationTile({
   );
 }
 
+interface ConfirmedProcess {
+  slug: string;
+  title: string;
+  regulationId: string;
+  agency: string;
+  frequencyLabel: string;
+}
+
 export default function DashboardPage() {
   const { user } = useUser();
   const {
     activeRegulations,
     regulations,
+    getSectionAnswers,
     getActiveAssessment,
     getLastCompletedAssessment,
   } = useComplianceStore();
   const [reportModalOpen, setReportModalOpen] = useState(false);
+  const [manifests, setManifests] = useState<Record<string, RegulationManifest>>({});
+  const [loadingManifests, setLoadingManifests] = useState(true);
 
-  // Collect RegulationProcess items from parent Regulation for each active regulation
-  const allRegulationProcesses: RegulationProcess[] = [];
-  for (const al of activeRegulations) {
-    const leg = regulations.find((l) => l.id === al.regulationId);
-    if (leg?.processes) {
-      allRegulationProcesses.push(...leg.processes);
+  useEffect(() => {
+    if (activeRegulations.length === 0) {
+      setLoadingManifests(false);
+      return;
     }
-  }
+    setLoadingManifests(true);
+    Promise.all(
+      activeRegulations.map((al) =>
+        fetch(`/api/compliance/regulations/${al.regulationId}/manifest`)
+          .then((r) => (r.ok ? r.json() : null))
+          .then((data): [string, RegulationManifest | null] => [al.regulationId, data])
+      )
+    ).then((results) => {
+      const map: Record<string, RegulationManifest> = {};
+      for (const [id, manifest] of results) {
+        if (manifest) map[id] = manifest;
+      }
+      setManifests(map);
+      setLoadingManifests(false);
+    });
+  }, [activeRegulations]);
+
+  const confirmedProcesses = useMemo<ConfirmedProcess[]>(() => {
+    const list: ConfirmedProcess[] = [];
+    for (const al of activeRegulations) {
+      const manifest = manifests[al.regulationId];
+      if (!manifest) continue;
+      const regulation = regulations.find((r) => r.id === al.regulationId);
+      if (!regulation) continue;
+      for (const entry of manifest.processList) {
+        const answers = getSectionAnswers(al.regulationId, entry.id);
+        if (answers["process-exists"] !== "Yes") continue;
+        if (!getProcessIdForSlug(entry.id)) continue;
+        const regProcess = getRegulationProcessForSlug(entry.id, regulation.processes);
+        list.push({
+          slug: entry.id,
+          title: entry.title,
+          regulationId: al.regulationId,
+          agency: regulation.agency,
+          frequencyLabel: regProcess?.frequencyLabel ?? "",
+        });
+      }
+    }
+    return list;
+  }, [activeRegulations, manifests, regulations, getSectionAnswers]);
 
   return (
     <div className="px-4 py-12">
@@ -178,26 +227,71 @@ export default function DashboardPage() {
 
             {/* Two-column: Business Processes | Calendar */}
             <div className="mt-8 grid gap-8 lg:grid-cols-[1fr_320px]">
-              {/* Left column */}
-              <div>
-                {allRegulationProcesses.length > 0 && (
-                  <div>
-                    <h2 className="text-lg font-semibold text-gray-900">
-                      Business Processes
-                    </h2>
-                    <p className="mt-1 text-sm text-gray-500">
-                      Key processes across your active regulations
-                    </p>
-                    <div className="mt-3">
-                      <ProcessTable processes={allRegulationProcesses} />
-                    </div>
-                  </div>
-                )}
+              {/* Calendar — first on mobile, right column on desktop */}
+              <div className="order-1 lg:order-2">
+                <ComplianceCalendar />
               </div>
 
-              {/* Right column */}
-              <div>
-                <ComplianceCalendar />
+              {/* Business Processes — second on mobile, left column on desktop */}
+              <div className="order-2 lg:order-1">
+                <h2 className="text-lg font-semibold text-gray-900">
+                  Business Processes
+                </h2>
+                <p className="mt-1 text-sm text-gray-500">
+                  Confirmed processes across your active regulations
+                </p>
+                <div className="mt-3">
+                  {loadingManifests ? (
+                    <div className="flex items-center gap-2 py-4 text-sm text-gray-500">
+                      <div className="h-4 w-4 animate-spin rounded-full border-2 border-indigo-600 border-t-transparent" />
+                      Loading…
+                    </div>
+                  ) : confirmedProcesses.length === 0 ? (
+                    <div className="rounded-xl border border-gray-200 p-6 text-center">
+                      <p className="text-sm text-gray-500">No confirmed processes yet.</p>
+                      <p className="mt-1 text-xs text-gray-400">
+                        Complete your self-assessment to confirm which processes apply.
+                      </p>
+                    </div>
+                  ) : (
+                    <div className="overflow-hidden rounded-xl border border-gray-200 bg-white">
+                      <div className="divide-y divide-gray-100">
+                        {confirmedProcesses.map((proc) => (
+                          <Link
+                            key={`${proc.regulationId}-${proc.slug}`}
+                            href={`/dashboard/processes/${proc.slug}`}
+                            className="flex items-center justify-between gap-4 px-5 py-3.5 transition-colors hover:bg-gray-50"
+                          >
+                            <span className="text-sm font-medium text-gray-900 group-hover:text-indigo-600">
+                              {proc.title}
+                            </span>
+                            <div className="flex shrink-0 items-center gap-2">
+                              {proc.frequencyLabel && (
+                                <span className="hidden rounded-full bg-gray-100 px-2.5 py-0.5 text-xs font-medium text-gray-600 sm:inline-block">
+                                  {proc.frequencyLabel}
+                                </span>
+                              )}
+                              <span className="rounded-full bg-indigo-50 px-2.5 py-0.5 text-xs font-medium text-indigo-700">
+                                {proc.agency}
+                              </span>
+                              <svg className="h-4 w-4 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                                <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
+                              </svg>
+                            </div>
+                          </Link>
+                        ))}
+                      </div>
+                      <div className="border-t border-gray-100 px-5 py-3">
+                        <Link
+                          href="/dashboard/processes"
+                          className="text-sm font-medium text-indigo-600 hover:text-indigo-500"
+                        >
+                          View all processes →
+                        </Link>
+                      </div>
+                    </div>
+                  )}
+                </div>
               </div>
             </div>
           </>

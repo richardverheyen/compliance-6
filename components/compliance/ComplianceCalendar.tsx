@@ -73,15 +73,11 @@ function BellIcon({ active }: { active: boolean }) {
 }
 
 export function ComplianceCalendar() {
-  const { activeRegulations, regulations, fetchRegulations, getRemindersForKeyDate } =
+  const { activeRegulations, regulations, getRemindersForKeyDate } =
     useComplianceStore();
   const [dates, setDates] = useState<ObligationDate[]>([]);
   const [loading, setLoading] = useState(true);
   const [modalDate, setModalDate] = useState<ObligationDate | null>(null);
-
-  useEffect(() => {
-    if (regulations.length === 0) fetchRegulations();
-  }, [regulations.length, fetchRegulations]);
 
   useEffect(() => {
     if (activeRegulations.length === 0) {

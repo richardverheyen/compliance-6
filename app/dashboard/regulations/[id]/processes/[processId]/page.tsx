@@ -15,13 +15,9 @@ export default function ProcessFormPage() {
   const processId = params.processId as string;
 
   const { pdfVisible, togglePdf, pdfUrl } = usePdfPanel();
-  const { regulations, fetchRegulations, getActiveAssessment } = useComplianceStore();
+  const { regulations, getActiveAssessment } = useComplianceStore();
   const [regulation, setRegulation] = useState<Regulation | undefined>();
   const [manifest, setManifest] = useState<RegulationManifest | null>(null);
-
-  useEffect(() => {
-    if (regulations.length === 0) fetchRegulations();
-  }, [regulations.length, fetchRegulations]);
 
   useEffect(() => {
     setRegulation(regulations.find((l) => l.id === regulationId));

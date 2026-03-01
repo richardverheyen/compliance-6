@@ -7,7 +7,7 @@ import { AssignOwnerModal } from "@/components/compliance/AssignOwnerModal";
 import {
   getRegulationProcessForSlug,
   getProcessIdForSlug,
-} from "@/mocks/compliance-data";
+} from "@/lib/process-computation";
 import type { RegulationManifest } from "@/lib/types/regulation-content";
 
 interface ConfirmedProcess {
@@ -76,7 +76,7 @@ export default function ProcessesPage() {
         const answers = getSectionAnswers(al.regulationId, entry.id);
         if (answers["process-exists"] !== "Yes") continue;
 
-        const regProcess = getRegulationProcessForSlug(entry.id, al.regulationId);
+        const regProcess = regulation ? getRegulationProcessForSlug(entry.id, regulation.processes) : undefined;
         const processId = getProcessIdForSlug(entry.id);
         if (!processId) continue;
 

@@ -1,17 +1,12 @@
 "use client";
 
-import { useEffect } from "react";
 import Link from "next/link";
 import { useComplianceStore } from "@/lib/compliance-store";
 import { AgencyLogo } from "@/components/compliance/AgencyLogo";
 
 export default function RegulationsPage() {
-  const { regulations, activeRegulations, isLoading, fetchRegulations } =
+  const { regulations, activeRegulations, isLoading } =
     useComplianceStore();
-
-  useEffect(() => {
-    fetchRegulations();
-  }, [fetchRegulations]);
 
   if (isLoading && regulations.length === 0) {
     return (

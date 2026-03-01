@@ -1,13 +1,12 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useComplianceStore } from "@/lib/compliance-store";
 
 export default function TeamPage() {
   const {
     activeRegulations,
     regulations,
-    fetchTeam,
     addTeamMember,
     removeTeamMember,
     getTeamMembersWithAuth,
@@ -20,12 +19,6 @@ export default function TeamPage() {
   const [email, setEmail] = useState("");
   const [role, setRole] = useState("");
   const [confirmDelete, setConfirmDelete] = useState<string | null>(null);
-
-  useEffect(() => {
-    if (teamMembers.length === 0) {
-      fetchTeam();
-    }
-  }, [teamMembers.length, fetchTeam]);
 
   async function handleAdd(e: React.FormEvent) {
     e.preventDefault();

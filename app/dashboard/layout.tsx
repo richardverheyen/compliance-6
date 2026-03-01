@@ -1,8 +1,10 @@
 "use client";
 
+import { useEffect } from "react";
 import { usePathname } from "next/navigation";
 import Link from "next/link";
 import { UserButton } from "@clerk/nextjs";
+import { useComplianceStore } from "@/lib/compliance-store";
 
 const navItems = [
   { href: "/dashboard", label: "Dashboard" },
@@ -13,6 +15,11 @@ const navItems = [
 
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
+  const { initialize } = useComplianceStore();
+
+  useEffect(() => {
+    initialize();
+  }, [initialize]);
 
   function isActive(href: string) {
     if (href === "/dashboard") return pathname === "/dashboard";

@@ -9,7 +9,7 @@ import { AssignOwnerModal } from "@/components/compliance/AssignOwnerModal";
 import {
   getRegulationProcessForSlug,
   getProcessIdForSlug,
-} from "@/mocks/compliance-data";
+} from "@/lib/process-computation";
 import type { RegulationProcess } from "@/lib/types/compliance";
 import type { RegulationManifest, ProcessListEntry } from "@/lib/types/regulation-content";
 
@@ -49,8 +49,8 @@ export default function ProcessDetailPage() {
   );
 
   // Metadata from catalog
-  const regProcess: RegulationProcess | undefined = regulationId
-    ? getRegulationProcessForSlug(slug, regulationId)
+  const regProcess: RegulationProcess | undefined = regulation
+    ? getRegulationProcessForSlug(slug, regulation.processes)
     : undefined;
 
   // Owner

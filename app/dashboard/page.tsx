@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import dynamic from "next/dynamic";
 import Link from "next/link";
 import { useUser } from "@clerk/nextjs";
@@ -95,18 +95,10 @@ export default function DashboardPage() {
   const {
     activeRegulations,
     regulations,
-    teamMembers,
-    fetchTeam,
     getActiveAssessment,
     getLastCompletedAssessment,
   } = useComplianceStore();
   const [reportModalOpen, setReportModalOpen] = useState(false);
-
-  useEffect(() => {
-    if (teamMembers.length === 0) {
-      fetchTeam();
-    }
-  }, [teamMembers.length, fetchTeam]);
 
   // Collect RegulationProcess items from parent Regulation for each active regulation
   const allRegulationProcesses: RegulationProcess[] = [];

@@ -65,7 +65,6 @@ export default function RegulationDetailPage() {
 
   const {
     regulations,
-    fetchRegulations,
     getActiveRegulation,
     activateRegulation,
     getRegulationProcessOwner,
@@ -96,12 +95,6 @@ export default function RegulationDetailPage() {
   const [introData, setIntroData] = useState<IntroductionData | null>(null);
   const [manifest, setManifest] = useState<RegulationManifest | null>(null);
   const [contentLoading, setContentLoading] = useState(true);
-
-  useEffect(() => {
-    if (regulations.length === 0) {
-      fetchRegulations();
-    }
-  }, [regulations.length, fetchRegulations]);
 
   useEffect(() => {
     setRegulation(regulations.find((l) => l.id === id));

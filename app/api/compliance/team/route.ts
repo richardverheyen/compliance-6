@@ -62,6 +62,7 @@ export async function GET() {
       name: ([firstName, lastName].filter(Boolean).join(" ")) || (m.publicUserData?.identifier ?? uid),
       email: m.publicUserData?.identifier ?? "",
       role: dbRow?.role ?? "",
+      orgRole: (m.role ?? "org:member") as "org:admin" | "org:member",
       avatarColor: (dbRow?.avatar_color ?? AVATAR_COLORS[0]) as string,
     };
   });
@@ -81,14 +82,14 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: "Organization required" }, { status: 400 });
   }
 
-  const body = await req.json() as { email: string; role?: string };
+  const body = await req.json() as { email: string; role?: string; orgRole?: "org:admin" | "org:member" };
 
   const clerk = await clerkClient();
   const invitation = await clerk.organizations.createOrganizationInvitation({
     organizationId: orgId,
     emailAddress: body.email,
     inviterUserId: userId,
-    role: "org:member",
+    role: body.orgRole ?? "org:member",
   });
 
   return NextResponse.json(

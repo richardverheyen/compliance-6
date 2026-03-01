@@ -20,17 +20,6 @@ function isProcessUnlocked(entry: ProcessListEntry, introAnswers: Record<string,
   return introAnswers[entry.gatedBy] === "Yes";
 }
 
-const locations = [
-  "New South Wales",
-  "Victoria",
-  "Queensland",
-  "Western Australia",
-  "South Australia",
-  "Tasmania",
-  "Northern Territory",
-  "Australian Capital Territory",
-];
-
 // Generic: derive answers where "Yes" if any listed controls = "Yes"
 function deriveAnswers(
   base: Record<string, string>,
@@ -65,6 +54,7 @@ export default function RegulationDetailPage() {
 
   const {
     regulations,
+    orgProfile,
     getActiveRegulation,
     activateRegulation,
     getRegulationProcessOwner,
@@ -76,11 +66,6 @@ export default function RegulationDetailPage() {
   } = useComplianceStore();
 
   const [regulation, setRegulation] = useState<Regulation | undefined>();
-  const [businessName, setBusinessName] = useState("");
-  const [location, setLocation] = useState("");
-  const [foundingYear, setFoundingYear] = useState("");
-  const [employeeCount, setEmployeeCount] = useState("");
-  const [selectedServices, setSelectedServices] = useState<string[]>([]);
   const [introAnswers, setIntroAnswers] = useState<Record<string, string>>({});
   const [showActivationForm, setShowActivationForm] = useState(false);
   const [filterActive, setFilterActive] = useState(true);
@@ -167,26 +152,10 @@ export default function RegulationDetailPage() {
     return <p className="text-sm text-gray-500">Loading...</p>;
   }
 
-  function toggleService(service: string) {
-    setSelectedServices((prev) =>
-      prev.includes(service) ? prev.filter((s) => s !== service) : [...prev, service],
-    );
-  }
-
   function handleActivate(e: React.FormEvent) {
     e.preventDefault();
     const fullAnswers = deriveAnswers(introAnswers, introData);
-    activateRegulation(
-      id,
-      {
-        businessName,
-        location,
-        foundingYear: Number(foundingYear),
-        employeeCount: Number(employeeCount),
-        services: selectedServices,
-      },
-      fullAnswers,
-    );
+    activateRegulation(id, fullAnswers);
     router.push(`/dashboard/regulations/${id}`);
     setShowActivationForm(false);
   }
@@ -242,9 +211,10 @@ export default function RegulationDetailPage() {
         </div>
       </div>
       <p className="mt-4 text-sm text-gray-600">{regulation.description}</p>
-      {active && active.businessProfile.services.length > 0 && (
+      {orgProfile && orgProfile.applicableServices.filter((s) => regulation.applicableServices.includes(s)).length > 0 && (
         <p className="mt-2 text-sm font-medium text-indigo-700">
-          Applies to you as a {active.businessProfile.services.join(", ")} provider.
+          Applies to you as a{" "}
+          {orgProfile.applicableServices.filter((s) => regulation.applicableServices.includes(s)).join(", ")} provider.
         </p>
       )}
 
@@ -256,7 +226,7 @@ export default function RegulationDetailPage() {
                   <div>
                     <h2 className="text-lg font-semibold text-gray-900">Begin Compliance Self-Assessment</h2>
                     <p className="mt-0.5 text-sm text-gray-600">
-                      Complete your business profile and scoping questions to activate compliance tracking.
+                      Answer the scoping questions below to activate compliance tracking.
                     </p>
                   </div>
                   <button
@@ -266,78 +236,6 @@ export default function RegulationDetailPage() {
                   >
                     Cancel
                   </button>
-                </div>
-
-                {/* Business Profile */}
-                <div className="rounded-xl border border-gray-200 bg-white p-6">
-                  <h3 className="text-base font-semibold text-gray-900">Business Profile</h3>
-                  <div className="mt-4 space-y-4">
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700">Business Name</label>
-                      <input
-                        type="text"
-                        required
-                        value={businessName}
-                        onChange={(e) => setBusinessName(e.target.value)}
-                        className="mt-1 block w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-indigo-500 focus:ring-indigo-500 focus:outline-none"
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700">Location</label>
-                      <select
-                        required
-                        value={location}
-                        onChange={(e) => setLocation(e.target.value)}
-                        className="mt-1 block w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-indigo-500 focus:ring-indigo-500 focus:outline-none"
-                      >
-                        <option value="">Select a state or territory</option>
-                        {locations.map((loc) => (
-                          <option key={loc} value={loc}>{loc}</option>
-                        ))}
-                      </select>
-                    </div>
-                    <div className="grid grid-cols-2 gap-4">
-                      <div>
-                        <label className="block text-sm font-medium text-gray-700">Founding Year</label>
-                        <input
-                          type="number"
-                          required
-                          min="1900"
-                          max={new Date().getFullYear()}
-                          value={foundingYear}
-                          onChange={(e) => setFoundingYear(e.target.value)}
-                          className="mt-1 block w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-indigo-500 focus:ring-indigo-500 focus:outline-none"
-                        />
-                      </div>
-                      <div>
-                        <label className="block text-sm font-medium text-gray-700">Employee Count</label>
-                        <input
-                          type="number"
-                          required
-                          min="1"
-                          value={employeeCount}
-                          onChange={(e) => setEmployeeCount(e.target.value)}
-                          className="mt-1 block w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-indigo-500 focus:ring-indigo-500 focus:outline-none"
-                        />
-                      </div>
-                    </div>
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700">Applicable Services</label>
-                      <div className="mt-2 grid grid-cols-2 gap-2">
-                        {regulation.applicableServices.map((service) => (
-                          <label key={service} className="flex items-center gap-2 text-sm text-gray-700">
-                            <input
-                              type="checkbox"
-                              checked={selectedServices.includes(service)}
-                              onChange={() => toggleService(service)}
-                              className="rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
-                            />
-                            {service}
-                          </label>
-                        ))}
-                      </div>
-                    </div>
-                  </div>
                 </div>
 
                 {/* Introduction / Scoping form — only shown if regulation has one */}

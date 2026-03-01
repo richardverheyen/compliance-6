@@ -8,6 +8,7 @@ import {
 } from "@react-pdf/renderer";
 import type {
   ActiveRegulation,
+  OrgProfile,
   Regulation,
   SelfAssessment,
   TeamMember,
@@ -19,6 +20,8 @@ import { getProcessRating } from "@/lib/types/compliance";
 export interface AuditReportData {
   regulation: Regulation;
   activeRegulation: ActiveRegulation;
+  orgName: string;
+  orgProfile: OrgProfile | null;
   allAssessments: SelfAssessment[];
   teamMembers: TeamMember[];
   generatedAt: string;
@@ -252,8 +255,8 @@ function PageFooter({
 // ─── Document ─────────────────────────────────────────────────────────────────
 
 function AuditReportDocument({ data }: { data: AuditReportData }) {
-  const { regulation, activeRegulation, allAssessments, teamMembers, generatedAt } = data;
-  const { businessProfile, processes } = activeRegulation;
+  const { regulation, activeRegulation, orgName, orgProfile, allAssessments, teamMembers, generatedAt } = data;
+  const { processes } = activeRegulation;
 
   const latestAssessment = [...allAssessments]
     .filter((s) => s.status === "completed")
@@ -279,7 +282,7 @@ function AuditReportDocument({ data }: { data: AuditReportData }) {
           </View>
           <View>
             <Text style={styles.coverMeta}>
-              Organisation: {businessProfile.businessName}
+              Organisation: {orgName}
             </Text>
             <Text style={styles.coverMeta}>Generated: {formatDate(generatedAt)}</Text>
             {latestAssessment && (
@@ -327,28 +330,20 @@ function AuditReportDocument({ data }: { data: AuditReportData }) {
           </Text>
         </View>
 
-        {/* Section 2 — Business Profile */}
-        <Text style={styles.sectionHeader}>2. Business Profile</Text>
+        {/* Section 2 — Organisation Profile */}
+        <Text style={styles.sectionHeader}>2. Organisation Profile</Text>
         <View style={styles.metaRow}>
-          <Text style={styles.metaLabel}>Business Name</Text>
-          <Text style={styles.metaValue}>{businessProfile.businessName}</Text>
+          <Text style={styles.metaLabel}>Organisation Name</Text>
+          <Text style={styles.metaValue}>{orgName}</Text>
         </View>
         <View style={styles.metaRow}>
           <Text style={styles.metaLabel}>Location</Text>
-          <Text style={styles.metaValue}>{businessProfile.location}</Text>
+          <Text style={styles.metaValue}>{orgProfile?.location ?? "—"}</Text>
         </View>
         <View style={styles.metaRow}>
-          <Text style={styles.metaLabel}>Founded</Text>
-          <Text style={styles.metaValue}>{businessProfile.foundingYear}</Text>
-        </View>
-        <View style={styles.metaRow}>
-          <Text style={styles.metaLabel}>Employee Count</Text>
-          <Text style={styles.metaValue}>{businessProfile.employeeCount}</Text>
-        </View>
-        <View style={styles.metaRow}>
-          <Text style={styles.metaLabel}>Services</Text>
+          <Text style={styles.metaLabel}>Applicable Services</Text>
           <Text style={styles.metaValue}>
-            {businessProfile.services.join(", ")}
+            {orgProfile?.applicableServices.length ? orgProfile.applicableServices.join(", ") : "—"}
           </Text>
         </View>
 

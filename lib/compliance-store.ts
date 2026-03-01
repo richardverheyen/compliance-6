@@ -2,8 +2,8 @@ import { create } from "zustand";
 import type {
   Regulation,
   ActiveRegulation,
+  OrgProfile,
   SelfAssessment,
-  BusinessProfile,
   TeamMember,
   PendingInvitation,
   ComplianceEvent,
@@ -14,6 +14,7 @@ import { computeProcessesFromAnswers } from "@/lib/process-computation";
 interface ComplianceState {
   regulations: Regulation[];
   activeRegulations: ActiveRegulation[];
+  orgProfile: OrgProfile | null;
   teamMembers: TeamMember[];
   pendingInvitations: PendingInvitation[];
   calendarEvents: ComplianceEvent[];
@@ -29,7 +30,7 @@ interface ComplianceState {
   hasActiveRegulations: () => boolean;
 
   // Section-based activation & answers
-  activateRegulation: (id: string, profile: BusinessProfile, introAnswers: Record<string, string>) => Promise<void>;
+  activateRegulation: (id: string, introAnswers: Record<string, string>) => Promise<void>;
   saveSectionAnswers: (regulationId: string, sectionId: string, answers: Record<string, string>) => Promise<void>;
   getSectionAnswers: (regulationId: string, sectionId: string) => Record<string, string>;
   clearSectionAnswers: (regulationId: string, sectionId: string) => Promise<void>;
@@ -41,8 +42,9 @@ interface ComplianceState {
   getLastCompletedAssessment: (regulationId: string) => SelfAssessment | undefined;
 
   // Team
-  addTeamMember: (member: { email: string; role?: string }) => Promise<void>;
+  addTeamMember: (member: { email: string; role?: string; orgRole?: "org:admin" | "org:member" }) => Promise<void>;
   removeTeamMember: (id: string) => Promise<void>;
+  updateMemberOrgRole: (memberId: string, orgRole: "org:admin" | "org:member") => Promise<void>;
   getTeamMember: (id: string) => TeamMember | undefined;
   getTeamMembersWithAuth: () => TeamMember[];
 
@@ -83,6 +85,7 @@ export const useComplianceStore = create<ComplianceState>()(
   (set, get) => ({
     regulations: [],
     activeRegulations: [],
+    orgProfile: null,
     teamMembers: [],
     pendingInvitations: [],
     calendarEvents: [],
@@ -93,16 +96,17 @@ export const useComplianceStore = create<ComplianceState>()(
     initialize: async () => {
       set({ isLoading: true });
       try {
-        const [regsRes, arRes, teamRes, calRes, paRes, remRes] = await Promise.all([
+        const [regsRes, arRes, teamRes, calRes, paRes, remRes, orgRes] = await Promise.all([
           fetch("/api/compliance/regulations"),
           fetch("/api/compliance/active-regulations"),
           fetch("/api/compliance/team"),
           fetch("/api/compliance/calendar"),
           fetch("/api/compliance/process-assignments"),
           fetch("/api/compliance/reminders"),
+          fetch("/api/organisation"),
         ]);
 
-        const [regulations, activeRegulationsRaw, teamData, calendarEvents, processAssignments, reminders] =
+        const [regulations, activeRegulationsRaw, teamData, calendarEvents, processAssignments, reminders, orgProfile] =
           await Promise.all([
             regsRes.ok ? regsRes.json() : [],
             arRes.ok ? arRes.json() : [],
@@ -110,6 +114,7 @@ export const useComplianceStore = create<ComplianceState>()(
             calRes.ok ? calRes.json() : [],
             paRes.ok ? paRes.json() : {},
             remRes.ok ? remRes.json() : [],
+            orgRes.ok ? orgRes.json() : null,
           ]);
 
         // Recompute processes client-side for each active regulation
@@ -120,6 +125,7 @@ export const useComplianceStore = create<ComplianceState>()(
         set({
           regulations,
           activeRegulations,
+          orgProfile: orgProfile ?? null,
           teamMembers: teamData.members ?? [],
           pendingInvitations: teamData.pending ?? [],
           calendarEvents,
@@ -139,7 +145,7 @@ export const useComplianceStore = create<ComplianceState>()(
 
     hasActiveRegulations: () => get().activeRegulations.length > 0,
 
-    activateRegulation: async (id, profile, introAnswers) => {
+    activateRegulation: async (id, introAnswers) => {
       // Optimistic update
       const firstAssessment: SelfAssessment = {
         id: Date.now().toString(),
@@ -151,7 +157,6 @@ export const useComplianceStore = create<ComplianceState>()(
       const newActive: ActiveRegulation = {
         regulationId: id,
         activatedAt: new Date().toISOString(),
-        businessProfile: profile,
         selfAssessments: [firstAssessment],
         activeAssessmentId: firstAssessment.id,
         processes: computeProcessesFromAnswers({ "risk-assessment": introAnswers }),
@@ -167,7 +172,7 @@ export const useComplianceStore = create<ComplianceState>()(
         const res = await fetch("/api/compliance/active-regulations", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ regulationId: id, businessProfile: profile, introAnswers }),
+          body: JSON.stringify({ regulationId: id, introAnswers }),
         });
         if (!res.ok) throw new Error("Failed");
         const serverData = await res.json() as ActiveRegulation;
@@ -357,7 +362,7 @@ export const useComplianceStore = create<ComplianceState>()(
       const res = await fetch("/api/compliance/team", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(member),
+        body: JSON.stringify({ email: member.email, role: member.role, orgRole: member.orgRole }),
       });
       const newInvitation: PendingInvitation = await res.json();
       set((state) => ({ pendingInvitations: [...state.pendingInvitations, newInvitation] }));
@@ -373,6 +378,25 @@ export const useComplianceStore = create<ComplianceState>()(
         set((state) => ({
           teamMembers: state.teamMembers.filter((m) => m.id !== id),
         }));
+      }
+    },
+
+    updateMemberOrgRole: async (memberId, orgRole) => {
+      // Optimistic update
+      set((state) => ({
+        teamMembers: state.teamMembers.map((m) =>
+          m.id === memberId ? { ...m, orgRole } : m,
+        ),
+      }));
+      try {
+        const res = await fetch(`/api/compliance/team/${memberId}`, {
+          method: "PATCH",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ orgRole }),
+        });
+        if (!res.ok) throw new Error("Failed");
+      } catch {
+        get().initialize();
       }
     },
 

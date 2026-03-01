@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { useComplianceStore } from "@/lib/compliance-store";
-import { useUser } from "@clerk/nextjs";
+import { useUser, useOrganization } from "@clerk/nextjs";
 import { getProcessRating } from "@/lib/types/compliance";
 import type { ExecutiveSummaryData } from "./ExecutiveSummaryDoc";
 import type { AuditReportData } from "./AuditReportDoc";
@@ -21,6 +21,7 @@ export function ReportModal({ isOpen, onClose }: ReportModalProps) {
   const [error, setError] = useState<string | null>(null);
 
   const { user: clerkUser } = useUser();
+  const { organization } = useOrganization();
   const user = clerkUser
     ? {
         id: clerkUser.id,
@@ -30,6 +31,7 @@ export function ReportModal({ isOpen, onClose }: ReportModalProps) {
     : null;
   const {
     activeRegulations,
+    orgProfile,
     regulations,
     teamMembers,
     getActiveAssessment,
@@ -58,8 +60,7 @@ export function ReportModal({ isOpen, onClose }: ReportModalProps) {
               )
             : 0;
 
-        const firstAl = activeRegulations[0];
-        const companyName = firstAl?.businessProfile?.businessName ?? "Your Organisation";
+        const companyName = organization?.name ?? "Your Organisation";
 
         const regulationSummaries = activeRegulations.map((al) => {
           const reg = regulations.find((r) => r.id === al.regulationId);
@@ -108,6 +109,8 @@ export function ReportModal({ isOpen, onClose }: ReportModalProps) {
         const data: AuditReportData = {
           regulation,
           activeRegulation,
+          orgName: organization?.name ?? "Your Organisation",
+          orgProfile: orgProfile ?? null,
           allAssessments: activeRegulation.selfAssessments,
           teamMembers,
           generatedAt: new Date().toISOString(),

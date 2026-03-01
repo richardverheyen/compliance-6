@@ -47,7 +47,6 @@ export async function GET() {
     return {
       regulationId: ar.regulation_id,
       activatedAt: ar.activated_at,
-      businessProfile: ar.business_profile ?? {},
       selfAssessments: assessments,
       activeAssessmentId: activeAssessment?.id ?? null,
       // processes computed client-side from sectionAnswers
@@ -67,7 +66,6 @@ export async function POST(req: Request) {
 
   const body = await req.json() as {
     regulationId: string;
-    businessProfile: Record<string, unknown>;
     introAnswers: Record<string, string>;
   };
 
@@ -80,7 +78,6 @@ export async function POST(req: Request) {
       {
         org_id: tenantId,
         regulation_id: body.regulationId,
-        business_profile: body.businessProfile,
       },
       { onConflict: "org_id,regulation_id" },
     )
@@ -111,7 +108,6 @@ export async function POST(req: Request) {
     {
       regulationId: ar.regulation_id,
       activatedAt: ar.activated_at,
-      businessProfile: ar.business_profile,
       selfAssessments: [
         {
           id: sa.id,

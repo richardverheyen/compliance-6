@@ -52,7 +52,19 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
           </div>
 
           <div className="hidden items-center gap-3 md:flex">
-            <UserButton />
+            <UserButton>
+              <UserButton.MenuItems>
+                <UserButton.Link
+                  label="Organisation Settings"
+                  labelIcon={
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor">
+                      <path fillRule="evenodd" d="M6.955 1.45A.5.5 0 0 1 7.452 1h1.096a.5.5 0 0 1 .497.45l.17 1.699c.484.12.94.312 1.354.564l1.34-.849a.5.5 0 0 1 .633.065l.775.775a.5.5 0 0 1 .065.633l-.849 1.34c.252.414.443.87.563 1.354l1.7.17a.5.5 0 0 1 .45.497v1.096a.5.5 0 0 1-.45.497l-1.699.17c-.12.484-.312.94-.564 1.354l.849 1.34a.5.5 0 0 1-.065.633l-.775.775a.5.5 0 0 1-.633.065l-1.34-.849c-.414.252-.87.443-1.354.563l-.17 1.7a.5.5 0 0 1-.497.45H7.452a.5.5 0 0 1-.497-.45l-.17-1.699a4.973 4.973 0 0 1-1.354-.564l-1.34.849a.5.5 0 0 1-.633-.065l-.775-.775a.5.5 0 0 1-.065-.633l.849-1.34A4.973 4.973 0 0 1 2.904 8.43l-1.7-.17A.5.5 0 0 1 .75 7.763V6.667a.5.5 0 0 1 .45-.497l1.699-.17c.12-.484.312-.94.564-1.354l-.849-1.34a.5.5 0 0 1 .065-.633l.775-.775a.5.5 0 0 1 .633-.065l1.34.849A4.973 4.973 0 0 1 6.784 3.15l.17-1.699ZM8 10a2 2 0 1 0 0-4 2 2 0 0 0 0 4Z" clipRule="evenodd" />
+                    </svg>
+                  }
+                  href="/dashboard/settings"
+                />
+              </UserButton.MenuItems>
+            </UserButton>
           </div>
         </div>
 
@@ -71,6 +83,16 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
               {item.label}
             </Link>
           ))}
+          <Link
+            href="/dashboard/settings"
+            className={`shrink-0 rounded-lg px-3 py-1.5 text-sm font-medium transition-colors ${
+              isActive("/dashboard/settings")
+                ? "bg-indigo-50 text-indigo-600"
+                : "text-gray-600 hover:bg-gray-50"
+            }`}
+          >
+            Settings
+          </Link>
         </div>
       </nav>
 

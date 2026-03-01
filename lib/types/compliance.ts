@@ -39,12 +39,9 @@ export interface Regulation {
   processes: RegulationProcess[];
 }
 
-export interface BusinessProfile {
-  businessName: string;
-  location: string;
-  foundingYear: number;
-  employeeCount: number;
-  services: string[];
+export interface OrgProfile {
+  location: string | null;
+  applicableServices: string[];
 }
 
 export interface SelfAssessment {
@@ -60,7 +57,6 @@ export interface SelfAssessment {
 export interface ActiveRegulation {
   regulationId: string;
   activatedAt: string;
-  businessProfile: BusinessProfile;
   processes: BusinessProcess[];
   selfAssessments: SelfAssessment[];
   activeAssessmentId: string | null;
@@ -71,6 +67,7 @@ export interface TeamMember {
   name: string;
   email: string;
   role: string;
+  orgRole: "org:admin" | "org:member";
   avatarColor: string;
 }
 

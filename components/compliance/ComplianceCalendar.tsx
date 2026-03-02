@@ -86,15 +86,20 @@ function BellIcon({ active }: { active: boolean }) {
   );
 }
 
-export function ComplianceCalendar() {
+export function ComplianceCalendar({ regulationId }: { regulationId?: string } = {}) {
   const { activeRegulations, regulations, getRemindersForKeyDate } =
     useComplianceStore();
   const [dates, setDates] = useState<ObligationDate[]>([]);
   const [loading, setLoading] = useState(true);
   const [modalDate, setModalDate] = useState<ObligationDate | null>(null);
 
+  // If a regulationId is provided, scope to just that one; otherwise use all active regulations.
+  const targets = regulationId
+    ? activeRegulations.filter((ar) => ar.regulationId === regulationId)
+    : activeRegulations;
+
   useEffect(() => {
-    if (activeRegulations.length === 0) {
+    if (targets.length === 0) {
       setDates([]);
       setLoading(false);
       return;
@@ -102,7 +107,7 @@ export function ComplianceCalendar() {
 
     setLoading(true);
     Promise.all(
-      activeRegulations.map((ar) =>
+      targets.map((ar) =>
         fetch(`/api/compliance/regulations/${ar.regulationId}/key-dates`)
           .then((r) => (r.ok ? r.json() : []))
           .then((data: RegulationKeyDate[]) => {
@@ -123,7 +128,8 @@ export function ComplianceCalendar() {
       setDates(allDates.flat().sort((a, b) => a.days - b.days));
       setLoading(false);
     });
-  }, [activeRegulations, regulations]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [regulationId, activeRegulations, regulations]);
 
   return (
     <>
@@ -140,10 +146,7 @@ export function ComplianceCalendar() {
               const urgent = !over && date.days <= 30;
               const [y, m, d] = date.resolvedDate.split("-").map(Number);
               const dateObj = new Date(y, m - 1, d);
-              const mon = dateObj
-                .toLocaleDateString("en-AU", { month: "short" })
-                .toUpperCase();
-              const label = `${mon} ${String(d).padStart(2, "0")}`;
+              const mon = dateObj.toLocaleDateString("en-AU", { month: "short" });
               const reminders = getRemindersForKeyDate(date.id);
               const hasReminder = reminders.length > 0;
               return (
@@ -153,21 +156,22 @@ export function ComplianceCalendar() {
                     i < dates.length - 1 ? "border-b border-dashed border-gray-200" : ""
                   }`}
                 >
-                  <div className="flex h-10 w-16 shrink-0 items-center justify-center rounded-md bg-gray-100 text-xs font-bold text-gray-700">
-                    {label}
+                  <div className="flex h-8 w-8 shrink-0 flex-col items-center justify-center rounded-md border border-gray-100 bg-gray-50">
+                    <span className="text-xs font-bold leading-none text-gray-800">{d}</span>
+                    <span className="text-[9px] font-medium uppercase leading-tight text-gray-500">{mon}</span>
                   </div>
                   <div className="min-w-0 flex-1">
-                    <p className="text-sm font-semibold text-gray-900">{date.title}</p>
-                    <p className="text-xs text-gray-500">
-                      <span className="font-medium text-indigo-600">
+                    <p className="truncate text-sm font-semibold text-gray-900">{date.title}</p>
+                    {!regulationId && (
+                      <p className="truncate text-xs font-medium text-indigo-600">
                         {date.regulationShortName}
-                      </span>
-                    </p>
+                      </p>
+                    )}
                     {hasReminder && (
-                      <p className="mt-0.5 text-xs text-indigo-500 sm:hidden">
+                      <p className="mt-0.5 text-xs text-indigo-500">
                         {reminders.length === 1
-                          ? `Reminder Scheduled ${reminderDisplayDate(reminders[0], date.resolvedDate)}`
-                          : `${reminders.length} Reminders Scheduled`}
+                          ? `Reminder ${reminderDisplayDate(reminders[0], date.resolvedDate)}`
+                          : `${reminders.length} reminders set`}
                       </p>
                     )}
                   </div>

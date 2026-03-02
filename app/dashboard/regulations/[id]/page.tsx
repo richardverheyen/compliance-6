@@ -11,7 +11,7 @@ import { getProcessRating } from "@/lib/types/compliance";
 import { AssignOwnerModal } from "@/components/compliance/AssignOwnerModal";
 import { AgencyLogo } from "@/components/compliance/AgencyLogo";
 import MermaidDiagram from "@/components/compliance/MermaidDiagram";
-import { KeyDatesWidget } from "@/components/compliance/KeyDatesWidget";
+import { ComplianceCalendar } from "@/components/compliance/ComplianceCalendar";
 import type { IntroductionData, RegulationManifest, ProcessListEntry } from "@/lib/types/regulation-content";
 import { usePdfPanel } from "./_context";
 
@@ -617,8 +617,8 @@ export default function RegulationDetailPage() {
 
                 {/* ── Key dates sidebar — hidden when PDF panel is open ── */}
                 {!pdfVisible && (
-                  <div className="w-full shrink-0 lg:w-64">
-                    <KeyDatesWidget regulationId={id} />
+                  <div className="w-full shrink-0 lg:w-96">
+                    <ComplianceCalendar regulationId={id} />
                   </div>
                 )}
               </div>

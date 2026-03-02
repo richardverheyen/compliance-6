@@ -214,7 +214,7 @@ export default function DashboardPage() {
         ) : (
           <>
             {/* Two-column: left content | Report widget + Calendar */}
-            <div className="mt-8 grid gap-8 lg:grid-cols-[1fr_320px]">
+            <div className="mt-8 grid gap-8 lg:grid-cols-[1fr_380px]">
               {/* Right sidebar — first on mobile, right column on desktop */}
               <div className="order-1 lg:order-2 flex flex-col gap-6">
                 <GenerateReportWidget onClick={() => setReportModalOpen(true)} />

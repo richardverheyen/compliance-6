@@ -1,17 +1,14 @@
 import { Page } from "@playwright/test";
+import { setupClerkTestingToken } from "@clerk/testing/playwright";
 
 // ─── Fixtures ─────────────────────────────────────────────────────────────────
 
-export const BUSINESS_PROFILE = {
-  businessName: "Acme Financial Services",
-  location: "New South Wales",
-  foundingYear: "2020",
-  employeeCount: "25",
-};
-
-/** Generate a unique email address per test run to avoid duplicates. */
+/**
+ * Generate a unique email for a test run.
+ * The +clerk_test suffix enables Clerk's dev-mode magic OTP bypass (code: 424242).
+ */
 export function uniqueEmail(): string {
-  return `e2e-${Date.now()}@test.example`;
+  return `e2e-${Date.now()}+clerk_test@example.com`;
 }
 
 // ─── Storage ──────────────────────────────────────────────────────────────────
@@ -49,6 +46,9 @@ export async function signUp(
   password: string,
   orgName = "E2E Test Org",
 ) {
+  // setupClerkTestingToken installs a bypass header that skips email OTP in dev mode.
+  await setupClerkTestingToken({ page });
+
   await page.goto("/sign-up");
   await page.waitForURL(/sign-up/, { timeout: 15_000 });
   const [firstName, ...rest] = name.split(" ");
@@ -56,47 +56,64 @@ export async function signUp(
   if (rest.length > 0) await page.fill('input[name="lastName"]', rest.join(" "));
   await page.fill('input[name="emailAddress"]', email);
   await page.fill('input[name="password"]', password);
-  await page.click('button[type="submit"]');
+  // Clerk renders an aria-hidden button[type="submit"] alongside the visible "Continue" button.
+  // force:true bypasses Next.js dev overlay portal which intercepts pointer events in dev mode.
+  await page.getByRole("button", { name: "Continue" }).click({ force: true });
 
-  // New flow: sign-up redirects to /onboarding for org creation
-  await page.waitForURL(/onboarding/, { timeout: 20_000 });
-  await page.waitForLoadState("networkidle");
+  // After "Continue", the possible next states are:
+  //   1. OTP input appears (email verification required)
+  //   2. Clerk sign-up task: /sign-up/tasks/choose-organization (org creation built into sign-up)
+  //   3. Direct redirect to /onboarding or /dashboard
+  const otpInput = page.locator('input[autocomplete="one-time-code"]');
+  await Promise.race([
+    page.waitForURL(/sign-up\/tasks|onboarding|dashboard/, { timeout: 30_000 }),
+    otpInput.waitFor({ state: "visible", timeout: 30_000 }),
+  ]);
 
-  // Clerk's <CreateOrganization> renders an "Organization name" input
-  await page.getByLabel(/organization name/i).fill(orgName);
-  await page.getByRole("button", { name: /create organization/i }).click();
+  if (!page.url().match(/sign-up\/tasks|onboarding|dashboard/)) {
+    // OTP appeared — use Clerk dev magic code (works when email has +clerk_test suffix)
+    await otpInput.fill("424242");
+    await page.waitForURL(/sign-up\/tasks|onboarding|dashboard/, { timeout: 20_000 });
+  }
 
-  await page.waitForURL("/dashboard", { timeout: 20_000 });
+  if (page.url().includes("sign-up/tasks")) {
+    // Clerk's built-in org setup task: fill org name and continue
+    await page.waitForLoadState("load");
+    const nameInput = page.getByLabel("Name");
+    await nameInput.clear();
+    await nameInput.fill(orgName);
+    await page.getByRole("button", { name: "Continue" }).click({ force: true });
+    await page.waitForURL(/dashboard/, { timeout: 30_000 });
+    return;
+  }
+
+  if (page.url().includes("onboarding")) {
+    // Custom /onboarding fallback: user reached our page, create org via <CreateOrganization>
+    await page.waitForLoadState("load");
+    await page.getByLabel(/organization name/i).fill(orgName);
+    await page.getByRole("button", { name: /create organization/i }).click({ force: true });
+    await page.waitForURL("/dashboard", { timeout: 30_000 });
+  }
+  // If already at /dashboard, we're done.
 }
 
 // ─── Regulation helpers ───────────────────────────────────────────────────────
 
 /**
  * Activate the AML/CTF regulation.
- * Fills the business profile form, optionally toggles customer types in the
- * scoping section, then submits. Assumes the user is already logged in.
+ * Optionally toggles customer types in the scoping section, then submits.
+ * Assumes the user is already logged in.
  */
 export async function activateAMLRegulation(
   page: Page,
-  opts: { customerTypes?: string[]; services?: string[] } = {},
+  opts: { customerTypes?: string[] } = {},
 ) {
-  const { customerTypes = [], services = ["Remittance"] } = opts;
+  const { customerTypes = [] } = opts;
 
   await page.goto("/dashboard/regulations/aml-ctf-rules");
   await page.waitForLoadState("networkidle");
 
   await page.getByRole("button", { name: "Begin Compliance Self-Assessment" }).click();
-
-  // Business Profile
-  await page.locator('label:has-text("Business Name") + input').fill(BUSINESS_PROFILE.businessName);
-  await page.locator('label:has-text("Location") + select').selectOption(BUSINESS_PROFILE.location);
-  await page.locator('label:has-text("Founding Year") + input').fill(BUSINESS_PROFILE.foundingYear);
-  await page.locator('label:has-text("Employee Count") + input').fill(BUSINESS_PROFILE.employeeCount);
-
-  // Applicable Services checkboxes
-  for (const svc of services) {
-    await page.getByLabel(svc).check();
-  }
 
   // Customer type toggles in the scoping section
   for (const type of customerTypes) {
@@ -117,9 +134,9 @@ export async function startAssessment(
 ) {
   const { customerTypes = [] } = opts;
 
-  // State C button or State D button
+  // "Start your first Self Assessment" (State C) or "Start New Assessment" (tabbed State D)
   await page.getByRole("button", {
-    name: /Start your first Self Assessment|Start New Self Assessment/,
+    name: /Start your first Self Assessment|Start New Assessment/,
   }).click();
 
   // Assessment-level scoping questions

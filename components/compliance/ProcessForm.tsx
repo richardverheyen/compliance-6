@@ -18,6 +18,7 @@ interface ProcessFormProps {
   sectionId: string;
   readOnly?: boolean;
   onAnswersChange: (answers: Answers) => void;
+  onSave?: (answers: Answers) => void;
 }
 
 // ─── Status helpers ───────────────────────────────────────────────────────────
@@ -484,6 +485,7 @@ export function ProcessForm({
   sectionId,
   readOnly,
   onAnswersChange,
+  onSave,
 }: ProcessFormProps) {
   const [answers, setAnswers] = useState<Answers>(initialAnswers);
   const saveTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -677,10 +679,10 @@ export function ProcessForm({
       {!readOnly && (
         <div className="mt-4 flex justify-end">
           <button
-            onClick={() => onAnswersChange(answers)}
+            onClick={() => onSave ? onSave(answers) : onAnswersChange(answers)}
             className="rounded-lg bg-indigo-600 px-6 py-2.5 text-sm font-semibold text-white hover:bg-indigo-500"
           >
-            Save Progress
+            Save & Return
           </button>
         </div>
       )}

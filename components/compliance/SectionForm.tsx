@@ -62,6 +62,12 @@ export function SectionForm({ regulationId, sectionId, readOnly, onSave }: Secti
   function handleAnswersChange(answers: Record<string, string>) {
     if (!readOnly) {
       saveSectionAnswers(regulationId, sectionId, answers);
+    }
+  }
+
+  function handleSave(answers: Record<string, string>) {
+    if (!readOnly) {
+      saveSectionAnswers(regulationId, sectionId, answers);
       onSave?.();
     }
   }
@@ -75,6 +81,7 @@ export function SectionForm({ regulationId, sectionId, readOnly, onSave }: Secti
       sectionId={sectionId}
       readOnly={readOnly}
       onAnswersChange={handleAnswersChange}
+      onSave={handleSave}
     />
   );
 }

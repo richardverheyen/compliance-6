@@ -13,7 +13,8 @@ export async function PATCH(
   }
 
   const { assessmentId, sectionId } = await params;
-  const answers = await req.json() as Record<string, string>;
+  const text = await req.text();
+  const answers = (text ? JSON.parse(text) : {}) as Record<string, string>;
 
   const supabase = createSupabaseClient();
 

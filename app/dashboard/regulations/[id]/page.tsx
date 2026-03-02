@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import Link from "next/link";
+import dynamic from "next/dynamic";
 import { useComplianceStore } from "@/lib/compliance-store";
 import { useUser } from "@clerk/nextjs";
 import type { Regulation, SelfAssessment } from "@/lib/types/compliance";
@@ -13,6 +14,11 @@ import MermaidDiagram from "@/components/compliance/MermaidDiagram";
 import { KeyDatesWidget } from "@/components/compliance/KeyDatesWidget";
 import type { IntroductionData, RegulationManifest, ProcessListEntry } from "@/lib/types/regulation-content";
 import { usePdfPanel } from "./_context";
+
+const ReportModal = dynamic(
+  () => import("@/components/reports/ReportModal").then((m) => m.ReportModal),
+  { ssr: false },
+);
 
 // Returns true when a process form entry is visible given scoping answers.
 function isProcessUnlocked(entry: ProcessListEntry, introAnswers: Record<string, string>): boolean {
@@ -75,6 +81,7 @@ export default function RegulationDetailPage() {
   const [showScopingForm, setShowScopingForm] = useState(false);
   const [scopingAnswers, setScopingAnswers] = useState<Record<string, string>>({});
   const [completedMessage, setCompletedMessage] = useState(false);
+  const [reportModalOpen, setReportModalOpen] = useState(false);
 
   // Dynamically fetched regulation content
   const [introData, setIntroData] = useState<IntroductionData | null>(null);
@@ -183,17 +190,30 @@ export default function RegulationDetailPage() {
         >
           &larr; Back to Regulations
         </Link>
-        {pdfUrl && (
-          <button
-            onClick={togglePdf}
-            className="hidden lg:flex shrink-0 items-center gap-1.5 rounded-lg border border-gray-200 px-3 py-1.5 text-xs font-medium text-gray-600 hover:border-gray-300 hover:text-gray-900"
-          >
-            <svg className="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-              <path strokeLinecap="round" strokeLinejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-            </svg>
-            {pdfVisible ? "Hide regulation documents" : "Show regulation documents"}
-          </button>
-        )}
+        <div className="flex items-center gap-2">
+          {active && (
+            <button
+              onClick={() => setReportModalOpen(true)}
+              className="flex shrink-0 items-center gap-1.5 rounded-lg border border-gray-200 px-3 py-1.5 text-xs font-medium text-gray-600 hover:border-gray-300 hover:text-gray-900"
+            >
+              <svg className="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+              </svg>
+              Generate Report
+            </button>
+          )}
+          {pdfUrl && (
+            <button
+              onClick={togglePdf}
+              className="hidden lg:flex shrink-0 items-center gap-1.5 rounded-lg border border-gray-200 px-3 py-1.5 text-xs font-medium text-gray-600 hover:border-gray-300 hover:text-gray-900"
+            >
+              <svg className="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+              </svg>
+              {pdfVisible ? "Hide regulation documents" : "Show regulation documents"}
+            </button>
+          )}
+        </div>
       </div>
 
       <div className="mt-4 flex items-center gap-4">
@@ -602,10 +622,16 @@ export default function RegulationDetailPage() {
                   </div>
                 )}
               </div>
-              
+
             )}
             {/* end two-column layout */}
       </div>
+
+      <ReportModal
+        isOpen={reportModalOpen}
+        onClose={() => setReportModalOpen(false)}
+        regulationId={id}
+      />
     </>
   );
 }

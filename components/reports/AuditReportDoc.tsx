@@ -23,6 +23,8 @@ export interface AuditReportData {
   orgName: string;
   orgProfile: OrgProfile | null;
   allAssessments: SelfAssessment[];
+  /** Section answers from the latest completed assessment, keyed by process slug */
+  sectionAnswers: Record<string, Record<string, string>>;
   teamMembers: TeamMember[];
   generatedAt: string;
 }
@@ -255,7 +257,7 @@ function PageFooter({
 // ─── Document ─────────────────────────────────────────────────────────────────
 
 function AuditReportDocument({ data }: { data: AuditReportData }) {
-  const { regulation, activeRegulation, orgName, orgProfile, allAssessments, teamMembers, generatedAt } = data;
+  const { regulation, activeRegulation, orgName, orgProfile, allAssessments, sectionAnswers, teamMembers, generatedAt } = data;
   const { processes } = activeRegulation;
 
   const latestAssessment = [...allAssessments]
@@ -398,6 +400,8 @@ function AuditReportDocument({ data }: { data: AuditReportData }) {
           processes.map((process) => {
             const rating = getProcessRating(process);
             const ownerName = getOwnerName(process.ownerId);
+            const processAnswers = sectionAnswers[process.id] ?? {};
+            const isConfirmed = processAnswers["process-exists"] === "Yes";
             return (
               <View key={process.id} style={styles.processBlock} wrap={false}>
                 <View style={{ flexDirection: "row", alignItems: "center", gap: 8, marginBottom: 2 }}>
@@ -405,38 +409,62 @@ function AuditReportDocument({ data }: { data: AuditReportData }) {
                   <View
                     style={[
                       styles.pill,
-                      { backgroundColor: ratingColor(rating) },
+                      { backgroundColor: isConfirmed ? ratingColor(rating) : GRAY_400 },
                     ]}
                   >
-                    <Text>{ratingLabel(rating)}</Text>
+                    <Text>{isConfirmed ? ratingLabel(rating) : "Not Applicable"}</Text>
                   </View>
                 </View>
                 {ownerName && (
                   <Text style={styles.processOwner}>Owner: {ownerName}</Text>
                 )}
-                {process.steps.map((step) => (
-                  <View key={step.id} style={styles.stepRow}>
-                    <View
-                      style={{
-                        width: 6,
-                        height: 6,
-                        borderRadius: 3,
-                        backgroundColor: ratingColor(step.rating),
-                        marginRight: 6,
-                        flexShrink: 0,
-                      }}
-                    />
-                    <Text style={styles.stepTitle}>{step.title}</Text>
-                    <View
-                      style={[
-                        styles.pill,
-                        { backgroundColor: ratingColor(step.rating) },
-                      ]}
-                    >
-                      <Text>{ratingLabel(step.rating)}</Text>
-                    </View>
-                  </View>
-                ))}
+                {process.steps
+                  .filter((step) => step.id !== "process-exists")
+                  .map((step) => {
+                    const answer = processAnswers[step.id];
+                    const detail = processAnswers[`${step.id}_detail`];
+                    const answerColor =
+                      answer === "Yes" ? GREEN : answer === "No" ? RED : GRAY_400;
+                    const answerLabel = answer ?? "—";
+                    return (
+                      <View key={step.id} style={{ marginBottom: 4 }}>
+                        <View style={styles.stepRow}>
+                          <View
+                            style={{
+                              width: 6,
+                              height: 6,
+                              borderRadius: 3,
+                              backgroundColor: answerColor,
+                              marginRight: 6,
+                              flexShrink: 0,
+                            }}
+                          />
+                          <Text style={styles.stepTitle}>{step.title}</Text>
+                          <View
+                            style={[
+                              styles.pill,
+                              { backgroundColor: answerColor },
+                            ]}
+                          >
+                            <Text>{answerLabel}</Text>
+                          </View>
+                        </View>
+                        {detail ? (
+                          <Text
+                            style={{
+                              fontSize: 8,
+                              color: GRAY_600,
+                              marginLeft: 12,
+                              marginTop: 2,
+                              marginBottom: 2,
+                            }}
+                          >
+                            {detail}
+                          </Text>
+                        ) : null}
+                      </View>
+                    );
+                  })}
               </View>
             );
           })

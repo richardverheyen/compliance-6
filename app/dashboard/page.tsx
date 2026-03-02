@@ -91,6 +91,29 @@ function RegulationTile({
   );
 }
 
+function GenerateReportWidget({ onClick }: { onClick: () => void }) {
+  return (
+    <div className="rounded-xl border border-gray-200 bg-white p-5">
+      <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-indigo-50">
+        <svg className="h-5 w-5 text-indigo-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.75}>
+          <path strokeLinecap="round" strokeLinejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+        </svg>
+      </div>
+      <h3 className="mt-3 text-sm font-semibold text-gray-900">Generate Report</h3>
+      <p className="mt-1 text-sm text-gray-500">
+        Export a compliance PDF — executive summary or detailed audit report — from your self-assessment data.
+      </p>
+      <button
+        type="button"
+        onClick={onClick}
+        className="mt-4 w-full rounded-lg bg-indigo-600 px-4 py-2 text-sm font-semibold text-white hover:bg-indigo-500"
+      >
+        Generate Report →
+      </button>
+    </div>
+  );
+}
+
 interface ConfirmedProcess {
   slug: string;
   title: string;
@@ -161,79 +184,65 @@ export default function DashboardPage() {
   return (
     <div className="px-4 py-12">
       <div className="mx-auto max-w-7xl">
-        <div className="flex items-start justify-between">
-          <div>
-            <h1 className="text-3xl font-bold text-gray-900">Dashboard</h1>
-            <p className="mt-2 text-gray-600">
-              Welcome back{user?.firstName ? `, ${user.firstName}` : ""}!
-            </p>
-          </div>
-          {activeRegulations.length > 0 && (
-            <button
-              type="button"
-              onClick={() => setReportModalOpen(true)}
-              className="flex items-center gap-2 rounded-lg bg-indigo-600 px-4 py-2.5 text-sm font-semibold text-white hover:bg-indigo-500"
-            >
-              <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
-                />
-              </svg>
-              Generate Report
-            </button>
-          )}
+        <div>
+          <h1 className="text-3xl font-bold text-gray-900">Dashboard</h1>
+          <p className="mt-2 text-gray-600">
+            Welcome back{user?.firstName ? `, ${user.firstName}` : ""}!
+          </p>
         </div>
 
         {activeRegulations.length === 0 ? (
-          <div className="mt-8 rounded-xl border border-gray-200 p-8 text-center">
-            <h2 className="text-lg font-semibold text-gray-900">
-              No active regulations
-            </h2>
-            <p className="mt-2 text-sm text-gray-600">
-              Get started by browsing available regulations and completing an
-              introduction form.
-            </p>
-            <Link
-              href="/dashboard/regulations"
-              className="mt-4 inline-block rounded-lg bg-indigo-600 px-4 py-2.5 text-sm font-semibold text-white hover:bg-indigo-500"
-            >
-              Browse Regulations
-            </Link>
+          /* ── No active regulations ── */
+          <div className="mt-8 grid gap-6 lg:grid-cols-[1fr_280px]">
+            <div className="rounded-xl border border-gray-200 p-8 text-center">
+              <h2 className="text-lg font-semibold text-gray-900">
+                No active regulations
+              </h2>
+              <p className="mt-2 text-sm text-gray-600">
+                Get started by browsing available regulations and completing an
+                introduction form.
+              </p>
+              <Link
+                href="/dashboard/regulations"
+                className="mt-4 inline-block rounded-lg bg-indigo-600 px-4 py-2.5 text-sm font-semibold text-white hover:bg-indigo-500"
+              >
+                Browse Regulations
+              </Link>
+            </div>
+            <GenerateReportWidget onClick={() => setReportModalOpen(true)} />
           </div>
         ) : (
           <>
-            {/* Regulation tiles — full width */}
-            <div className="mt-8">
-              <div className="grid gap-4 sm:grid-cols-2">
-                {activeRegulations.map((al) => {
-                  const reg = regulations.find((l) => l.id === al.regulationId);
-                  return (
-                    <RegulationTile
-                      key={al.regulationId}
-                      al={al}
-                      regulationName={reg?.name ?? al.regulationId}
-                      regulationShortName={reg?.shortName ?? al.regulationId}
-                      regulationAgency={reg?.agency ?? ""}
-                      activeAssessment={getActiveAssessment(al.regulationId)}
-                      lastCompleted={getLastCompletedAssessment(al.regulationId)}
-                    />
-                  );
-                })}
-              </div>
-            </div>
-
-            {/* Two-column: Business Processes | Calendar */}
+            {/* Two-column: left content | Report widget + Calendar */}
             <div className="mt-8 grid gap-8 lg:grid-cols-[1fr_320px]">
-              {/* Calendar — first on mobile, right column on desktop */}
-              <div className="order-1 lg:order-2">
+              {/* Right sidebar — first on mobile, right column on desktop */}
+              <div className="order-1 lg:order-2 flex flex-col gap-6">
+                <GenerateReportWidget onClick={() => setReportModalOpen(true)} />
                 <ComplianceCalendar />
               </div>
 
-              {/* Business Processes — second on mobile, left column on desktop */}
-              <div className="order-2 lg:order-1">
+              {/* Left column — second on mobile, left column on desktop */}
+              <div className="order-2 lg:order-1 flex flex-col gap-8">
+                {/* Regulation tiles */}
+                <div className="grid gap-4 sm:grid-cols-2">
+                  {activeRegulations.map((al) => {
+                    const reg = regulations.find((l) => l.id === al.regulationId);
+                    return (
+                      <RegulationTile
+                        key={al.regulationId}
+                        al={al}
+                        regulationName={reg?.name ?? al.regulationId}
+                        regulationShortName={reg?.shortName ?? al.regulationId}
+                        regulationAgency={reg?.agency ?? ""}
+                        activeAssessment={getActiveAssessment(al.regulationId)}
+                        lastCompleted={getLastCompletedAssessment(al.regulationId)}
+                      />
+                    );
+                  })}
+                </div>
+
+                {/* Business Processes */}
+                <div>
                 <h2 className="text-lg font-semibold text-gray-900">
                   Business Processes
                 </h2>
@@ -292,8 +301,9 @@ export default function DashboardPage() {
                     </div>
                   )}
                 </div>
-              </div>
-            </div>
+                </div>{/* end Business Processes */}
+              </div>{/* end left column */}
+            </div>{/* end grid */}
           </>
         )}
       </div>

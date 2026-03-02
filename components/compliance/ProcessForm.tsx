@@ -145,6 +145,10 @@ function ControlRow({ ctrl, answers, rules, introAnswers, onAnswer, readOnly }: 
           {(["Yes", "No"] as const).map((val) => (
             <label
               key={val}
+              onClick={(e) => {
+                e.preventDefault(); // prevent browser scroll-to-focus on sr-only input
+                if (!readOnly) onAnswer(ctrl.id, val);
+              }}
               className={`text-sm px-3.5 py-1 border rounded transition-colors select-none ${
                 readOnly ? "pointer-events-none opacity-70" : "cursor-pointer"
               } ${

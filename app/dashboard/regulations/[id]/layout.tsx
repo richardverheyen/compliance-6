@@ -214,7 +214,7 @@ export default function RegulationLayout({ children }: { children: React.ReactNo
         Full-height flex row: the nav is h-16 (4rem), so we take the rest.
         Content column scrolls independently; PDF panel fills 100% height.
       */}
-      <div className="flex h-[calc(100vh-4rem)] overflow-hidden">
+      <div className="flex h-full overflow-hidden">
         {/* Content — scrolls normally */}
         <div className="flex-1 min-w-0 overflow-y-auto px-4 py-12">
           <div className="mx-auto max-w-7xl">

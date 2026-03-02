@@ -6,7 +6,7 @@ import Link from "next/link";
 import dynamic from "next/dynamic";
 import { useComplianceStore } from "@/lib/compliance-store";
 import { useUser } from "@clerk/nextjs";
-import type { Regulation, SelfAssessment } from "@/lib/types/compliance";
+import type { Regulation } from "@/lib/types/compliance";
 import { getProcessRating } from "@/lib/types/compliance";
 import { AssignOwnerModal } from "@/components/compliance/AssignOwnerModal";
 import { AgencyLogo } from "@/components/compliance/AgencyLogo";
@@ -69,6 +69,7 @@ export default function RegulationDetailPage() {
     getLastCompletedAssessment,
     startSelfAssessment,
     completeSelfAssessment,
+    deleteAssessment,
   } = useComplianceStore();
 
   const [regulation, setRegulation] = useState<Regulation | undefined>();
@@ -76,6 +77,11 @@ export default function RegulationDetailPage() {
   const [showActivationForm, setShowActivationForm] = useState(false);
   const [filterActive, setFilterActive] = useState(true);
   const [assignModal, setAssignModal] = useState<{ processId: string; processName: string } | null>(null);
+
+  // Delete confirmation state: assessmentId being confirmed, or null
+  const [deleteConfirmId, setDeleteConfirmId] = useState<string | null>(null);
+  // Selected tab: null = auto-select (in-progress, else newest completed)
+  const [selectedAssessmentId, setSelectedAssessmentId] = useState<string | null>(null);
 
   // Self-assessment UI state
   const [showScopingForm, setShowScopingForm] = useState(false);
@@ -113,10 +119,6 @@ export default function RegulationDetailPage() {
   const activeAssessment = active ? getActiveAssessment(id) : undefined;
   const lastCompleted = active ? getLastCompletedAssessment(id) : undefined;
 
-  const completedAssessments: SelfAssessment[] = (active?.selfAssessments ?? [])
-    .filter((s) => s.status === "completed")
-    .sort((a, b) => new Date(b.completedAt!).getTime() - new Date(a.completedAt!).getTime());
-
   // Intro answers from the current or last completed assessment
   const currentIntroAnswers =
     activeAssessment?.sectionAnswers["risk-assessment"] ??
@@ -147,12 +149,27 @@ export default function RegulationDetailPage() {
     return getProcessRating(bp) === "green" ? "green" : "in-progress";
   }
 
-  function getFormLastCompleted(entryId: string): SelfAssessment | null {
-    return (
-      completedAssessments.find(
-        (a) => a.sectionAnswers[entryId] && Object.keys(a.sectionAnswers[entryId]).length > 0,
-      ) ?? null
-    );
+  // All assessments sorted newest-first for the tab bar
+  const allAssessmentsSorted = [...(active?.selfAssessments ?? [])].sort(
+    (a, b) => new Date(b.startedAt).getTime() - new Date(a.startedAt).getTime(),
+  );
+
+  // Numbering: sort oldest-first, assign index+1
+  const assessmentNumberMap = new Map<string, number>(
+    [...(active?.selfAssessments ?? [])]
+      .sort((a, b) => new Date(a.startedAt).getTime() - new Date(b.startedAt).getTime())
+      .map((a, i) => [a.id, i + 1]),
+  );
+
+  // Resolved selected tab: user pick → in-progress → newest completed
+  const resolvedSelectedId =
+    selectedAssessmentId ?? activeAssessment?.id ?? lastCompleted?.id ?? null;
+  const selectedAssessment = active?.selfAssessments.find((a) => a.id === resolvedSelectedId);
+
+  async function handleDeleteAssessment(assessmentId: string) {
+    await deleteAssessment(id, assessmentId);
+    setDeleteConfirmId(null);
+    if (selectedAssessmentId === assessmentId) setSelectedAssessmentId(null);
   }
 
   if (!regulation || contentLoading) {
@@ -174,6 +191,7 @@ export default function RegulationDetailPage() {
     setShowScopingForm(false);
     setScopingAnswers({});
     setCompletedMessage(false);
+    setSelectedAssessmentId(null); // auto-select the new in-progress tab
   }
 
   function handleCompleteAssessment() {
@@ -297,13 +315,22 @@ export default function RegulationDetailPage() {
                 )}
 
 
-                {/* ── State C: active, no assessment, no history ── */}
-                {active && !activeAssessment && !lastCompleted && (
-                  <div className="space-y-4">
-                    {showScopingForm ? (
+                {/* ── Active regulation: unified assessment section ── */}
+                {active && (
+                  <>
+                    {completedMessage && (
+                      <div className="rounded-lg border border-green-200 bg-green-50 px-4 py-3 text-sm text-green-800">
+                        Assessment completed and recorded.
+                      </div>
+                    )}
+
+                    {/* Scoping form — unified for first and new assessments */}
+                    {showScopingForm && (
                       <form onSubmit={handleStartAssessment} className="space-y-4">
                         <div className="flex items-center justify-between">
-                          <h2 className="text-lg font-semibold text-gray-900">Start Your First Self Assessment</h2>
+                          <h2 className="text-lg font-semibold text-gray-900">
+                            {active.selfAssessments.length === 0 ? "Start Your First Self Assessment" : "New Self Assessment"}
+                          </h2>
                           <button
                             type="button"
                             onClick={() => { setShowScopingForm(false); setScopingAnswers({}); }}
@@ -315,31 +342,23 @@ export default function RegulationDetailPage() {
                         {introData && manifest?.hasIntroductionForm && (
                           <div className="rounded-xl border border-gray-200 bg-white p-6">
                             <h3 className="text-base font-semibold text-gray-900">Scoping Questions</h3>
-                            <p className="mt-1 text-sm text-gray-600">
-                              {introData.groups[0]?.description}
-                            </p>
+                            <p className="mt-1 text-sm text-gray-600">{introData.groups[0]?.description}</p>
                             <div className="mt-4">
-                              <IntroForm
-                                introData={introData}
-                                answers={scopingAnswers}
-                                onChange={setScopingAnswers}
-                              />
+                              <IntroForm introData={introData} answers={scopingAnswers} onChange={setScopingAnswers} />
                             </div>
                           </div>
                         )}
-                        <button
-                          type="submit"
-                          className="w-full rounded-lg bg-indigo-600 px-4 py-2.5 text-sm font-semibold text-white hover:bg-indigo-500"
-                        >
+                        <button type="submit" className="w-full rounded-lg bg-indigo-600 px-4 py-2.5 text-sm font-semibold text-white hover:bg-indigo-500">
                           Start Assessment
                         </button>
                       </form>
-                    ) : (
+                    )}
+
+                    {/* State C: no assessments and not showing scoping form */}
+                    {!showScopingForm && active.selfAssessments.length === 0 && (
                       <div className="rounded-xl border border-dashed border-indigo-300 bg-indigo-50 p-6 text-center">
                         <p className="text-sm font-medium text-indigo-900">No assessments yet</p>
-                        <p className="mt-1 text-xs text-indigo-700">
-                          Complete a self assessment to track your compliance over time.
-                        </p>
+                        <p className="mt-1 text-xs text-indigo-700">Complete a self assessment to track your compliance over time.</p>
                         <button
                           onClick={() => setShowScopingForm(true)}
                           className="mt-4 rounded-lg bg-indigo-600 px-4 py-2 text-sm font-semibold text-white hover:bg-indigo-500"
@@ -348,266 +367,290 @@ export default function RegulationDetailPage() {
                         </button>
                       </div>
                     )}
-                  </div>
-                )}
 
-                {/* ── State D: active, no assessment, has history ── */}
-                {active && !activeAssessment && lastCompleted && (
-                  <div className="space-y-4">
-                    {completedMessage && (
-                      <div className="rounded-lg border border-green-200 bg-green-50 px-4 py-3 text-sm text-green-800">
-                        Assessment completed and recorded.
-                      </div>
-                    )}
-                    {showScopingForm ? (
-                      <form onSubmit={handleStartAssessment} className="space-y-4">
-                        <div className="flex items-center justify-between">
-                          <h2 className="text-lg font-semibold text-gray-900">New Self Assessment</h2>
-                          <button
-                            type="button"
-                            onClick={() => { setShowScopingForm(false); setScopingAnswers({}); }}
-                            className="text-sm text-gray-500 hover:text-gray-700"
-                          >
-                            Cancel
-                          </button>
-                        </div>
-                        {introData && manifest?.hasIntroductionForm && (
-                          <div className="rounded-xl border border-gray-200 bg-white p-6">
-                            <h3 className="text-base font-semibold text-gray-900">Scoping Questions</h3>
-                            <p className="mt-1 text-sm text-gray-600">
-                              {introData.groups[0]?.description}
-                            </p>
-                            <div className="mt-4">
-                              <IntroForm
-                                introData={introData}
-                                answers={scopingAnswers}
-                                onChange={setScopingAnswers}
-                              />
-                            </div>
-                          </div>
-                        )}
-                        <button
-                          type="submit"
-                          className="w-full rounded-lg bg-indigo-600 px-4 py-2.5 text-sm font-semibold text-white hover:bg-indigo-500"
-                        >
-                          Start Assessment
-                        </button>
-                      </form>
-                    ) : (
-                      <div className="rounded-xl border border-gray-200 bg-white p-4">
-                        <div className="flex flex-wrap items-center justify-between gap-3">
-                          <div>
-                            <p className="text-sm font-medium text-gray-900">
-                              Last assessed: {formatDate(lastCompleted.completedAt!)}
-                              {lastCompleted.completedBy && (
-                                <span className="text-gray-500"> · {lastCompleted.completedBy}</span>
-                              )}
-                            </p>
-                            <p className="mt-0.5 text-xs text-gray-500">
-                              {active.selfAssessments.filter((s) => s.status === "completed").length} assessment
-                              {active.selfAssessments.filter((s) => s.status === "completed").length !== 1 ? "s" : ""} completed
-                            </p>
-                          </div>
-                          <button
-                            onClick={() => setShowScopingForm(true)}
-                            className="rounded-lg bg-indigo-600 px-4 py-2 text-sm font-semibold text-white hover:bg-indigo-500"
-                          >
-                            Start New Self Assessment
-                          </button>
-                        </div>
-                      </div>
-                    )}
-                  </div>
-                )}
-
-                {/* Compliance Forms — driven by manifest.processList */}
-                <div className="space-y-3">
-                  <div className="flex items-center justify-between gap-2">
-                    <h2 className="text-xl font-semibold text-gray-900">Compliance Assessment</h2>
-                    {active && (
-                      <label className="flex cursor-pointer items-center gap-2.5 select-none">
-                        <span className={`text-xs font-medium transition-colors ${filterActive ? "text-indigo-700" : "text-gray-400"}`}>
-                          Relevant to me only
-                        </span>
-                        <button
-                          role="switch"
-                          aria-checked={filterActive}
-                          onClick={() => setFilterActive((v) => !v)}
-                          className={`relative inline-flex h-5 w-9 shrink-0 items-center rounded-full transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 focus-visible:ring-offset-2 ${
-                            filterActive ? "bg-indigo-600" : "bg-gray-200"
-                          }`}
-                        >
-                          <span
-                            className={`inline-block h-3.5 w-3.5 transform rounded-full bg-white shadow transition-transform ${
-                              filterActive ? "translate-x-[18px]" : "translate-x-[3px]"
-                            }`}
-                          />
-                        </button>
-                      </label>
-                    )}
-                  </div>
-
-                  {manifest?.processList && (() => {
-                    const entries = manifest.processList;
-                    const visibleEntries = (!active || !filterActive)
-                      ? entries
-                      : entries.filter((e) => isProcessUnlocked(e, currentIntroAnswers));
-
-                    if (visibleEntries.length === 0) {
-                      return (
-                        <p className="text-sm text-gray-400">
-                          No forms match your current scoping answers.
-                        </p>
-                      );
-                    }
-
-                    if (activeAssessment) {
-                      // State B: assessment in progress — forms table wrapped inside assessment container
-                      return (
-                        <div className="overflow-hidden rounded-xl border border-indigo-200">
-                          {/* Assessment header */}
-                          <div className="flex flex-wrap items-center justify-between gap-3 border-b border-indigo-100 bg-indigo-50 px-4 py-3">
-                            <div className="flex items-center gap-2">
-                              <span className="rounded-full bg-indigo-600 px-2.5 py-0.5 text-xs font-semibold text-white">
-                                Assessment in progress
-                              </span>
-                              <span className="text-xs text-indigo-700">
-                                Started {formatDate(activeAssessment.startedAt)}
-                              </span>
-                            </div>
-                            {allAssessmentComplete ? (
+                    {/* Tabbed assessment view — shown when there are assessments */}
+                    {!showScopingForm && active.selfAssessments.length > 0 && (
+                      <div className="space-y-3">
+                        <div className="flex items-center justify-between gap-2">
+                          <h2 className="text-xl font-semibold text-gray-900">Compliance Assessment</h2>
+                          <div className="flex items-center gap-3">
+                            {selectedAssessment?.status === "in_progress" && (
+                              <label className="flex cursor-pointer items-center gap-2.5 select-none">
+                                <span className={`text-xs font-medium transition-colors ${filterActive ? "text-indigo-700" : "text-gray-400"}`}>
+                                  Relevant to me only
+                                </span>
+                                <button
+                                  role="switch"
+                                  aria-checked={filterActive}
+                                  onClick={() => setFilterActive((v) => !v)}
+                                  className={`relative inline-flex h-5 w-9 shrink-0 items-center rounded-full transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 focus-visible:ring-offset-2 ${filterActive ? "bg-indigo-600" : "bg-gray-200"}`}
+                                >
+                                  <span className={`inline-block h-3.5 w-3.5 transform rounded-full bg-white shadow transition-transform ${filterActive ? "translate-x-[18px]" : "translate-x-[3px]"}`} />
+                                </button>
+                              </label>
+                            )}
+                            {!activeAssessment && (
                               <button
-                                onClick={handleCompleteAssessment}
-                                className="rounded-lg bg-green-600 px-4 py-1.5 text-sm font-semibold text-white hover:bg-green-500"
+                                onClick={() => setShowScopingForm(true)}
+                                className="rounded-lg bg-indigo-600 px-3 py-1.5 text-xs font-semibold text-white hover:bg-indigo-500"
                               >
-                                Complete Assessment
+                                Start New Assessment
                               </button>
-                            ) : (
-                              <span className="text-xs text-indigo-600">
-                                {incompleteCount} form{incompleteCount !== 1 ? "s" : ""} remaining
-                              </span>
                             )}
                           </div>
-                          {/* Forms table */}
-                          <table className="w-full bg-white text-sm">
-                            <thead>
-                              <tr className="border-b border-gray-100 text-left">
-                                <th className="px-4 py-2.5 text-xs font-medium text-gray-500">Form</th>
-                                <th className="px-4 py-2.5 text-xs font-medium text-gray-500">Status</th>
-                                <th className="px-4 py-2.5 text-xs font-medium text-gray-500">Owner</th>
-                              </tr>
-                            </thead>
-                            <tbody className="divide-y divide-gray-50">
-                              {visibleEntries.map((entry) => {
-                                const formHref = `/dashboard/regulations/${id}/processes/${entry.id}`;
-                                const ownerId = getRegulationProcessOwner(entry.id);
-                                const owner = ownerId ? getTeamMembersWithAuth().find((m) => m.id === ownerId) : undefined;
-                                const completion = getEntryCompletion(entry);
-                                const relevant = isProcessUnlocked(entry, currentIntroAnswers);
-                                const notApplicable = !filterActive && !relevant;
-
-                                return (
-                                  <tr key={entry.id} className={`${notApplicable ? "opacity-50" : "hover:bg-gray-50"} transition-colors`}>
-                                    <td className="px-4 py-3">
-                                      {relevant ? (
-                                        <Link href={formHref} className="font-medium text-gray-900 hover:text-indigo-600">
-                                          {entry.title}
-                                        </Link>
-                                      ) : (
-                                        <span className="font-medium text-gray-400">{entry.title}</span>
-                                      )}
-                                    </td>
-                                    <td className="px-4 py-3">
-                                      {completion === "green" && (
-                                        <span className="inline-flex items-center gap-1.5 text-xs font-medium text-green-600">
-                                          <svg className="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
-                                            <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
-                                          </svg>
-                                          Complete
-                                        </span>
-                                      )}
-                                      {completion === "in-progress" && (
-                                        <span className="inline-flex items-center gap-1.5 text-xs font-medium text-yellow-600">
-                                          <span className="h-2 w-2 rounded-full bg-yellow-400" />
-                                          In progress
-                                        </span>
-                                      )}
-                                      {completion === "none" && (
-                                        <span className="inline-flex items-center gap-1.5 text-xs text-gray-400">
-                                          <span className="h-2 w-2 rounded-full bg-gray-300" />
-                                          Not started
-                                        </span>
-                                      )}
-                                    </td>
-                                    <td className="px-4 py-3">
-                                      {owner ? (
-                                        <span className="text-xs font-medium text-gray-700">{owner.name}</span>
-                                      ) : (
-                                        <button
-                                          onClick={() => setAssignModal({ processId: entry.id, processName: entry.title })}
-                                          className="text-xs font-medium text-indigo-600 hover:text-indigo-500"
-                                        >
-                                          Assign owner
-                                        </button>
-                                      )}
-                                    </td>
-                                  </tr>
-                                );
-                              })}
-                            </tbody>
-                          </table>
                         </div>
-                      );
-                    } else {
-                      // States A, C, D: no active assessment — table with last completed info
-                      return (
-                        <div className="overflow-hidden rounded-xl border border-gray-200 bg-white">
-                          <table className="w-full text-sm">
-                            <thead>
-                              <tr className="border-b border-gray-100 bg-gray-50 text-left">
-                                <th className="px-4 py-2.5 text-xs font-medium text-gray-500">Form</th>
-                                <th className="px-4 py-2.5 text-xs font-medium text-gray-500">Last Completed</th>
-                                <th className="px-4 py-2.5 text-xs font-medium text-gray-500">Completed By</th>
-                              </tr>
-                            </thead>
-                            <tbody className="divide-y divide-gray-100">
-                              {visibleEntries.map((entry) => {
-                                const relevant = !active || isProcessUnlocked(entry, currentIntroAnswers);
-                                const notApplicable = active && !filterActive && !relevant;
-                                const lastCompletion = getFormLastCompleted(entry.id);
 
-                                return (
-                                  <tr key={entry.id} className={notApplicable ? "opacity-50" : ""}>
-                                    <td className="px-4 py-3">
-                                      <span className={`font-medium ${notApplicable ? "text-gray-400" : "text-gray-900"}`}>
-                                        {entry.title}
+                        <div className="overflow-hidden rounded-xl border border-gray-200">
+                          {/* Tab bar */}
+                          <div className="flex overflow-x-auto border-b border-gray-100 bg-white">
+                            {allAssessmentsSorted.map((a) => {
+                              const num = assessmentNumberMap.get(a.id) ?? 0;
+                              const isSelected = a.id === resolvedSelectedId;
+                              const isInProg = a.id === active.activeAssessmentId;
+                              return (
+                                <button
+                                  key={a.id}
+                                  onClick={() => setSelectedAssessmentId(a.id)}
+                                  className={`flex shrink-0 items-center gap-2 border-b-2 px-4 py-2.5 text-sm font-medium transition-colors ${
+                                    isSelected
+                                      ? "border-indigo-600 text-indigo-600"
+                                      : "border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700"
+                                  }`}
+                                >
+                                  #{num}
+                                  {isInProg ? (
+                                    <span className="rounded-full bg-indigo-100 px-1.5 py-0.5 text-xs font-semibold text-indigo-700">
+                                      In progress
+                                    </span>
+                                  ) : (
+                                    <span className="text-xs text-gray-400">{formatDate(a.completedAt!)}</span>
+                                  )}
+                                </button>
+                              );
+                            })}
+                          </div>
+
+                          {/* Tab panel */}
+                          {selectedAssessment && (
+                            <div className="bg-white">
+                              {selectedAssessment.status === "in_progress" ? (
+                                <>
+                                  {/* In-progress panel: started date + complete button */}
+                                  <div className="flex flex-wrap items-center justify-between gap-3 border-b border-gray-100 px-4 py-3">
+                                    <span className="text-xs text-gray-500">
+                                      Started {formatDate(selectedAssessment.startedAt)}
+                                    </span>
+                                    {allAssessmentComplete ? (
+                                      <button
+                                        onClick={handleCompleteAssessment}
+                                        className="rounded-lg bg-green-600 px-4 py-1.5 text-sm font-semibold text-white hover:bg-green-500"
+                                      >
+                                        Complete Assessment
+                                      </button>
+                                    ) : (
+                                      <span className="text-xs text-indigo-600">
+                                        {incompleteCount} form{incompleteCount !== 1 ? "s" : ""} remaining
                                       </span>
-                                    </td>
-                                    <td className="px-4 py-3 text-xs text-gray-500">
-                                      {lastCompletion ? formatDate(lastCompletion.completedAt!) : <span className="text-gray-300">—</span>}
-                                    </td>
-                                    <td className="px-4 py-3 text-xs text-gray-500">
-                                      {lastCompletion?.completedBy ?? <span className="text-gray-300">—</span>}
-                                    </td>
-                                  </tr>
-                                );
-                              })}
-                            </tbody>
-                          </table>
+                                    )}
+                                  </div>
+                                  {/* In-progress process table */}
+                                  {(() => {
+                                    const entries = manifest?.processList ?? [];
+                                    const visibleEntries = !filterActive
+                                      ? entries
+                                      : entries.filter((e) => isProcessUnlocked(e, currentIntroAnswers));
+                                    if (visibleEntries.length === 0) {
+                                      return <p className="px-4 py-6 text-sm text-gray-400">No forms match your current scoping answers.</p>;
+                                    }
+                                    return (
+                                      <table className="w-full text-sm">
+                                        <thead>
+                                          <tr className="border-b border-gray-100 text-left">
+                                            <th className="px-4 py-2.5 text-xs font-medium text-gray-500">Form</th>
+                                            <th className="px-4 py-2.5 text-xs font-medium text-gray-500">Status</th>
+                                            <th className="px-4 py-2.5 text-xs font-medium text-gray-500">Owner</th>
+                                          </tr>
+                                        </thead>
+                                        <tbody className="divide-y divide-gray-50">
+                                          {visibleEntries.map((entry) => {
+                                            const formHref = `/dashboard/regulations/${id}/processes/${entry.id}`;
+                                            const ownerId = getRegulationProcessOwner(entry.id);
+                                            const owner = ownerId ? getTeamMembersWithAuth().find((m) => m.id === ownerId) : undefined;
+                                            const completion = getEntryCompletion(entry);
+                                            const relevant = isProcessUnlocked(entry, currentIntroAnswers);
+                                            const notApplicable = !filterActive && !relevant;
+                                            return (
+                                              <tr key={entry.id} className={`${notApplicable ? "opacity-50" : "hover:bg-gray-50"} transition-colors`}>
+                                                <td className="px-4 py-3">
+                                                  {relevant ? (
+                                                    <Link href={formHref} className="font-medium text-gray-900 hover:text-indigo-600">
+                                                      {entry.title}
+                                                    </Link>
+                                                  ) : (
+                                                    <span className="font-medium text-gray-400">{entry.title}</span>
+                                                  )}
+                                                </td>
+                                                <td className="px-4 py-3">
+                                                  {completion === "green" && (
+                                                    <span className="inline-flex items-center gap-1.5 text-xs font-medium text-green-600">
+                                                      <svg className="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+                                                        <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                                                      </svg>
+                                                      Complete
+                                                    </span>
+                                                  )}
+                                                  {completion === "in-progress" && (
+                                                    <span className="inline-flex items-center gap-1.5 text-xs font-medium text-yellow-600">
+                                                      <span className="h-2 w-2 rounded-full bg-yellow-400" />
+                                                      In progress
+                                                    </span>
+                                                  )}
+                                                  {completion === "none" && (
+                                                    <span className="inline-flex items-center gap-1.5 text-xs text-gray-400">
+                                                      <span className="h-2 w-2 rounded-full bg-gray-300" />
+                                                      Not started
+                                                    </span>
+                                                  )}
+                                                </td>
+                                                <td className="px-4 py-3">
+                                                  {owner ? (
+                                                    <span className="text-xs font-medium text-gray-700">{owner.name}</span>
+                                                  ) : (
+                                                    <button
+                                                      onClick={() => setAssignModal({ processId: entry.id, processName: entry.title })}
+                                                      className="text-xs font-medium text-indigo-600 hover:text-indigo-500"
+                                                    >
+                                                      Assign owner
+                                                    </button>
+                                                  )}
+                                                </td>
+                                              </tr>
+                                            );
+                                          })}
+                                        </tbody>
+                                      </table>
+                                    );
+                                  })()}
+                                </>
+                              ) : (
+                                <>
+                                  {/* Completed panel: header + process table with view links */}
+                                  <div className="border-b border-gray-100 px-4 py-3 text-xs text-gray-500">
+                                    Completed {formatDate(selectedAssessment.completedAt!)}
+                                    {selectedAssessment.completedBy && ` · ${selectedAssessment.completedBy}`}
+                                  </div>
+                                  <table className="w-full text-sm">
+                                    <thead>
+                                      <tr className="border-b border-gray-100 text-left">
+                                        <th className="px-4 py-2.5 text-xs font-medium text-gray-500">Form</th>
+                                        <th className="px-4 py-2.5 text-xs font-medium text-gray-500">Status</th>
+                                      </tr>
+                                    </thead>
+                                    <tbody className="divide-y divide-gray-100">
+                                      {(manifest?.processList ?? []).map((entry) => {
+                                        const aIntroAnswers = selectedAssessment.sectionAnswers["risk-assessment"] ?? {};
+                                        const hasAnswers = Object.keys(selectedAssessment.sectionAnswers[entry.id] ?? {}).length > 0;
+                                        const isUnlocked = !entry.gatedBy || aIntroAnswers[entry.gatedBy] === "Yes";
+                                        const href = `/dashboard/regulations/${id}/assessments/${selectedAssessment.id}/processes/${entry.id}`;
+                                        return (
+                                          <tr key={entry.id} className={isUnlocked ? "hover:bg-gray-50 transition-colors" : "opacity-50"}>
+                                            <td className="px-4 py-3">
+                                              {isUnlocked ? (
+                                                <Link href={href} className="font-medium text-gray-900 hover:text-indigo-600">
+                                                  {entry.title}
+                                                </Link>
+                                              ) : (
+                                                <span className="font-medium text-gray-400">{entry.title}</span>
+                                              )}
+                                            </td>
+                                            <td className="px-4 py-3">
+                                              {hasAnswers ? (
+                                                <span className="inline-flex items-center gap-1.5 text-xs font-medium text-green-600">
+                                                  <svg className="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+                                                    <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                                                  </svg>
+                                                  Answered
+                                                </span>
+                                              ) : (
+                                                <span className="inline-flex items-center gap-1.5 text-xs text-gray-400">
+                                                  <span className="h-2 w-2 rounded-full bg-gray-300" />
+                                                  Not answered
+                                                </span>
+                                              )}
+                                            </td>
+                                          </tr>
+                                        );
+                                      })}
+                                    </tbody>
+                                  </table>
+                                </>
+                              )}
+                              {/* Delete row */}
+                              <div className="border-t border-gray-100 px-4 py-3">
+                                {deleteConfirmId === selectedAssessment.id ? (
+                                  <span className="flex items-center gap-3">
+                                    <span className="text-xs text-gray-600">Delete this assessment?</span>
+                                    <button
+                                      onClick={() => handleDeleteAssessment(selectedAssessment.id)}
+                                      className="text-xs font-medium text-red-600 hover:text-red-500"
+                                    >
+                                      Yes, delete
+                                    </button>
+                                    <button
+                                      onClick={() => setDeleteConfirmId(null)}
+                                      className="text-xs text-gray-500 hover:text-gray-700"
+                                    >
+                                      Cancel
+                                    </button>
+                                  </span>
+                                ) : (
+                                  <button
+                                    onClick={() => setDeleteConfirmId(selectedAssessment.id)}
+                                    className="text-xs font-medium text-gray-400 hover:text-red-500"
+                                  >
+                                    Delete assessment
+                                  </button>
+                                )}
+                              </div>
+                            </div>
+                          )}
                         </div>
-                      );
-                    }
-                  })()}
 
-                  {assignModal && (
-                    <AssignOwnerModal
-                      processId={assignModal.processId}
-                      processName={assignModal.processName}
-                      isOpen
-                      onClose={() => setAssignModal(null)}
-                    />
-                  )}
-                </div>
+                        {assignModal && (
+                          <AssignOwnerModal
+                            processId={assignModal.processId}
+                            processName={assignModal.processName}
+                            isOpen
+                            onClose={() => setAssignModal(null)}
+                          />
+                        )}
+                      </div>
+                    )}
+                  </>
+                )}
+
+                {/* Compliance Forms list — non-activated regulations */}
+                {!active && manifest?.processList && (
+                  <div className="space-y-3">
+                    <h2 className="text-xl font-semibold text-gray-900">Compliance Assessment</h2>
+                    <div className="overflow-hidden rounded-xl border border-gray-200 bg-white">
+                      <table className="w-full text-sm">
+                        <thead>
+                          <tr className="border-b border-gray-100 bg-gray-50 text-left">
+                            <th className="px-4 py-2.5 text-xs font-medium text-gray-500">Form</th>
+                          </tr>
+                        </thead>
+                        <tbody className="divide-y divide-gray-100">
+                          {manifest.processList.map((entry) => (
+                            <tr key={entry.id}>
+                              <td className="px-4 py-3 font-medium text-gray-900">{entry.title}</td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                )}
 
                 {/* Mermaid Flowchart — only shown if manifest provides diagram */}
                 {manifest?.mermaidDiagram && (

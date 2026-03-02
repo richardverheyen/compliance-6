@@ -10,9 +10,11 @@ interface SectionFormProps {
   sectionId: string;
   readOnly?: boolean;
   onSave?: () => void;
+  answers?: Record<string, string>;
+  introAnswers?: Record<string, string>;
 }
 
-export function SectionForm({ regulationId, sectionId, readOnly, onSave }: SectionFormProps) {
+export function SectionForm({ regulationId, sectionId, readOnly, onSave, answers: answersProp, introAnswers: introAnswersProp }: SectionFormProps) {
   const { getSectionAnswers, saveSectionAnswers } = useComplianceStore();
   const [form, setForm] = useState<ProcessFormData | null>(null);
   const [loading, setLoading] = useState(true);
@@ -56,8 +58,8 @@ export function SectionForm({ regulationId, sectionId, readOnly, onSave }: Secti
     );
   }
 
-  const initialAnswers = getSectionAnswers(regulationId, sectionId);
-  const introAnswers = getSectionAnswers(regulationId, "risk-assessment");
+  const initialAnswers = answersProp ?? getSectionAnswers(regulationId, sectionId);
+  const introAnswers = introAnswersProp ?? getSectionAnswers(regulationId, "risk-assessment");
 
   function handleAnswersChange(answers: Record<string, string>) {
     if (!readOnly) {

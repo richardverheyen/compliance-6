@@ -40,6 +40,8 @@ interface ComplianceState {
   completeSelfAssessment: (regulationId: string, completedBy: string) => Promise<void>;
   getActiveAssessment: (regulationId: string) => SelfAssessment | undefined;
   getLastCompletedAssessment: (regulationId: string) => SelfAssessment | undefined;
+  getAssessmentById: (regulationId: string, assessmentId: string) => SelfAssessment | undefined;
+  deleteAssessment: (regulationId: string, assessmentId: string) => Promise<void>;
 
   // Team
   addTeamMember: (member: { email: string; role?: string; orgRole?: "org:admin" | "org:member" }) => Promise<void>;
@@ -356,6 +358,31 @@ export const useComplianceStore = create<ComplianceState>()(
         .filter((s) => s.status === "completed")
         .sort((a, b) => (b.completedAt ?? "").localeCompare(a.completedAt ?? ""));
       return completed[0];
+    },
+
+    getAssessmentById: (regulationId, assessmentId) => {
+      const al = get().activeRegulations.find((a) => a.regulationId === regulationId);
+      return al?.selfAssessments.find((s) => s.id === assessmentId);
+    },
+
+    deleteAssessment: async (regulationId, assessmentId) => {
+      // Optimistic update
+      set((state) => ({
+        activeRegulations: state.activeRegulations.map((al) => {
+          if (al.regulationId !== regulationId) return al;
+          const updatedAssessments = al.selfAssessments.filter((s) => s.id !== assessmentId);
+          const clearedActiveId = al.activeAssessmentId === assessmentId ? null : al.activeAssessmentId;
+          return recomputeProcesses({ ...al, selfAssessments: updatedAssessments, activeAssessmentId: clearedActiveId });
+        }),
+      }));
+      try {
+        await fetch(
+          `/api/compliance/active-regulations/${regulationId}/assessments/${assessmentId}`,
+          { method: "DELETE" },
+        );
+      } catch {
+        get().initialize();
+      }
     },
 
     addTeamMember: async (member) => {

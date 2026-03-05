@@ -513,16 +513,12 @@ export default function RegulationDetailPage() {
                                                   )}
                                                 </td>
                                                 <td className="px-4 py-3">
-                                                  {owner ? (
-                                                    <span className="text-xs font-medium text-gray-700">{owner.name}</span>
-                                                  ) : (
-                                                    <button
-                                                      onClick={() => setAssignModal({ processId: entry.id, processName: entry.title })}
-                                                      className="text-xs font-medium text-indigo-600 hover:text-indigo-500"
-                                                    >
-                                                      Assign owner
-                                                    </button>
-                                                  )}
+                                                  <button
+                                                    onClick={() => setAssignModal({ processId: entry.id, processName: entry.title })}
+                                                    className={`text-xs font-medium ${owner ? "text-gray-700 hover:text-indigo-600" : "text-indigo-600 hover:text-indigo-500"}`}
+                                                  >
+                                                    {owner ? owner.name : "Assign owner"}
+                                                  </button>
                                                 </td>
                                               </tr>
                                             );

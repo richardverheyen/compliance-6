@@ -18,7 +18,7 @@ import {
 async function setupWithActiveAssessment(page: Parameters<typeof clearAppStorage>[0]) {
   const email = uniqueEmail();
   await clearAppStorage(page);
-  await signUp(page, "Report User", email, "password123");
+  await signUp(page, "Report User", email, "Compl1ance!Test");
   // activateAMLRegulation automatically creates the first assessment (State B)
   await activateAMLRegulation(page, { customerTypes: ["Individuals"] });
   // Navigate to dashboard
@@ -34,7 +34,7 @@ test.describe("Generate Report button", () => {
   }) => {
     const email = uniqueEmail();
     await clearAppStorage(page);
-    await signUp(page, "No Regs User", email, "password123");
+    await signUp(page, "No Regs User", email, "Compl1ance!Test");
     await page.goto("/dashboard");
     await page.waitForLoadState("networkidle");
 
@@ -44,7 +44,7 @@ test.describe("Generate Report button", () => {
   test("'Generate Report' button appears after activating a regulation", async ({ page }) => {
     const email = uniqueEmail();
     await clearAppStorage(page);
-    await signUp(page, "Report Visible", email, "password123");
+    await signUp(page, "Report Visible", email, "Compl1ance!Test");
     await activateAMLRegulation(page, { customerTypes: [] });
 
     await page.goto("/dashboard");

@@ -13,7 +13,7 @@ import { clearAppStorage, signUp, uniqueEmail } from "./helpers";
 test.describe("Team page", () => {
   test.beforeEach(async ({ page }) => {
     await clearAppStorage(page);
-    await signUp(page, "Team Admin", uniqueEmail(), "password123");
+    await signUp(page, "Team Admin", uniqueEmail(), "Compl1ance!Test");
   });
 
   // ─── Page structure ───────────────────────────────────────────────────────

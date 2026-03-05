@@ -550,6 +550,8 @@ export function ProcessForm({
   const controlsToCount = processExists ? form.controls : form.controls.filter((c) => c.id === "process-exists");
   controlsToCount.forEach((ctrl) => {
     if (!checkVisibility(ctrl.id, form.rules, answers, introAnswers)) return;
+    if (ctrl.group && !checkVisibility(ctrl.group, form.rules, answers, introAnswers)) return;
+    if (ctrl["checklist-items"]) return; // checklist controls are supplementary, not required
     totalControls++;
     if (getControlStatus(ctrl, answers) === "success") answeredControls++;
   });

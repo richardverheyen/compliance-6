@@ -72,19 +72,38 @@ export function getSectionData(processSlug: string): SectionData {
 export function computeProcessesFromAnswers(
   sectionAnswers: Record<string, Record<string, string>>,
 ): BusinessProcess[] {
+  const introAnswers = sectionAnswers["risk-assessment"] || {};
+
   return Object.keys(amlCTFContent.processForms).map((slug) => {
     const data = getSectionData(slug);
     const answers = sectionAnswers[slug] || {};
 
-    const steps = data.fields.map((field) => {
-      const rating: ComplianceRating =
-        getFieldStatus(field, answers) === "success" ? "green" : "red";
-      return {
-        id: field.id,
-        title: field.label,
-        rating,
-      };
-    });
+    function isVisible(id: string): boolean {
+      const showRules = data.rules.filter((r) => r.target === id && r.effect === "SHOW");
+      if (showRules.length === 0) return true;
+      return showRules.some((r) => {
+        const val = introAnswers[r.scope] ?? answers[r.scope];
+        return val === r.schema.const;
+      });
+    }
+
+    const steps = data.fields
+      .filter((field) => !(field as unknown as { "checklist-items"?: unknown })["checklist-items"])
+      .filter((field) => {
+        if (!isVisible(field.id)) return false;
+        const group = (field as unknown as { group?: string }).group;
+        if (group && !isVisible(group)) return false;
+        return true;
+      })
+      .map((field) => {
+        const rating: ComplianceRating =
+          getFieldStatus(field, answers) === "success" ? "green" : "red";
+        return {
+          id: field.id,
+          title: field.label,
+          rating,
+        };
+      });
 
     const entry = amlCTFContent.manifest.processList.find((p) => p.id === slug);
 

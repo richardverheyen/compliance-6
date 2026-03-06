@@ -72,7 +72,7 @@ export function getSectionData(processSlug: string): SectionData {
 export function computeProcessesFromAnswers(
   sectionAnswers: Record<string, Record<string, string>>,
 ): BusinessProcess[] {
-  const introAnswers = sectionAnswers["risk-assessment"] || {};
+  const introAnswers = sectionAnswers["__scoping__"] || {};
 
   return Object.keys(amlCTFContent.processForms).map((slug) => {
     const data = getSectionData(slug);

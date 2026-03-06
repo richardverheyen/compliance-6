@@ -95,7 +95,7 @@ export async function POST(req: Request) {
       org_id: tenantId,
       regulation_id: body.regulationId,
       status: "in_progress",
-      section_answers: { "risk-assessment": body.introAnswers },
+      section_answers: { "__scoping__": body.introAnswers },
     })
     .select()
     .single();

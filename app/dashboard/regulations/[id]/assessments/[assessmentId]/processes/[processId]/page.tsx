@@ -53,7 +53,7 @@ export default function AssessmentProcessPage() {
 
   const isReadOnly = !assessment || assessment.status === "completed";
   const answers = assessment?.sectionAnswers[processId];
-  const introAnswers = assessment?.sectionAnswers["risk-assessment"];
+  const introAnswers = assessment?.sectionAnswers["__scoping__"];
 
   if (!regulation) {
     return <p className="text-sm text-gray-500">Loading...</p>;

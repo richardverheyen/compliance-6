@@ -122,6 +122,7 @@ interface ConfirmedProcess {
   agency: string;
   frequencyLabel: string;
   lastAssessmentDate: string | undefined;
+  isBeingReassessed: boolean;
 }
 
 export default function DashboardPage() {
@@ -129,7 +130,6 @@ export default function DashboardPage() {
   const {
     activeRegulations,
     regulations,
-    getSectionAnswers,
     getActiveAssessment,
     getLastCompletedAssessment,
   } = useComplianceStore();
@@ -168,8 +168,14 @@ export default function DashboardPage() {
       const regulation = regulations.find((r) => r.id === al.regulationId);
       if (!regulation) continue;
       const lastAssessment = getLastCompletedAssessment(al.regulationId);
+      const activeAssessment = getActiveAssessment(al.regulationId);
+      // Use last completed assessment as the source of truth for confirmed processes.
+      // Fall back to the in-progress assessment only when no completed assessment exists yet.
+      const sourceAssessment = lastAssessment ?? activeAssessment;
+      if (!sourceAssessment) continue;
+      const isBeingReassessed = !!lastAssessment && !!activeAssessment;
       for (const entry of manifest.processList) {
-        const answers = getSectionAnswers(al.regulationId, entry.id);
+        const answers = sourceAssessment.sectionAnswers[entry.id] ?? {};
         if (answers["process-exists"] !== "Yes") continue;
         if (!getProcessIdForSlug(entry.id)) continue;
         const regProcess = getRegulationProcessForSlug(entry.id, regulation.processes);
@@ -180,11 +186,12 @@ export default function DashboardPage() {
           agency: regulation.agency,
           frequencyLabel: regProcess?.frequencyLabel ?? "",
           lastAssessmentDate: lastAssessment?.completedAt,
+          isBeingReassessed,
         });
       }
     }
     return list;
-  }, [activeRegulations, manifests, regulations, getSectionAnswers, getLastCompletedAssessment]);
+  }, [activeRegulations, manifests, regulations, getLastCompletedAssessment, getActiveAssessment]);
 
   useEffect(() => {
     if (confirmedProcesses.length === 0) {
@@ -199,8 +206,12 @@ export default function DashboardPage() {
         if (!data) return null;
         const controls = data.fields ?? [];
         const rules = data.rules ?? [];
-        const answers = getSectionAnswers(proc.regulationId, proc.slug);
-        const introAnswers = getSectionAnswers(proc.regulationId, "risk-assessment");
+        // Use the last completed assessment for scoring; fall back to in-progress for first assessment
+        const sourceAssessment =
+          getLastCompletedAssessment(proc.regulationId) ??
+          getActiveAssessment(proc.regulationId);
+        const answers = sourceAssessment?.sectionAnswers[proc.slug] ?? {};
+        const introAnswers = sourceAssessment?.sectionAnswers["__scoping__"] ?? {};
         const { correct, total } = computeProcessScore(controls, rules, answers, introAnswers);
         return [`${proc.regulationId}:${proc.slug}`, total - correct] as [string, number];
       })
@@ -277,10 +288,10 @@ export default function DashboardPage() {
                 {/* Business Processes */}
                 <div>
                 <h2 className="text-lg font-semibold text-gray-900">
-                  Business Processes
+                  Regulated Business Processes
                 </h2>
                 <p className="mt-1 text-sm text-gray-500">
-                  Confirmed processes across your active regulations
+                  Processes impacted by regulation within your business
                 </p>
                 <div className="mt-3">
                   {loadingManifests ? (
@@ -305,17 +316,31 @@ export default function DashboardPage() {
                           <Link
                             key={`${proc.regulationId}-${proc.slug}`}
                             href={`/dashboard/processes/${proc.slug}`}
-                            className="flex items-center justify-between gap-4 px-5 py-3.5 transition-colors hover:bg-gray-50"
+                            className={`flex items-center justify-between gap-4 py-3.5 px-5 transition-colors ${
+                              proc.isBeingReassessed ? "bg-amber-50 hover:bg-amber-100/60" : "hover:bg-gray-50"
+                            }`}
                           >
                             <div className="min-w-0">
                               <span className="block text-sm font-medium text-gray-900">
                                 {proc.title}
                               </span>
-                              {proc.lastAssessmentDate && (
-                                <span className="block text-xs text-gray-400">
-                                  Last assessed {formatDate(proc.lastAssessmentDate)}
-                                </span>
-                              )}
+                              <div className="mt-0.5 flex flex-wrap items-center gap-x-1.5 gap-y-0 text-xs text-gray-400">
+                                {proc.frequencyLabel && (
+                                  <span>{proc.frequencyLabel}</span>
+                                )}
+                                {proc.frequencyLabel && proc.lastAssessmentDate && (
+                                  <span aria-hidden>·</span>
+                                )}
+                                {proc.lastAssessmentDate && (
+                                  <span>Last assessed {formatDate(proc.lastAssessmentDate)}</span>
+                                )}
+                                {proc.isBeingReassessed && (
+                                  <>
+                                    <span aria-hidden>·</span>
+                                    <span className="font-medium text-amber-600">Re-assessing</span>
+                                  </>
+                                )}
+                              </div>
                             </div>
                             <div className="flex shrink-0 items-center gap-2">
                               {nonCompliant !== undefined && (
@@ -328,11 +353,6 @@ export default function DashboardPage() {
                                     {nonCompliant} non-compliant
                                   </span>
                                 )
-                              )}
-                              {proc.frequencyLabel && (
-                                <span className="hidden rounded-full bg-gray-100 px-2.5 py-0.5 text-xs font-medium text-gray-600 sm:inline-block">
-                                  {proc.frequencyLabel}
-                                </span>
                               )}
                               <span className="rounded-full bg-indigo-50 px-2.5 py-0.5 text-xs font-medium text-indigo-700">
                                 {proc.agency}

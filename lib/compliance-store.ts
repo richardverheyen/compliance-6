@@ -154,14 +154,14 @@ export const useComplianceStore = create<ComplianceState>()(
         regulationId: id,
         status: "in_progress",
         startedAt: new Date().toISOString(),
-        sectionAnswers: { "risk-assessment": introAnswers },
+        sectionAnswers: { "__scoping__": introAnswers },
       };
       const newActive: ActiveRegulation = {
         regulationId: id,
         activatedAt: new Date().toISOString(),
         selfAssessments: [firstAssessment],
         activeAssessmentId: firstAssessment.id,
-        processes: computeProcessesFromAnswers({ "risk-assessment": introAnswers }),
+        processes: computeProcessesFromAnswers({ "__scoping__": introAnswers }),
       };
       set((state) => ({
         activeRegulations: [
@@ -270,7 +270,7 @@ export const useComplianceStore = create<ComplianceState>()(
             regulationId,
             status: "in_progress",
             startedAt: new Date().toISOString(),
-            sectionAnswers: { "risk-assessment": introAnswers },
+            sectionAnswers: { "__scoping__": introAnswers },
           };
           const updated = {
             ...al,
@@ -298,11 +298,11 @@ export const useComplianceStore = create<ComplianceState>()(
             // Replace the optimistic assessment with the server one
             const updatedAssessments = [
               ...al.selfAssessments.filter((s) => s.status !== "in_progress" || s.id === serverAssessment.id),
-              { ...serverAssessment, sectionAnswers: serverAssessment.sectionAnswers ?? { "risk-assessment": introAnswers } },
+              { ...serverAssessment, sectionAnswers: serverAssessment.sectionAnswers ?? { "__scoping__": introAnswers } },
             ].filter((s, i, arr) => arr.findIndex((x) => x.id === s.id) === i);
             // Remove the old optimistic entry if different id
             const cleaned = al.selfAssessments.filter((s) => s.status !== "in_progress").concat(
-              { ...serverAssessment, sectionAnswers: serverAssessment.sectionAnswers ?? { "risk-assessment": introAnswers } },
+              { ...serverAssessment, sectionAnswers: serverAssessment.sectionAnswers ?? { "__scoping__": introAnswers } },
             );
             return recomputeProcesses({ ...al, selfAssessments: cleaned, activeAssessmentId: serverAssessment.id });
           }),

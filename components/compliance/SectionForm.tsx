@@ -59,7 +59,7 @@ export function SectionForm({ regulationId, sectionId, readOnly, onSave, answers
   }
 
   const initialAnswers = answersProp ?? getSectionAnswers(regulationId, sectionId);
-  const introAnswers = introAnswersProp ?? getSectionAnswers(regulationId, "risk-assessment");
+  const introAnswers = introAnswersProp ?? getSectionAnswers(regulationId, "__scoping__");
 
   function handleAnswersChange(answers: Record<string, string>) {
     if (!readOnly) {

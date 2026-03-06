@@ -195,8 +195,8 @@ export default function RegulationDetailPage() {
 
   // Intro answers from the current or last completed assessment
   const currentIntroAnswers =
-    activeAssessment?.sectionAnswers["risk-assessment"] ??
-    lastCompleted?.sectionAnswers["risk-assessment"] ??
+    activeAssessment?.sectionAnswers["__scoping__"] ??
+    lastCompleted?.sectionAnswers["__scoping__"] ??
     {};
 
   // Completion computation for State B
@@ -634,11 +634,11 @@ export default function RegulationDetailPage() {
                                     <tbody className="divide-y divide-gray-100">
                                       {(manifest?.processList ?? [])
                                         .filter((entry) => {
-                                          const aIntroAnswers = selectedAssessment.sectionAnswers["risk-assessment"] ?? {};
+                                          const aIntroAnswers = selectedAssessment.sectionAnswers["__scoping__"] ?? {};
                                           return !entry.gatedBy || aIntroAnswers[entry.gatedBy] === "Yes";
                                         })
                                         .map((entry) => {
-                                        const aIntroAnswers = selectedAssessment.sectionAnswers["risk-assessment"] ?? {};
+                                        const aIntroAnswers = selectedAssessment.sectionAnswers["__scoping__"] ?? {};
                                         const processAnswers = selectedAssessment.sectionAnswers[entry.id] ?? {};
                                         const hasAnswers = Object.keys(processAnswers).length > 0;
                                         const href = `/dashboard/regulations/${id}/assessments/${selectedAssessment.id}/processes/${entry.id}`;

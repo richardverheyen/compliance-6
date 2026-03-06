@@ -43,8 +43,8 @@ function RemediationText({ text }: { text: string }) {
   return <p className="leading-relaxed text-gray-700">{parts}</p>;
 }
 
-// ── Checklist item summary — shows each item's checked state ──────────────────
-function ChecklistSummary({
+// ── Checklist answer — shows each item's actual checked state ─────────────────
+function ChecklistAnswer({
   ctrl,
   answers,
 }: {
@@ -54,18 +54,21 @@ function ChecklistSummary({
   const items = ctrl["checklist-items"] ?? [];
   if (items.length === 0) return null;
   return (
-    <div className="mt-2 space-y-1 rounded border border-gray-100 bg-gray-50 px-2.5 py-2">
+    <div className="space-y-1">
       {items.map((item, i) => {
         if (item.type === "or-group" && item.items) {
+          const anyChecked = item.items.some((_, j) => answers[`${ctrl.id}__ci_${i}_${j}`] === "true");
           return (
-            <div key={i} className="rounded border border-green-100 bg-green-50/60 px-2 py-1.5">
-              <p className="mb-1 text-[0.6rem] font-bold uppercase tracking-wider text-green-700">Any one of:</p>
+            <div key={i} className={`rounded border px-2 py-1.5 ${anyChecked ? "border-green-100 bg-green-50/60" : "border-red-100 bg-red-50/40"}`}>
+              <p className={`mb-1 text-[0.6rem] font-bold uppercase tracking-wider ${anyChecked ? "text-green-700" : "text-red-600"}`}>
+                Any one of:
+              </p>
               {item.items.map((sub, j) => {
                 const checked = answers[`${ctrl.id}__ci_${i}_${j}`] === "true";
                 return (
                   <div key={j} className="flex items-start gap-1.5 py-0.5">
                     <span className={`mt-0.5 shrink-0 text-[0.65rem] font-bold ${checked ? "text-green-600" : "text-gray-300"}`}>
-                      {checked ? "✓" : "✗"}
+                      {checked ? "✓" : "○"}
                     </span>
                     <span className={`text-xs leading-snug ${checked ? "text-gray-800" : "text-gray-400"}`}>{sub.label}</span>
                   </div>
@@ -74,15 +77,46 @@ function ChecklistSummary({
             </div>
           );
         }
-        // Skip note-type items (no checkable state)
         if (!item.label || ("note" in (item as object))) return null;
         const checked = answers[`${ctrl.id}__ci_${i}`] === "true";
         return (
           <div key={i} className="flex items-start gap-1.5 py-0.5">
-            <span className={`mt-0.5 shrink-0 text-[0.65rem] font-bold ${checked ? "text-green-600" : "text-gray-300"}`}>
+            <span className={`mt-0.5 shrink-0 text-[0.65rem] font-bold ${checked ? "text-green-600" : "text-red-400"}`}>
               {checked ? "✓" : "✗"}
             </span>
-            <span className={`text-xs leading-snug ${checked ? "text-gray-800" : "text-gray-400"}`}>{item.label}</span>
+            <span className={`text-xs leading-snug ${checked ? "text-gray-700" : "text-gray-500"}`}>{item.label}</span>
+          </div>
+        );
+      })}
+    </div>
+  );
+}
+
+// ── Checklist expected — shows the full list of required items as the target state ─
+function ChecklistExpected({ ctrl }: { ctrl: ProcessControl }) {
+  const items = ctrl["checklist-items"] ?? [];
+  if (items.length === 0) return null;
+  return (
+    <div className="space-y-1">
+      {items.map((item, i) => {
+        if (item.type === "or-group" && item.items) {
+          return (
+            <div key={i} className="rounded border border-green-100 bg-green-50/60 px-2 py-1.5">
+              <p className="mb-1 text-[0.6rem] font-bold uppercase tracking-wider text-green-700">Any one of:</p>
+              {item.items.map((sub, j) => (
+                <div key={j} className="flex items-start gap-1.5 py-0.5">
+                  <span className="mt-0.5 shrink-0 text-[0.65rem] font-bold text-green-500">✓</span>
+                  <span className="text-xs leading-snug text-gray-600">{sub.label}</span>
+                </div>
+              ))}
+            </div>
+          );
+        }
+        if (!item.label || ("note" in (item as object))) return null;
+        return (
+          <div key={i} className="flex items-start gap-1.5 py-0.5">
+            <span className="mt-0.5 shrink-0 text-[0.65rem] font-bold text-green-500">✓</span>
+            <span className="text-xs leading-snug text-gray-600">{item.label}</span>
           </div>
         );
       })}
@@ -309,7 +343,7 @@ export default function RemediationPage() {
                           key={ctrl.id}
                           className={`border-t border-gray-100 align-top ${isSubprocess ? "bg-indigo-50/20" : "bg-white"} hover:bg-gray-50 transition-colors`}
                         >
-                          {/* Question + optional checklist summary */}
+                          {/* Question */}
                           <td className={`px-4 py-4 ${isSubprocess ? "pl-8" : ""}`}>
                             <p className="leading-snug text-gray-800">{ctrl.label}</p>
                             {sourceRules.length > 0 && (
@@ -319,17 +353,12 @@ export default function RemediationPage() {
                                 ))}
                               </div>
                             )}
-                            {isChecklist && (
-                              <ChecklistSummary ctrl={ctrl} answers={answers} />
-                            )}
                           </td>
 
                           {/* Your answer */}
                           <td className="px-4 py-4">
                             {isChecklist ? (
-                              <span className="inline-flex items-center rounded bg-red-100 px-2 py-0.5 text-xs font-medium text-red-700">
-                                Incomplete
-                              </span>
+                              <ChecklistAnswer ctrl={ctrl} answers={answers} />
                             ) : (
                               <span
                                 className={`inline-flex items-center rounded px-2 py-0.5 text-xs font-medium ${
@@ -345,9 +374,13 @@ export default function RemediationPage() {
 
                           {/* Expected */}
                           <td className="px-4 py-4">
-                            <span className="inline-flex items-center rounded bg-green-100 px-2 py-0.5 text-xs font-medium text-green-700">
-                              {isChecklist ? "✓ Complete" : expectedLabel}
-                            </span>
+                            {isChecklist ? (
+                              <ChecklistExpected ctrl={ctrl} />
+                            ) : (
+                              <span className="inline-flex items-center rounded bg-green-100 px-2 py-0.5 text-xs font-medium text-green-700">
+                                {expectedLabel}
+                              </span>
+                            )}
                           </td>
 
                           {/* Remediation */}

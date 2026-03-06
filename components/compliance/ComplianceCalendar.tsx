@@ -168,11 +168,14 @@ export function ComplianceCalendar({ regulationId }: { regulationId?: string } =
                       </p>
                     )}
                     {hasReminder && (
-                      <p className="mt-0.5 text-xs text-indigo-500">
+                      <button
+                        onClick={() => setModalDate(date)}
+                        className="mt-0.5 text-xs text-indigo-500 hover:text-indigo-700 hover:underline text-left"
+                      >
                         {reminders.length === 1
                           ? `Reminder ${reminderDisplayDate(reminders[0], date.resolvedDate)}`
                           : `${reminders.length} reminders set`}
-                      </p>
+                      </button>
                     )}
                   </div>
                   <span

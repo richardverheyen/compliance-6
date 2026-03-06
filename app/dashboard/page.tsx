@@ -54,9 +54,9 @@ function RegulationTile({
       <div className="flex items-start gap-4">
         <AgencyLogo agency={regulationAgency} />
         <div className="min-w-0">
-          <h3 className="font-semibold text-gray-900 leading-tight">
+          <Link href={href} className="font-semibold text-gray-900 leading-tight hover:text-indigo-600">
             {regulationShortName}
-          </h3>
+          </Link>
           <p className="mt-0.5 text-sm text-gray-500">{regulationAgency}</p>
         </div>
       </div>

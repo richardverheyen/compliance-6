@@ -14,6 +14,8 @@ import MermaidDiagram from "@/components/compliance/MermaidDiagram";
 import { ComplianceCalendar } from "@/components/compliance/ComplianceCalendar";
 import type { IntroductionData, RegulationManifest, ProcessListEntry } from "@/lib/types/regulation-content";
 import { usePdfPanel } from "./_context";
+import type { ProcessControl } from "@/lib/types/process-form";
+import { computeProcessScore, getScoreColor } from "@/lib/process-score";
 
 const ReportModal = dynamic(
   () => import("@/components/reports/ReportModal").then((m) => m.ReportModal),
@@ -47,6 +49,78 @@ function formatDate(isoString: string): string {
     month: "short",
     year: "numeric",
   });
+}
+
+// ── Process Score Cell ───────────────────────────────────────────────────────
+// Fetches the process schema once, then computes score live from current answers.
+
+function ProcessScoreCell({
+  regulationId,
+  processId,
+  assessmentId,
+  answers,
+  introAnswers,
+  showRemediation,
+}: {
+  regulationId: string;
+  processId: string;
+  assessmentId: string;
+  answers: Record<string, string>;
+  introAnswers: Record<string, string>;
+  showRemediation: boolean;
+}) {
+  const [controls, setControls] = useState<ProcessControl[]>([]);
+  const [rules, setRules] = useState<{ target: string; scope: string; effect: string; schema: { const: string } }[]>([]);
+  const [loaded, setLoaded] = useState(false);
+
+  useEffect(() => {
+    fetch(`/api/compliance/regulations/${regulationId}/processes/${processId}/schema`)
+      .then((r) => (r.ok ? r.json() : null))
+      .then((data) => {
+        if (!data) return;
+        setControls(data.fields ?? []);
+        setRules(data.rules ?? []);
+        setLoaded(true);
+      });
+  }, [regulationId, processId]);
+
+  if (!loaded) {
+    return <td className="px-4 py-3 text-xs text-gray-400">—</td>;
+  }
+
+  const { correct, total, pct } = computeProcessScore(controls, rules, answers, introAnswers);
+  const color = getScoreColor(pct);
+  const hasAnswers = Object.keys(answers).length > 0;
+
+  const badgeClass =
+    color === "green"
+      ? "bg-green-100 text-green-700 border-green-200"
+      : color === "amber"
+      ? "bg-amber-100 text-amber-700 border-amber-200"
+      : "bg-red-100 text-red-700 border-red-200";
+
+  return (
+    <td className="px-4 py-3">
+      <div className="flex flex-col gap-1 items-start">
+        {total > 0 ? (
+          <span className={`inline-flex items-center rounded-full border px-2 py-0.5 text-xs font-semibold ${badgeClass}`}>
+            {correct}/{total}
+            <span className="ml-1 font-normal opacity-75">({pct}%)</span>
+          </span>
+        ) : (
+          <span className="text-xs text-gray-400">—</span>
+        )}
+        {showRemediation && hasAnswers && total > 0 && (
+          <Link
+            href={`/dashboard/regulations/${regulationId}/assessments/${assessmentId}/processes/${processId}/remediation`}
+            className="text-[0.65rem] font-medium text-indigo-600 hover:text-indigo-500 hover:underline"
+          >
+            Remediation feedback →
+          </Link>
+        )}
+      </div>
+    </td>
+  );
 }
 
 
@@ -372,7 +446,7 @@ export default function RegulationDetailPage() {
                     {!showScopingForm && active.selfAssessments.length > 0 && (
                       <div className="space-y-3">
                         <div className="flex items-center justify-between gap-2">
-                          <h2 className="text-xl font-semibold text-gray-900">Compliance Assessment</h2>
+                          <h2 className="text-xl font-semibold text-gray-900">Compliance Self-Assessments</h2>
                           <div className="flex items-center gap-3">
                             {selectedAssessment?.status === "in_progress" && (
                               <label className="flex cursor-pointer items-center gap-2.5 select-none">
@@ -394,7 +468,7 @@ export default function RegulationDetailPage() {
                                 onClick={() => setShowScopingForm(true)}
                                 className="rounded-lg bg-indigo-600 px-3 py-1.5 text-xs font-semibold text-white hover:bg-indigo-500"
                               >
-                                Start New Assessment
+                                Start New Self-Assessment
                               </button>
                             )}
                           </div>
@@ -468,6 +542,7 @@ export default function RegulationDetailPage() {
                                           <tr className="border-b border-gray-100 text-left">
                                             <th className="px-4 py-2.5 text-xs font-medium text-gray-500">Form</th>
                                             <th className="px-4 py-2.5 text-xs font-medium text-gray-500">Status</th>
+                                            <th className="px-4 py-2.5 text-xs font-medium text-gray-500">Score</th>
                                             <th className="px-4 py-2.5 text-xs font-medium text-gray-500">Owner</th>
                                           </tr>
                                         </thead>
@@ -479,6 +554,7 @@ export default function RegulationDetailPage() {
                                             const completion = getEntryCompletion(entry);
                                             const relevant = isProcessUnlocked(entry, currentIntroAnswers);
                                             const notApplicable = !filterActive && !relevant;
+                                            const processAnswers = activeAssessment?.sectionAnswers[entry.id] ?? {};
                                             return (
                                               <tr key={entry.id} className={`${notApplicable ? "opacity-50" : "hover:bg-gray-50"} transition-colors`}>
                                                 <td className="px-4 py-3">
@@ -512,6 +588,14 @@ export default function RegulationDetailPage() {
                                                     </span>
                                                   )}
                                                 </td>
+                                                <ProcessScoreCell
+                                                  regulationId={id}
+                                                  processId={entry.id}
+                                                  assessmentId={activeAssessment!.id}
+                                                  answers={processAnswers}
+                                                  introAnswers={currentIntroAnswers}
+                                                  showRemediation
+                                                />
                                                 <td className="px-4 py-3">
                                                   <button
                                                     onClick={() => setAssignModal({ processId: entry.id, processName: entry.title })}
@@ -540,12 +624,14 @@ export default function RegulationDetailPage() {
                                       <tr className="border-b border-gray-100 text-left">
                                         <th className="px-4 py-2.5 text-xs font-medium text-gray-500">Form</th>
                                         <th className="px-4 py-2.5 text-xs font-medium text-gray-500">Status</th>
+                                        <th className="px-4 py-2.5 text-xs font-medium text-gray-500">Score</th>
                                       </tr>
                                     </thead>
                                     <tbody className="divide-y divide-gray-100">
                                       {(manifest?.processList ?? []).map((entry) => {
                                         const aIntroAnswers = selectedAssessment.sectionAnswers["risk-assessment"] ?? {};
-                                        const hasAnswers = Object.keys(selectedAssessment.sectionAnswers[entry.id] ?? {}).length > 0;
+                                        const processAnswers = selectedAssessment.sectionAnswers[entry.id] ?? {};
+                                        const hasAnswers = Object.keys(processAnswers).length > 0;
                                         const isUnlocked = !entry.gatedBy || aIntroAnswers[entry.gatedBy] === "Yes";
                                         const href = `/dashboard/regulations/${id}/assessments/${selectedAssessment.id}/processes/${entry.id}`;
                                         return (
@@ -574,6 +660,14 @@ export default function RegulationDetailPage() {
                                                 </span>
                                               )}
                                             </td>
+                                            <ProcessScoreCell
+                                              regulationId={id}
+                                              processId={entry.id}
+                                              assessmentId={selectedAssessment.id}
+                                              answers={processAnswers}
+                                              introAnswers={aIntroAnswers}
+                                              showRemediation={isUnlocked}
+                                            />
                                           </tr>
                                         );
                                       })}
@@ -628,7 +722,7 @@ export default function RegulationDetailPage() {
                 {/* Compliance Forms list — non-activated regulations */}
                 {!active && manifest?.processList && (
                   <div className="space-y-3">
-                    <h2 className="text-xl font-semibold text-gray-900">Compliance Assessment</h2>
+                    <h2 className="text-xl font-semibold text-gray-900">Compliance Self-Assessments</h2>
                     <div className="overflow-hidden rounded-xl border border-gray-200 bg-white">
                       <table className="w-full text-sm">
                         <thead>

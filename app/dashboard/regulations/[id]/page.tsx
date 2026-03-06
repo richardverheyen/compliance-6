@@ -588,14 +588,18 @@ export default function RegulationDetailPage() {
                                                     </span>
                                                   )}
                                                 </td>
-                                                <ProcessScoreCell
-                                                  regulationId={id}
-                                                  processId={entry.id}
-                                                  assessmentId={activeAssessment!.id}
-                                                  answers={processAnswers}
-                                                  introAnswers={currentIntroAnswers}
-                                                  showRemediation
-                                                />
+                                                {completion === "none" ? (
+                                                  <td className="px-4 py-3 text-xs text-gray-400">—</td>
+                                                ) : (
+                                                  <ProcessScoreCell
+                                                    regulationId={id}
+                                                    processId={entry.id}
+                                                    assessmentId={activeAssessment!.id}
+                                                    answers={processAnswers}
+                                                    introAnswers={currentIntroAnswers}
+                                                    showRemediation
+                                                  />
+                                                )}
                                                 <td className="px-4 py-3">
                                                   <button
                                                     onClick={() => setAssignModal({ processId: entry.id, processName: entry.title })}
@@ -628,22 +632,22 @@ export default function RegulationDetailPage() {
                                       </tr>
                                     </thead>
                                     <tbody className="divide-y divide-gray-100">
-                                      {(manifest?.processList ?? []).map((entry) => {
+                                      {(manifest?.processList ?? [])
+                                        .filter((entry) => {
+                                          const aIntroAnswers = selectedAssessment.sectionAnswers["risk-assessment"] ?? {};
+                                          return !entry.gatedBy || aIntroAnswers[entry.gatedBy] === "Yes";
+                                        })
+                                        .map((entry) => {
                                         const aIntroAnswers = selectedAssessment.sectionAnswers["risk-assessment"] ?? {};
                                         const processAnswers = selectedAssessment.sectionAnswers[entry.id] ?? {};
                                         const hasAnswers = Object.keys(processAnswers).length > 0;
-                                        const isUnlocked = !entry.gatedBy || aIntroAnswers[entry.gatedBy] === "Yes";
                                         const href = `/dashboard/regulations/${id}/assessments/${selectedAssessment.id}/processes/${entry.id}`;
                                         return (
-                                          <tr key={entry.id} className={isUnlocked ? "hover:bg-gray-50 transition-colors" : "opacity-50"}>
+                                          <tr key={entry.id} className="hover:bg-gray-50 transition-colors">
                                             <td className="px-4 py-3">
-                                              {isUnlocked ? (
-                                                <Link href={href} className="font-medium text-gray-900 hover:text-indigo-600">
-                                                  {entry.title}
-                                                </Link>
-                                              ) : (
-                                                <span className="font-medium text-gray-400">{entry.title}</span>
-                                              )}
+                                              <Link href={href} className="font-medium text-gray-900 hover:text-indigo-600">
+                                                {entry.title}
+                                              </Link>
                                             </td>
                                             <td className="px-4 py-3">
                                               {hasAnswers ? (
@@ -666,7 +670,7 @@ export default function RegulationDetailPage() {
                                               assessmentId={selectedAssessment.id}
                                               answers={processAnswers}
                                               introAnswers={aIntroAnswers}
-                                              showRemediation={isUnlocked}
+                                              showRemediation
                                             />
                                           </tr>
                                         );

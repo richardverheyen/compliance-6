@@ -211,22 +211,24 @@ export default function RegulationLayout({ children }: { children: React.ReactNo
   return (
     <PdfPanelContext.Provider value={{ pdfVisible, togglePdf, pdfUrl, navigateToPdfDestination }}>
       {/*
-        Full-height flex row: the nav is h-16 (4rem), so we take the rest.
-        Content column scrolls independently; PDF panel fills 100% height.
+        Two-column flex row. Content scrolls with the page normally.
+        PDF panel is sticky to the viewport top so it always fills the screen
+        without competing with the page scrollbar.
       */}
-      <div className="flex h-full overflow-hidden">
-        {/* Content — scrolls normally */}
-        <div className="flex-1 min-w-0 overflow-y-auto px-4 py-12">
+      <div className="flex items-start">
+        {/* Content — scrolls with the page */}
+        <div className="flex-1 min-w-0 px-4 py-12">
           <div className="mx-auto max-w-7xl">
             {children}
           </div>
         </div>
 
-        {/* PDF panel — full height, animated width */}
+        {/* PDF panel — sticky viewport-height column, animated width */}
         {pdfUrl && (
           <div
-            className="hidden lg:block shrink-0 overflow-hidden"
+            className="hidden lg:block shrink-0 sticky top-0 overflow-hidden"
             style={{
+              height: "100vh",
               width: pdfVisible ? "38vw" : "0",
               opacity: pdfVisible ? 1 : 0,
               transition: "width 500ms ease-in-out, opacity 300ms ease-in-out",

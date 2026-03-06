@@ -53,3 +53,4 @@ pipeline/__pycache__/
 pipeline/.env
 pipeline/**/__pycache__/
 pipeline/.pytest_cache/
+pipeline/runs/1/excerpts/

@@ -3,7 +3,8 @@ import Link from "next/link";
 const plans = [
   {
     name: "Starter",
-    price: "$99",
+    price: "$XX",
+    priceDetail: "per regulation / month",
     description: "For small teams beginning their compliance journey.",
     features: [
       "Up to 5 users",
@@ -16,7 +17,8 @@ const plans = [
   },
   {
     name: "Professional",
-    price: "$299",
+    price: "$XX",
+    priceDetail: "per regulation / month",
     description: "For growing teams managing multiple regulatory obligations.",
     features: [
       "Up to 25 users",
@@ -32,6 +34,7 @@ const plans = [
   {
     name: "Enterprise",
     price: "Custom",
+    priceDetail: null,
     description: "For larger organisations with complex compliance needs.",
     features: [
       "Unlimited users",
@@ -71,8 +74,8 @@ export default function PricingPage() {
               <p className="mt-2 text-sm text-gray-600">{plan.description}</p>
               <p className="mt-6">
                 <span className="text-4xl font-bold text-gray-900">{plan.price}</span>
-                {plan.price !== "Custom" && (
-                  <span className="text-sm text-gray-500">/month</span>
+                {plan.priceDetail && (
+                  <span className="text-sm text-gray-500"> {plan.priceDetail}</span>
                 )}
               </p>
               <ul className="mt-8 space-y-3">
@@ -93,7 +96,7 @@ export default function PricingPage() {
                     : "border border-gray-300 text-gray-700 hover:bg-gray-50"
                 }`}
               >
-                {plan.price === "Custom" ? "Contact Us" : "Get Started"}
+                {plan.name === "Enterprise" ? "Contact Us" : "Get Started"}
               </Link>
             </div>
           ))}

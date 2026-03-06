@@ -18,6 +18,7 @@ export default function RegulationLayout({ children }: { children: React.ReactNo
 
   const [pdfUrl, setPdfUrl] = useState<string | null>(null);
   const [pdfVisible, setPdfVisible] = useState(false);
+  const pdfVisibleRef = useRef(false);
   const iframeRef = useRef<HTMLIFrameElement>(null);
 
   useEffect(() => {
@@ -33,7 +34,12 @@ export default function RegulationLayout({ children }: { children: React.ReactNo
 
   const togglePdf = useCallback(() => setPdfVisible((v) => !v), []);
 
+  // Keep ref in sync so navigateToPdfDestination can read the current value
+  // without being a stale closure.
+  useEffect(() => { pdfVisibleRef.current = pdfVisible; }, [pdfVisible]);
+
   const navigateToPdfDestination = useCallback((ruleCode: string) => {
+    const wasVisible = pdfVisibleRef.current;
     setPdfVisible(true);
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -198,14 +204,24 @@ export default function RegulationLayout({ children }: { children: React.ReactNo
       return true;
     };
 
-    doNavigate().then((ready) => {
-      if (!ready) {
-        const interval = setInterval(() => {
-          doNavigate().then((done) => { if (done) clearInterval(interval); });
-        }, 100);
-        setTimeout(() => clearInterval(interval), 10_000);
-      }
-    });
+    const attemptNavigate = () => {
+      doNavigate().then((ready) => {
+        if (!ready) {
+          const interval = setInterval(() => {
+            doNavigate().then((done) => { if (done) clearInterval(interval); });
+          }, 100);
+          setTimeout(() => clearInterval(interval), 10_000);
+        }
+      });
+    };
+
+    // If the panel was closed, wait for the open animation (500ms) to finish
+    // before computing getBoundingClientRect-based scroll position.
+    if (!wasVisible) {
+      setTimeout(attemptNavigate, 520);
+    } else {
+      attemptNavigate();
+    }
   }, []);
 
   return (

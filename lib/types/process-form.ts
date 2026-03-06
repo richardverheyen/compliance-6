@@ -8,6 +8,7 @@ export interface ProcessControl {
   "process-id"?: string;
   "source-rules"?: string[];
   "mapping-confidence"?: number;
+  remediation?: string;
   "checklist-items"?: Array<{
     label?: string;
     type?: string;

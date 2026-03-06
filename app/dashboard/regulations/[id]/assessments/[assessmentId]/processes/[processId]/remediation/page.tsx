@@ -312,9 +312,9 @@ export default function RemediationPage() {
                 const issues = groupedIssues.get(group.id) ?? [];
                 const isSubprocess = group.variant === "subprocess";
                 return (
-                  <>
+                  <React.Fragment key={`group-${group.id}`}>
                     {/* Group header row */}
-                    <tr key={`group-${group.id}`} className="border-t-2 border-gray-200 bg-gray-50">
+                    <tr className="border-t-2 border-gray-200 bg-gray-50">
                       <td
                         colSpan={4}
                         className={`px-4 py-2.5 ${isSubprocess ? "pl-8" : ""}`}
@@ -394,7 +394,7 @@ export default function RemediationPage() {
                         </tr>
                       );
                     })}
-                  </>
+                  </React.Fragment>
                 );
               })}
             </tbody>

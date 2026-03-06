@@ -288,8 +288,42 @@ OUTPUT_TOOL = {
                             "type": "number",
                             "description": "Confidence in this mapping (0.0-1.0). 1.0=direct unambiguous, 0.7=clear but aggregated, 0.5=reasonable interpretation, <0.5=uncertain",
                         },
+                        "remediation": {
+                            "type": "string",
+                            "description": "A plain English guidance statement shown to the user when they give the wrong answer. Must: (1) reference the business process name, (2) describe what compliance element is missing from their process, (3) cite the specific rule codes from source-rules. 1-3 sentences, no bullet points.",
+                        },
+                        "checklist-items": {
+                            "type": "array",
+                            "description": "Optional. Use ONLY when the regulation enumerates a specific list of required data fields or conditions that must ALL be present (e.g. minimum KYC information to collect). Renders as interactive checkboxes. Each item is either a required checkbox or an OR-group where at least one option suffices.",
+                            "items": {
+                                "oneOf": [
+                                    {
+                                        "type": "object",
+                                        "description": "A single required item — must be checked to satisfy the control",
+                                        "properties": {"label": {"type": "string"}},
+                                        "required": ["label"],
+                                    },
+                                    {
+                                        "type": "object",
+                                        "description": "An OR-group — at least one of the nested items must be checked",
+                                        "properties": {
+                                            "type": {"type": "string", "enum": ["or-group"]},
+                                            "items": {
+                                                "type": "array",
+                                                "items": {
+                                                    "type": "object",
+                                                    "properties": {"label": {"type": "string"}},
+                                                    "required": ["label"],
+                                                },
+                                            },
+                                        },
+                                        "required": ["type", "items"],
+                                    },
+                                ]
+                            },
+                        },
                     },
-                    "required": ["id", "group", "label", "detail-required", "correct-option"],
+                    "required": ["id", "group", "label", "detail-required", "correct-option", "remediation"],
                 },
             },
             "groups": {
@@ -347,6 +381,7 @@ A compliance control point (question) within the form:
 - process-id: (optional) Business process ID from the PROCESSES map below.
 - source-rules: REQUIRED array of regulation rule codes this control derives from.
 - mapping-confidence: REQUIRED number 0.0-1.0 indicating confidence in the regulation-to-control mapping.
+- remediation: REQUIRED plain English guidance shown to the user when they answer incorrectly (i.e. do not select the correct-option). Must be 1-3 sentences. Must: (1) name the specific business process (use the process-id label or form title), (2) describe what is missing from the customer's process based on what a wrong answer implies, (3) cite the specific rule codes from source-rules that mandate this requirement. Do not use bullet points. Be specific and actionable. Example: "Your Customer Identification Procedure does not collect the minimum KYC information required for individual customers. Update your process to collect full name, date of birth, and residential address for every individual customer before commencing a designated service, as required under rules 4.2.3(1), 4.2.3(2), and 4.2.3(3)."
 
 ### Group
 An organisational container representing a **process step**. Groups use semantic slugs — NOT regulation section numbers:
@@ -388,6 +423,35 @@ For non-CDD forms, organise by logical workflow steps.
 4. Use **detail-required: false** for simple yes/no compliance checks.
 5. **Skip** italic/note text — use it as group descriptions instead.
 6. Every control MUST include **source-rules** and **mapping-confidence**.
+
+## Checklist Items
+
+When a regulation enumerates a **specific list of required data fields or conditions** that must ALL be satisfied (e.g. "collect full name, date of birth, and residential address"), add a `checklist-items` array to the control. This renders as interactive checkboxes in the form.
+
+- Use `{"label": "..."}` for each required item
+- Use `{"type": "or-group", "items": [...]}` when any ONE of several alternatives satisfies the requirement (e.g. "principal place of business OR residential address")
+- Only use `checklist-items` for controls where the regulation explicitly lists a finite set of required elements — NOT for general process or risk-based questions
+- Controls with `checklist-items` MUST have `correct-option: "Yes"`
+
+Example — "collect minimum KYC for individuals":
+```json
+"checklist-items": [
+  {{"label": "Full name"}},
+  {{"label": "Date of birth"}},
+  {{"label": "Residential address"}}
+]
+```
+
+Example — "collect minimum KYC for sole traders" (where address is one of two options):
+```json
+"checklist-items": [
+  {{"label": "Full name"}},
+  {{"label": "Date of birth"}},
+  {{"label": "Business name"}},
+  {{"type": "or-group", "items": [{{"label": "Principal place of business address"}}, {{"label": "Residential address"}}]}},
+  {{"label": "ABN"}}
+]
+```
 7. Every control MUST include a **group** field matching a group slug in your output.
 
 ## Critical Rules
@@ -576,6 +640,7 @@ Analyse the regulatory text above and produce the controls, groups, and rules fo
 - Every control MUST have a "group" field matching a slug in your groups array
 - Group IDs MUST be semantic slugs (e.g. "collection-kyc"), NEVER 4_x numbers
 - Use variant "subprocess" for optional/secondary process paths
+- Every control MUST have a "remediation" string: name the business process, describe what is missing when the wrong answer is given, and cite the rule codes from source-rules
 """
 
 
@@ -725,6 +790,7 @@ def inject_process_existence(slug: str, form_def: dict, result: dict) -> dict:
         "correct-option": "Yes",
         "source-rules": [],
         "mapping-confidence": 1.0,
+        "remediation": f"Your organisation does not have {article} {title} process in place. You must establish a documented {title} process to meet your AML/CTF obligations. Review the controls below and implement the required procedures before completing this assessment.",
     }
 
     # Prepend (skip if already present)
@@ -819,6 +885,31 @@ def run_process_architect(run_dir: str, single_process: str | None = None,
         # Apply feedback overrides (post-LLM, not sent to LLM)
         if feedback:
             result = apply_feedback_overrides(result, feedback)
+
+        # Preserve checklist-items from the existing output file.
+        # The LLM may generate checklist-items from scratch (schema supports it), but if it
+        # doesn't — or if the existing file had hand-crafted checklist-items — graft them
+        # back onto any matching controls so they are never silently lost on re-runs.
+        existing_output_path = PROCESSES_DIR / f"{process_id}.json"
+        if existing_output_path.exists():
+            try:
+                with open(existing_output_path) as f:
+                    existing_data = json.load(f)
+                existing_checklists = {
+                    ctrl["id"]: ctrl["checklist-items"]
+                    for ctrl in existing_data.get("controls", [])
+                    if "checklist-items" in ctrl
+                }
+                preserved = 0
+                for ctrl in result.get("controls", []):
+                    cid = ctrl["id"]
+                    if cid in existing_checklists and "checklist-items" not in ctrl:
+                        ctrl["checklist-items"] = existing_checklists[cid]
+                        preserved += 1
+                if preserved:
+                    logger.info(f"  Preserved {preserved} checklist-items block(s) from existing {process_id}.json")
+            except Exception as e:
+                logger.warning(f"  Could not read existing {process_id}.json to preserve checklist-items: {e}")
 
         # Coverage audit
         report = compute_coverage_report(process_id, text_nodes, result)

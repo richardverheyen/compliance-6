@@ -3,30 +3,19 @@
     {
       "id": "process-exists",
       "group": "process-existence",
-      "label": "Does your business have an ML/TF Risk Assessment process?",
+      "label": "Does your business have a ML/TF Risk Assessment process?",
       "detail-required": false,
       "correct-option": "Yes",
       "source-rules": [],
-      "mapping-confidence": 1
-    },
-    {
-      "id": "4_1_3",
-      "group": "risk-assessment-factors",
-      "label": "Have you identified and documented the ML/TF risk factors relevant to your business as required by Rule 4.1.3?",
-      "detail-required": true,
-      "detail-label": "Describe your ML/TF risk identification process and the factors you have assessed.",
-      "correct-option": "Yes",
-      "process-id": "PROC-AML-002c",
-      "source-rules": [
-        "4.1.3"
-      ],
-      "mapping-confidence": 0.95
+      "mapping-confidence": 1.0,
+      "remediation": "Your organisation does not have a ML/TF Risk Assessment process in place. You must establish a documented ML/TF Risk Assessment process to meet your AML/CTF obligations. Review the controls below and implement the required procedures before completing this assessment."
     },
     {
       "id": "4_1_3_1",
-      "group": "risk-assessment-factors",
-      "label": "Have you assessed customer types (including beneficial owners and PEPs) as part of your ML/TF risk identification?",
-      "detail-required": false,
+      "group": "ml-tf-risk-assessment",
+      "label": "Does your ML/TF risk assessment consider customer types, including beneficial owners and politically exposed persons?",
+      "detail-required": true,
+      "detail-label": "Describe how you assess customer types in your ML/TF risk identification process",
       "correct-option": "Yes",
       "process-id": "PROC-AML-002c",
       "source-rules": [
@@ -34,93 +23,92 @@
         "4.1.3(1)(a)",
         "4.1.3(1)(b)"
       ],
-      "mapping-confidence": 0.95
+      "mapping-confidence": 0.95,
+      "remediation": "Your ML/TF Risk Assessment does not adequately consider customer types as a risk factor. Your process must consider the risk posed by your customer types, including beneficial owners and politically exposed persons, as required under rules 4.1.3(1), 4.1.3(1)(a), and 4.1.3(1)(b)."
     },
     {
       "id": "4_1_3_2",
-      "group": "risk-assessment-factors",
-      "label": "Have you assessed customers' sources of funds and wealth as part of your ML/TF risk identification?",
-      "detail-required": false,
+      "group": "ml-tf-risk-assessment",
+      "label": "Does your ML/TF risk assessment consider customers' sources of funds and wealth?",
+      "detail-required": true,
+      "detail-label": "Describe how you assess sources of funds and wealth in your ML/TF risk identification process",
       "correct-option": "Yes",
       "process-id": "PROC-AML-002c",
       "source-rules": [
         "4.1.3(2)"
       ],
-      "mapping-confidence": 0.95
+      "mapping-confidence": 0.95,
+      "remediation": "Your ML/TF Risk Assessment does not consider sources of funds and wealth as a risk factor. Your process must assess the risk posed by customers' sources of funds and wealth, as required under rule 4.1.3(2)."
     },
     {
       "id": "4_1_3_3",
-      "group": "risk-assessment-factors",
-      "label": "Have you assessed the nature and purpose of business relationships with customers as part of your ML/TF risk identification?",
+      "group": "ml-tf-risk-assessment",
+      "label": "Does your ML/TF risk assessment consider the nature and purpose of business relationships, including collection of relevant information?",
       "detail-required": true,
-      "detail-label": "Describe how you collect and assess information about the nature and purpose of customer relationships.",
+      "detail-label": "Describe how you assess the nature and purpose of business relationships in your ML/TF risk identification process",
       "correct-option": "Yes",
       "process-id": "PROC-AML-002c",
       "source-rules": [
         "4.1.3(3)"
       ],
-      "mapping-confidence": 0.9
+      "mapping-confidence": 0.95,
+      "remediation": "Your ML/TF Risk Assessment does not adequately consider the nature and purpose of business relationships as a risk factor. Your process must assess the risk posed by the nature and purpose of the business relationship with customers, including collection of relevant information where appropriate, as required under rule 4.1.3(3)."
     },
     {
       "id": "4_1_3_4",
-      "group": "risk-assessment-factors",
-      "label": "Have you assessed the control structure of non-individual customers as part of your ML/TF risk identification?",
-      "detail-required": false,
+      "group": "ml-tf-risk-assessment",
+      "label": "Does your ML/TF risk assessment consider the control structure of non-individual customers?",
+      "detail-required": true,
+      "detail-label": "Describe how you assess the control structure of non-individual customers in your ML/TF risk identification process",
       "correct-option": "Yes",
       "process-id": "PROC-AML-002c",
       "source-rules": [
         "4.1.3(4)"
       ],
-      "mapping-confidence": 0.95
+      "mapping-confidence": 0.95,
+      "remediation": "Your ML/TF Risk Assessment does not consider the control structure of non-individual customers as a risk factor. Your process must assess the risk posed by the control structure of non-individual customers, as required under rule 4.1.3(4)."
     },
     {
       "id": "4_1_3_5",
-      "group": "risk-assessment-factors",
-      "label": "Have you assessed the types of designated services you provide as part of your ML/TF risk identification?",
-      "detail-required": false,
+      "group": "ml-tf-risk-assessment",
+      "label": "Does your ML/TF risk assessment consider the types of designated services you provide?",
+      "detail-required": true,
+      "detail-label": "Describe how you assess the types of designated services in your ML/TF risk identification process",
       "correct-option": "Yes",
       "process-id": "PROC-AML-002c",
       "source-rules": [
         "4.1.3(5)"
       ],
-      "mapping-confidence": 0.95
+      "mapping-confidence": 0.95,
+      "remediation": "Your ML/TF Risk Assessment does not consider the types of designated services as a risk factor. Your process must assess the risk posed by the types of designated services you provide, as required under rule 4.1.3(5)."
     },
     {
       "id": "4_1_3_6",
-      "group": "risk-assessment-factors",
-      "label": "Have you assessed the methods by which you deliver designated services as part of your ML/TF risk identification?",
-      "detail-required": false,
+      "group": "ml-tf-risk-assessment",
+      "label": "Does your ML/TF risk assessment consider the methods by which you deliver designated services?",
+      "detail-required": true,
+      "detail-label": "Describe how you assess delivery methods in your ML/TF risk identification process",
       "correct-option": "Yes",
       "process-id": "PROC-AML-002c",
       "source-rules": [
         "4.1.3(6)"
       ],
-      "mapping-confidence": 0.95
+      "mapping-confidence": 0.95,
+      "remediation": "Your ML/TF Risk Assessment does not consider the methods of service delivery as a risk factor. Your process must assess the risk posed by the methods by which you deliver designated services, as required under rule 4.1.3(6)."
     },
     {
       "id": "4_1_3_7",
-      "group": "risk-assessment-factors",
-      "label": "Have you assessed the foreign jurisdictions with which you deal as part of your ML/TF risk identification?",
-      "detail-required": false,
+      "group": "ml-tf-risk-assessment",
+      "label": "Does your ML/TF risk assessment consider the foreign jurisdictions with which you deal?",
+      "detail-required": true,
+      "detail-label": "Describe how you assess foreign jurisdictions in your ML/TF risk identification process",
       "correct-option": "Yes",
       "process-id": "PROC-AML-002c",
       "source-rules": [
         "4.1.3(7)"
       ],
-      "mapping-confidence": 0.95
-    },
-    {
-      "id": "4_1_6",
-      "group": "risk-assessment-application",
-      "label": "If you have customers who became customers after 1 June 2014, have you applied the enhanced requirements for beneficial owners (Part 4.12) and PEPs (Part 4.13) to those customers?",
-      "detail-required": true,
-      "detail-label": "Describe how you determine customer commencement dates and apply enhanced requirements to post-1 June 2014 customers.",
-      "correct-option": "Yes",
-      "process-id": "PROC-AML-002c",
-      "source-rules": [
-        "4.1.6"
-      ],
-      "mapping-confidence": 0.85
+      "mapping-confidence": 0.95,
+      "remediation": "Your ML/TF Risk Assessment does not consider foreign jurisdictions as a risk factor. Your process must assess the risk posed by the foreign jurisdictions with which you deal, as required under rule 4.1.3(7)."
     }
   ],
   "groups": [
@@ -131,15 +119,9 @@
       "variant": "main"
     },
     {
-      "id": "risk-assessment-factors",
-      "title": "ML/TF Risk Identification Factors",
-      "description": "Assessment of the key risk factors a reporting entity must consider when identifying, managing and mitigating money laundering or terrorism financing risk.",
-      "variant": "main"
-    },
-    {
-      "id": "risk-assessment-application",
-      "title": "Application of Enhanced Requirements",
-      "description": "Special application rules for customers acquired after transition dates and the applicability of enhanced due diligence requirements.",
+      "id": "ml-tf-risk-assessment",
+      "title": "ML/TF Risk Assessment",
+      "description": "Identify and assess the money laundering or terrorism financing risk your reporting entity may reasonably face in relation to providing designated services. Your assessment must consider seven core risk factors.",
       "variant": "main"
     }
   ],

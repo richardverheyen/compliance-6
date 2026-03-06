@@ -3,206 +3,108 @@
     {
       "id": "process-exists",
       "group": "process-existence",
-      "label": "Does your business have a Customer Due Diligence — Associations process?",
+      "label": "Does your business have a Customer Due Diligence \u2014 Associations process?",
       "detail-required": false,
       "correct-option": "Yes",
       "source-rules": [],
-      "mapping-confidence": 1
+      "mapping-confidence": 1.0,
+      "remediation": "Your organisation does not have a Customer Due Diligence \u2014 Associations process in place. You must establish a documented Customer Due Diligence \u2014 Associations process to meet your AML/CTF obligations. Review the controls below and implement the required procedures before completing this assessment."
     },
     {
       "id": "4_6_2",
       "group": "general-cdd-obligation",
-      "label": "Have you implemented risk-based systems and controls to verify that the association exists and that names of governing committee members have been provided?",
+      "label": "Does your AML/CTF program include risk-based systems and controls to verify that associations notified to you exist and have provided the names of their governing committee members?",
       "detail-required": true,
       "detail-label": "Describe your risk-based systems and controls",
       "correct-option": "Yes",
-      "process-id": "PROC-AML-002c",
       "source-rules": [
-        "4.6.2"
+        "4.6.2",
+        "4.6.2(1)",
+        "4.6.2(2)"
       ],
-      "mapping-confidence": 0.9
+      "mapping-confidence": 0.95,
+      "remediation": "Your Customer Due Diligence program for associations does not include the required risk-based systems and controls to verify association existence and governing committee member disclosure. Implement procedures to reasonably satisfy yourself on these two matters for every association customer, as required under rules 4.6.2(1) and 4.6.2(2)."
     },
     {
-      "id": "4_6_3_1",
+      "id": "4_6_3",
       "group": "collection-kyc-incorporated",
-      "label": "Do you collect the full name of incorporated associations?",
-      "detail-required": false,
+      "label": "Does your KYC collection procedure for incorporated associations capture all required information: full name, principal place of administration/registered office address, incorporation identification number, and full names of chairman, secretary and treasurer?",
+      "detail-required": true,
+      "detail-label": "Describe how your procedure collects and records this information",
       "correct-option": "Yes",
-      "process-id": "PROC-AML-002a",
       "source-rules": [
-        "4.6.3(1)(a)"
-      ],
-      "mapping-confidence": 1
-    },
-    {
-      "id": "4_6_3_1_b",
-      "group": "collection-kyc-incorporated",
-      "label": "Do you collect the association's principal place of administration or registered office address, or the residential address of the public officer, president, secretary or treasurer?",
-      "detail-required": false,
-      "correct-option": "Yes",
-      "process-id": "PROC-AML-002a",
-      "source-rules": [
-        "4.6.3(1)(b)"
-      ],
-      "mapping-confidence": 0.95
-    },
-    {
-      "id": "4_6_3_1_c",
-      "group": "collection-kyc-incorporated",
-      "label": "Do you collect any unique identifying number issued upon incorporation of the association?",
-      "detail-required": false,
-      "correct-option": "Yes",
-      "process-id": "PROC-AML-002a",
-      "source-rules": [
-        "4.6.3(1)(c)"
-      ],
-      "mapping-confidence": 1
-    },
-    {
-      "id": "4_6_3_1_d",
-      "group": "collection-kyc-incorporated",
-      "label": "Do you collect the full names of the chairman, secretary and treasurer (or equivalent officers) of the incorporated association?",
-      "detail-required": false,
-      "correct-option": "Yes",
-      "process-id": "PROC-AML-002a",
-      "source-rules": [
+        "4.6.3",
+        "4.6.3(1)(a)",
+        "4.6.3(1)(b)",
+        "4.6.3(1)(c)",
         "4.6.3(1)(d)"
       ],
-      "mapping-confidence": 1
-    },
-    {
-      "id": "4_6_3_2",
-      "group": "collection-kyc-unincorporated",
-      "label": "Do you collect the full name of unincorporated associations where the customer is a member?",
-      "detail-required": false,
-      "correct-option": "Yes",
-      "process-id": "PROC-AML-002a",
-      "source-rules": [
-        "4.6.3(2)(a)"
-      ],
-      "mapping-confidence": 1
-    },
-    {
-      "id": "4_6_3_2_b",
-      "group": "collection-kyc-unincorporated",
-      "label": "Do you collect the principal place of administration address of unincorporated associations (if any)?",
-      "detail-required": false,
-      "correct-option": "Yes",
-      "process-id": "PROC-AML-002a",
-      "source-rules": [
-        "4.6.3(2)(b)"
-      ],
-      "mapping-confidence": 1
-    },
-    {
-      "id": "4_6_3_2_c",
-      "group": "collection-kyc-unincorporated",
-      "label": "Do you collect the full names of the chairman, secretary and treasurer (or equivalent officers) of the unincorporated association?",
-      "detail-required": false,
-      "correct-option": "Yes",
-      "process-id": "PROC-AML-002a",
-      "source-rules": [
-        "4.6.3(2)(c)"
-      ],
-      "mapping-confidence": 1
-    },
-    {
-      "id": "4_6_3_2_d",
-      "group": "collection-kyc-unincorporated",
-      "label": "Do you collect information required for the member (individual) in accordance with your customer identification procedure for individuals?",
-      "detail-required": false,
-      "correct-option": "Yes",
-      "process-id": "PROC-AML-002a",
-      "source-rules": [
-        "4.6.3(2)(d)"
-      ],
-      "mapping-confidence": 0.9
+      "mapping-confidence": 0.95,
+      "remediation": "Your Customer Identification Procedure does not collect the minimum KYC information required for incorporated associations. Update your procedure to collect full name, principal place of administration or registered office address, the incorporation identification number, and full names of chairman, secretary and treasurer for each incorporated association customer, as required under rule 4.6.3(1)."
     },
     {
       "id": "4_6_4",
       "group": "additional-kyc-assessment",
-      "label": "Have you implemented risk-based systems and controls to determine whether additional KYC information beyond the minimum should be collected about associations?",
+      "label": "Does your AML/CTF program include risk-based systems and controls to determine whether additional KYC information beyond the minimum requirements should be collected for associations?",
       "detail-required": true,
-      "detail-label": "Describe your risk-based approach to additional KYC information",
+      "detail-label": "Describe your risk-based assessment process",
       "correct-option": "Yes",
-      "process-id": "PROC-AML-002c",
       "source-rules": [
         "4.6.4"
       ],
-      "mapping-confidence": 0.9
+      "mapping-confidence": 0.9,
+      "remediation": "Your Customer Due Diligence program does not include risk-based systems and controls to determine whether additional KYC information should be collected for associations. Implement a procedure to assess each association customer for increased ML/TF risk and collect additional information where warranted, as required under rule 4.6.4."
     },
     {
       "id": "4_6_5_1",
       "group": "verification-incorporated",
-      "label": "Do you verify the full name of incorporated associations using ASIC information, incorporation authority data, association rules or constitution, or reliable independent documents/electronic data?",
+      "label": "For incorporated associations, do you verify the full name and incorporation identification number from ASIC, the relevant State/Territory/overseas authority, the association's constitution, certified copies, or reliable independent documents/data?",
       "detail-required": true,
-      "detail-label": "Describe your verification sources and methods",
+      "detail-label": "Describe the sources you use to verify incorporated association information",
       "correct-option": "Yes",
-      "process-id": "PROC-AML-002b",
       "source-rules": [
-        "4.6.5(1)(a)"
-      ],
-      "mapping-confidence": 0.95
-    },
-    {
-      "id": "4_6_5_1_b",
-      "group": "verification-incorporated",
-      "label": "Do you verify the unique identifying number of incorporated associations using the above sources?",
-      "detail-required": true,
-      "detail-label": "Describe your verification methods for the unique identifier",
-      "correct-option": "Yes",
-      "process-id": "PROC-AML-002b",
-      "source-rules": [
+        "4.6.5",
+        "4.6.5(1)(a)",
         "4.6.5(1)(b)"
       ],
-      "mapping-confidence": 0.95
+      "mapping-confidence": 0.95,
+      "remediation": "Your Customer Due Diligence program does not verify the required information for incorporated associations using approved sources. Update your verification procedure to verify the full name and incorporation identification number using information from ASIC, the relevant State/Territory/overseas authority, the association's constitution, certified copies, or reliable independent documents/data, as required under rule 4.6.5(1)."
     },
     {
-      "id": "4_6_5_2_a",
+      "id": "4_6_5_2",
       "group": "verification-unincorporated",
-      "label": "Do you verify the full name of unincorporated associations using the association's rules or constitution, certified copies, or reliable independent documents/electronic data?",
+      "label": "For unincorporated associations, do you verify the association name from the constitution, certified copies, or reliable independent documents/data, and verify member information according to the individual customer identification procedure?",
       "detail-required": true,
-      "detail-label": "Describe your verification sources and methods",
+      "detail-label": "Describe how you verify unincorporated association and member information",
       "correct-option": "Yes",
-      "process-id": "PROC-AML-002b",
       "source-rules": [
-        "4.6.5(2)(a)"
-      ],
-      "mapping-confidence": 0.95
-    },
-    {
-      "id": "4_6_5_2_b",
-      "group": "verification-unincorporated",
-      "label": "Do you verify information about the member (individual) in accordance with your customer identification procedure for individuals?",
-      "detail-required": false,
-      "correct-option": "Yes",
-      "process-id": "PROC-AML-002b",
-      "source-rules": [
+        "4.6.5",
+        "4.6.5(2)(a)",
         "4.6.5(2)(b)"
       ],
-      "mapping-confidence": 0.9
+      "mapping-confidence": 0.95,
+      "remediation": "Your Customer Due Diligence program does not verify the required information for unincorporated associations using approved methods. Update your verification procedure to verify the association name from the constitution or reliable independent documents/data, and verify member information in accordance with the individual customer identification procedure, as required under rule 4.6.5(2)."
     },
     {
       "id": "4_6_6",
-      "group": "additional-kyc-assessment",
-      "label": "Have you implemented risk-based systems and controls to determine whether and to what extent additional collected KYC information should be verified?",
+      "group": "additional-verification-assessment",
+      "label": "Does your AML/CTF program include risk-based systems and controls to determine whether additional KYC information collected for associations should be verified?",
       "detail-required": true,
-      "detail-label": "Describe your risk-based approach to verification of additional information",
+      "detail-label": "Describe your risk-based additional verification assessment process",
       "correct-option": "Yes",
-      "process-id": "PROC-AML-002c",
       "source-rules": [
         "4.6.6"
       ],
-      "mapping-confidence": 0.9
+      "mapping-confidence": 0.9,
+      "remediation": "Your Customer Due Diligence program does not include risk-based systems and controls to assess whether additional KYC information for associations should be verified. Implement a procedure to determine, based on ML/TF risk assessment, what additional information collected should be verified, as required under rule 4.6.6."
     },
     {
       "id": "4_6_7",
       "group": "verification-methods",
-      "label": "Do your verification procedures use one or more of the following: constitution/rules, certified copies, meeting minutes, ASIC/incorporation authority data, reliable independent documents, or reliable independent electronic data?",
+      "label": "Do you verify association information using documents such as constitution/rules, certified copies, meeting minutes, ASIC/government records, reliable independent documents, or reliable independent electronic data?",
       "detail-required": true,
-      "detail-label": "Specify which verification sources and methods you use",
+      "detail-label": "Describe which verification sources you use for associations",
       "correct-option": "Yes",
-      "process-id": "PROC-AML-002b",
       "source-rules": [
         "4.6.7",
         "4.6.7(1)",
@@ -212,35 +114,36 @@
         "4.6.7(5)",
         "4.6.7(6)"
       ],
-      "mapping-confidence": 0.9
+      "mapping-confidence": 0.95,
+      "remediation": "Your Customer Due Diligence program does not use approved methods to verify association information. Update your verification procedure to use one or more of the following sources: constitution or rules (certified or original), meeting minutes (certified or original), ASIC or government records for incorporated associations, reliable independent documents, or reliable independent electronic data, as required under rule 4.6.7."
     },
     {
       "id": "4_6_8",
-      "group": "verification-methods",
-      "label": "Do you use disclosure certificates for verification when information is not otherwise reasonably available and the certificate is used for purposes of risk-based additional KYC assessment?",
+      "group": "disclosure-certificate-subprocess",
+      "label": "When information about an association is not reasonably available from standard sources, do you use disclosure certificates as a verification method?",
       "detail-required": true,
-      "detail-label": "Describe your use of disclosure certificates and the conditions triggering their use",
-      "correct-option": "No",
-      "process-id": "PROC-AML-002b",
+      "detail-label": "Describe your use of disclosure certificates for association verification",
+      "correct-option": "Yes",
       "source-rules": [
         "4.6.8",
         "4.6.8(1)",
         "4.6.8(2)"
       ],
-      "mapping-confidence": 0.85
+      "mapping-confidence": 0.85,
+      "remediation": "Your Customer Due Diligence program does not include disclosure certificates as an alternative verification method when standard sources are unavailable. Implement a procedure to use disclosure certificates to verify association information when the information cannot reasonably be obtained from sources specified in rule 4.6.7, as permitted under rule 4.6.8."
     },
     {
       "id": "4_6_9",
       "group": "discrepancy-handling",
-      "label": "Have you implemented risk-based systems and controls to respond to discrepancies identified during verification and to determine whether you remain reasonably satisfied about the association's existence and member committee names?",
+      "label": "Does your AML/CTF program include risk-based systems and controls to respond to discrepancies discovered when verifying association information?",
       "detail-required": true,
-      "detail-label": "Describe your procedures for identifying, investigating and responding to discrepancies",
+      "detail-label": "Describe your process for handling verification discrepancies",
       "correct-option": "Yes",
-      "process-id": "PROC-AML-002c",
       "source-rules": [
         "4.6.9"
       ],
-      "mapping-confidence": 0.9
+      "mapping-confidence": 0.9,
+      "remediation": "Your Customer Due Diligence program does not include systems and controls to handle discrepancies that arise during association verification. Implement a procedure to respond to any discrepancies and determine whether you can remain reasonably satisfied that the association exists and the governing committee member information is accurate, as required under rule 4.6.9."
     }
   ],
   "groups": [
@@ -253,49 +156,62 @@
     {
       "id": "general-cdd-obligation",
       "title": "General CDD Obligation for Associations",
-      "description": "Risk-based systems and controls to verify that the association exists and that names of governing committee members have been provided.",
+      "description": "Risk-based systems and controls to verify association existence and governing committee disclosure",
       "variant": "main"
     },
     {
       "id": "collection-kyc-incorporated",
-      "title": "Collection of KYC Information — Incorporated Associations",
-      "description": "Minimum KYC information to be collected about incorporated associations.",
+      "title": "KYC Collection \u2014 Incorporated Associations",
+      "description": "Minimum KYC information collection for incorporated associations",
       "variant": "main"
     },
     {
       "id": "collection-kyc-unincorporated",
-      "title": "Collection of KYC Information — Unincorporated Associations",
-      "description": "Minimum KYC information to be collected when a customer is a member of an unincorporated association.",
+      "title": "KYC Collection \u2014 Unincorporated Associations",
+      "description": "Minimum KYC information collection for unincorporated associations and their members",
       "variant": "main"
     },
     {
       "id": "additional-kyc-assessment",
-      "title": "Risk-Based Additional KYC Assessment",
-      "description": "Risk-based determination of whether additional KYC information beyond the minimum should be collected and verified.",
+      "title": "Additional KYC Assessment",
+      "description": "Risk-based determination of additional KYC information requirements",
       "variant": "main"
     },
     {
       "id": "verification-incorporated",
-      "title": "Verification of Information — Incorporated Associations",
-      "description": "Verification procedures for incorporated association information using regulatory registries and reliable sources.",
+      "title": "Verification \u2014 Incorporated Associations",
+      "description": "Verification procedures for incorporated association information",
       "variant": "main"
     },
     {
       "id": "verification-unincorporated",
-      "title": "Verification of Information — Unincorporated Associations",
-      "description": "Verification procedures for unincorporated association information using constitution, rules, and reliable sources.",
+      "title": "Verification \u2014 Unincorporated Associations",
+      "description": "Verification procedures for unincorporated association and member information",
+      "variant": "main"
+    },
+    {
+      "id": "additional-verification-assessment",
+      "title": "Additional Verification Assessment",
+      "description": "Risk-based determination of additional verification requirements",
       "variant": "main"
     },
     {
       "id": "verification-methods",
-      "title": "Verification Methods and Disclosure Certificates",
-      "description": "Approved methods and sources for verification, including use of disclosure certificates where appropriate.",
+      "title": "Verification Methods",
+      "description": "Approved documents and sources for verifying association information",
       "variant": "main"
     },
     {
+      "id": "disclosure-certificate-subprocess",
+      "title": "Disclosure Certificates",
+      "description": "Use of disclosure certificates when standard verification sources are unavailable",
+      "variant": "subprocess",
+      "subprocess-label": "Disclosure Certificate"
+    },
+    {
       "id": "discrepancy-handling",
-      "title": "Responding to Verification Discrepancies",
-      "description": "Risk-based systems and controls to identify and respond to discrepancies discovered during verification.",
+      "title": "Discrepancy Handling",
+      "description": "Responding to discrepancies discovered during association verification",
       "variant": "main"
     }
   ],
@@ -310,6 +226,14 @@
     },
     {
       "target": "collection-kyc-incorporated",
+      "scope": "sub-incorporated",
+      "effect": "SHOW",
+      "schema": {
+        "const": "Yes"
+      }
+    },
+    {
+      "target": "4_6_3",
       "scope": "sub-incorporated",
       "effect": "SHOW",
       "schema": {
@@ -333,7 +257,23 @@
       }
     },
     {
+      "target": "4_6_5_1",
+      "scope": "sub-incorporated",
+      "effect": "SHOW",
+      "schema": {
+        "const": "Yes"
+      }
+    },
+    {
       "target": "verification-unincorporated",
+      "scope": "sub-unincorporated",
+      "effect": "SHOW",
+      "schema": {
+        "const": "Yes"
+      }
+    },
+    {
+      "target": "4_6_5_2",
       "scope": "sub-unincorporated",
       "effect": "SHOW",
       "schema": {

@@ -7,92 +7,84 @@
       "detail-required": false,
       "correct-option": "Yes",
       "source-rules": [],
-      "mapping-confidence": 1
+      "mapping-confidence": 1.0,
+      "remediation": "Your organisation does not have an Alternative Identity Proofing process in place. You must establish a documented Alternative Identity Proofing process to meet your AML/CTF obligations. Review the controls below and implement the required procedures before completing this assessment."
     },
     {
       "id": "4_15_1",
-      "group": "alternative-proofing-gatekeeping",
-      "label": "Is the customer unable to establish identity using standard customer identification requirements under Chapter 4?",
+      "group": "alternative-id-eligibility",
+      "label": "Do you have risk-based systems and controls in place to use alternative identity proofing processes when customers cannot provide standard identification evidence?",
       "detail-required": true,
-      "detail-label": "Describe the reason why standard identification requirements cannot be met",
+      "detail-label": "Describe your risk-based systems and controls for alternative identity proofing",
       "correct-option": "Yes",
       "process-id": "PROC-AML-002",
       "source-rules": [
         "4.15.1"
       ],
-      "mapping-confidence": 0.95
-    },
-    {
-      "id": "4_15_1_a",
-      "group": "alternative-proofing-gatekeeping",
-      "label": "Is the customer unable to produce or provide necessary identity evidence due to COVID-19 Pandemic measures?",
-      "detail-required": true,
-      "detail-label": "Describe which COVID-19 measures are preventing identity evidence provision",
-      "correct-option": "Yes",
-      "process-id": "PROC-AML-002",
-      "source-rules": [
-        "4.15.1A"
-      ],
-      "mapping-confidence": 0.95
+      "mapping-confidence": 0.95,
+      "remediation": "Your Customer Identification Procedure does not implement risk-based systems and controls to support alternative identity proofing when customers cannot obtain standard identification evidence. Establish documented risk-based systems and controls that allow your organisation to use alternative identity proofing processes when customers are unable to provide the necessary information or evidence of identity under standard requirements, as required under rule 4.15.1."
     },
     {
       "id": "4_15_2",
-      "group": "self-attestation-process",
-      "label": "Are you accepting a self-attestation from the customer certifying that identity information provided is true and correct?",
+      "group": "self-attestation-acceptance",
+      "label": "Do you have a procedure to accept self-attestation from customers when alternative identity proofing processes cannot establish identity?",
       "detail-required": true,
-      "detail-label": "Describe your process for obtaining and documenting customer self-attestation",
+      "detail-label": "Describe your self-attestation procedure and how you implement it",
       "correct-option": "Yes",
-      "process-id": "PROC-AML-002b",
+      "process-id": "PROC-AML-002",
       "source-rules": [
         "4.15.2"
       ],
-      "mapping-confidence": 0.95
+      "mapping-confidence": 0.92,
+      "remediation": "Your Customer Identification Procedure does not include a self-attestation mechanism for cases where alternative identity proofing processes cannot establish customer identity. Establish a documented procedure to accept self-attestation from customers certifying that the identity information they have provided is true and correct, to be used only when alternative identity proofing under rule 4.15.1 or 4.15.1A cannot establish identity, as required under rule 4.15.2."
     },
     {
       "id": "4_15_3",
-      "group": "self-attestation-risk-management",
-      "label": "Are you applying appropriate levels of ongoing customer due diligence to identify, mitigate and manage ML/TF risks associated with self-attested identities?",
+      "group": "self-attestation-cdd",
+      "label": "Do you apply appropriate levels of ongoing customer due diligence to identify, mitigate and manage ML/TF risk when customer identities have been established using self-attestation?",
       "detail-required": true,
-      "detail-label": "Describe your ongoing due diligence procedures for self-attested customers",
+      "detail-label": "Describe your ongoing customer due diligence procedures for self-attested identities",
       "correct-option": "Yes",
       "process-id": "PROC-AML-003c",
       "source-rules": [
         "4.15.3"
       ],
-      "mapping-confidence": 0.95
+      "mapping-confidence": 0.93,
+      "remediation": "Your Ongoing Customer Due Diligence process does not account for identities established via self-attestation. Implement appropriate levels of ongoing due diligence proportionate to the ML/TF risks associated with customers whose identities were established using self-attestation, including monitoring and review procedures to identify and mitigate risk, as required under rule 4.15.3."
     },
     {
       "id": "4_15_4",
       "group": "self-attestation-validation",
-      "label": "Do you have controls to ensure you do not rely on a self-attestation if you know or have reason to believe it is incorrect or misleading?",
+      "label": "Do you have controls to prevent reliance on self-attestation when you know or have reason to believe it is incorrect or misleading?",
       "detail-required": true,
-      "detail-label": "Describe your verification and validation controls for self-attestations",
+      "detail-label": "Describe your validation and verification controls for self-attestation",
       "correct-option": "Yes",
       "process-id": "PROC-AML-002b",
       "source-rules": [
         "4.15.4"
       ],
-      "mapping-confidence": 0.95
+      "mapping-confidence": 0.94,
+      "remediation": "Your identity verification procedure does not include safeguards to reject self-attestation when it is or appears to be incorrect or misleading. Establish controls and procedures to validate self-attested information and ensure you do not rely on any self-attestation that you know or have reason to believe is incorrect or misleading, as required under rule 4.15.4."
     },
     {
       "id": "4_15_5",
-      "group": "alternative-verification-covid",
-      "label": "Are you accepting copies of documents (rather than originals or certified copies) due to COVID-19 Pandemic measures when verification based on originals or certified copies cannot be completed?",
+      "group": "covid-verification-copies",
+      "label": "Do you have a procedure to rely on copies of identification documents (rather than originals or certified copies) during COVID-19 Pandemic measures, in accordance with your risk-based systems and controls?",
       "detail-required": true,
-      "detail-label": "Describe your risk-based systems and controls for accepting document copies during COVID-19 measures",
+      "detail-label": "Describe your procedure for accepting document copies during COVID-19 circumstances",
       "correct-option": "Yes",
       "process-id": "PROC-AML-002b",
       "source-rules": [
         "4.15.5"
       ],
-      "mapping-confidence": 0.95
+      "mapping-confidence": 0.91,
+      "remediation": "Your identity verification procedure does not accommodate acceptance of document copies when COVID-19 Pandemic measures prevent verification of originals or certified copies. Establish a risk-based procedure to accept copies of identification documents in lieu of originals or certified copies/extracts when COVID-19 Pandemic measures prevent access to the original documents, as required under rule 4.15.5."
     },
     {
       "id": "4_15_6",
       "group": "covid-measures-definition",
-      "label": "Do you have documented criteria defining what constitutes 'COVID-19 Pandemic measures' for your organisation?",
-      "detail-required": true,
-      "detail-label": "Describe your definition and scope of COVID-19 Pandemic measures (including government measures, your own reasonable measures, and third-party measures)",
+      "label": "Do you understand and correctly apply the definition of 'COVID-19 Pandemic measures' as measures implemented or recommended by Australian government bodies, or reasonable measures adopted by your organisation or persons you deal with?",
+      "detail-required": false,
       "correct-option": "Yes",
       "process-id": "PROC-AML-002",
       "source-rules": [
@@ -101,7 +93,8 @@
         "4.15.6(2)",
         "4.15.6(3)"
       ],
-      "mapping-confidence": 0.9
+      "mapping-confidence": 0.88,
+      "remediation": "Your alternative identity proofing procedures do not correctly apply the regulatory definition of 'COVID-19 Pandemic measures'. Ensure your procedures correctly recognise and respond to measures implemented or recommended by Australian government bodies, as well as reasonable measures adopted by your organisation or persons you interact with (including those in foreign jurisdictions), when determining whether alternative identity proofing is permissible under rules 4.15.6(1), 4.15.6(2), and 4.15.6(3)."
     }
   ],
   "groups": [
@@ -112,94 +105,51 @@
       "variant": "main"
     },
     {
-      "id": "alternative-proofing-gatekeeping",
-      "title": "Gatekeeping: Standard Identification Unable to be Established",
-      "description": "Determine whether conditions are met to use alternative identity proofing processes under rules 4.15.1 or 4.15.1A.",
+      "id": "alternative-id-eligibility",
+      "title": "General Alternative Identity Proofing Requirement",
+      "description": "Establish risk-based systems and controls to support alternative identity proofing when customers cannot provide standard identification evidence.",
       "variant": "main"
     },
     {
-      "id": "alternative-verification-process",
-      "title": "Alternative Verification Processes",
-      "description": "Select and apply alternative identity proofing methods in accordance with risk-based systems and controls.",
-      "variant": "main"
-    },
-    {
-      "id": "self-attestation-process",
-      "title": "Self-Attestation Documentation",
-      "description": "Process for accepting and documenting customer self-attestation when alternative proofing processes cannot establish identity.",
+      "id": "covid-alternative-processes",
+      "title": "Alternative Processes for COVID-19 Circumstances",
+      "description": "Implement alternative identity proofing procedures (such as acceptance of multiple secondary documents) to address cases where customers possess but cannot produce identification due to COVID-19 Pandemic measures.",
       "variant": "subprocess",
-      "subprocess-label": "Self-Attestation"
+      "subprocess-label": "COVID-19 Alternative Procedures"
     },
     {
-      "id": "self-attestation-risk-management",
+      "id": "self-attestation-acceptance",
+      "title": "Self-Attestation Acceptance",
+      "description": "Establish procedures to accept customer self-attestation certifying the truth and correctness of identity information when alternative identity proofing processes cannot establish identity.",
+      "variant": "main"
+    },
+    {
+      "id": "self-attestation-cdd",
       "title": "Ongoing Due Diligence for Self-Attested Identities",
-      "description": "Apply appropriate ongoing customer due diligence to identify, mitigate and manage ML/TF risks where customer identity was established via self-attestation.",
-      "variant": "subprocess",
-      "subprocess-label": "Self-Attestation Risk Management"
+      "description": "Apply appropriate levels of ongoing customer due diligence to identify, mitigate and manage ML/TF risks associated with identities established via self-attestation.",
+      "variant": "main"
     },
     {
       "id": "self-attestation-validation",
-      "title": "Self-Attestation Validation Controls",
-      "description": "Implement controls to reject or cease reliance on self-attestations if known or reasonably believed to be incorrect or misleading.",
-      "variant": "subprocess",
-      "subprocess-label": "Self-Attestation Validation"
+      "title": "Self-Attestation Validation and Rejection",
+      "description": "Implement controls to prevent reliance on self-attestation when you know or have reason to believe it is incorrect or misleading.",
+      "variant": "main"
     },
     {
-      "id": "alternative-verification-covid",
-      "title": "Document Verification Flexibility During COVID-19",
-      "description": "Accept document copies instead of originals or certified copies where COVID-19 Pandemic measures prevent standard verification.",
+      "id": "covid-verification-copies",
+      "title": "Document Copy Acceptance During COVID-19",
+      "description": "Establish procedures to accept copies of identification documents in lieu of originals or certified copies when COVID-19 Pandemic measures prevent access to original documents.",
       "variant": "subprocess",
-      "subprocess-label": "COVID-19 Flexibility"
+      "subprocess-label": "COVID-19 Verification Procedures"
     },
     {
       "id": "covid-measures-definition",
-      "title": "Definition of COVID-19 Pandemic Measures",
-      "description": "Document and apply the definition of 'COVID-19 Pandemic measures' including government measures, your reasonable measures, and third-party reasonable measures.",
+      "title": "Understanding COVID-19 Pandemic Measures",
+      "description": "Ensure your procedures correctly apply the regulatory definition of 'COVID-19 Pandemic measures' to determine when alternative identity proofing and verification is permissible.",
       "variant": "main"
     }
   ],
-  "rules": [
-    {
-      "target": "self-attestation-process",
-      "scope": "4_15_1",
-      "effect": "SHOW",
-      "schema": {
-        "const": "Yes"
-      }
-    },
-    {
-      "target": "self-attestation-process",
-      "scope": "4_15_1_a",
-      "effect": "SHOW",
-      "schema": {
-        "const": "Yes"
-      }
-    },
-    {
-      "target": "self-attestation-risk-management",
-      "scope": "4_15_2",
-      "effect": "SHOW",
-      "schema": {
-        "const": "Yes"
-      }
-    },
-    {
-      "target": "self-attestation-validation",
-      "scope": "4_15_2",
-      "effect": "SHOW",
-      "schema": {
-        "const": "Yes"
-      }
-    },
-    {
-      "target": "alternative-verification-covid",
-      "scope": "4_15_1_a",
-      "effect": "SHOW",
-      "schema": {
-        "const": "Yes"
-      }
-    }
-  ],
+  "rules": [],
   "sub_scoping": [],
   "form_links": []
 }

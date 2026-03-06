@@ -10,6 +10,7 @@ import type { RegulationManifest } from "@/lib/types/regulation-content";
 import { getRegulationProcessForSlug, getProcessIdForSlug } from "@/lib/process-computation";
 import { ComplianceCalendar } from "@/components/compliance/ComplianceCalendar";
 import { AgencyLogo } from "@/components/compliance/AgencyLogo";
+import { computeProcessScore } from "@/lib/process-score";
 
 const ReportModal = dynamic(
   () => import("@/components/reports/ReportModal").then((m) => m.ReportModal),
@@ -120,6 +121,7 @@ interface ConfirmedProcess {
   regulationId: string;
   agency: string;
   frequencyLabel: string;
+  lastAssessmentDate: string | undefined;
 }
 
 export default function DashboardPage() {
@@ -134,6 +136,7 @@ export default function DashboardPage() {
   const [reportModalOpen, setReportModalOpen] = useState(false);
   const [manifests, setManifests] = useState<Record<string, RegulationManifest>>({});
   const [loadingManifests, setLoadingManifests] = useState(true);
+  const [processScores, setProcessScores] = useState<Record<string, number>>({});
 
   useEffect(() => {
     if (activeRegulations.length === 0) {
@@ -164,6 +167,7 @@ export default function DashboardPage() {
       if (!manifest) continue;
       const regulation = regulations.find((r) => r.id === al.regulationId);
       if (!regulation) continue;
+      const lastAssessment = getLastCompletedAssessment(al.regulationId);
       for (const entry of manifest.processList) {
         const answers = getSectionAnswers(al.regulationId, entry.id);
         if (answers["process-exists"] !== "Yes") continue;
@@ -175,11 +179,40 @@ export default function DashboardPage() {
           regulationId: al.regulationId,
           agency: regulation.agency,
           frequencyLabel: regProcess?.frequencyLabel ?? "",
+          lastAssessmentDate: lastAssessment?.completedAt,
         });
       }
     }
     return list;
-  }, [activeRegulations, manifests, regulations, getSectionAnswers]);
+  }, [activeRegulations, manifests, regulations, getSectionAnswers, getLastCompletedAssessment]);
+
+  useEffect(() => {
+    if (confirmedProcesses.length === 0) {
+      setProcessScores({});
+      return;
+    }
+    Promise.all(
+      confirmedProcesses.map(async (proc) => {
+        const data = await fetch(
+          `/api/compliance/regulations/${proc.regulationId}/processes/${proc.slug}/schema`
+        ).then((r) => (r.ok ? r.json() : null));
+        if (!data) return null;
+        const controls = data.fields ?? [];
+        const rules = data.rules ?? [];
+        const answers = getSectionAnswers(proc.regulationId, proc.slug);
+        const introAnswers = getSectionAnswers(proc.regulationId, "risk-assessment");
+        const { correct, total } = computeProcessScore(controls, rules, answers, introAnswers);
+        return [`${proc.regulationId}:${proc.slug}`, total - correct] as [string, number];
+      })
+    ).then((results) => {
+      const scores: Record<string, number> = {};
+      for (const r of results) {
+        if (r) scores[r[0]] = r[1];
+      }
+      setProcessScores(scores);
+    });
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [confirmedProcesses]);
 
   return (
     <div className="px-4 py-12">
@@ -265,16 +298,37 @@ export default function DashboardPage() {
                   ) : (
                     <div className="overflow-hidden rounded-xl border border-gray-200 bg-white">
                       <div className="divide-y divide-gray-100">
-                        {confirmedProcesses.map((proc) => (
+                        {confirmedProcesses.map((proc) => {
+                          const scoreKey = `${proc.regulationId}:${proc.slug}`;
+                          const nonCompliant = processScores[scoreKey];
+                          return (
                           <Link
                             key={`${proc.regulationId}-${proc.slug}`}
                             href={`/dashboard/processes/${proc.slug}`}
                             className="flex items-center justify-between gap-4 px-5 py-3.5 transition-colors hover:bg-gray-50"
                           >
-                            <span className="text-sm font-medium text-gray-900 group-hover:text-indigo-600">
-                              {proc.title}
-                            </span>
+                            <div className="min-w-0">
+                              <span className="block text-sm font-medium text-gray-900">
+                                {proc.title}
+                              </span>
+                              {proc.lastAssessmentDate && (
+                                <span className="block text-xs text-gray-400">
+                                  Last assessed {formatDate(proc.lastAssessmentDate)}
+                                </span>
+                              )}
+                            </div>
                             <div className="flex shrink-0 items-center gap-2">
+                              {nonCompliant !== undefined && (
+                                nonCompliant === 0 ? (
+                                  <span className="hidden rounded-full bg-green-50 px-2.5 py-0.5 text-xs font-medium text-green-700 sm:inline-block">
+                                    Compliant
+                                  </span>
+                                ) : (
+                                  <span className="hidden rounded-full bg-red-50 px-2.5 py-0.5 text-xs font-semibold text-red-700 sm:inline-block">
+                                    {nonCompliant} non-compliant
+                                  </span>
+                                )
+                              )}
                               {proc.frequencyLabel && (
                                 <span className="hidden rounded-full bg-gray-100 px-2.5 py-0.5 text-xs font-medium text-gray-600 sm:inline-block">
                                   {proc.frequencyLabel}
@@ -288,7 +342,8 @@ export default function DashboardPage() {
                               </svg>
                             </div>
                           </Link>
-                        ))}
+                          );
+                        })}
                       </div>
                       <div className="border-t border-gray-100 px-5 py-3">
                         <Link

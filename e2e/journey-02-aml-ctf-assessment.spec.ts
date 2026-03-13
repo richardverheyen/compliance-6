@@ -12,6 +12,8 @@
  * Video is always recorded so the full journey is captured.
  */
 
+import * as fs from "fs";
+import * as path from "path";
 import { test, expect } from "@playwright/test";
 import {
   clearAppStorage,
@@ -236,4 +238,20 @@ test("Journey 2 — AML/CTF self-assessment for a Legal firm", async ({ page }) 
 
   // Hold the overlay on screen long enough for the video to clearly record it.
   await page.waitForTimeout(4_000);
+
+  // ── Step 10: Save the PDF to disk for manual inspection ──────────────────
+  const pdfBase64 = await page.evaluate(async (url) => {
+    const res = await fetch(url);
+    const buf = await res.arrayBuffer();
+    const bytes = new Uint8Array(buf);
+    let binary = "";
+    for (let i = 0; i < bytes.byteLength; i++) binary += String.fromCharCode(bytes[i]);
+    return btoa(binary);
+  }, blobUrl);
+
+  const outDir = path.join(process.cwd(), "test-results", "pdfs");
+  fs.mkdirSync(outDir, { recursive: true });
+  const outPath = path.join(outDir, `audit-report-${Date.now()}.pdf`);
+  fs.writeFileSync(outPath, Buffer.from(pdfBase64, "base64"));
+  console.log(`PDF saved to: ${outPath}`);
 });

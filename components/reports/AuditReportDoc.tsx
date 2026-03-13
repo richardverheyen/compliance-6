@@ -173,9 +173,9 @@ const styles = StyleSheet.create({
   },
   stepRow: {
     flexDirection: "row",
-    alignItems: "center",
+    alignItems: "flex-start",
     justifyContent: "space-between",
-    paddingVertical: 3,
+    paddingVertical: 4,
     borderBottomColor: GRAY_100,
     borderBottomWidth: 1,
   },
@@ -427,7 +427,7 @@ function AuditReportDocument({ data }: { data: AuditReportData }) {
                       answer === "Yes" ? GREEN : answer === "No" ? RED : GRAY_400;
                     const answerLabel = answer ?? "—";
                     return (
-                      <View key={step.id} style={{ marginBottom: 4 }}>
+                      <View key={step.id} style={{ marginBottom: 8 }}>
                         <View style={styles.stepRow}>
                           <View
                             style={{
@@ -455,8 +455,9 @@ function AuditReportDocument({ data }: { data: AuditReportData }) {
                               fontSize: 8,
                               color: GRAY_600,
                               marginLeft: 12,
-                              marginTop: 2,
-                              marginBottom: 2,
+                              marginTop: 3,
+                              marginBottom: 6,
+                              lineHeight: 1.5,
                             }}
                           >
                             {detail}

@@ -1,0 +1,860 @@
+{
+  "controls": [
+    {
+      "id": "process-exists",
+      "group": "process-existence",
+      "label": "Does your business have an AML/CTF Program process?",
+      "detail-required": false,
+      "correct-option": "Yes",
+      "source-rules": [],
+      "mapping-confidence": 1.0,
+      "remediation": "Your organisation does not have an AML/CTF Program process in place. You must establish a documented AML/CTF Program process to meet your AML/CTF obligations. Review the controls below and implement the required procedures before completing this assessment."
+    },
+    {
+      "id": "8_1_2",
+      "group": "ml-tf-risk-assessment",
+      "label": "Does your AML/CTF Program (Part A) identify, manage, and mitigate ML/TF risk that you may reasonably face in relation to the provision of designated services at or through a permanent establishment in Australia?",
+      "detail-required": true,
+      "detail-label": "Describe how your Part A program identifies, manages, and mitigates ML/TF risk",
+      "correct-option": "Yes",
+      "process-id": "PROC-AML-002c",
+      "source-rules": [
+        "8.1.2"
+      ],
+      "mapping-confidence": 1.0,
+      "remediation": "Your AML/CTF Program does not include the core Part A obligation to identify, manage, and mitigate money laundering and terrorism financing risk. Part A must be designed to address the ML/TF risks you reasonably face in providing designated services in Australia, as required under rule 8.1.2."
+    },
+    {
+      "id": "8_1_3",
+      "group": "ml-tf-risk-assessment",
+      "label": "When determining and implementing risk-based systems or controls, do you have regard to the nature, size and complexity of your business and the type of ML/TF risk you might reasonably face?",
+      "detail-required": true,
+      "detail-label": "Describe how you tailor your risk-based approach to your business profile",
+      "correct-option": "Yes",
+      "process-id": "PROC-AML-002c",
+      "source-rules": [
+        "8.1.3"
+      ],
+      "mapping-confidence": 1.0,
+      "remediation": "Your AML/CTF Program does not appropriately calibrate risk-based systems and controls to your business profile. You must consider the nature, size, and complexity of your business and the ML/TF risk you reasonably face when designing risk-based measures, as required under rule 8.1.3."
+    },
+    {
+      "id": "8_1_4",
+      "group": "ml-tf-risk-assessment",
+      "label": "Does your ML/TF risk identification process consider customer types, designated service types, delivery methods, and foreign jurisdictions you deal with?",
+      "detail-required": true,
+      "detail-label": "Describe how you assess these four risk factors",
+      "correct-option": "Yes",
+      "process-id": "PROC-AML-002c",
+      "source-rules": [
+        "8.1.4",
+        "8.1.4(1)",
+        "8.1.4(2)",
+        "8.1.4(3)",
+        "8.1.4(4)"
+      ],
+      "mapping-confidence": 1.0,
+      "remediation": "Your ML/TF Risk Assessment does not consider all mandatory risk factors. You must assess the risk posed by your customer types (including PEPs), the types of designated services provided, the methods of service delivery, and the foreign jurisdictions you deal with, as required under rules 8.1.4(1), 8.1.4(2), 8.1.4(3), and 8.1.4(4).",
+      "checklist-items": [
+        {
+          "label": "Customer types, including any politically exposed persons"
+        },
+        {
+          "label": "Types of designated services provided"
+        },
+        {
+          "label": "Methods by which designated services are delivered"
+        },
+        {
+          "label": "Foreign jurisdictions with which you deal"
+        }
+      ]
+    },
+    {
+      "id": "8_1_5_1",
+      "group": "ml-tf-risk-assessment",
+      "label": "Is Part A designed to enable you to understand the nature and purpose of business relationships with your customer types, including the collection of relevant information?",
+      "detail-required": true,
+      "detail-label": "Describe how Part A supports understanding of customer relationships",
+      "correct-option": "Yes",
+      "process-id": "PROC-AML-002c",
+      "source-rules": [
+        "8.1.5(1)"
+      ],
+      "mapping-confidence": 1.0,
+      "remediation": "Your AML/CTF Program Part A does not enable understanding of customer relationships. Part A must be designed to help you understand the nature and purpose of business relationships with your customers, including appropriate information collection, as required under rule 8.1.5(1)."
+    },
+    {
+      "id": "8_1_5_2",
+      "group": "ml-tf-risk-assessment",
+      "label": "Is Part A designed to enable you to understand the control structure of non-individual customers?",
+      "detail-required": true,
+      "detail-label": "Describe how Part A supports understanding of non-individual customer control structures",
+      "correct-option": "Yes",
+      "process-id": "PROC-AML-003a",
+      "source-rules": [
+        "8.1.5(2)"
+      ],
+      "mapping-confidence": 1.0,
+      "remediation": "Your AML/CTF Program Part A does not enable understanding of non-individual customer control structures. Part A must be designed to help you understand who controls your corporate, trust, and other non-individual customers, as required under rule 8.1.5(2)."
+    },
+    {
+      "id": "8_1_5_3",
+      "group": "ml-tf-risk-assessment",
+      "label": "Is Part A designed to enable you to identify and recognise significant changes in ML/TF risk arising from customer types, service types, delivery methods, foreign jurisdictions, and changes in customer relationships, control structures, or beneficial ownership?",
+      "detail-required": true,
+      "detail-label": "Describe how Part A enables identification and recognition of significant risk changes",
+      "correct-option": "Yes",
+      "process-id": "PROC-AML-002c",
+      "source-rules": [
+        "8.1.5(3)",
+        "8.1.5(3)(a)",
+        "8.1.5(3)(b)",
+        "8.1.5(4)"
+      ],
+      "mapping-confidence": 0.8,
+      "remediation": "Your AML/CTF Program Part A does not enable identification and recognition of significant ML/TF risk changes. Part A must be designed to identify and recognise changes in risk arising from the four risk factors and from changes in customer relationships, control structures, or beneficial ownership, as required under rules 8.1.5(3), 8.1.5(3)(a), 8.1.5(3)(b), and 8.1.5(4)."
+    },
+    {
+      "id": "8_1_5_5",
+      "group": "ml-tf-risk-assessment",
+      "label": "Is Part A designed to enable you to identify, mitigate, and manage ML/TF risk arising from new designated services, new delivery methods, new or developing technologies, and changes in customer relationships, control structures, or beneficial ownership \u2013 prior to adoption or introduction?",
+      "detail-required": true,
+      "detail-label": "Describe how Part A enables pre-emptive risk management for new business initiatives and customer changes",
+      "correct-option": "Yes",
+      "process-id": "PROC-AML-002c",
+      "source-rules": [
+        "8.1.5(5)",
+        "8.1.5(5)(a)",
+        "8.1.5(5)(b)",
+        "8.1.5(5)(c)",
+        "8.1.5(5)(d)"
+      ],
+      "mapping-confidence": 0.9,
+      "remediation": "Your AML/CTF Program Part A does not enable proactive risk management before introducing new services, methods, or technologies, or when customer circumstances change. Part A must be designed to identify, mitigate, and manage ML/TF risk arising from these changes prior to adoption or introduction, as required under rules 8.1.5(5)(a), 8.1.5(5)(b), 8.1.5(5)(c), and 8.1.5(5)(d)."
+    },
+    {
+      "id": "8_1_6",
+      "group": "ml-tf-risk-assessment",
+      "label": "Does Part A require you to have regard to ML/TF risk when determining appropriate risk-based procedures for Part B of your AML/CTF program?",
+      "detail-required": true,
+      "detail-label": "Describe how Part A links risk assessment to Part B procedures",
+      "correct-option": "Yes",
+      "process-id": "PROC-AML-002c",
+      "source-rules": [
+        "8.1.6"
+      ],
+      "mapping-confidence": 1.0,
+      "remediation": "Your AML/CTF Program Part A does not link ML/TF risk assessment to the design of Part B procedures. Part A must include a requirement that you consider ML/TF risk when determining appropriate risk-based procedures for Part B, as required under rule 8.1.6."
+    },
+    {
+      "id": "8_1_7",
+      "group": "ml-tf-risk-assessment",
+      "label": "Do you apply Part A to all areas of your business involved in providing designated services, including functions carried out by third parties?",
+      "detail-required": true,
+      "detail-label": "Describe the scope of Part A application across your business and third parties",
+      "correct-option": "Yes",
+      "process-id": "PROC-AML-002c",
+      "source-rules": [
+        "8.1.7"
+      ],
+      "mapping-confidence": 1.0,
+      "remediation": "Your AML/CTF Program Part A does not apply to all areas of your business involved in designated service provision. Unless otherwise provided in the AML/CTF Act or Rules, you must apply Part A to all business areas involved in designated services, including any functions carried out by third parties, as required under rule 8.1.7."
+    },
+    {
+      "id": "8_2_1",
+      "group": "training",
+      "label": "Does Part A include an AML/CTF risk awareness training program?",
+      "detail-required": true,
+      "detail-label": "Describe your AML/CTF risk awareness training program",
+      "correct-option": "Yes",
+      "process-id": "PROC-AML-002",
+      "source-rules": [
+        "8.2.1"
+      ],
+      "mapping-confidence": 1.0,
+      "remediation": "Your AML/CTF Program does not include an AML/CTF risk awareness training program. Part A must include a training program that meets the requirements in rules 8.2.2 and 8.2.3, as required under rule 8.2.1."
+    },
+    {
+      "id": "8_2_2",
+      "group": "training",
+      "label": "Is your training program designed so that you give employees appropriate training at appropriate intervals, having regard to ML/TF risk?",
+      "detail-required": true,
+      "detail-label": "Describe the frequency and appropriateness of your training delivery",
+      "correct-option": "Yes",
+      "process-id": "PROC-AML-002",
+      "source-rules": [
+        "8.2.2"
+      ],
+      "mapping-confidence": 1.0,
+      "remediation": "Your AML/CTF risk awareness training program does not provide appropriate training at appropriate intervals based on ML/TF risk. You must design your training program to deliver risk-appropriate training at suitable intervals to your employees, as required under rule 8.2.2."
+    },
+    {
+      "id": "8_2_3",
+      "group": "training",
+      "label": "Is your training program designed to enable employees to understand your AML/CTF obligations, consequences of non-compliance, ML/TF risks and their potential consequences, and relevant program processes and procedures?",
+      "detail-required": true,
+      "detail-label": "Describe how your training covers these four understanding areas",
+      "correct-option": "Yes",
+      "process-id": "PROC-AML-002",
+      "source-rules": [
+        "8.2.3",
+        "8.2.3(1)",
+        "8.2.3(2)",
+        "8.2.3(3)",
+        "8.2.3(4)"
+      ],
+      "mapping-confidence": 0.9,
+      "remediation": "Your AML/CTF training program does not ensure employees understand all mandatory content areas. Your training must enable employees to understand your AML/CTF obligations, the consequences of non-compliance, the ML/TF risks you face and their potential consequences, and the program processes and procedures relevant to their work, as required under rules 8.2.3(1), 8.2.3(2), 8.2.3(3), and 8.2.3(4).",
+      "checklist-items": [
+        {
+          "label": "Obligations under the AML/CTF Act and Rules"
+        },
+        {
+          "label": "Consequences of non-compliance with the AML/CTF Act and Rules"
+        },
+        {
+          "label": "Type of ML/TF risk faced and the potential consequences"
+        },
+        {
+          "label": "Program processes and procedures relevant to the employee's work"
+        }
+      ]
+    },
+    {
+      "id": "8_3_1",
+      "group": "employee-due-diligence",
+      "label": "Does Part A include an employee due diligence program?",
+      "detail-required": true,
+      "detail-label": "Describe your employee due diligence program",
+      "correct-option": "Yes",
+      "process-id": "PROC-AML-002",
+      "source-rules": [
+        "8.3.1"
+      ],
+      "mapping-confidence": 1.0,
+      "remediation": "Your AML/CTF Program does not include an employee due diligence program. Part A must include a program that meets the requirements in rules 8.3.2 to 8.3.4, as required under rule 8.3.1."
+    },
+    {
+      "id": "8_3_2",
+      "group": "employee-due-diligence",
+      "label": "Does your employee due diligence program include appropriate risk-based systems and controls to determine whether to, and in what manner to, screen prospective employees who may be in a position to facilitate ML/TF offences?",
+      "detail-required": true,
+      "detail-label": "Describe your prospective employee screening approach",
+      "correct-option": "Yes",
+      "process-id": "PROC-AML-002",
+      "source-rules": [
+        "8.3.2"
+      ],
+      "mapping-confidence": 1.0,
+      "remediation": "Your employee due diligence program does not include risk-based screening for prospective employees. You must implement appropriate risk-based systems and controls to determine whether to screen, and how to screen, prospective employees who may be in a position to facilitate money laundering or terrorism financing offences, as required under rule 8.3.2."
+    },
+    {
+      "id": "8_3_3",
+      "group": "employee-due-diligence",
+      "label": "Does your employee due diligence program include appropriate risk-based systems and controls to determine whether to, and in what manner to, re-screen employees who are transferred or promoted into positions where they may facilitate ML/TF offences?",
+      "detail-required": true,
+      "detail-label": "Describe your employee re-screening approach for transfers and promotions",
+      "correct-option": "Yes",
+      "process-id": "PROC-AML-002",
+      "source-rules": [
+        "8.3.3"
+      ],
+      "mapping-confidence": 1.0,
+      "remediation": "Your employee due diligence program does not include risk-based re-screening for employee transfers and promotions. You must implement appropriate risk-based systems and controls to determine whether to re-screen, and how to re-screen, employees who are transferred or promoted into positions where they may facilitate ML/TF offences, as required under rule 8.3.3."
+    },
+    {
+      "id": "8_3_4",
+      "group": "employee-due-diligence",
+      "label": "Does your employee due diligence program establish and maintain a system to manage employees who fail, without reasonable excuse, to comply with any Part A or Part B system, control, or procedure?",
+      "detail-required": true,
+      "detail-label": "Describe your system for managing non-compliant employees",
+      "correct-option": "Yes",
+      "process-id": "PROC-AML-002",
+      "source-rules": [
+        "8.3.4"
+      ],
+      "mapping-confidence": 1.0,
+      "remediation": "Your employee due diligence program does not include a system to manage non-compliant employees. You must establish and maintain a system to manage employees who fail, without reasonable excuse, to comply with your AML/CTF program systems, controls, or procedures, as required under rule 8.3.4."
+    },
+    {
+      "id": "8_4_1",
+      "group": "oversight",
+      "label": "Has Part A been approved by your governing board and senior management (or CEO/equivalent if no board exists), and is it subject to their ongoing oversight?",
+      "detail-required": true,
+      "detail-label": "Describe the approval and oversight arrangements for Part A",
+      "correct-option": "Yes",
+      "process-id": "PROC-AML-002",
+      "source-rules": [
+        "8.4.1"
+      ],
+      "mapping-confidence": 1.0,
+      "remediation": "Your AML/CTF Program Part A has not been approved by your governing board and senior management, or is not subject to their ongoing oversight. Part A must be approved by, and subject to ongoing oversight of, your board and senior management (or CEO/equivalent if no board exists), as required under rule 8.4.1."
+    },
+    {
+      "id": "8_5_1",
+      "group": "compliance-officer",
+      "label": "Does Part A provide for you to designate a person as the 'AML/CTF Compliance Officer' at the management level?",
+      "detail-required": true,
+      "detail-label": "Provide the name and title of your AML/CTF Compliance Officer",
+      "correct-option": "Yes",
+      "process-id": "PROC-AML-002",
+      "source-rules": [
+        "8.5.1"
+      ],
+      "mapping-confidence": 1.0,
+      "remediation": "Your AML/CTF Program does not provide for an AML/CTF Compliance Officer. Part A must include a provision for you to designate a person at the management level as the AML/CTF Compliance Officer, as required under rule 8.5.1."
+    },
+    {
+      "id": "8_6_1",
+      "group": "independent-review",
+      "label": "Is Part A subject to regular independent review?",
+      "detail-required": true,
+      "detail-label": "Describe the frequency and scope of your independent review",
+      "correct-option": "Yes",
+      "process-id": "PROC-AML-002",
+      "source-rules": [
+        "8.6.1"
+      ],
+      "mapping-confidence": 1.0,
+      "remediation": "Your AML/CTF Program Part A is not subject to regular independent review. Part A must undergo regular independent review, as required under rule 8.6.1."
+    },
+    {
+      "id": "8_6_2",
+      "group": "independent-review",
+      "label": "Does the frequency of your independent review take into account the nature, size and complexity of your business, and the type and level of ML/TF risk you face?",
+      "detail-required": true,
+      "detail-label": "Explain how you determine appropriate review frequency",
+      "correct-option": "Yes",
+      "process-id": "PROC-AML-002",
+      "source-rules": [
+        "8.6.2"
+      ],
+      "mapping-confidence": 1.0,
+      "remediation": "Your independent review frequency does not consider your business profile and ML/TF risk. The frequency of your independent review should be calibrated to the nature, size, and complexity of your business, and the type and level of ML/TF risk you face, as required under rule 8.6.2."
+    },
+    {
+      "id": "8_6_3",
+      "group": "independent-review",
+      "label": "Is the person appointed to conduct the review independent (i.e., not involved in the design, implementation, or maintenance of Part A, or development of your risk assessment or related internal controls)?",
+      "detail-required": true,
+      "detail-label": "Explain how reviewer independence is ensured",
+      "correct-option": "Yes",
+      "process-id": "PROC-AML-002",
+      "source-rules": [
+        "8.6.3",
+        "8.6.3(1)",
+        "8.6.3(2)",
+        "8.6.4"
+      ],
+      "mapping-confidence": 0.9,
+      "remediation": "Your independent reviewer has been involved in functions or measures being reviewed, or you cannot demonstrate their independence. The reviewer must not have been involved in designing, implementing, or maintaining Part A, or developing your risk assessment or related internal controls, and you must be able to demonstrate their independence, as required under rules 8.6.3(1), 8.6.3(2), and 8.6.4."
+    },
+    {
+      "id": "8_6_5",
+      "group": "independent-review",
+      "label": "Does the independent review assess the effectiveness of Part A having regard to ML/TF risk, compliance with the Rules, effective implementation, and your compliance with Part A?",
+      "detail-required": true,
+      "detail-label": "Describe the four assessment areas covered in your independent review",
+      "correct-option": "Yes",
+      "process-id": "PROC-AML-002",
+      "source-rules": [
+        "8.6.5",
+        "8.6.5(1)",
+        "8.6.5(2)",
+        "8.6.5(3)",
+        "8.6.5(4)"
+      ],
+      "mapping-confidence": 0.9,
+      "remediation": "Your independent review does not assess all mandatory areas. The review should assess Part A's effectiveness having regard to ML/TF risk, compliance with the Rules, effective implementation, and your compliance with Part A, as required under rules 8.6.5(1), 8.6.5(2), 8.6.5(3), and 8.6.5(4).",
+      "checklist-items": [
+        {
+          "label": "Effectiveness of Part A having regard to ML/TF risk"
+        },
+        {
+          "label": "Compliance of Part A with the AML/CTF Rules"
+        },
+        {
+          "label": "Effective implementation of Part A"
+        },
+        {
+          "label": "Reporting entity's compliance with Part A"
+        }
+      ]
+    },
+    {
+      "id": "8_6_6",
+      "group": "independent-review",
+      "label": "Are the results of the independent review, including any report prepared, provided to senior management and, where applicable, the governing board?",
+      "detail-required": true,
+      "detail-label": "Describe how review results are reported to governance",
+      "correct-option": "Yes",
+      "process-id": "PROC-AML-002",
+      "source-rules": [
+        "8.6.6"
+      ],
+      "mapping-confidence": 1.0,
+      "remediation": "The results of your independent review are not provided to senior management and the governing board. You must ensure that review results, including any report prepared, are provided to senior management and, where applicable, the governing board, as required under rule 8.6.6."
+    },
+    {
+      "id": "8_7_1",
+      "group": "austrac-feedback",
+      "label": "When developing and updating Part A, do you take into account applicable AUSTRAC guidance material and any feedback provided by AUSTRAC relevant to ML/TF risk identification, mitigation, and management?",
+      "detail-required": true,
+      "detail-label": "Describe how you incorporate AUSTRAC guidance and feedback into Part A",
+      "correct-option": "Yes",
+      "process-id": "PROC-AML-002",
+      "source-rules": [
+        "8.7.1",
+        "8.7.1(1)",
+        "8.7.1(2)"
+      ],
+      "mapping-confidence": 0.9,
+      "remediation": "Your AML/CTF Program development and update process does not consider AUSTRAC guidance and feedback. When developing and updating Part A, you must take into account applicable AUSTRAC guidance material and any feedback provided by AUSTRAC relevant to ML/TF risk, as required under rules 8.7.1(1) and 8.7.1(2)."
+    },
+    {
+      "id": "8_8_2",
+      "group": "foreign-permanent-establishment",
+      "label": "If you provide designated services at or through a permanent establishment in a foreign country, does Part A include systems and controls that meet the AML/CTF Act obligations applicable to those services?",
+      "detail-required": true,
+      "detail-label": "Describe the systems and controls for your foreign permanent establishments",
+      "correct-option": "Yes",
+      "process-id": "PROC-AML-002",
+      "source-rules": [
+        "8.8.1",
+        "8.8.2"
+      ],
+      "mapping-confidence": 0.9,
+      "remediation": "Your AML/CTF Program Part A does not include appropriate systems and controls for designated services provided at or through permanent establishments in foreign countries. Part A must include systems and controls that meet the AML/CTF Act obligations applicable to those services, as required under rules 8.8.1 and 8.8.2."
+    },
+    {
+      "id": "8_9_1",
+      "group": "reporting",
+      "label": "Does Part A include your reporting obligations under sections 41, 43, 45, 47 and 51F of the AML/CTF Act and Chapter 64 of the Rules, together with appropriate systems and controls to ensure compliance?",
+      "detail-required": true,
+      "detail-label": "Describe how Part A includes reporting obligations and supporting systems",
+      "correct-option": "Yes",
+      "process-id": "PROC-AML-002",
+      "source-rules": [
+        "8.9.1",
+        "8.9.1(1)",
+        "8.9.1(2)",
+        "8.9.1(3)"
+      ],
+      "mapping-confidence": 0.9,
+      "remediation": "Your AML/CTF Program Part A does not include mandatory reporting obligations and supporting systems. Part A must include your obligations under sections 41, 43, 45, 47, and 51F of the AML/CTF Act and Chapter 64 of the Rules, together with appropriate systems and controls designed to ensure compliance, as required under rules 8.9.1(1), 8.9.1(2), and 8.9.1(3).",
+      "checklist-items": [
+        {
+          "label": "Obligations under sections 41, 43, 45, and 47 of the AML/CTF Act (reporting obligations)"
+        },
+        {
+          "label": "Appropriate systems and controls to ensure compliance with reporting obligations"
+        },
+        {
+          "label": "Obligations under section 51F of the AML/CTF Act and Chapter 64 of the Rules"
+        }
+      ]
+    },
+    {
+      "id": "8_9_1_4",
+      "group": "reporting",
+      "label": "If you are a remittance dealer, does Part A include your obligations under section 75M of the AML/CTF Act to advise the AUSTRAC CEO or registered remittance network provider of material changes in circumstances?",
+      "detail-required": true,
+      "detail-label": "Describe how Part A addresses remittance dealer notification obligations",
+      "correct-option": "Yes",
+      "process-id": "PROC-AML-002",
+      "source-rules": [
+        "8.9.1(4)",
+        "8.9.1(4)(a)",
+        "8.9.1(4)(b)"
+      ],
+      "mapping-confidence": 0.9,
+      "remediation": "Your AML/CTF Program Part A does not include your remittance dealer notification obligations. If you are a remittance dealer, Part A must include your obligations under section 75M of the AML/CTF Act to advise the AUSTRAC CEO or registered remittance network provider of material changes in circumstances, as required under rules 8.9.1(4)(a) and 8.9.1(4)(b)."
+    },
+    {
+      "id": "9_1_2",
+      "group": "joint-program",
+      "label": "If you are adopting a joint AML/CTF program as part of a designated business group, does Part A identify, manage, and mitigate ML/TF risk faced by each reporting entity in the group in relation to designated services provided at or through permanent establishments in Australia?",
+      "detail-required": true,
+      "detail-label": "Describe how the joint Part A addresses ML/TF risk for each entity in the group",
+      "correct-option": "Yes",
+      "process-id": "PROC-AML-002",
+      "source-rules": [
+        "9.1.1",
+        "9.1.2"
+      ],
+      "mapping-confidence": 0.9,
+      "remediation": "Your joint AML/CTF Program Part A does not identify, manage, and mitigate ML/TF risk for each reporting entity in your designated business group. The joint Part A must address ML/TF risk faced by each reporting entity in the group in relation to designated services in Australia, as required under rules 9.1.1 and 9.1.2."
+    },
+    {
+      "id": "9_1_3",
+      "group": "joint-program",
+      "label": "When determining risk-based systems and controls for the joint program, does Part A have regard to the nature, size and complexity of business, and the type of ML/TF risk reasonably faced, for each reporting entity in the designated business group?",
+      "detail-required": true,
+      "detail-label": "Describe how the joint Part A tailors risk-based controls to each entity's profile",
+      "correct-option": "Yes",
+      "process-id": "PROC-AML-002",
+      "source-rules": [
+        "9.1.3",
+        "9.1.3(1)",
+        "9.1.3(2)"
+      ],
+      "mapping-confidence": 0.9,
+      "remediation": "Your joint AML/CTF Program Part A does not appropriately calibrate risk-based systems to each entity in the group. The joint Part A must have regard to the nature, size, and complexity of business, and the type of ML/TF risk reasonably faced, for each reporting entity in the designated business group, as required under rules 9.1.3(1) and 9.1.3(2)."
+    },
+    {
+      "id": "9_1_4",
+      "group": "joint-program",
+      "label": "When identifying ML/TF risk for the joint program, does Part A take account of customer types, designated service types, delivery methods, and foreign jurisdictions for each reporting entity in the designated business group?",
+      "detail-required": true,
+      "detail-label": "Describe how the joint Part A assesses these risk factors across the group",
+      "correct-option": "Yes",
+      "process-id": "PROC-AML-002",
+      "source-rules": [
+        "9.1.4",
+        "9.1.4(1)",
+        "9.1.4(2)",
+        "9.1.4(3)",
+        "9.1.4(4)"
+      ],
+      "mapping-confidence": 0.9,
+      "remediation": "Your joint AML/CTF Program Part A does not assess all mandatory risk factors for each entity in the group. The joint Part A must take account of customer types (including PEPs), designated service types, delivery methods, and foreign jurisdictions for each reporting entity in the designated business group, as required under rules 9.1.4(1), 9.1.4(2), 9.1.4(3), and 9.1.4(4)."
+    },
+    {
+      "id": "9_1_5",
+      "group": "joint-program",
+      "label": "Is the joint Part A designed to enable the group to understand customer relationships and control structures, identify and recognise significant changes in ML/TF risk, and identify, mitigate, and manage risk from new services, methods, technologies, and customer changes?",
+      "detail-required": true,
+      "detail-label": "Describe how the joint Part A enables these risk management capabilities",
+      "correct-option": "Yes",
+      "process-id": "PROC-AML-002",
+      "source-rules": [
+        "9.1.5",
+        "9.1.5(1)",
+        "9.1.5(2)",
+        "9.1.5(3)",
+        "9.1.5(3)(a)",
+        "9.1.5(3)(b)",
+        "9.1.5(4)",
+        "9.1.5(5)",
+        "9.1.5(5)(a)",
+        "9.1.5(5)(b)",
+        "9.1.5(5)(c)",
+        "9.1.5(5)(d)"
+      ],
+      "mapping-confidence": 0.7,
+      "remediation": "Your joint AML/CTF Program Part A does not enable the designated business group to adequately understand customer relationships and control structures, identify and recognise significant changes in ML/TF risk, or manage risk from new services, methods, technologies, and customer changes. The joint Part A must be designed to enable these capabilities, as required under rules 9.1.5(1) through 9.1.5(5)(d)."
+    },
+    {
+      "id": "9_1_6",
+      "group": "joint-program",
+      "label": "Does the joint Part A require each reporting entity to have regard to ML/TF risk when determining appropriate risk-based procedures for Part B?",
+      "detail-required": true,
+      "detail-label": "Describe how the joint Part A links risk assessment to Part B procedures for each entity",
+      "correct-option": "Yes",
+      "process-id": "PROC-AML-002",
+      "source-rules": [
+        "9.1.6"
+      ],
+      "mapping-confidence": 1.0,
+      "remediation": "Your joint AML/CTF Program Part A does not require each reporting entity to consider ML/TF risk when designing Part B procedures. The joint Part A must include a requirement that each reporting entity have regard to ML/TF risk when determining appropriate risk-based procedures for Part B, as required under rule 9.1.6."
+    },
+    {
+      "id": "9_1_7",
+      "group": "joint-program",
+      "label": "Does each reporting entity in the designated business group apply the joint Part A to all areas of its business involved in providing designated services, including functions carried out by third parties?",
+      "detail-required": true,
+      "detail-label": "Describe the scope of joint Part A application across each entity's business",
+      "correct-option": "Yes",
+      "process-id": "PROC-AML-002",
+      "source-rules": [
+        "9.1.7"
+      ],
+      "mapping-confidence": 1.0,
+      "remediation": "The joint AML/CTF Program Part A is not applied to all areas of each reporting entity's business involved in designated services. Unless otherwise provided in the AML/CTF Act or Rules, each entity in the designated business group must apply the joint Part A to all business areas involved in designated services, including functions carried out by third parties, as required under rule 9.1.7."
+    },
+    {
+      "id": "9_2_1",
+      "group": "joint-program",
+      "label": "Does the joint Part A include an AML/CTF risk awareness training program that provides appropriate training at appropriate intervals for employees of each reporting entity, having regard to ML/TF risk?",
+      "detail-required": true,
+      "detail-label": "Describe the joint training program and how it is delivered to each entity's employees",
+      "correct-option": "Yes",
+      "process-id": "PROC-AML-002",
+      "source-rules": [
+        "9.2.1",
+        "9.2.2"
+      ],
+      "mapping-confidence": 0.9,
+      "remediation": "Your joint AML/CTF Program does not include a risk awareness training program that provides appropriate training at appropriate intervals for each entity's employees. The joint Part A must include a training program designed so that each reporting entity gives its employees appropriate training at appropriate intervals, having regard to ML/TF risk, as required under rules 9.2.1 and 9.2.2."
+    },
+    {
+      "id": "9_2_3",
+      "group": "joint-program",
+      "label": "Is the joint training program designed to enable employees to understand AML/CTF obligations, consequences of non-compliance, ML/TF risks and their potential consequences, and relevant program processes and procedures?",
+      "detail-required": true,
+      "detail-label": "Describe how the joint training covers these understanding areas",
+      "correct-option": "Yes",
+      "process-id": "PROC-AML-002",
+      "source-rules": [
+        "9.2.3",
+        "9.2.3(1)",
+        "9.2.3(2)",
+        "9.2.3(3)",
+        "9.2.3(4)"
+      ],
+      "mapping-confidence": 0.9,
+      "remediation": "Your joint AML/CTF training program does not ensure employees understand all mandatory content areas. The joint training must enable employees to understand AML/CTF obligations, the consequences of non-compliance, the ML/TF risks and their potential consequences, and the program processes and procedures relevant to their work, as required under rules 9.2.3(1), 9.2.3(2), 9.2.3(3), and 9.2.3(4)."
+    },
+    {
+      "id": "9_3_1",
+      "group": "joint-program",
+      "label": "Does the joint Part A include an employee due diligence program with appropriate risk-based systems for screening prospective employees, re-screening transferred/promoted employees, and managing non-compliant employees?",
+      "detail-required": true,
+      "detail-label": "Describe the joint employee due diligence program",
+      "correct-option": "Yes",
+      "process-id": "PROC-AML-002",
+      "source-rules": [
+        "9.3.1",
+        "9.3.2",
+        "9.3.3",
+        "9.3.4"
+      ],
+      "mapping-confidence": 0.8,
+      "remediation": "Your joint AML/CTF Program does not include an adequate employee due diligence program. The joint Part A must include an employee due diligence program with appropriate risk-based systems and controls for screening prospective employees, re-screening transferred or promoted employees, and managing non-compliant employees, as required under rules 9.3.2, 9.3.3, and 9.3.4."
+    },
+    {
+      "id": "9_4_1",
+      "group": "joint-program",
+      "label": "Has the joint Part A been approved by the governing board and senior management of each reporting entity in the designated business group (or by the main holding company board and senior management if all members are related), and is it subject to their ongoing oversight?",
+      "detail-required": true,
+      "detail-label": "Describe the approval and oversight arrangements for the joint Part A",
+      "correct-option": "Yes",
+      "process-id": "PROC-AML-002",
+      "source-rules": [
+        "9.4.1",
+        "9.4.2"
+      ],
+      "mapping-confidence": 0.9,
+      "remediation": "Your joint AML/CTF Program Part A has not been approved by the required governance bodies or is not subject to their ongoing oversight. The joint Part A must be approved by, and subject to ongoing oversight of, the board and senior management of each reporting entity (or the main holding company if all members are related), as required under rules 9.4.1 and 9.4.2."
+    },
+    {
+      "id": "9_5_1",
+      "group": "joint-program",
+      "label": "Does the joint Part A provide for the designated business group to designate a person as the 'AML/CTF Compliance Officer' at the management level?",
+      "detail-required": true,
+      "detail-label": "Provide the name and title of the group AML/CTF Compliance Officer",
+      "correct-option": "Yes",
+      "process-id": "PROC-AML-002",
+      "source-rules": [
+        "9.5.1"
+      ],
+      "mapping-confidence": 1.0,
+      "remediation": "Your joint AML/CTF Program does not provide for a designated business group AML/CTF Compliance Officer. The joint Part A must include a provision for the group to designate a person at the management level as the AML/CTF Compliance Officer, as required under rule 9.5.1."
+    },
+    {
+      "id": "9_6_1",
+      "group": "joint-program",
+      "label": "Is the joint Part A subject to regular independent review, with frequency taking into account the nature, size and complexity of each reporting entity's business and the type and level of ML/TF risk?",
+      "detail-required": true,
+      "detail-label": "Describe the frequency and scope of independent review for the joint Part A",
+      "correct-option": "Yes",
+      "process-id": "PROC-AML-002",
+      "source-rules": [
+        "9.6.1",
+        "9.6.2"
+      ],
+      "mapping-confidence": 0.9,
+      "remediation": "Your joint AML/CTF Program Part A is not subject to regular independent review with appropriate frequency. The joint Part A must undergo regular independent review, with frequency calibrated to the nature, size, and complexity of each reporting entity's business and the type and level of ML/TF risk, as required under rules 9.6.1 and 9.6.2."
+    },
+    {
+      "id": "9_6_3",
+      "group": "joint-program",
+      "label": "Is the person appointed to conduct the review of the joint Part A independent (i.e., not involved in design, implementation, maintenance, or development of risk assessments or internal controls), and can the group demonstrate the reviewer's independence?",
+      "detail-required": true,
+      "detail-label": "Explain how reviewer independence is ensured for the joint program",
+      "correct-option": "Yes",
+      "process-id": "PROC-AML-002",
+      "source-rules": [
+        "9.6.3",
+        "9.6.3(1)",
+        "9.6.3(2)",
+        "9.6.4"
+      ],
+      "mapping-confidence": 0.9,
+      "remediation": "Your independent reviewer for the joint program has been involved in functions or measures being reviewed, or the group cannot demonstrate their independence. The reviewer must not have been involved in designing, implementing, or maintaining the joint Part A, or developing any entity's risk assessment or related internal controls, and the group must be able to demonstrate their independence, as required under rules 9.6.3(1), 9.6.3(2), and 9.6.4."
+    },
+    {
+      "id": "9_6_5",
+      "group": "joint-program",
+      "label": "Does the independent review of the joint Part A assess effectiveness having regard to each entity's ML/TF risk, compliance with the Rules, effective implementation, and each entity's compliance with Part A?",
+      "detail-required": true,
+      "detail-label": "Describe the assessment areas covered in the independent review",
+      "correct-option": "Yes",
+      "process-id": "PROC-AML-002",
+      "source-rules": [
+        "9.6.5",
+        "9.6.5(1)",
+        "9.6.5(2)",
+        "9.6.5(3)",
+        "9.6.5(4)"
+      ],
+      "mapping-confidence": 0.9,
+      "remediation": "Your independent review of the joint Part A does not assess all mandatory areas. The review should assess the joint Part A's effectiveness having regard to each entity's ML/TF risk, compliance with the Rules, effective implementation, and each entity's compliance with Part A, as required under rules 9.6.5(1), 9.6.5(2), 9.6.5(3), and 9.6.5(4)."
+    },
+    {
+      "id": "9_6_6",
+      "group": "joint-program",
+      "label": "Are the results of the independent review of the joint Part A, including any report prepared, provided to senior management and, where applicable, the governing board of each reporting entity in the designated business group?",
+      "detail-required": true,
+      "detail-label": "Describe how review results are reported to governance across the group",
+      "correct-option": "Yes",
+      "process-id": "PROC-AML-002",
+      "source-rules": [
+        "9.6.6"
+      ],
+      "mapping-confidence": 1.0,
+      "remediation": "The results of your independent review of the joint Part A are not provided to senior management and governing boards across the group. You must ensure that review results, including any report prepared, are provided to senior management and, where applicable, the governing board of each reporting entity in the designated business group, as required under rule 9.6.6."
+    },
+    {
+      "id": "9_7_1",
+      "group": "joint-program",
+      "label": "When developing and updating the joint Part A, do you take into account applicable AUSTRAC guidance material and any feedback provided by AUSTRAC relevant to ML/TF risk identification, mitigation, and management?",
+      "detail-required": true,
+      "detail-label": "Describe how you incorporate AUSTRAC guidance and feedback into the joint Part A",
+      "correct-option": "Yes",
+      "process-id": "PROC-AML-002",
+      "source-rules": [
+        "9.7.1",
+        "9.7.1(1)",
+        "9.7.1(2)"
+      ],
+      "mapping-confidence": 0.9,
+      "remediation": "Your joint AML/CTF Program development and update process does not consider AUSTRAC guidance and feedback. When developing and updating the joint Part A, you must take into account applicable AUSTRAC guidance material and any feedback provided by AUSTRAC relevant to ML/TF risk, as required under rules 9.7.1(1) and 9.7.1(2)."
+    },
+    {
+      "id": "9_8_2",
+      "group": "joint-program",
+      "label": "If any reporting entity in the designated business group provides designated services at or through a permanent establishment in a foreign country, does the joint Part A include systems and controls that meet the AML/CTF Act obligations applicable to those services?",
+      "detail-required": true,
+      "detail-label": "Describe the systems and controls for foreign permanent establishments in the joint program",
+      "correct-option": "Yes",
+      "process-id": "PROC-AML-002",
+      "source-rules": [
+        "9.8.1",
+        "9.8.2"
+      ],
+      "mapping-confidence": 0.9,
+      "remediation": "Your joint AML/CTF Program Part A does not include appropriate systems and controls for designated services provided at or through permanent establishments in foreign countries by entities in the group. The joint Part A must include systems and controls that meet the AML/CTF Act obligations applicable to those services, as required under rules 9.8.1 and 9.8.2."
+    },
+    {
+      "id": "9_9_1",
+      "group": "joint-program",
+      "label": "Does the joint Part A include the reporting obligations under sections 41, 43, 45, 47 and 51F of the AML/CTF Act and Chapter 64 of the Rules that apply to each reporting entity, together with appropriate systems and controls to ensure compliance?",
+      "detail-required": true,
+      "detail-label": "Describe how the joint Part A includes reporting obligations and supporting systems for each entity",
+      "correct-option": "Yes",
+      "process-id": "PROC-AML-002",
+      "source-rules": [
+        "9.9.1",
+        "9.9.1(1)",
+        "9.9.1(2)",
+        "9.9.1(3)"
+      ],
+      "mapping-confidence": 0.9,
+      "remediation": "Your joint AML/CTF Program Part A does not include mandatory reporting obligations and supporting systems for each entity in the group. The joint Part A must include the obligations under sections 41, 43, 45, 47, and 51F of the AML/CTF Act and Chapter 64 of the Rules that apply to each reporting entity, together with appropriate systems and controls designed to ensure compliance, as required under rules 9.9.1(1), 9.9.1(2), and 9.9.1(3)."
+    },
+    {
+      "id": "9_9_1_4",
+      "group": "joint-program",
+      "label": "If any reporting entity in the designated business group is a remittance dealer, does the joint Part A include obligations under section 75M of the AML/CTF Act to advise the AUSTRAC CEO or registered remittance network provider of material changes in circumstances?",
+      "detail-required": true,
+      "detail-label": "Describe how the joint Part A addresses remittance dealer notification obligations",
+      "correct-option": "Yes",
+      "process-id": "PROC-AML-002",
+      "source-rules": [
+        "9.9.1(4)",
+        "9.9.1(4)(a)",
+        "9.9.1(4)(b)"
+      ],
+      "mapping-confidence": 0.9,
+      "remediation": "Your joint AML/CTF Program Part A does not include remittance dealer notification obligations for applicable entities in the group. If any reporting entity in the designated business group is a remittance dealer, the joint Part A must include obligations under section 75M of the AML/CTF Act to advise the AUSTRAC CEO or registered remittance network provider of material changes in circumstances, as required under rules 9.9.1(4)(a) and 9.9.1(4)(b)."
+    }
+  ],
+  "groups": [
+    {
+      "id": "process-existence",
+      "title": "Process Confirmation",
+      "description": "Before answering the detailed compliance questions, confirm whether your organisation operates this business process.",
+      "variant": "main"
+    },
+    {
+      "id": "ml-tf-risk-assessment",
+      "title": "ML/TF Risk Assessment (Part A)",
+      "description": "Part A of your AML/CTF program is the foundational risk assessment and management framework. It must identify, manage, and mitigate the money laundering and terrorism financing risks you face when providing designated services. This includes understanding your customer relationships, control structures, and proactively managing risks from new services, methods, and technologies.",
+      "variant": "main"
+    },
+    {
+      "id": "training",
+      "title": "AML/CTF Risk Awareness Training",
+      "description": "Your AML/CTF program must include a training program that provides employees with appropriate training at appropriate intervals. Training must cover your AML/CTF obligations, consequences of non-compliance, ML/TF risks, and relevant program processes and procedures.",
+      "variant": "subprocess",
+      "subprocess-label": "Training"
+    },
+    {
+      "id": "employee-due-diligence",
+      "title": "Employee Due Diligence",
+      "description": "Your AML/CTF program must include risk-based systems for screening prospective employees, re-screening transferred or promoted employees, and managing employees who fail to comply with your program. This applies to employees who may be in a position to facilitate money laundering or terrorism financing offences.",
+      "variant": "subprocess",
+      "subprocess-label": "Employee DD"
+    },
+    {
+      "id": "oversight",
+      "title": "Governance and Oversight",
+      "description": "Part A must be approved by your governing board and senior management (or CEO/equivalent if no board exists) and subject to their ongoing oversight. This ensures accountability and executive-level commitment to your AML/CTF program.",
+      "variant": "subprocess",
+      "subprocess-label": "Oversight"
+    },
+    {
+      "id": "compliance-officer",
+      "title": "AML/CTF Compliance Officer",
+      "description": "Your AML/CTF program must provide for the designation of an AML/CTF Compliance Officer at the management level. This officer is responsible for overseeing compliance with your program.",
+      "variant": "main"
+    },
+    {
+      "id": "independent-review",
+      "title": "Independent Review",
+      "description": "Part A must be subject to regular independent review. The reviewer must be independent (not involved in designing or implementing Part A), and the review must assess effectiveness, compliance, implementation, and your adherence to the program. Results must be reported to senior management and the governing board.",
+      "variant": "subprocess",
+      "subprocess-label": "Review"
+    },
+    {
+      "id": "austrac-feedback",
+      "title": "AUSTRAC Guidance and Feedback",
+      "description": "When developing and updating Part A, you must take into account applicable AUSTRAC guidance material and any feedback provided by AUSTRAC relevant to ML/TF risk identification, mitigation, and management.",
+      "variant": "main"
+    },
+    {
+      "id": "foreign-permanent-establishment",
+      "title": "Foreign Permanent Establishments",
+      "description": "If you provide designated services at or through a permanent establishment in a foreign country, Part A must include systems and controls that meet the AML/CTF Act obligations applicable to those services. Where the foreign jurisdiction has comparable AML/CTF laws, only minimal additional systems and controls are needed.",
+      "variant": "main"
+    },
+    {
+      "id": "reporting",
+      "title": "Reporting Obligations",
+      "description": "Part A must include your reporting obligations under the AML/CTF Act (suspicious matter reports, threshold transaction reports, international funds transfer instructions, etc.) and appropriate systems and controls to ensure compliance. If you are a remittance dealer, this includes obligations to notify AUSTRAC of material changes.",
+      "variant": "main"
+    },
+    {
+      "id": "joint-program",
+      "title": "Joint AML/CTF Program (Designated Business Groups)",
+      "description": "If you are part of a designated business group, you may adopt a joint AML/CTF program that applies to each reporting entity in the group. The joint program must address ML/TF risk for each entity, with appropriate risk-based systems, training, employee due diligence, governance oversight, compliance officer designation, independent review, AUSTRAC feedback incorporation, and reporting obligations. The joint program must be approved by the board and senior management of each entity (or the main holding company if all members are related).",
+      "variant": "subprocess",
+      "subprocess-label": "Joint Program"
+    }
+  ],
+  "rules": [],
+  "sub_scoping": [],
+  "form_links": []
+}

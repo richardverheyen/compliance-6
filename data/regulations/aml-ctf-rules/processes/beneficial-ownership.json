@@ -12,35 +12,42 @@
     },
     {
       "id": "4_12_1",
-      "group": "general-obligation",
-      "label": "Does your AML/CTF program include systems and controls to determine the beneficial owner of each customer and carry out collection and verification either before providing a designated service or as soon as practicable after?",
+      "group": "collection-bo",
+      "label": "Does your Beneficial Ownership procedure collect the beneficial owner's full name, and either date of birth or full residential address, before or as soon as practicable after providing designated services?",
       "detail-required": true,
-      "detail-label": "Describe your systems and controls for determining beneficial owners and the timing of collection/verification",
+      "detail-label": "Describe your collection process and timing",
       "correct-option": "Yes",
       "process-id": "PROC-AML-003a",
       "source-rules": [
-        "4.12.1"
+        "4.12.1",
+        "4.12.1(1)",
+        "4.12.1(1)(a)",
+        "4.12.1(1)(b)",
+        "4.12.1(1)(c)"
       ],
-      "mapping-confidence": 1.0,
-      "remediation": "Your Beneficial Ownership Identification process does not include the required systems and controls to determine beneficial owners and carry out collection and verification activities. Your AML/CTF program must establish appropriate systems and controls to identify beneficial owners and collect/verify their information either before providing a designated service or as soon as practicable afterward, as required under rule 4.12.1."
-    },
-    {
-      "id": "4_12_1_1_a",
-      "group": "collection",
-      "label": "Do you collect each beneficial owner's full name?",
-      "detail-required": false,
-      "correct-option": "Yes",
-      "process-id": "PROC-AML-003a",
-      "source-rules": [
-        "4.12.1(1)(a)"
-      ],
-      "mapping-confidence": 1.0,
-      "remediation": "Your Beneficial Ownership Identification process does not collect the full name of each beneficial owner. You must collect and take reasonable measures to verify each beneficial owner's full name as required under rule 4.12.1(1)(a)."
+      "mapping-confidence": 0.95,
+      "remediation": "Your Beneficial Ownership Identification procedure does not collect the minimum required information for beneficial owners. You must collect each beneficial owner's full name and either their date of birth or full residential address before providing designated services (or as soon as practicable after), as required under rules 4.12.1, 4.12.1(1), 4.12.1(1)(a), 4.12.1(1)(b), and 4.12.1(1)(c).",
+      "checklist-items": [
+        {
+          "label": "Full name"
+        },
+        {
+          "type": "or-group",
+          "items": [
+            {
+              "label": "Date of birth"
+            },
+            {
+              "label": "Full residential address"
+            }
+          ]
+        }
+      ]
     },
     {
       "id": "4_12_2_1",
-      "group": "exemptions",
-      "label": "When your customer is an individual, do you assume the customer and beneficial owner are the same (unless you have reasonable grounds to consider otherwise)?",
+      "group": "collection-bo",
+      "label": "For individual customers, does your procedure assume the customer and beneficial owner are the same person unless you have reasonable grounds to consider otherwise?",
       "detail-required": false,
       "correct-option": "Yes",
       "process-id": "PROC-AML-003a",
@@ -48,13 +55,14 @@
         "4.12.2(1)"
       ],
       "mapping-confidence": 1.0,
-      "remediation": "Your Beneficial Ownership Identification process does not apply the available simplification for individual customers. For customers who are individuals, you may assume the customer and beneficial owner are one and the same unless you have reasonable grounds to consider otherwise, as permitted under rule 4.12.2(1)."
+      "remediation": "Your Beneficial Ownership Identification procedure does not correctly handle individual customers. When the customer is an individual, you may assume they are the beneficial owner unless you have reasonable grounds to consider otherwise, as permitted under rule 4.12.2(1)."
     },
     {
       "id": "4_12_2_2",
       "group": "exemptions",
-      "label": "Do you exempt the following customer types from beneficial ownership requirements: companies verified under simplified company verification (4.3.8), trusts verified under simplified trustee verification (4.4.8), Australian Government Entities, and foreign listed public companies (or their majority-owned subsidiaries) subject to transparency disclosure requirements?",
-      "detail-required": false,
+      "label": "Does your procedure exempt customers from beneficial ownership collection when they are verified under simplified procedures, are Australian Government Entities, or are foreign listed public companies with transparency requirements?",
+      "detail-required": true,
+      "detail-label": "Describe which exemptions your procedure applies",
       "correct-option": "Yes",
       "process-id": "PROC-AML-003a",
       "source-rules": [
@@ -66,30 +74,44 @@
         "4.12.2(2)(e)"
       ],
       "mapping-confidence": 0.9,
-      "remediation": "Your Beneficial Ownership Identification process does not apply the available exemptions for low-risk entity types. You do not need to apply beneficial ownership requirements to companies verified under simplified procedures (rule 4.3.8), trusts verified under simplified procedures (rule 4.4.8), Australian Government Entities, or foreign listed public companies subject to transparency requirements, as permitted under rules 4.12.2(2)(a) through 4.12.2(2)(e)."
+      "remediation": "Your Beneficial Ownership Identification procedure does not apply the permitted exemptions. You are not required to collect beneficial ownership information for customers verified under simplified company procedures (4.3.8), simplified trustee procedures (4.4.8), Australian Government Entities, or foreign listed public companies with disclosure requirements, as provided under rules 4.12.2(2)(a) through 4.12.2(2)(e).",
+      "checklist-items": [
+        {
+          "label": "Company verified under simplified procedure (4.3.8)"
+        },
+        {
+          "label": "Trust verified under simplified procedure (4.4.8)"
+        },
+        {
+          "label": "Australian Government Entity"
+        },
+        {
+          "label": "Foreign listed public company with disclosure requirements"
+        }
+      ]
     },
     {
       "id": "4_12_3",
-      "group": "additional-collection",
-      "label": "Does your AML/CTF program include risk-based systems and controls to determine whether any additional information (beyond the minimum requirements) should be collected and verified about beneficial owners?",
+      "group": "risk-assessment",
+      "label": "Does your procedure include risk-based systems to determine whether additional information about beneficial owners should be collected and verified beyond the minimum requirements?",
       "detail-required": true,
-      "detail-label": "Describe your risk-based approach to determining when additional beneficial owner information should be collected",
+      "detail-label": "Describe your risk-based approach to additional beneficial owner information",
       "correct-option": "Yes",
-      "process-id": "PROC-AML-003a",
+      "process-id": "PROC-AML-002c",
       "source-rules": [
         "4.12.3"
       ],
       "mapping-confidence": 1.0,
-      "remediation": "Your Beneficial Ownership Identification process does not include risk-based systems to assess whether additional information should be collected about beneficial owners. Your AML/CTF program must include appropriate risk-based systems and controls to determine whether information beyond the minimum requirements should be collected and verified for any beneficial owner, as required under rule 4.12.3."
+      "remediation": "Your Beneficial Ownership Identification procedure lacks risk-based systems to assess whether additional beneficial owner information should be collected. You must implement appropriate risk-based controls to determine when to collect and verify information beyond the minimum requirements, as required under rule 4.12.3."
     },
     {
       "id": "4_12_4",
       "group": "verification",
-      "label": "Does your AML/CTF program require that verification of beneficial owner information be based on reliable and independent documentation, reliable and independent electronic data, or a combination of both?",
+      "label": "Does your procedure require verification of beneficial owner information using reliable and independent documentation, electronic data, or a combination of both?",
       "detail-required": true,
-      "detail-label": "Describe your verification methods for beneficial owner information",
+      "detail-label": "Describe your verification methods",
       "correct-option": "Yes",
-      "process-id": "PROC-AML-003a",
+      "process-id": "PROC-AML-002b",
       "source-rules": [
         "4.12.4",
         "4.12.4(1)",
@@ -97,42 +119,61 @@
         "4.12.4(3)"
       ],
       "mapping-confidence": 1.0,
-      "remediation": "Your Beneficial Ownership Identification process does not require verification based on reliable and independent sources. Verification of beneficial owner information must be based on reliable and independent documentation, reliable and independent electronic data, or a combination of both, as required under rules 4.12.4(1), 4.12.4(2), and 4.12.4(3)."
+      "remediation": "Your Beneficial Ownership Identification procedure does not require proper verification of beneficial owner information. Verification must be based on reliable and independent documentation, reliable and independent electronic data, or a combination of both, as required under rules 4.12.4, 4.12.4(1), 4.12.4(2), and 4.12.4(3).",
+      "checklist-items": [
+        {
+          "type": "or-group",
+          "items": [
+            {
+              "label": "Reliable and independent documentation"
+            },
+            {
+              "label": "Reliable and independent electronic data"
+            },
+            {
+              "label": "Combination of documentation and electronic data"
+            }
+          ]
+        }
+      ]
     },
     {
       "id": "4_12_6",
-      "group": "safe-harbour",
-      "label": "Have you confirmed that you will NOT use the safe harbour procedures in 4.12.7 if any beneficial owner is a foreign politically exposed person?",
-      "detail-required": false,
+      "group": "safe-harbour-bo",
+      "label": "For medium or lower ML/TF risk beneficial owners, do you use the safe harbour verification procedure (and confirm no beneficial owner is a foreign politically exposed person)?",
+      "detail-required": true,
+      "detail-label": "Describe when and how you apply the safe harbour procedure",
       "correct-option": "Yes",
-      "process-id": "PROC-AML-003a",
+      "process-id": "PROC-AML-002b",
       "source-rules": [
-        "4.12.6"
+        "4.12.5",
+        "4.12.6",
+        "4.12.7"
       ],
-      "mapping-confidence": 1.0,
-      "remediation": "Your Beneficial Ownership Identification process does not properly restrict the use of safe harbour procedures for high-risk individuals. The safe harbour procedures in rule 4.12.7 are not applicable if any beneficial owner is a foreign politically exposed person, as specified in rule 4.12.6."
+      "mapping-confidence": 0.85,
+      "remediation": "Your Beneficial Ownership Identification procedure does not utilize the safe harbour verification procedure for medium or lower ML/TF risk beneficial owners. You may streamline verification using the safe harbour procedure outlined in rule 4.12.7, provided no beneficial owner is a foreign politically exposed person, as specified in rules 4.12.5 and 4.12.6."
     },
     {
       "id": "4_12_7_1",
-      "group": "safe-harbour",
-      "label": "For medium or lower risk beneficial owners, do you collect the information described in paragraph 4.12.1 (full name plus either date of birth or residential address)?",
+      "group": "safe-harbour-bo",
+      "label": "If using safe harbour, does your procedure collect all information described in 4.12.1 for each beneficial owner?",
       "detail-required": false,
       "correct-option": "Yes",
       "process-id": "PROC-AML-003a",
       "source-rules": [
-        "4.12.7(1)",
-        "4.12.1"
+        "4.12.7(1)"
       ],
       "mapping-confidence": 1.0,
-      "remediation": "Your Beneficial Ownership Identification process does not collect the minimum required information when using safe harbour procedures. When applying the safe harbour procedure for medium or lower risk beneficial owners, you must collect the information described in rule 4.12.1 (full name plus either date of birth or residential address) for each beneficial owner, as required under rule 4.12.7(1)."
+      "remediation": "Your safe harbour Beneficial Ownership procedure does not collect the required minimum information. Even when using safe harbour verification, you must still collect each beneficial owner's full name and either date of birth or full residential address, as required under rule 4.12.7(1)."
     },
     {
       "id": "4_12_7_2",
-      "group": "safe-harbour",
-      "label": "For documentation-based safe harbour verification, do you verify each beneficial owner's full name and either their full residential address or date of birth (or both) using either: (a) an original or certified copy of a primary photographic ID document, OR (b) an original or certified copy of a primary non-photographic ID document PLUS a secondary ID document?",
-      "detail-required": false,
+      "group": "safe-harbour-bo",
+      "label": "If using documentation-based safe harbour, does your procedure verify beneficial owner name and either address or date of birth using either: (a) primary photographic ID, or (b) primary non-photographic ID plus secondary ID?",
+      "detail-required": true,
+      "detail-label": "Describe your documentation-based verification approach",
       "correct-option": "Yes",
-      "process-id": "PROC-AML-003a",
+      "process-id": "PROC-AML-002b",
       "source-rules": [
         "4.12.7(2)",
         "4.12.7(2)(a)",
@@ -140,20 +181,17 @@
         "4.12.7(2)(i)",
         "4.12.7(2)(i)(ii)"
       ],
-      "mapping-confidence": 1.0,
-      "remediation": "Your Beneficial Ownership Identification process does not use the correct documentation for safe harbour verification. When using documentation-based safe harbour procedures, you must verify each beneficial owner's full name and either their address or date of birth using either a primary photographic ID or a combination of primary non-photographic ID plus secondary ID, as required under rules 4.12.7(2)(a) and 4.12.7(2)(b).",
+      "mapping-confidence": 0.95,
+      "remediation": "Your documentation-based safe harbour procedure does not use the correct identification documents. You must verify beneficial owner name and either residential address or date of birth using an original or certified copy of: (a) primary photographic ID, or (b) both primary non-photographic ID and secondary ID, as required under rules 4.12.7(2), 4.12.7(2)(a), 4.12.7(2)(b), 4.12.7(2)(i), and 4.12.7(2)(i)(ii).",
       "checklist-items": [
-        {
-          "label": "Full name"
-        },
         {
           "type": "or-group",
           "items": [
             {
-              "label": "Residential address"
+              "label": "Primary photographic identification document (original or certified copy)"
             },
             {
-              "label": "Date of birth"
+              "label": "Primary non-photographic ID + secondary ID (both original or certified copies)"
             }
           ]
         }
@@ -161,106 +199,85 @@
     },
     {
       "id": "4_12_7_3",
-      "group": "safe-harbour",
-      "label": "For documentation-based safe harbour verification, do you verify that each document has not expired (except Commonwealth passports expired within the preceding two years)?",
+      "group": "safe-harbour-bo",
+      "label": "If using documentation-based safe harbour, does your procedure verify that documents have not expired (except Commonwealth passports expired within two years)?",
       "detail-required": false,
       "correct-option": "Yes",
-      "process-id": "PROC-AML-003a",
+      "process-id": "PROC-AML-002b",
       "source-rules": [
         "4.12.7(3)"
       ],
       "mapping-confidence": 1.0,
-      "remediation": "Your Beneficial Ownership Identification process does not verify document currency as required for safe harbour procedures. You must verify that each document produced for beneficial owner verification has not expired, with the exception of Commonwealth passports that expired within the preceding two years, as required under rule 4.12.7(3)."
+      "remediation": "Your documentation-based safe harbour procedure does not verify document expiry. You must confirm that documents produced for beneficial owner verification have not expired, with the exception of Commonwealth passports that expired within the preceding two years, as required under rule 4.12.7(3)."
     },
     {
       "id": "4_12_7_4",
-      "group": "safe-harbour",
-      "label": "For electronic-based safe harbour verification, do you verify each beneficial owner's full name and either their full residential address or date of birth (or both) using reliable and independent electronic data from at least two separate data sources?",
-      "detail-required": false,
+      "group": "safe-harbour-bo",
+      "label": "If using electronic-based safe harbour, does your procedure verify beneficial owner name and either address or date of birth using reliable and independent electronic data from at least two separate data sources?",
+      "detail-required": true,
+      "detail-label": "Describe your electronic data sources and verification process",
       "correct-option": "Yes",
-      "process-id": "PROC-AML-003a",
+      "process-id": "PROC-AML-002b",
       "source-rules": [
         "4.12.7(4)"
       ],
       "mapping-confidence": 1.0,
-      "remediation": "Your Beneficial Ownership Identification process does not meet the electronic verification requirements for safe harbour procedures. When using electronic-based safe harbour verification, you must verify each beneficial owner's full name and either their address or date of birth using reliable and independent electronic data from at least two separate data sources, as required under rule 4.12.7(4).",
+      "remediation": "Your electronic-based safe harbour procedure does not use sufficient data sources. You must verify beneficial owner name and either residential address or date of birth using reliable and independent electronic data from at least two separate data sources, as required under rule 4.12.7(4).",
       "checklist-items": [
         {
-          "label": "Full name"
+          "label": "Reliable and independent electronic data"
         },
         {
-          "type": "or-group",
-          "items": [
-            {
-              "label": "Residential address"
-            },
-            {
-              "label": "Date of birth"
-            }
-          ]
+          "label": "At least two separate data sources"
         }
       ]
     },
     {
       "id": "4_12_8",
-      "group": "discrepancy",
-      "label": "Does your AML/CTF program include risk-based systems and controls to respond to any discrepancy that arises when verifying beneficial owner information, so that you can be reasonably satisfied that each beneficial owner is the person the customer claims they are?",
+      "group": "discrepancy-handling",
+      "label": "Does your procedure include risk-based systems to respond to discrepancies in beneficial owner verification so you can be reasonably satisfied the beneficial owner is who the customer claims?",
       "detail-required": true,
-      "detail-label": "Describe your procedures for responding to discrepancies in beneficial owner verification",
+      "detail-label": "Describe your discrepancy response process",
       "correct-option": "Yes",
       "process-id": "PROC-AML-003a",
       "source-rules": [
         "4.12.8"
       ],
       "mapping-confidence": 1.0,
-      "remediation": "Your Beneficial Ownership Identification process does not include procedures for handling verification discrepancies. Your AML/CTF program must include appropriate risk-based systems and controls to respond to any discrepancy that arises during verification so you can determine that you are reasonably satisfied that each beneficial owner is who the customer claims they are, as required under rule 4.12.8."
+      "remediation": "Your Beneficial Ownership Identification procedure lacks appropriate controls for handling verification discrepancies. You must implement risk-based systems to respond to any discrepancies that arise during verification, enabling you to determine that you are reasonably satisfied the beneficial owner is the person the customer claims, as required under rule 4.12.8."
     },
     {
-      "id": "4_12_9_1",
-      "group": "fallback",
-      "label": "If you cannot ascertain a beneficial owner for a company (not verified under simplified procedures) or partnership, do you identify and take reasonable measures to verify any individual who is entitled (directly or indirectly) to exercise 25% or more of voting rights (including veto power), OR who holds a senior managing official position?",
-      "detail-required": false,
+      "id": "4_12_9",
+      "group": "fallback-controls",
+      "label": "If you cannot ascertain a beneficial owner, does your procedure require identification and reasonable verification of alternative control persons (e.g., 25%+ voting rights holders or senior managing officials)?",
+      "detail-required": true,
+      "detail-label": "Describe your fallback identification procedure",
       "correct-option": "Yes",
       "process-id": "PROC-AML-003a",
       "source-rules": [
         "4.12.9",
         "4.12.9(1)",
         "4.12.9(1)(a)",
-        "4.12.9(1)(b)"
-      ],
-      "mapping-confidence": 1.0,
-      "remediation": "Your Beneficial Ownership Identification process does not include the required fallback procedure for companies and partnerships. When you are unable to ascertain a beneficial owner for a company or partnership, you must identify and take reasonable measures to verify any individual entitled to exercise 25% or more of voting rights or holding a senior managing official position, as required under rules 4.12.9(1)(a) and 4.12.9(1)(b)."
-    },
-    {
-      "id": "4_12_9_2",
-      "group": "fallback",
-      "label": "If you cannot ascertain a beneficial owner for a trust (not verified under simplified procedures), do you identify and take reasonable measures to verify any individual who holds the power to appoint or remove the trustees?",
-      "detail-required": false,
-      "correct-option": "Yes",
-      "process-id": "PROC-AML-003a",
-      "source-rules": [
-        "4.12.9",
-        "4.12.9(2)"
-      ],
-      "mapping-confidence": 1.0,
-      "remediation": "Your Beneficial Ownership Identification process does not include the required fallback procedure for trusts. When you are unable to ascertain a beneficial owner for a trust, you must identify and take reasonable measures to verify any individual who holds the power to appoint or remove the trustees, as required under rule 4.12.9(2)."
-    },
-    {
-      "id": "4_12_9_3",
-      "group": "fallback",
-      "label": "If you cannot ascertain a beneficial owner for an association or registered co-operative, do you identify and take reasonable measures to verify any individual who is entitled (directly or indirectly) to exercise 25% or more of voting rights (including veto power), OR would be entitled to 25% or more of property on dissolution, OR holds a senior managing official position?",
-      "detail-required": false,
-      "correct-option": "Yes",
-      "process-id": "PROC-AML-003a",
-      "source-rules": [
-        "4.12.9",
+        "4.12.9(1)(b)",
+        "4.12.9(2)",
         "4.12.9(3)",
         "4.12.9(3)(a)",
         "4.12.9(3)(b)",
         "4.12.9(3)(c)"
       ],
-      "mapping-confidence": 1.0,
-      "remediation": "Your Beneficial Ownership Identification process does not include the required fallback procedure for associations and registered co-operatives. When you are unable to ascertain a beneficial owner for an association or registered co-operative, you must identify and take reasonable measures to verify individuals meeting the 25% voting rights threshold, 25% property entitlement on dissolution, or holding senior managing official positions, as required under rules 4.12.9(3)(a), 4.12.9(3)(b), and 4.12.9(3)(c)."
+      "mapping-confidence": 0.9,
+      "remediation": "Your Beneficial Ownership Identification procedure does not have adequate fallback controls when the beneficial owner cannot be ascertained. You must identify and take reasonable measures to verify alternative control persons such as individuals with 25% or more voting rights, senior managing officials, or those with power to appoint/remove trustees, as required under rules 4.12.9, 4.12.9(1), 4.12.9(2), and 4.12.9(3).",
+      "checklist-items": [
+        {
+          "label": "For companies/partnerships: individuals with 25%+ voting rights or senior managing officials"
+        },
+        {
+          "label": "For trusts: individuals who can appoint or remove trustees"
+        },
+        {
+          "label": "For associations/co-operatives: individuals with 25%+ voting rights, 25%+ dissolution entitlement, or senior managing officials"
+        }
+      ]
     }
   ],
   "groups": [
@@ -271,61 +288,85 @@
       "variant": "main"
     },
     {
-      "id": "general-obligation",
-      "title": "General Beneficial Ownership Obligation",
-      "description": "Your AML/CTF program must include systems and controls to determine the beneficial owner of each customer and collect and verify their identity information, either before providing a designated service or as soon as practicable after.",
-      "variant": "main"
-    },
-    {
-      "id": "collection",
+      "id": "collection-bo",
       "title": "Collection of Beneficial Owner Information",
-      "description": "Minimum information that must be collected about each beneficial owner.",
+      "description": "Determine and collect minimum required information about each beneficial owner before or as soon as practicable after providing designated services.",
       "variant": "main"
     },
     {
       "id": "exemptions",
-      "title": "Exemptions and Simplifications",
-      "description": "Circumstances where beneficial ownership requirements may be modified or do not apply.",
-      "variant": "subprocess",
-      "subprocess-label": "Exemptions"
+      "title": "Beneficial Ownership Exemptions",
+      "description": "Apply permitted exemptions for specific customer types that do not require beneficial ownership collection.",
+      "variant": "main"
     },
     {
-      "id": "additional-collection",
+      "id": "risk-assessment",
       "title": "Risk-Based Additional Collection",
-      "description": "Determine whether additional information beyond the minimum requirements should be collected and verified about beneficial owners.",
+      "description": "Assess whether additional beneficial owner information beyond the minimum should be collected and verified based on ML/TF risk.",
       "variant": "main"
     },
     {
       "id": "verification",
       "title": "Verification of Beneficial Owner Information",
-      "description": "Methods and requirements for verifying the information collected about beneficial owners.",
+      "description": "Verify collected beneficial owner information using reliable and independent sources.",
       "variant": "main"
     },
     {
-      "id": "safe-harbour",
-      "title": "Safe Harbour Procedures (Medium or Lower Risk)",
-      "description": "Optional standardized procedures for verifying beneficial owners when the relationship is assessed as medium or lower ML/TF risk. These procedures are not available if any beneficial owner is a foreign politically exposed person.",
+      "id": "safe-harbour-bo",
+      "title": "Safe Harbour Verification Procedure",
+      "description": "Optional streamlined verification procedure for medium or lower ML/TF risk beneficial owners (not applicable if any beneficial owner is a foreign politically exposed person).",
       "variant": "subprocess",
       "subprocess-label": "Safe Harbour"
     },
     {
-      "id": "discrepancy",
-      "title": "Discrepancy Handling",
-      "description": "Responding to discrepancies that arise during the verification of beneficial owner information.",
+      "id": "discrepancy-handling",
+      "title": "Responding to Verification Discrepancies",
+      "description": "Handle any discrepancies that arise during beneficial owner verification to achieve reasonable satisfaction of identity.",
       "variant": "main"
     },
     {
-      "id": "fallback",
-      "title": "Fallback Procedure (Unable to Determine Beneficial Owner)",
-      "description": "When you cannot ascertain a beneficial owner, identify and verify individuals meeting specified control thresholds or holding senior positions.",
-      "variant": "subprocess",
-      "subprocess-label": "Fallback"
+      "id": "fallback-controls",
+      "title": "Fallback Procedure When Beneficial Owner Cannot Be Ascertained",
+      "description": "Alternative identification requirements when you are unable to determine the beneficial owner.",
+      "variant": "main"
     }
   ],
   "rules": [
     {
       "target": "4_12",
       "scope": "4_1_5_1",
+      "effect": "SHOW",
+      "schema": {
+        "const": "Yes"
+      }
+    },
+    {
+      "target": "4_12_7_1",
+      "scope": "4_12_6",
+      "effect": "SHOW",
+      "schema": {
+        "const": "Yes"
+      }
+    },
+    {
+      "target": "4_12_7_2",
+      "scope": "4_12_6",
+      "effect": "SHOW",
+      "schema": {
+        "const": "Yes"
+      }
+    },
+    {
+      "target": "4_12_7_3",
+      "scope": "4_12_6",
+      "effect": "SHOW",
+      "schema": {
+        "const": "Yes"
+      }
+    },
+    {
+      "target": "4_12_7_4",
+      "scope": "4_12_6",
       "effect": "SHOW",
       "schema": {
         "const": "Yes"

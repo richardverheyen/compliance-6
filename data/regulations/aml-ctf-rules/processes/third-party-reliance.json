@@ -1,0 +1,448 @@
+{
+  "controls": [
+    {
+      "id": "process-exists",
+      "group": "process-existence",
+      "label": "Does your business have a Third Party Reliance process?",
+      "detail-required": false,
+      "correct-option": "Yes",
+      "source-rules": [],
+      "mapping-confidence": 1.0,
+      "remediation": "Your organisation does not have a Third Party Reliance process in place. You must establish a documented Third Party Reliance process to meet your AML/CTF obligations. Review the controls below and implement the required procedures before completing this assessment."
+    },
+    {
+      "id": "4_7_1_2",
+      "group": "general-conditions",
+      "label": "Does your Third Party Reliance procedure limit reliance to customer due diligence procedures that comply with foreign laws giving effect to the FATF Recommendations relating to customer due diligence and record-keeping?",
+      "detail-required": true,
+      "detail-label": "Describe how you assess compliance with FATF Recommendations",
+      "correct-option": "Yes",
+      "process-id": "PROC-AML-002",
+      "source-rules": [
+        "7.1.2",
+        "7.1.3"
+      ],
+      "mapping-confidence": 0.95,
+      "remediation": "Your Third Party Reliance procedure does not adequately restrict reliance to FATF-compliant procedures. You must only rely on customer due diligence procedures that comply with foreign laws giving effect to the FATF Recommendations relating to customer due diligence and record-keeping, as required under rules 7.1.2 and 7.1.3."
+    },
+    {
+      "id": "4_7_1_3_1",
+      "group": "general-conditions",
+      "label": "Does your Third Party Reliance procedure require the other person to identify and verify the customer's identity using reliable and independent sources?",
+      "detail-required": false,
+      "correct-option": "Yes",
+      "process-id": "PROC-AML-002b",
+      "source-rules": [
+        "7.1.3(1)"
+      ],
+      "mapping-confidence": 1.0,
+      "remediation": "Your Third Party Reliance procedure does not ensure the other person identifies and verifies customer identity using reliable and independent sources. Update your procedure to require the other person to be satisfied that it knows who the customer is through reliable and independent verification, as required under rule 7.1.3(1)."
+    },
+    {
+      "id": "4_7_1_3_2",
+      "group": "general-conditions",
+      "label": "Does your Third Party Reliance procedure require the other person to identify the beneficial owner and take reasonable measures to verify the beneficial owner's identity?",
+      "detail-required": false,
+      "correct-option": "Yes",
+      "process-id": "PROC-AML-003a",
+      "source-rules": [
+        "7.1.3(2)"
+      ],
+      "mapping-confidence": 1.0,
+      "remediation": "Your Third Party Reliance procedure does not ensure the other person identifies and verifies beneficial owners. Update your procedure to require the other person to identify beneficial owners and take reasonable measures to verify their identity, as required under rule 7.1.3(2)."
+    },
+    {
+      "id": "4_7_1_3_3",
+      "group": "general-conditions",
+      "label": "Does your Third Party Reliance procedure require the other person to identify any person acting on behalf of the customer and verify their identity and authority?",
+      "detail-required": false,
+      "correct-option": "Yes",
+      "process-id": "PROC-AML-002",
+      "source-rules": [
+        "7.1.3(3)"
+      ],
+      "mapping-confidence": 1.0,
+      "remediation": "Your Third Party Reliance procedure does not ensure the other person verifies persons acting on behalf of customers. Update your procedure to require the other person to identify persons acting on behalf of the customer and verify their identity and authority, as required under rule 7.1.3(3)."
+    },
+    {
+      "id": "4_7_2_2_1",
+      "group": "ongoing-reliance",
+      "label": "For ongoing reliance arrangements, do you have written agreements that document the responsibilities of both your entity and the other person?",
+      "detail-required": true,
+      "detail-label": "Describe how responsibilities are documented in written agreements",
+      "correct-option": "Yes",
+      "process-id": "PROC-AML-002",
+      "source-rules": [
+        "7.2.2(1)(a)"
+      ],
+      "mapping-confidence": 1.0,
+      "remediation": "Your Third Party Reliance procedure does not document responsibilities in written agreements for ongoing reliance arrangements. You must create written agreements that document the responsibilities of your entity and the other person, as required under rule 7.2.2(1)(a)."
+    },
+    {
+      "id": "4_7_2_2_1_b",
+      "group": "ongoing-reliance",
+      "label": "Do your written reliance agreements enable you to obtain all required KYC information relating to the customer, beneficial owner, and any person acting on behalf of the customer before commencing a designated service?",
+      "detail-required": true,
+      "detail-label": "Describe how your agreements ensure timely access to KYC information",
+      "correct-option": "Yes",
+      "process-id": "PROC-AML-002a",
+      "source-rules": [
+        "7.2.2(1)(b)",
+        "7.2.2(1)(i)",
+        "7.2.2(1)(i)(ii)",
+        "7.2.2(1)(i)(iii)"
+      ],
+      "mapping-confidence": 1.0,
+      "checklist-items": [
+        {
+          "label": "Customer KYC information"
+        },
+        {
+          "label": "Beneficial owner KYC information (if any)"
+        },
+        {
+          "label": "Person acting on behalf of customer KYC information (if any)"
+        },
+        {
+          "label": "Information available before commencing designated service"
+        }
+      ],
+      "remediation": "Your Third Party Reliance agreements do not ensure timely access to all required KYC information before service commencement. Update your written agreements to enable you to obtain all required KYC information relating to the customer, beneficial owner, and persons acting on behalf of the customer before commencing a designated service, as required under rules 7.2.2(1)(b), 7.2.2(1)(i), 7.2.2(1)(i)(ii), and 7.2.2(1)(i)(iii)."
+    },
+    {
+      "id": "4_7_2_2_1_c",
+      "group": "ongoing-reliance",
+      "label": "Do your written reliance agreements enable you to obtain verification information (records of identification procedures and all relevant documents, data and information) either immediately or as soon as practicable following a request?",
+      "detail-required": true,
+      "detail-label": "Describe how and when you can obtain verification information",
+      "correct-option": "Yes",
+      "process-id": "PROC-AML-002b",
+      "source-rules": [
+        "7.2.2(1)(c)",
+        "7.2.2(1)(i)",
+        "7.2.2(1)(i)(ii)"
+      ],
+      "mapping-confidence": 1.0,
+      "remediation": "Your Third Party Reliance agreements do not ensure timely access to verification information. Update your written agreements to enable you to obtain records of identification procedures and all relevant documents, data and information either immediately (per agreement terms) or as soon as practicable following a request, as required under rules 7.2.2(1)(c), 7.2.2(1)(i), and 7.2.2(1)(i)(ii)."
+    },
+    {
+      "id": "4_7_2_2_1_d",
+      "group": "ongoing-reliance",
+      "label": "Are your written reliance agreements approved by your governing board or a senior managing official?",
+      "detail-required": true,
+      "detail-label": "Specify who approved the agreements and when",
+      "correct-option": "Yes",
+      "process-id": "PROC-AML-002",
+      "source-rules": [
+        "7.2.2(1)(d)"
+      ],
+      "mapping-confidence": 1.0,
+      "remediation": "Your Third Party Reliance agreements lack proper approval from your governing board or senior management. You must ensure all written reliance agreements are approved by your governing board or a senior managing official, as required under rule 7.2.2(1)(d)."
+    },
+    {
+      "id": "4_7_2_2_2",
+      "group": "ongoing-reliance",
+      "label": "Before entering into ongoing reliance arrangements, do you determine the ML/TF/serious crime risks you face, the nature and complexity of the other person's business, and the ML/TF/serious crime risks in the countries where the other person operates?",
+      "detail-required": true,
+      "detail-label": "Describe your risk assessment process for reliance arrangements",
+      "correct-option": "Yes",
+      "process-id": "PROC-AML-002c",
+      "source-rules": [
+        "7.2.2(2)",
+        "7.2.2(2)(a)",
+        "7.2.2(2)(b)",
+        "7.2.2(2)(c)"
+      ],
+      "mapping-confidence": 1.0,
+      "checklist-items": [
+        {
+          "label": "Type and level of ML/TF/serious crime risks your entity faces"
+        },
+        {
+          "label": "Nature, size, and complexity of the other person's business"
+        },
+        {
+          "label": "Other person's products, services, delivery channels, and customer types"
+        },
+        {
+          "label": "ML/TF/serious crime risks in countries where other person operates/resides"
+        }
+      ],
+      "remediation": "Your Third Party Reliance procedure does not include comprehensive risk assessments before entering ongoing reliance arrangements. You must determine the type and level of ML/TF/serious crime risks you face, the nature and complexity of the other person's business (including their products, services, delivery channels, and customer types), and the ML/TF/serious crime risks in the countries where the other person operates or resides, as required under rules 7.2.2(2), 7.2.2(2)(a), 7.2.2(2)(b), and 7.2.2(2)(c)."
+    },
+    {
+      "id": "4_7_2_2_3",
+      "group": "ongoing-reliance",
+      "label": "For ongoing reliance arrangements, is the other person either a reporting entity or a foreign entity regulated by laws giving effect to FATF Recommendations on CDD and record-keeping?",
+      "detail-required": true,
+      "detail-label": "Specify the regulatory status of the other person",
+      "correct-option": "Yes",
+      "process-id": "PROC-AML-002",
+      "source-rules": [
+        "7.2.2(3)",
+        "7.2.2(3)(a)",
+        "7.2.2(3)(b)"
+      ],
+      "mapping-confidence": 1.0,
+      "remediation": "Your Third Party Reliance procedure allows reliance on entities that do not meet regulatory requirements. You must only rely on entities that are either Australian reporting entities or foreign entities regulated by laws giving effect to FATF Recommendations relating to customer due diligence and record-keeping, as required under rules 7.2.2(3), 7.2.2(3)(a), and 7.2.2(3)(b)."
+    },
+    {
+      "id": "4_7_2_2_4",
+      "group": "ongoing-reliance",
+      "label": "If the other person is a reporting entity, do they have measures in place to comply with their obligations under Parts 2 and 10 of the AML/CTF Act?",
+      "detail-required": true,
+      "detail-label": "Describe how you verify the other person's compliance measures",
+      "correct-option": "Yes",
+      "process-id": "PROC-AML-002",
+      "source-rules": [
+        "7.2.2(4)"
+      ],
+      "mapping-confidence": 1.0,
+      "remediation": "Your Third Party Reliance procedure does not verify that reporting entities have appropriate compliance measures in place. You must ensure that if the other person is a reporting entity, they have measures in place to comply with their obligations under Parts 2 and 10 of the AML/CTF Act, as required under rule 7.2.2(4)."
+    },
+    {
+      "id": "4_7_2_2_5",
+      "group": "ongoing-reliance",
+      "label": "If the other person is a foreign entity, do they have measures in place to comply with equivalent CDD and record-keeping obligations?",
+      "detail-required": true,
+      "detail-label": "Describe how you verify the foreign entity's compliance measures",
+      "correct-option": "Yes",
+      "process-id": "PROC-AML-002",
+      "source-rules": [
+        "7.2.2(5)"
+      ],
+      "mapping-confidence": 1.0,
+      "remediation": "Your Third Party Reliance procedure does not verify that foreign entities have appropriate compliance measures in place. You must ensure that if the other person is a foreign entity, they have measures in place to comply with equivalent CDD and record-keeping obligations under foreign laws giving effect to FATF Recommendations, as required under rule 7.2.2(5)."
+    },
+    {
+      "id": "4_7_2_3",
+      "group": "ongoing-reliance",
+      "label": "Do you carry out regular assessments of your ongoing reliance arrangements to ensure the other person continues to meet all prescribed requirements?",
+      "detail-required": true,
+      "detail-label": "Describe your assessment schedule and process",
+      "correct-option": "Yes",
+      "process-id": "PROC-AML-002",
+      "source-rules": [
+        "7.2.3"
+      ],
+      "mapping-confidence": 1.0,
+      "remediation": "Your Third Party Reliance procedure does not include regular assessments of ongoing reliance arrangements. You must carry out regular assessments to ensure the other person continues to meet all prescribed requirements for reliance, as required under rule 7.2.3."
+    },
+    {
+      "id": "4_7_2_4",
+      "group": "ongoing-reliance",
+      "label": "Are your regular assessments of ongoing reliance arrangements conducted at least every two years, and more frequently based on ML/TF/serious crime risks and any material changes?",
+      "detail-required": true,
+      "detail-label": "Describe your assessment frequency and triggers for more frequent review",
+      "correct-option": "Yes",
+      "process-id": "PROC-AML-002c",
+      "source-rules": [
+        "7.2.4",
+        "7.2.4(1)",
+        "7.2.4(2)"
+      ],
+      "mapping-confidence": 1.0,
+      "remediation": "Your Third Party Reliance procedure does not conduct assessments with adequate frequency. You must carry out assessments at regular intervals having regard to the type and level of ML/TF/serious crime risks you face and any material changes in the other person's circumstances, but in any event at least every two years, as required under rules 7.2.4, 7.2.4(1), and 7.2.4(2)."
+    },
+    {
+      "id": "4_7_3_2_1",
+      "group": "case-by-case",
+      "label": "For case-by-case reliance, does the other person satisfy the same entity requirements as ongoing reliance (reporting entity or foreign entity with equivalent CDD obligations and compliance measures)?",
+      "detail-required": true,
+      "detail-label": "Describe the regulatory status and compliance measures of the other person",
+      "correct-option": "Yes",
+      "process-id": "PROC-AML-002",
+      "source-rules": [
+        "7.3.2(1)"
+      ],
+      "mapping-confidence": 0.9,
+      "remediation": "Your case-by-case Third Party Reliance procedure allows reliance on entities that do not meet regulatory requirements. You must ensure the other person satisfies the requirements in rules 7.2.2(3)\u20137.2.2(5) (reporting entity or foreign entity with equivalent CDD obligations and compliance measures), as required under rule 7.3.2(1)."
+    },
+    {
+      "id": "4_7_3_2_2",
+      "group": "case-by-case",
+      "label": "For case-by-case reliance, does the other person obtain all required KYC information relating to the customer, beneficial owner, and any person acting on behalf of the customer before you commence providing a designated service?",
+      "detail-required": true,
+      "detail-label": "Describe how you ensure KYC information is obtained before service commencement",
+      "correct-option": "Yes",
+      "process-id": "PROC-AML-002a",
+      "source-rules": [
+        "7.3.2(2)",
+        "7.3.2(2)(a)",
+        "7.3.2(2)(b)",
+        "7.3.2(2)(c)"
+      ],
+      "mapping-confidence": 1.0,
+      "checklist-items": [
+        {
+          "label": "Customer KYC information"
+        },
+        {
+          "label": "Beneficial owner KYC information (if any)"
+        },
+        {
+          "label": "Person acting on behalf of customer KYC information (if any)"
+        },
+        {
+          "label": "Information obtained before you commence designated service"
+        }
+      ],
+      "remediation": "Your case-by-case Third Party Reliance procedure does not ensure timely collection of KYC information. You must ensure the other person has obtained all required KYC information relating to the customer, beneficial owner (if any), and person acting on behalf of the customer (if any) before you commence providing a designated service, as required under rules 7.3.2(2), 7.3.2(2)(a), 7.3.2(2)(b), and 7.3.2(2)(c)."
+    },
+    {
+      "id": "4_7_3_2_3",
+      "group": "case-by-case",
+      "label": "For case-by-case reliance, do you have reasonable grounds to believe that verification information will be immediately available or otherwise made available within 7 calendar days of a written request?",
+      "detail-required": true,
+      "detail-label": "Describe the basis for your belief and arrangements for accessing verification information",
+      "correct-option": "Yes",
+      "process-id": "PROC-AML-002b",
+      "source-rules": [
+        "7.3.2(3)",
+        "7.3.2(3)(a)",
+        "7.3.2(3)(b)"
+      ],
+      "mapping-confidence": 1.0,
+      "remediation": "Your case-by-case Third Party Reliance procedure does not ensure timely access to verification information. You must have reasonable grounds to believe that verification information will be immediately available under an agreement or otherwise made available within 7 calendar days of a written request, as required under rules 7.3.2(3), 7.3.2(3)(a), and 7.3.2(3)(b)."
+    },
+    {
+      "id": "4_7_3_3",
+      "group": "case-by-case",
+      "label": "When forming a belief for case-by-case reliance, do you consider the ML/TF/serious crime risks you face, the risks in the countries where the other person operates, and the nature and complexity of the other person's business?",
+      "detail-required": true,
+      "detail-label": "Describe how you assess these factors to form a reasonable belief",
+      "correct-option": "Yes",
+      "process-id": "PROC-AML-002c",
+      "source-rules": [
+        "7.3.3",
+        "7.3.3(1)",
+        "7.3.3(2)",
+        "7.3.3(3)"
+      ],
+      "mapping-confidence": 1.0,
+      "checklist-items": [
+        {
+          "label": "Type and level of ML/TF/serious crime risks you face in providing designated services"
+        },
+        {
+          "label": "ML/TF/serious crime risks in countries where other person operates/resides"
+        },
+        {
+          "label": "Nature, size, and complexity of the other person's business"
+        },
+        {
+          "label": "Other person's products, services, delivery channels, and customer types"
+        }
+      ],
+      "remediation": "Your case-by-case Third Party Reliance procedure does not include adequate risk assessment to form a reasonable belief. You must consider the type and level of ML/TF/serious crime risks you face, the risks in the countries where the other person operates or resides, and the nature, size, and complexity of the other person's business (including their products, services, delivery channels, and customer types), as required under rules 7.3.3, 7.3.3(1), 7.3.3(2), and 7.3.3(3)."
+    },
+    {
+      "id": "4_7_3_4",
+      "group": "case-by-case",
+      "label": "For case-by-case reliance, do you make a written record that sets out how you met the requirements for reliance (entity requirements, KYC information obtained, reasonable belief, and risk factors considered)?",
+      "detail-required": true,
+      "detail-label": "Describe your record-keeping process for case-by-case reliance decisions",
+      "correct-option": "Yes",
+      "process-id": "PROC-AML-004",
+      "source-rules": [
+        "7.3.4"
+      ],
+      "mapping-confidence": 1.0,
+      "remediation": "Your case-by-case Third Party Reliance procedure does not maintain adequate written records. You must make a written record that sets out how you met the requirements in rules 7.3.2 and 7.3.3 for each case-by-case reliance decision, as required under rule 7.3.4."
+    },
+    {
+      "id": "4_7_3_5",
+      "group": "intra-group-reliance",
+      "label": "When relying on procedures within your corporate group or designated business group, do you and the other person apply a joint AML/CTF program or other group-wide measures relating to customer due diligence and record keeping?",
+      "detail-required": true,
+      "detail-label": "Describe your joint AML/CTF program or group-wide measures",
+      "correct-option": "Yes",
+      "process-id": "PROC-AML-002",
+      "source-rules": [
+        "7.3.5(1)",
+        "7.3.5(2)",
+        "7.3.5(2)(a)"
+      ],
+      "mapping-confidence": 1.0,
+      "remediation": "Your intra-group Third Party Reliance procedure does not utilize joint AML/CTF programs or group-wide measures. When relying on procedures carried out by a member of the same corporate or designated business group, you must apply a joint AML/CTF program or other group-wide measures relating to customer due diligence and record keeping, as required under rules 7.3.5(1), 7.3.5(2), and 7.3.5(2)(a)."
+    },
+    {
+      "id": "4_7_3_5_2_b",
+      "group": "intra-group-reliance",
+      "label": "For intra-group reliance, have you and the other person implemented a joint AML/CTF program or group-wide risk-based systems and controls consistent with FATF Recommendations?",
+      "detail-required": true,
+      "detail-label": "Describe your group-wide risk-based systems and controls",
+      "correct-option": "Yes",
+      "process-id": "PROC-AML-002",
+      "source-rules": [
+        "7.3.5(2)(b)"
+      ],
+      "mapping-confidence": 1.0,
+      "remediation": "Your intra-group Third Party Reliance procedure lacks FATF-consistent risk-based systems and controls. You must implement a joint AML/CTF program or group-wide anti-money laundering and counter terrorism-financing risk-based systems and controls consistent with the relevant FATF Recommendations, as required under rule 7.3.5(2)(b)."
+    },
+    {
+      "id": "4_7_3_5_3",
+      "group": "intra-group-reliance",
+      "label": "For intra-group reliance, are any higher ML/TF/serious crime risks in the countries where the other person operates adequately identified, mitigated and managed by the joint AML/CTF program and group risk-based systems?",
+      "detail-required": true,
+      "detail-label": "Describe how your joint program addresses higher risks in foreign jurisdictions",
+      "correct-option": "Yes",
+      "process-id": "PROC-AML-002c",
+      "source-rules": [
+        "7.3.5(3)"
+      ],
+      "mapping-confidence": 1.0,
+      "remediation": "Your intra-group Third Party Reliance procedure does not adequately address higher risks in foreign jurisdictions where group members operate. You must ensure that any higher ML/TF/serious crime risks in the countries where the other person operates or resides are adequately identified, mitigated and managed by the joint AML/CTF program and risk-based systems and controls of the corporate or designated business group, as required under rule 7.3.5(3)."
+    },
+    {
+      "id": "4_7_3_5_4",
+      "group": "intra-group-reliance",
+      "label": "For intra-group reliance, is the implementation of your group's risk-based systems and controls supervised or monitored at a group-level by a body empowered by law to supervise and enforce equivalent CDD and record-keeping obligations?",
+      "detail-required": true,
+      "detail-label": "Identify the supervisory body and describe the group-level oversight",
+      "correct-option": "Yes",
+      "process-id": "PROC-AML-002",
+      "source-rules": [
+        "7.3.5(4)"
+      ],
+      "mapping-confidence": 1.0,
+      "remediation": "Your intra-group Third Party Reliance procedure lacks adequate group-level supervision by a regulatory body. You must ensure that the implementation of the risk-based systems and controls are supervised or monitored at a group-level by a body empowered by law to supervise and enforce equivalent CDD and record-keeping obligations, as required under rule 7.3.5(4)."
+    }
+  ],
+  "groups": [
+    {
+      "id": "process-existence",
+      "title": "Process Confirmation",
+      "description": "Before answering the detailed compliance questions, confirm whether your organisation operates this business process.",
+      "variant": "main"
+    },
+    {
+      "id": "general-conditions",
+      "title": "General Reliance Conditions",
+      "description": "Foundational requirements that apply to all forms of third party reliance, including the types of procedures that may be relied upon and the minimum standards they must meet.",
+      "variant": "main"
+    },
+    {
+      "id": "ongoing-reliance",
+      "title": "Ongoing Reliance (Standing Arrangements)",
+      "description": "Requirements for establishing and maintaining written agreements or arrangements that allow you to rely on another person's customer identification procedures on an ongoing basis.",
+      "variant": "main"
+    },
+    {
+      "id": "case-by-case",
+      "title": "Case-by-Case Reliance",
+      "description": "Requirements for relying on another person's customer identification procedures on a transaction-by-transaction basis, without a standing agreement.",
+      "variant": "main"
+    },
+    {
+      "id": "intra-group-reliance",
+      "title": "Intra-Group Reliance (Simplified Requirements)",
+      "description": "Simplified compliance pathway available when relying on procedures carried out by another member of the same corporate group or designated business group, subject to group-wide AML/CTF programs and oversight.",
+      "variant": "subprocess",
+      "subprocess-label": "Intra-Group"
+    }
+  ],
+  "rules": [],
+  "sub_scoping": [],
+  "form_links": []
+}

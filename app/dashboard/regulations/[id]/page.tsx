@@ -43,6 +43,14 @@ function deriveAnswers(
   return derived;
 }
 
+// Returns controlIds for button groups marked persist:true
+function getPersistedControlIds(introData: IntroductionData | null): string[] {
+  if (!introData) return [];
+  return Object.values(introData.buttonGroups)
+    .filter((g) => g.persist)
+    .flatMap((g) => g.options.map((o) => o.controlId));
+}
+
 function formatDate(isoString: string): string {
   return new Date(isoString).toLocaleDateString("en-AU", {
     day: "numeric",
@@ -135,6 +143,8 @@ export default function RegulationDetailPage() {
   const {
     regulations,
     orgProfile,
+    designatedServices,
+    saveDesignatedServices,
     getActiveRegulation,
     activateRegulation,
     getRegulationProcessOwner,
@@ -250,9 +260,19 @@ export default function RegulationDetailPage() {
     return <p className="text-sm text-gray-500">Loading...</p>;
   }
 
+  function buildPersistedUpdates(answers: Record<string, string>): Record<string, boolean> {
+    const persistedIds = getPersistedControlIds(introData);
+    const updates: Record<string, boolean> = {};
+    for (const cId of persistedIds) {
+      updates[cId] = answers[cId] === "Yes";
+    }
+    return updates;
+  }
+
   function handleActivate(e: React.FormEvent) {
     e.preventDefault();
     const fullAnswers = deriveAnswers(introAnswers, introData);
+    saveDesignatedServices(buildPersistedUpdates(fullAnswers));
     activateRegulation(id, fullAnswers);
     router.push(`/dashboard/regulations/${id}`);
     setShowActivationForm(false);
@@ -261,6 +281,7 @@ export default function RegulationDetailPage() {
   function handleStartAssessment(e: React.FormEvent) {
     e.preventDefault();
     const fullAnswers = deriveAnswers(scopingAnswers, introData);
+    saveDesignatedServices(buildPersistedUpdates(fullAnswers));
     startSelfAssessment(id, fullAnswers);
     setShowScopingForm(false);
     setScopingAnswers({});
@@ -352,27 +373,21 @@ export default function RegulationDetailPage() {
 
                 {/* Introduction / Scoping form — only shown if regulation has one */}
                 {introData && manifest?.hasIntroductionForm && (
-                  <div className="rounded-xl border border-gray-200 bg-white p-6">
-                    <h3 className="text-base font-semibold text-gray-900">Scoping Questions</h3>
-                    <p className="mt-1 text-sm text-gray-600">
-                      {introData.groups[0]?.description}
-                    </p>
-                    <div className="mt-4">
-                      <IntroForm
-                        introData={introData}
-                        answers={introAnswers}
-                        onChange={setIntroAnswers}
-                      />
-                    </div>
-                  </div>
+                  <IntroForm
+                    introData={introData}
+                    answers={introAnswers}
+                    onChange={setIntroAnswers}
+                  />
                 )}
 
-                <button
-                  type="submit"
-                  className="w-full rounded-lg bg-indigo-600 px-4 py-2.5 text-sm font-semibold text-white hover:bg-indigo-500"
-                >
-                  Activate Compliance Tracking
-                </button>
+                <div className="flex justify-end">
+                  <button
+                    type="submit"
+                    className="w-full sm:w-auto rounded-lg bg-indigo-600 px-6 py-2.5 text-sm font-semibold text-white hover:bg-indigo-500"
+                  >
+                    Activate Compliance Tracking
+                  </button>
+                </div>
               </form>
             ) : (
               <div className="flex flex-col gap-6 lg:flex-row lg:items-start">
@@ -380,12 +395,22 @@ export default function RegulationDetailPage() {
                 <div className="min-w-0 flex-1 space-y-6">
                 {/* ── State A: not yet activated ── */}
                 {!active && (
-                  <button
-                    onClick={() => setShowActivationForm(true)}
-                    className="w-full rounded-lg bg-indigo-600 px-4 py-3 text-sm font-semibold text-white hover:bg-indigo-500"
-                  >
-                    Begin Compliance Self-Assessment
-                  </button>
+                  <div className="flex justify-end">
+                    <button
+                      onClick={() => {
+                        const persistedIds = getPersistedControlIds(introData);
+                        const prefilled: Record<string, string> = {};
+                        for (const cId of persistedIds) {
+                          if (designatedServices[cId] === "Yes") prefilled[cId] = "Yes";
+                        }
+                        setIntroAnswers(prefilled);
+                        setShowActivationForm(true);
+                      }}
+                      className="w-full sm:w-auto rounded-lg bg-indigo-600 px-6 py-2.5 text-sm font-semibold text-white hover:bg-indigo-500"
+                    >
+                      Begin Compliance Self-Assessment
+                    </button>
+                  </div>
                 )}
 
 
@@ -414,17 +439,13 @@ export default function RegulationDetailPage() {
                           </button>
                         </div>
                         {introData && manifest?.hasIntroductionForm && (
-                          <div className="rounded-xl border border-gray-200 bg-white p-6">
-                            <h3 className="text-base font-semibold text-gray-900">Scoping Questions</h3>
-                            <p className="mt-1 text-sm text-gray-600">{introData.groups[0]?.description}</p>
-                            <div className="mt-4">
-                              <IntroForm introData={introData} answers={scopingAnswers} onChange={setScopingAnswers} />
-                            </div>
-                          </div>
+                          <IntroForm introData={introData} answers={scopingAnswers} onChange={setScopingAnswers} />
                         )}
-                        <button type="submit" className="w-full rounded-lg bg-indigo-600 px-4 py-2.5 text-sm font-semibold text-white hover:bg-indigo-500">
-                          Start Assessment
-                        </button>
+                        <div className="flex justify-end">
+                          <button type="submit" className="w-full sm:w-auto rounded-lg bg-indigo-600 px-6 py-2.5 text-sm font-semibold text-white hover:bg-indigo-500">
+                            Start Assessment
+                          </button>
+                        </div>
                       </form>
                     )}
 
@@ -434,7 +455,15 @@ export default function RegulationDetailPage() {
                         <p className="text-sm font-medium text-indigo-900">No assessments yet</p>
                         <p className="mt-1 text-xs text-indigo-700">Complete a self assessment to track your compliance over time.</p>
                         <button
-                          onClick={() => setShowScopingForm(true)}
+                          onClick={() => {
+                            const persistedIds = getPersistedControlIds(introData);
+                            const prefilled: Record<string, string> = {};
+                            for (const cId of persistedIds) {
+                              if (designatedServices[cId] === "Yes") prefilled[cId] = "Yes";
+                            }
+                            setScopingAnswers(prefilled);
+                            setShowScopingForm(true);
+                          }}
                           className="mt-4 rounded-lg bg-indigo-600 px-4 py-2 text-sm font-semibold text-white hover:bg-indigo-500"
                         >
                           Start your first Self Assessment
@@ -465,7 +494,15 @@ export default function RegulationDetailPage() {
                             )}
                             {!activeAssessment && (
                               <button
-                                onClick={() => setShowScopingForm(true)}
+                                onClick={() => {
+                                  const persistedIds = getPersistedControlIds(introData);
+                                  const prefilled: Record<string, string> = {};
+                                  for (const cId of persistedIds) {
+                                    if (designatedServices[cId] === "Yes") prefilled[cId] = "Yes";
+                                  }
+                                  setScopingAnswers(prefilled);
+                                  setShowScopingForm(true);
+                                }}
                                 className="rounded-lg bg-indigo-600 px-3 py-1.5 text-xs font-semibold text-white hover:bg-indigo-500"
                               >
                                 Start New Self-Assessment

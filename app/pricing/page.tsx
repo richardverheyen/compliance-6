@@ -89,7 +89,7 @@ export default function PricingPage() {
                 ))}
               </ul>
               <Link
-                href="/signup"
+                href="/sign-up"
                 className={`mt-8 block rounded-lg px-4 py-2 text-center text-sm font-semibold ${
                   plan.highlighted
                     ? "bg-indigo-600 text-white hover:bg-indigo-700"

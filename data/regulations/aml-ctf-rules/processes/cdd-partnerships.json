@@ -3,178 +3,138 @@
     {
       "id": "process-exists",
       "group": "process-existence",
-      "label": "Does your business have a Customer Due Diligence — Partnerships process?",
+      "label": "Does your business have a Customer Due Diligence \u2014 Partnerships process?",
       "detail-required": false,
       "correct-option": "Yes",
       "source-rules": [],
       "mapping-confidence": 1.0,
-      "remediation": "Your organisation does not have a Customer Due Diligence — Partnerships process in place. You must establish a documented Customer Due Diligence — Partnerships process to meet your AML/CTF obligations. Review the controls below and implement the required procedures before completing this assessment."
+      "remediation": "Your organisation does not have a Customer Due Diligence \u2014 Partnerships process in place. You must establish a documented Customer Due Diligence \u2014 Partnerships process to meet your AML/CTF obligations. Review the controls below and implement the required procedures before completing this assessment."
     },
     {
       "id": "4_5_2",
       "group": "general-cdd-obligation",
-      "label": "Have you implemented risk-based systems and controls to verify that the partnership exists and that all partner names have been collected?",
+      "label": "Does your AML/CTF program include risk-based systems and controls to verify that the partnership exists and that all partners' names have been provided?",
       "detail-required": true,
-      "detail-label": "Describe your risk-based verification systems and controls",
       "correct-option": "Yes",
+      "detail-label": "Describe your risk-based systems and controls",
       "process-id": "PROC-AML-002c",
       "source-rules": [
         "4.5.2",
         "4.5.2(1)",
         "4.5.2(2)"
       ],
-      "mapping-confidence": 0.9,
-      "remediation": "Your Customer Due Diligence Program for Partnerships does not include the required risk-based systems and controls to verify partnership existence and confirm all partner names have been collected. Implement controls that enable you to be reasonably satisfied about partnership existence and partner identification, as required under rules 4.5.2, 4.5.2(1), and 4.5.2(2)."
+      "mapping-confidence": 0.95,
+      "remediation": "Your Customer Identification Procedure for Partnerships does not include the required risk-based systems and controls to verify partnership existence and partner names. Implement controls that enable you to be reasonably satisfied that the partnership exists and that all partner names have been provided in accordance with rule 4.5.3(5), as required under rules 4.5.2(1) and 4.5.2(2)."
     },
     {
       "id": "4_5_3",
       "group": "collection-kyc",
-      "label": "Do you collect the full name of the partnership?",
+      "label": "Does your procedure collect the minimum KYC information required for partnerships?",
       "detail-required": false,
       "correct-option": "Yes",
       "process-id": "PROC-AML-002a",
       "source-rules": [
-        "4.5.3",
-        "4.5.3(1)"
+        "4.5.3"
       ],
-      "mapping-confidence": 1.0,
-      "remediation": "Your Collection of KYC Information procedure does not collect the full name of the partnership. Update your process to collect the full name of every partnership customer before commencing a designated service, as required under rule 4.5.3(1)."
+      "mapping-confidence": 0.95,
+      "checklist-items": [
+        {
+          "label": "Full name of the partnership"
+        },
+        {
+          "label": "Full business name (if any) as registered under State or Territory business names legislation"
+        },
+        {
+          "label": "Country in which the partnership was established"
+        },
+        {
+          "label": "Information required to be collected about one of the partners (as per individual customer ID procedure)"
+        },
+        {
+          "label": "Full name and residential address of each partner (unless professional association membership is verified)"
+        }
+      ],
+      "remediation": "Your Collection of KYC Information procedure does not collect the minimum required information for partnerships. Ensure your procedure collects the partnership's full name, registered business name, country of establishment, individual partner information (per the individual ID procedure), and the name and residential address of each partner (unless regulated status is confirmed via professional association membership directory), as required under rule 4.5.3."
     },
     {
-      "id": "4_5_3_2",
-      "group": "collection-kyc",
-      "label": "Do you collect the full business name of the partnership as registered under State or Territory business names legislation (if any)?",
-      "detail-required": false,
-      "correct-option": "Yes",
-      "process-id": "PROC-AML-002a",
-      "source-rules": [
-        "4.5.3",
-        "4.5.3(2)"
-      ],
-      "mapping-confidence": 1.0,
-      "remediation": "Your Collection of KYC Information procedure does not collect the registered business name of the partnership under State or Territory legislation. Update your process to collect this information for every partnership customer, as required under rule 4.5.3(2)."
-    },
-    {
-      "id": "4_5_3_3",
-      "group": "collection-kyc",
-      "label": "Do you collect the country in which the partnership was established?",
-      "detail-required": false,
-      "correct-option": "Yes",
-      "process-id": "PROC-AML-002a",
-      "source-rules": [
-        "4.5.3",
-        "4.5.3(3)"
-      ],
-      "mapping-confidence": 1.0,
-      "remediation": "Your Collection of KYC Information procedure does not collect the country in which the partnership was established. Update your process to collect this information for every partnership customer, as required under rule 4.5.3(3)."
-    },
-    {
-      "id": "4_5_3_4",
-      "group": "collection-kyc",
-      "label": "Do you collect the individual identification information required by your AML/CTF program for at least one partner in the partnership?",
+      "id": "4_5_4",
+      "group": "additional-kyc-assessment",
+      "label": "Does your procedure include risk-based systems and controls to determine whether additional KYC information should be collected for partnerships?",
       "detail-required": true,
-      "detail-label": "Describe what individual identification information you collect for partners",
       "correct-option": "Yes",
-      "process-id": "PROC-AML-002a",
+      "detail-label": "Describe your risk-based assessment process for additional information collection",
+      "process-id": "PROC-AML-002c",
       "source-rules": [
-        "4.5.3",
-        "4.5.3(4)"
+        "4.5.4"
       ],
-      "mapping-confidence": 0.9,
-      "remediation": "Your Collection of KYC Information procedure does not collect individual identification information for at least one partner. Update your process to collect full name, date of birth, residential address, and identification details for at least one partner in the partnership, as required under rule 4.5.3(4)."
+      "mapping-confidence": 0.95,
+      "remediation": "Your Customer Identification Procedure for Partnerships does not include risk-based systems and controls to assess whether additional KYC information is needed. Implement a documented process to determine, based on assessed ML/TF risk, whether information beyond the minimum required under rule 4.5.3 should be collected, as required under rule 4.5.4."
     },
     {
-      "id": "4_5_3_5",
-      "group": "collection-kyc",
-      "label": "Do you collect the full name and residential address of each partner in the partnership (unless the partnership's regulated status is confirmed through a professional association directory)?",
-      "detail-required": true,
-      "detail-label": "Describe how you collect partner names and addresses, including any exemptions you apply for professional associations",
+      "id": "4_5_5_1",
+      "group": "verification-identity",
+      "label": "Does your procedure verify the partnership name from acceptable sources?",
+      "detail-required": false,
       "correct-option": "Yes",
-      "process-id": "PROC-AML-002a",
+      "process-id": "PROC-AML-002b",
       "source-rules": [
-        "4.5.3",
-        "4.5.3(5)"
+        "4.5.5(1)"
       ],
-      "mapping-confidence": 0.85,
-      "remediation": "Your Collection of KYC Information procedure does not collect the full name and residential address of each partner, or does not account for the professional association directory exemption. Update your process to collect this information for all partners unless the partnership's regulated status is confirmed through a current professional association membership directory, as required under rule 4.5.3(5).",
+      "mapping-confidence": 0.95,
       "checklist-items": [
         {
           "type": "or-group",
           "items": [
             {
-              "label": "Full name and residential address of each partner"
+              "label": "Partnership agreement"
             },
             {
-              "label": "Regulated status via professional association directory"
+              "label": "Certified copy or certified extract of partnership agreement"
+            },
+            {
+              "label": "Reliable and independent documents relating to the partnership"
+            },
+            {
+              "label": "Reliable and independent electronic data"
             }
           ]
         }
-      ]
-    },
-    {
-      "id": "4_5_4",
-      "group": "additional-kyc-assessment",
-      "label": "Have you implemented risk-based systems and controls to determine whether additional KYC information beyond the minimum should be collected?",
-      "detail-required": true,
-      "detail-label": "Describe your risk assessment process for determining additional collection requirements",
-      "correct-option": "Yes",
-      "process-id": "PROC-AML-002c",
-      "source-rules": [
-        "4.5.4"
       ],
-      "mapping-confidence": 0.9,
-      "remediation": "Your Customer Due Diligence Program for Partnerships does not include risk-based systems and controls to determine whether additional KYC information should be collected beyond the minimum. Implement a risk assessment procedure that evaluates each partnership and determines what additional information is necessary based on your ML/TF risk assessment, as required under rule 4.5.4."
-    },
-    {
-      "id": "4_5_5_1",
-      "group": "verification",
-      "label": "Do you verify the full name of the partnership using partnership agreements, certified copies of agreements, reliable independent documents, or reliable independent electronic data?",
-      "detail-required": true,
-      "detail-label": "Describe the verification sources and methods you use for partnership names",
-      "correct-option": "Yes",
-      "process-id": "PROC-AML-002b",
-      "source-rules": [
-        "4.5.5",
-        "4.5.5(1)"
-      ],
-      "mapping-confidence": 0.95,
-      "remediation": "Your Verification of Identity procedure does not verify the partnership name using acceptable sources. Update your process to verify the full partnership name from partnership agreements, certified copies of agreements, reliable independent documents, or reliable independent electronic data, as required under rule 4.5.5(1)."
+      "remediation": "Your Verification of Identity procedure does not verify the partnership name using acceptable sources. Ensure your procedure verifies the partnership's full name using at least one of: partnership agreement, certified copy/extract of partnership agreement, reliable and independent documents relating to the partnership, or reliable and independent electronic data, as required under rule 4.5.5(1)."
     },
     {
       "id": "4_5_5_2",
-      "group": "verification",
-      "label": "Do you verify individual identification information for at least one partner in accordance with your applicable customer identification procedure for individuals?",
+      "group": "verification-identity",
+      "label": "Does your procedure verify information about one of the partners in accordance with the applicable individual customer identification procedure?",
       "detail-required": true,
-      "detail-label": "Describe how you verify individual partner identity information",
       "correct-option": "Yes",
+      "detail-label": "Describe how you verify partner information",
       "process-id": "PROC-AML-002b",
       "source-rules": [
-        "4.5.5",
         "4.5.5(2)"
       ],
       "mapping-confidence": 0.95,
-      "remediation": "Your Verification of Identity procedure does not verify individual identification information for at least one partner. Update your process to verify full name, date of birth, and residential address for at least one partner using reliable and independent sources, as required under rule 4.5.5(2)."
+      "remediation": "Your Verification of Identity procedure does not verify partner information according to the individual customer identification procedure. Ensure your procedure verifies information about at least one partner using the same identity verification methods required for individual customers under your AML/CTF program, as required under rule 4.5.5(2)."
     },
     {
       "id": "4_5_6",
       "group": "additional-kyc-assessment",
-      "label": "Have you implemented risk-based systems and controls to determine whether, and to what extent, additional collected KYC information should be verified?",
+      "label": "Does your procedure include risk-based systems and controls to determine whether additional KYC information collected should be verified?",
       "detail-required": true,
-      "detail-label": "Describe your risk-based procedure for determining additional verification requirements",
       "correct-option": "Yes",
+      "detail-label": "Describe your risk-based assessment process for additional information verification",
       "process-id": "PROC-AML-002c",
       "source-rules": [
         "4.5.6"
       ],
-      "mapping-confidence": 0.9,
-      "remediation": "Your Customer Due Diligence Program for Partnerships does not include risk-based systems and controls to determine whether additional collected information should be verified. Implement a risk assessment procedure that determines the extent of verification required for additional KYC information based on your ML/TF risk assessment, as required under rule 4.5.6."
+      "mapping-confidence": 0.95,
+      "remediation": "Your Customer Identification Procedure for Partnerships does not include risk-based systems and controls to assess whether additional collected KYC information should be verified. Implement a documented process to determine, based on assessed ML/TF risk, whether and to what extent information beyond the minimum required under rule 4.5.5 should be verified, as required under rule 4.5.6."
     },
     {
       "id": "4_5_7",
       "group": "verification-methods",
-      "label": "Do you base partnership verification on partnership agreements, certified copies, certified extracts, reliable independent documents, reliable independent electronic data, or a combination of these?",
-      "detail-required": true,
-      "detail-label": "Describe the specific sources and methods you use for partnership verification",
+      "label": "Does your procedure limit verification of partnership information to the prescribed acceptable sources?",
+      "detail-required": false,
       "correct-option": "Yes",
       "process-id": "PROC-AML-002b",
       "source-rules": [
@@ -186,14 +146,38 @@
         "4.5.7(5)"
       ],
       "mapping-confidence": 0.95,
-      "remediation": "Your Verification of Identity procedure does not use acceptable methods for partnership verification. Update your process to verify partnership information using partnership agreements, certified copies or extracts of agreements, partnership meeting minutes, reliable independent documents, reliable independent electronic data, or a combination of these sources, as required under rule 4.5.7."
+      "checklist-items": [
+        {
+          "type": "or-group",
+          "items": [
+            {
+              "label": "Partnership agreement"
+            },
+            {
+              "label": "Certified copy or certified extract of partnership agreement"
+            },
+            {
+              "label": "Certified copy or certified extract of minutes of a partnership meeting"
+            },
+            {
+              "label": "Reliable and independent documents relating to the partnership"
+            },
+            {
+              "label": "Reliable and independent electronic data"
+            },
+            {
+              "label": "Combination of the above"
+            }
+          ]
+        }
+      ],
+      "remediation": "Your Verification of Identity procedure does not limit verification of partnership information to acceptable sources. Ensure that verification is based only on partnership agreements, certified copies/extracts of partnership agreements, certified copies/extracts of partnership meeting minutes, reliable and independent documents relating to the partnership, reliable and independent electronic data, or combinations thereof, as required under rule 4.5.7."
     },
     {
       "id": "4_5_8",
-      "group": "safe-harbour-disclosure",
-      "label": "Do you accept disclosure certificates as verification evidence for partnership information when the information is not otherwise reasonably available from primary sources?",
-      "detail-required": true,
-      "detail-label": "Describe how you accept and process disclosure certificates for partnership verification",
+      "group": "disclosure-certificate-safe-harbour",
+      "label": "Does your procedure recognize disclosure certificates as acceptable verification documents under specified conditions?",
+      "detail-required": false,
       "correct-option": "Yes",
       "process-id": "PROC-AML-002b",
       "source-rules": [
@@ -201,22 +185,30 @@
         "4.5.8(1)",
         "4.5.8(2)"
       ],
-      "mapping-confidence": 0.85,
-      "remediation": "Your Verification of Identity procedure does not account for disclosure certificates as an alternative verification method. Update your process to accept disclosure certificates when verifying partnership information for the purposes of determining additional collection requirements and when the information is not reasonably available from partnership agreements or other primary sources, as required under rules 4.5.8(1) and 4.5.8(2)."
+      "mapping-confidence": 0.9,
+      "checklist-items": [
+        {
+          "label": "Verification is for purposes of additional KYC assessment (rule 4.5.6)"
+        },
+        {
+          "label": "Information to be verified is not otherwise reasonably available from rule 4.5.7 sources"
+        }
+      ],
+      "remediation": "Your Verification of Identity procedure does not recognize disclosure certificates as acceptable verification documents. Update your procedure to accept disclosure certificates as reliable and independent documents for additional KYC information verification when: (1) the verification is for determining whether to verify additional collected information under rule 4.5.6, and (2) the information is not otherwise reasonably available from sources described in rule 4.5.7, as required under rule 4.5.8."
     },
     {
       "id": "4_5_9",
       "group": "discrepancy-handling",
-      "label": "Have you implemented risk-based systems and controls to respond to any discrepancies identified during partnership information verification?",
+      "label": "Does your procedure include risk-based systems and controls to respond to discrepancies discovered during verification?",
       "detail-required": true,
-      "detail-label": "Describe your process for identifying, investigating, and resolving verification discrepancies",
       "correct-option": "Yes",
+      "detail-label": "Describe your process for handling verification discrepancies",
       "process-id": "PROC-AML-002c",
       "source-rules": [
         "4.5.9"
       ],
-      "mapping-confidence": 0.9,
-      "remediation": "Your Customer Due Diligence Program for Partnerships does not include risk-based systems and controls to respond to discrepancies in partnership verification. Implement a procedure that identifies and investigates discrepancies in partnership name, partner identity, or other information and determines whether you can remain reasonably satisfied about partnership existence and partner identification, as required under rule 4.5.9."
+      "mapping-confidence": 0.95,
+      "remediation": "Your Customer Identification Procedure for Partnerships does not include risk-based systems and controls to respond to verification discrepancies. Implement a documented process to handle discrepancies that arise during verification so that you can determine whether you are reasonably satisfied that the partnership exists and that all partner names have been provided (as required under rules 4.5.2(1) and 4.5.2(2)), as mandated by rule 4.5.9."
     }
   ],
   "groups": [
@@ -228,45 +220,45 @@
     },
     {
       "id": "general-cdd-obligation",
-      "title": "General CDD Obligation for Partnerships",
-      "description": "Risk-based systems and controls to verify partnership existence and confirm all partner names have been collected",
+      "title": "General CDD Obligation",
+      "description": "Risk-based systems and controls to verify partnership existence and partner names.",
       "variant": "main"
     },
     {
       "id": "collection-kyc",
       "title": "Collection of KYC Information",
-      "description": "Minimum KYC information to be collected about partnership customers",
-      "variant": "main"
-    },
-    {
-      "id": "verification",
-      "title": "Verification of Information",
-      "description": "Minimum verification procedures for partnership name and individual partner identification",
-      "variant": "main"
-    },
-    {
-      "id": "verification-methods",
-      "title": "Verification Methods",
-      "description": "Acceptable sources and methods for verifying partnership information",
+      "description": "Minimum KYC information and documentation to be collected about partnerships.",
       "variant": "main"
     },
     {
       "id": "additional-kyc-assessment",
       "title": "Additional KYC Assessment",
-      "description": "Risk-based determination of additional collection and verification requirements beyond the minimum",
+      "description": "Risk-based assessment of whether additional KYC information should be collected and verified.",
       "variant": "main"
     },
     {
-      "id": "safe-harbour-disclosure",
-      "title": "Safe Harbour — Disclosure Certificates",
-      "description": "Acceptance and use of disclosure certificates as an alternative verification method when primary sources are not reasonably available",
+      "id": "verification-identity",
+      "title": "Verification of Identity",
+      "description": "Verification of partnership name and partner information.",
+      "variant": "main"
+    },
+    {
+      "id": "verification-methods",
+      "title": "Verification Methods",
+      "description": "Prescribed acceptable sources for verifying partnership information.",
+      "variant": "main"
+    },
+    {
+      "id": "disclosure-certificate-safe-harbour",
+      "title": "Disclosure Certificates",
+      "description": "Use of disclosure certificates for verifying partnership information under specified conditions.",
       "variant": "subprocess",
-      "subprocess-label": "Safe Harbour"
+      "subprocess-label": "Disclosure Certificate Safe Harbour"
     },
     {
       "id": "discrepancy-handling",
       "title": "Responding to Discrepancies",
-      "description": "Risk-based systems and controls to respond to discrepancies identified during partnership verification",
+      "description": "Risk-based systems and controls for handling discrepancies discovered during verification.",
       "variant": "main"
     }
   ],
@@ -280,8 +272,8 @@
       }
     },
     {
-      "target": "safe-harbour-disclosure",
-      "scope": "4_5_6",
+      "target": "disclosure-certificate-safe-harbour",
+      "scope": "4_5_4",
       "effect": "SHOW",
       "schema": {
         "const": "Yes"

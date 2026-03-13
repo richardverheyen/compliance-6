@@ -3,154 +3,132 @@
     {
       "id": "process-exists",
       "group": "process-existence",
-      "label": "Does your business have a Customer Due Diligence — Government Bodies process?",
+      "label": "Does your business have a Customer Due Diligence \u2014 Government Bodies process?",
       "detail-required": false,
       "correct-option": "Yes",
       "source-rules": [],
       "mapping-confidence": 1.0,
-      "remediation": "Your organisation does not have a Customer Due Diligence — Government Bodies process in place. You must establish a documented Customer Due Diligence — Government Bodies process to meet your AML/CTF obligations. Review the controls below and implement the required procedures before completing this assessment."
+      "remediation": "Your organisation does not have a Customer Due Diligence \u2014 Government Bodies process in place. You must establish a documented Customer Due Diligence \u2014 Government Bodies process to meet your AML/CTF obligations. Review the controls below and implement the required procedures before completing this assessment."
     },
     {
       "id": "4_8_2",
-      "group": "risk-based-satisfaction",
-      "label": "Does your AML/CTF program include risk-based systems and controls to enable reasonable satisfaction that notified government bodies exist and (where applicable) have provided beneficial ownership information?",
+      "group": "general-cdd-obligation",
+      "label": "Does your Customer Identification Procedure include risk-based systems and controls to verify that the government body exists?",
       "detail-required": true,
-      "detail-label": "Describe your risk-based systems and controls",
+      "detail-label": "Describe how you verify the existence of government bodies",
       "correct-option": "Yes",
-      "process-id": "PROC-AML-002c",
       "source-rules": [
-        "4.8.2",
-        "4.8.2(1)",
-        "4.8.2(2)"
+        "4.8.2(1)"
       ],
       "mapping-confidence": 0.95,
-      "remediation": "Your Customer Identification Procedure for government bodies does not include sufficient risk-based systems and controls to enable reasonable satisfaction about entity existence and beneficial ownership information. Implement appropriate risk-based controls that allow you to verify these matters before commencing a designated service, as required under rules 4.8.2, 4.8.2(1), and 4.8.2(2)."
+      "remediation": "Your Customer Identification Procedure does not include adequate risk-based systems and controls to verify government body existence. Ensure your CDD process includes appropriate controls to determine the existence of all government body customers, as required under rule 4.8.2(1)."
     },
     {
       "id": "4_8_3",
-      "group": "collection-kyc-government",
-      "label": "Does your procedure collect minimum KYC information for all government body customers (full name, principal place of operations address, Commonwealth status, and State/Territory/foreign country status)?",
-      "detail-required": true,
-      "detail-label": "Describe how you collect this minimum KYC information",
+      "group": "collection-kyc-information",
+      "label": "Does your procedure collect the minimum KYC information for all government body customers?",
+      "detail-required": false,
       "correct-option": "Yes",
-      "process-id": "PROC-AML-002a",
+      "checklist-items": [
+        {
+          "label": "Full name of the government body"
+        },
+        {
+          "label": "Full address of the government body's principal place of operations"
+        },
+        {
+          "label": "Whether the government body is an entity or emanation, or is established under legislation, of the Commonwealth"
+        },
+        {
+          "label": "Whether the government body is an entity or emanation, or is established under legislation, of a State, Territory, or a foreign country and the name of that State, Territory or country"
+        }
+      ],
       "source-rules": [
-        "4.8.3",
         "4.8.3(1)",
         "4.8.3(2)",
         "4.8.3(3)",
         "4.8.3(4)"
       ],
       "mapping-confidence": 1.0,
-      "remediation": "Your Collection of KYC Information procedure does not capture all mandatory information for government body customers. Update your procedure to collect the full name, principal place of operations address, Commonwealth entity status, and State/Territory/foreign country designation for every government body customer before commencing a designated service, as required under rules 4.8.3(1), 4.8.3(2), 4.8.3(3), and 4.8.3(4).",
-      "checklist-items": [
-        {
-          "label": "Full name"
-        },
-        {
-          "label": "Principal place of operations address"
-        },
-        {
-          "label": "Jurisdiction",
-          "note": "Commonwealth, State, Territory, or foreign country"
-        }
-      ]
+      "remediation": "Your Collection of KYC Information procedure does not collect all minimum required data for government body customers. Update your process to collect full name, principal place of operations address, Commonwealth status, and State/Territory/foreign country status (with jurisdictional name) for every government body customer before commencing a designated service, as required under rules 4.8.3(1), 4.8.3(2), 4.8.3(3), and 4.8.3(4)."
     },
     {
       "id": "4_8_4",
-      "group": "collection-kyc-government",
-      "label": "Does your procedure include risk-based systems and controls to determine whether to collect additional KYC information beyond the minimum requirements?",
+      "group": "additional-kyc-assessment",
+      "label": "Does your procedure include risk-based systems and controls to determine whether additional KYC information beyond the minimum should be collected for government bodies?",
       "detail-required": true,
-      "detail-label": "Describe your risk-based approach to collecting additional KYC information",
+      "detail-label": "Describe your risk-based assessment process for additional KYC collection",
       "correct-option": "Yes",
-      "process-id": "PROC-AML-002c",
       "source-rules": [
         "4.8.4"
       ],
       "mapping-confidence": 0.95,
-      "remediation": "Your Collection of KYC Information procedure does not include risk-based systems and controls to determine whether additional KYC information should be collected for government body customers. Implement a risk-based decision-making process that evaluates each customer and determines what additional information, if any, is necessary to manage money laundering and terrorism financing risk, as required under rule 4.8.4."
+      "remediation": "Your Customer Identification Procedure lacks risk-based systems and controls for determining whether additional KYC information should be collected beyond the minimum requirements for government body customers. Implement a documented risk assessment process that evaluates whether the government body's risk profile warrants additional information collection, as required under rule 4.8.4."
     },
     {
       "id": "4_8_5",
-      "group": "verification-government",
-      "label": "Does your procedure verify minimum KYC information about government bodies from reliable and independent documentation, electronic data, or a combination of both?",
+      "group": "verification-of-information",
+      "label": "Does your procedure verify the minimum KYC information collected for government bodies from reliable and independent documentation or electronic data?",
       "detail-required": true,
-      "detail-label": "Describe your verification methods and documentation sources",
+      "detail-label": "Describe the verification methods and acceptable sources (documentation, electronic data, or both) you use for government body KYC",
       "correct-option": "Yes",
-      "process-id": "PROC-AML-002b",
       "source-rules": [
         "4.8.5"
       ],
       "mapping-confidence": 0.95,
-      "remediation": "Your Verification of Identity procedure does not establish a documented process for verifying government body information from reliable and independent sources. Implement a procedure that verifies the full name, principal place of operations, and government entity status from reliable documentation, electronic data, or a combination of both, as required under rule 4.8.5.",
-      "checklist-items": [
-        {
-          "label": "Full name"
-        },
-        {
-          "label": "Principal place of operations address"
-        },
-        {
-          "label": "Jurisdiction",
-          "note": "Commonwealth, State, Territory, or foreign country"
-        }
-      ]
+      "remediation": "Your Verification of Information procedure does not verify government body KYC information from reliable and independent sources. Update your process to verify all minimum KYC information (full name, principal place of operations, Commonwealth status, and State/Territory/foreign country status) from reliable and independent documentation, electronic data, or a combination of both, as required under rule 4.8.5."
     },
     {
       "id": "4_8_6",
-      "group": "verification-government",
-      "label": "Does your procedure include risk-based systems and controls to determine whether to verify any additional KYC information collected about government bodies?",
+      "group": "additional-kyc-assessment",
+      "label": "Does your procedure include risk-based systems and controls to determine whether any additional KYC information collected should be verified?",
       "detail-required": true,
-      "detail-label": "Describe your risk-based approach to verifying additional KYC information",
+      "detail-label": "Describe your risk-based assessment process for determining whether additional collected KYC should be verified",
       "correct-option": "Yes",
-      "process-id": "PROC-AML-002c",
       "source-rules": [
         "4.8.6"
       ],
       "mapping-confidence": 0.95,
-      "remediation": "Your Verification of Identity procedure does not include risk-based systems and controls to determine whether additional KYC information should be verified for government body customers. Implement a risk-based decision-making process that evaluates each additional piece of information collected and determines whether and how it should be verified from reliable sources, as required under rule 4.8.6."
+      "remediation": "Your Customer Identification Procedure lacks risk-based systems and controls for determining whether additional KYC information should be verified for government body customers. Implement a documented risk assessment process that evaluates whether additional collected information warrants verification, as required under rule 4.8.6."
     },
     {
       "id": "4_8_7",
-      "group": "beneficial-ownership-foreign",
-      "label": "Does your procedure include risk-based systems and controls to determine whether to collect KYC information about the ownership or control of foreign government bodies?",
+      "group": "foreign-government-ownership",
+      "label": "Does your procedure include risk-based systems and controls to determine whether to collect information about the ownership or control of foreign government bodies?",
       "detail-required": true,
-      "detail-label": "Describe your risk-based approach to collecting beneficial ownership information",
+      "detail-label": "Describe your risk-based assessment process for determining whether to collect beneficial ownership information for foreign government entities",
       "correct-option": "Yes",
-      "process-id": "PROC-AML-003a",
       "source-rules": [
         "4.8.7"
       ],
       "mapping-confidence": 0.95,
-      "remediation": "Your Beneficial Ownership Identification procedure does not include risk-based systems and controls to determine whether to collect ownership or control information for foreign government body customers. Implement a risk-based decision-making process that evaluates the specific risks posed by each foreign government customer and determines what beneficial ownership information, if any, should be collected, as required under rule 4.8.7."
+      "remediation": "Your Customer Identification Procedure does not include risk-based systems and controls to determine whether beneficial ownership information should be collected for foreign government body customers. Implement a documented risk assessment process that evaluates whether the foreign government entity's profile requires collection of ownership or control information, as required under rule 4.8.7."
     },
     {
       "id": "4_8_8",
-      "group": "beneficial-ownership-foreign",
-      "label": "Does your procedure include risk-based systems and controls to determine whether to verify collected beneficial ownership information about foreign government bodies from reliable and independent sources?",
+      "group": "foreign-government-ownership",
+      "label": "Does your procedure include risk-based systems and controls to determine whether to verify beneficial ownership information collected for foreign government bodies?",
       "detail-required": true,
-      "detail-label": "Describe your risk-based approach to verifying beneficial ownership information",
+      "detail-label": "Describe your risk-based assessment process for determining whether to verify beneficial ownership information for foreign government entities",
       "correct-option": "Yes",
-      "process-id": "PROC-AML-003a",
       "source-rules": [
         "4.8.8"
       ],
       "mapping-confidence": 0.95,
-      "remediation": "Your Beneficial Ownership Identification procedure does not include risk-based systems and controls to determine whether collected beneficial ownership information should be verified for foreign government body customers. Implement a risk-based decision-making process that evaluates the risks and determines what verification methods should be used, including reliable documentation, electronic data, or a combination of both, as required under rule 4.8.8."
+      "remediation": "Your Customer Identification Procedure does not include risk-based systems and controls to determine whether beneficial ownership information for foreign government body customers should be verified. Implement a documented risk assessment process that evaluates whether collected ownership or control information requires verification from reliable and independent sources, as required under rule 4.8.8."
     },
     {
       "id": "4_8_9",
       "group": "discrepancy-handling",
-      "label": "Does your procedure include risk-based systems and controls to respond to discrepancies arising during verification of government body information?",
+      "label": "Does your procedure include risk-based systems and controls to respond to discrepancies when verifying government body information?",
       "detail-required": true,
-      "detail-label": "Describe your discrepancy response procedures",
+      "detail-label": "Describe how you respond to discrepancies in government body verification and how this helps you determine reasonableness of the information",
       "correct-option": "Yes",
-      "process-id": "PROC-AML-002b",
       "source-rules": [
         "4.8.9"
       ],
       "mapping-confidence": 0.95,
-      "remediation": "Your Customer Identification Procedure does not establish a clear process for managing discrepancies discovered during verification of government body information. Implement risk-based systems and controls that enable you to respond to discrepancies and determine whether you can be reasonably satisfied about entity existence and beneficial ownership, as required under rule 4.8.9."
+      "remediation": "Your Customer Identification Procedure lacks risk-based systems and controls to respond to discrepancies identified when verifying government body information. Implement a documented process for resolving verification discrepancies that enables you to determine whether you can be reasonably satisfied about the government body's existence and beneficial ownership (where applicable), as required under rule 4.8.9."
     }
   ],
   "groups": [
@@ -161,40 +139,40 @@
       "variant": "main"
     },
     {
-      "id": "cdd-government-obligation",
-      "title": "Customer Due Diligence Obligation for Government Bodies",
-      "description": "Compliance requirements for AML/CTF programs serving government body customers under Part 4.8 of the AML/CTF Rules.",
+      "id": "general-cdd-obligation",
+      "title": "General CDD Obligation",
+      "description": "Risk-based systems and controls to verify that government body customers exist and, where applicable, that beneficial ownership information is provided.",
       "variant": "main"
     },
     {
-      "id": "risk-based-satisfaction",
-      "title": "Risk-Based Systems and Controls",
-      "description": "Systems and controls to enable reasonable satisfaction about government body existence and beneficial ownership.",
-      "variant": "main"
-    },
-    {
-      "id": "collection-kyc-government",
+      "id": "collection-kyc-information",
       "title": "Collection of KYC Information",
-      "description": "Procedures for collecting minimum and additional KYC information about government body customers.",
+      "description": "Procedures to collect minimum required KYC information for government body customers, including name, principal place of operations, and jurisdictional status.",
       "variant": "main"
     },
     {
-      "id": "verification-government",
+      "id": "verification-of-information",
       "title": "Verification of Information",
-      "description": "Procedures for verifying government body information from reliable and independent sources.",
+      "description": "Procedures to verify collected KYC information from reliable and independent documentation or electronic data.",
       "variant": "main"
     },
     {
-      "id": "beneficial-ownership-foreign",
-      "title": "Beneficial Ownership for Foreign Government Bodies",
-      "description": "Risk-based procedures for collecting and verifying beneficial ownership information about foreign government entities.",
+      "id": "additional-kyc-assessment",
+      "title": "Additional KYC Assessment",
+      "description": "Risk-based assessment to determine whether additional KYC information should be collected and verified beyond the minimum requirements.",
+      "variant": "main"
+    },
+    {
+      "id": "foreign-government-ownership",
+      "title": "Foreign Government Entities \u2014 Beneficial Ownership",
+      "description": "Risk-based procedures to determine whether to collect and verify beneficial ownership information for foreign government body customers.",
       "variant": "subprocess",
-      "subprocess-label": "Foreign Government Bodies"
+      "subprocess-label": "Foreign Government"
     },
     {
       "id": "discrepancy-handling",
-      "title": "Discrepancy Handling",
-      "description": "Procedures for responding to discrepancies identified during verification of government body information.",
+      "title": "Responding to Discrepancies",
+      "description": "Risk-based systems and controls to respond to discrepancies when verifying government body information and to determine reasonableness of the information provided.",
       "variant": "main"
     }
   ],
@@ -208,7 +186,23 @@
       }
     },
     {
-      "target": "beneficial-ownership-foreign",
+      "target": "4_8_7",
+      "scope": "sub-foreign-govt",
+      "effect": "SHOW",
+      "schema": {
+        "const": "Yes"
+      }
+    },
+    {
+      "target": "4_8_8",
+      "scope": "sub-foreign-govt",
+      "effect": "SHOW",
+      "schema": {
+        "const": "Yes"
+      }
+    },
+    {
+      "target": "foreign-government-ownership",
       "scope": "sub-foreign-govt",
       "effect": "SHOW",
       "schema": {

@@ -1,0 +1,270 @@
+{
+  "controls": [
+    {
+      "id": "process-exists",
+      "group": "process-existence",
+      "label": "Does your business have a Correspondent Banking process?",
+      "detail-required": false,
+      "correct-option": "Yes",
+      "source-rules": [],
+      "mapping-confidence": 1.0,
+      "remediation": "Your organisation does not have a Correspondent Banking process in place. You must establish a documented Correspondent Banking process to meet your AML/CTF obligations. Review the controls below and implement the required procedures before completing this assessment."
+    },
+    {
+      "id": "3_1_2",
+      "group": "pre-entry-due-diligence",
+      "label": "Does your correspondent banking program require due diligence to assess money laundering, financing of terrorism and other serious crime risks before entering into a correspondent banking relationship with a respondent?",
+      "detail-required": true,
+      "detail-label": "Describe your due diligence process for assessing correspondent banking risks",
+      "correct-option": "Yes",
+      "process-id": "PROC-AML-003",
+      "source-rules": [
+        "3.1.2"
+      ],
+      "mapping-confidence": 1.0,
+      "remediation": "Your Correspondent Banking program does not include initial due diligence to assess money laundering and terrorism financing risks before entering into a respondent relationship. Establish a documented due diligence process to assess risks associated with each prospective respondent's vostro account relationship, as required under rule 3.1.2."
+    },
+    {
+      "id": "3_1_3_1",
+      "group": "pre-entry-due-diligence",
+      "label": "Does your due diligence assessment evaluate the ownership, control and management structures of the respondent and its ultimate parent company?",
+      "detail-required": true,
+      "detail-label": "Explain how you assess ownership, control and management structures",
+      "correct-option": "Yes",
+      "process-id": "PROC-AML-003a",
+      "source-rules": [
+        "3.1.3(1)"
+      ],
+      "mapping-confidence": 1.0,
+      "remediation": "Your pre-entry due diligence does not adequately assess the respondent's ownership, control and management structures, including those of its ultimate parent company. Update your assessment process to evaluate these structural factors for every respondent before commencing a correspondent banking relationship, as required under rule 3.1.3(1)."
+    },
+    {
+      "id": "3_1_3_2",
+      "group": "pre-entry-due-diligence",
+      "label": "Does your due diligence assessment evaluate the nature, size, complexity and business operations of the respondent, including its products, services, delivery channels, customer types and transaction patterns?",
+      "detail-required": true,
+      "detail-label": "Describe how you assess the respondent's business operations and transaction patterns",
+      "correct-option": "Yes",
+      "process-id": "PROC-AML-003",
+      "source-rules": [
+        "3.1.3(2)"
+      ],
+      "mapping-confidence": 1.0,
+      "remediation": "Your pre-entry due diligence does not adequately assess the respondent's business operations, customer types and transaction patterns. Update your assessment to evaluate the nature, size, complexity, products, services, delivery channels and underlying customer transactions, as required under rule 3.1.3(2)."
+    },
+    {
+      "id": "3_1_3_3",
+      "group": "pre-entry-due-diligence",
+      "label": "Does your due diligence assessment evaluate the countries in which the respondent operates and, where applicable, the countries where its ultimate parent company operates?",
+      "detail-required": true,
+      "detail-label": "Describe how you assess geographic risk jurisdictions",
+      "correct-option": "Yes",
+      "process-id": "PROC-AML-003",
+      "source-rules": [
+        "3.1.3(3)"
+      ],
+      "mapping-confidence": 1.0,
+      "remediation": "Your pre-entry due diligence does not adequately assess the countries in which the respondent and its ultimate parent company operate. Update your assessment process to identify and evaluate the geographic jurisdictions involved in the correspondent banking relationship, as required under rule 3.1.3(3)."
+    },
+    {
+      "id": "3_1_3_4",
+      "group": "pre-entry-due-diligence",
+      "label": "Does your due diligence assessment evaluate the existence and quality of anti-money laundering and counter-terrorism financing regulation in the respondent's jurisdictions and its compliance with those regulations?",
+      "detail-required": true,
+      "detail-label": "Describe how you assess regulatory environment and the respondent's compliance practices",
+      "correct-option": "Yes",
+      "process-id": "PROC-AML-003",
+      "source-rules": [
+        "3.1.3(4)"
+      ],
+      "mapping-confidence": 1.0,
+      "remediation": "Your pre-entry due diligence does not adequately assess the quality of AML/CTF regulation in the respondent's operating jurisdictions or the respondent's own compliance with those regulations. Update your assessment to evaluate both the regulatory environment and the respondent's documented compliance practices, as required under rule 3.1.3(4)."
+    },
+    {
+      "id": "3_1_3_5",
+      "group": "pre-entry-due-diligence",
+      "label": "Does your due diligence assessment evaluate the adequacy and effectiveness of the respondent's anti-money laundering and counter-terrorism financing systems and controls?",
+      "detail-required": true,
+      "detail-label": "Describe how you assess the respondent's AML/CTF systems and controls",
+      "correct-option": "Yes",
+      "process-id": "PROC-AML-003",
+      "source-rules": [
+        "3.1.3(5)"
+      ],
+      "mapping-confidence": 1.0,
+      "remediation": "Your pre-entry due diligence does not adequately assess the respondent's AML/CTF systems and controls. Update your assessment process to evaluate the adequacy and effectiveness of the respondent's anti-money laundering and counter-terrorism financing program before approving entry into the correspondent banking relationship, as required under rule 3.1.3(5)."
+    },
+    {
+      "id": "3_1_3_6",
+      "group": "pre-entry-due-diligence",
+      "label": "Does your due diligence assessment evaluate publicly-available information about the respondent's reputation, including any history of regulatory investigations, adverse actions or criminal proceedings related to AML/CTF or serious crimes?",
+      "detail-required": true,
+      "detail-label": "Describe how you obtain and assess reputational information",
+      "correct-option": "Yes",
+      "process-id": "PROC-AML-003",
+      "source-rules": [
+        "3.1.3(6)"
+      ],
+      "mapping-confidence": 1.0,
+      "remediation": "Your pre-entry due diligence does not adequately assess publicly-available reputational information about the respondent, including regulatory investigations, adverse actions or criminal proceedings. Update your assessment to obtain and review publicly available information about the respondent's AML/CTF regulatory history and reputation, as required under rule 3.1.3(6)."
+    },
+    {
+      "id": "3_1_3_7",
+      "group": "prohibited-relationships",
+      "label": "If you maintain payable-through accounts (vostro accounts directly accessed by the respondent's customers), does the respondent conduct customer due diligence and ongoing customer due diligence for those customers?",
+      "detail-required": false,
+      "correct-option": "Yes",
+      "process-id": "PROC-AML-002",
+      "source-rules": [
+        "3.1.3(7)(a)"
+      ],
+      "mapping-confidence": 1.0,
+      "remediation": "Your payable-through account procedures do not ensure the respondent conducts customer due diligence and ongoing customer due diligence on its customers with direct access to your vostro accounts. Establish a requirement that the respondent perform and maintain appropriate CDD and ongoing CDD for all customers accessing payable-through accounts, as required under rule 3.1.3(7)(a)."
+    },
+    {
+      "id": "3_1_3_7_b",
+      "group": "prohibited-relationships",
+      "label": "If you maintain payable-through accounts, does the respondent agree to provide on request the documents, data or other information obtained when conducting customer due diligence and ongoing customer due diligence for those customers?",
+      "detail-required": true,
+      "detail-label": "Describe your process for requesting and obtaining payable-through account customer CDD documentation from the respondent",
+      "correct-option": "Yes",
+      "process-id": "PROC-AML-002",
+      "source-rules": [
+        "3.1.3(7)(b)"
+      ],
+      "mapping-confidence": 1.0,
+      "remediation": "Your payable-through account procedures do not ensure the respondent is contractually obligated to provide customer due diligence documentation on request. Establish a requirement in your correspondent banking agreements that the respondent must provide on request all CDD and ongoing CDD documents and data for customers accessing payable-through accounts, as required under rule 3.1.3(7)(b)."
+    },
+    {
+      "id": "3_1_4",
+      "group": "approval-process",
+      "label": "Before approving entry into a correspondent banking relationship, does your senior officer review the written due diligence assessment record and evaluate whether your AML/CTF program adequately manages the identified risks?",
+      "detail-required": true,
+      "detail-label": "Describe the senior officer approval process and how due diligence assessment records are documented and reviewed",
+      "correct-option": "Yes",
+      "process-id": "PROC-AML-003",
+      "source-rules": [
+        "3.1.4"
+      ],
+      "mapping-confidence": 1.0,
+      "remediation": "Your correspondent banking approval process does not include documented senior officer review of the due diligence assessment and the adequacy of your AML/CTF program to manage identified risks. Establish a documented approval process requiring your senior officer to review the written assessment record and confirm the firm's program adequately manages the risks before any correspondent banking relationship commences, as required under rule 3.1.4."
+    },
+    {
+      "id": "3_1_5_1",
+      "group": "payable-through-approval",
+      "label": "If you maintain payable-through accounts, before approving the relationship, is your senior officer satisfied that the respondent verifies the identity of and conducts ongoing customer due diligence for customers before they access those accounts?",
+      "detail-required": false,
+      "correct-option": "Yes",
+      "process-id": "PROC-AML-002",
+      "source-rules": [
+        "3.1.5(1)"
+      ],
+      "mapping-confidence": 1.0,
+      "remediation": "Your payable-through account approval process does not ensure senior officer confirmation that the respondent verifies customer identity and conducts ongoing CDD before customers access the accounts. Update your approval process to require senior officer satisfaction that the respondent performs identity verification and ongoing CDD for all payable-through account customers, as required under rule 3.1.5(1)."
+    },
+    {
+      "id": "3_1_5_2",
+      "group": "payable-through-approval",
+      "label": "If you maintain payable-through accounts, before approving the relationship, is your senior officer satisfied that the respondent is able to provide the correspondent on request the documents, data or other information obtained when conducting customer due diligence and ongoing customer due diligence for customers accessing those accounts?",
+      "detail-required": true,
+      "detail-label": "Describe how your senior officer confirms the respondent's capacity and commitment to provide payable-through account customer CDD documentation on request",
+      "correct-option": "Yes",
+      "process-id": "PROC-AML-002",
+      "source-rules": [
+        "3.1.5(2)"
+      ],
+      "mapping-confidence": 1.0,
+      "remediation": "Your payable-through account approval process does not ensure senior officer confirmation that the respondent can provide customer due diligence documentation on request. Update your approval process to require senior officer satisfaction that the respondent has the capacity and commitment to provide CDD and ongoing CDD documents and data for payable-through account customers on demand, as required under rule 3.1.5(2)."
+    }
+  ],
+  "groups": [
+    {
+      "id": "process-existence",
+      "title": "Process Confirmation",
+      "description": "Before answering the detailed compliance questions, confirm whether your organisation operates this business process.",
+      "variant": "main"
+    },
+    {
+      "id": "pre-entry-due-diligence",
+      "title": "Pre-Entry Due Diligence Assessment",
+      "description": "Initial assessment and documentation of money laundering, financing of terrorism and other serious crime risks associated with the prospective correspondent banking relationship",
+      "variant": "main"
+    },
+    {
+      "id": "prohibited-relationships",
+      "title": "Payable-Through Account Requirements",
+      "description": "Additional due diligence requirements where the correspondent maintains vostro accounts directly accessible by the respondent's customers (payable-through accounts)",
+      "variant": "subprocess",
+      "subprocess-label": "Payable-Through"
+    },
+    {
+      "id": "approval-process",
+      "title": "Senior Officer Approval and Risk Assessment",
+      "description": "Documented approval process requiring senior officer review of the due diligence assessment and adequacy of the correspondent's AML/CTF program",
+      "variant": "main"
+    },
+    {
+      "id": "payable-through-approval",
+      "title": "Senior Officer Approval for Payable-Through Accounts",
+      "description": "Additional senior officer confirmation requirements specific to payable-through account relationships",
+      "variant": "subprocess",
+      "subprocess-label": "Payable-Through"
+    },
+    {
+      "id": "ongoing-monitoring",
+      "title": "Ongoing Assessment of Correspondent Banking Relationships",
+      "description": "Continuous monitoring and re-assessment of correspondent banking relationships (Part 3.2 - controls to follow)",
+      "variant": "main"
+    },
+    {
+      "id": "record-keeping",
+      "title": "Record Keeping and Documentation",
+      "description": "Maintenance of documentation and records related to correspondent banking due diligence and assessments",
+      "variant": "main"
+    }
+  ],
+  "rules": [
+    {
+      "target": "prohibited-relationships",
+      "scope": "3_1_3_7",
+      "effect": "SHOW",
+      "schema": {
+        "const": "Yes"
+      }
+    },
+    {
+      "target": "3_1_3_7_b",
+      "scope": "3_1_3_7",
+      "effect": "SHOW",
+      "schema": {
+        "const": "Yes"
+      }
+    },
+    {
+      "target": "payable-through-approval",
+      "scope": "3_1_3_7",
+      "effect": "SHOW",
+      "schema": {
+        "const": "Yes"
+      }
+    },
+    {
+      "target": "3_1_5_1",
+      "scope": "3_1_3_7",
+      "effect": "SHOW",
+      "schema": {
+        "const": "Yes"
+      }
+    },
+    {
+      "target": "3_1_5_2",
+      "scope": "3_1_3_7",
+      "effect": "SHOW",
+      "schema": {
+        "const": "Yes"
+      }
+    }
+  ],
+  "sub_scoping": [],
+  "form_links": []
+}

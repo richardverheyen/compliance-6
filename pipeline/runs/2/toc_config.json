@@ -1,0 +1,21 @@
+{
+  "toc_pages": [
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9
+  ],
+  "entry_pattern": "^(\\d+|CHAPTER \\d+|Part \\d+\\.\\d+)",
+  "sub_entry_patterns": [],
+  "example_matches": [
+    "1",
+    "2",
+    "CHAPTER 1",
+    "Part 1.1",
+    "Part 4.13"
+  ],
+  "notes": "This ToC uses a multi-level hierarchical structure: top-level sections are simple numbers (1, 2), followed by CHAPTER headings (CHAPTER 1, CHAPTER 2, etc.), which contain Parts (Part 1.1, Part 1.2, etc.). The pattern captures all three types of leading section codes. Not all chapters have explicitly numbered top-level entries. Chapters are not always sequential (e.g., CHAPTER 24, then CHAPTER 27). Some chapters have titles immediately after the chapter number without parts listed."
+}

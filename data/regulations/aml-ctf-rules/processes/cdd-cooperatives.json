@@ -13,27 +13,61 @@
     {
       "id": "4_7_2",
       "group": "general-cdd-obligation",
-      "label": "Does your AML/CTF program include risk-based systems and controls to satisfy yourself that a registered co-operative exists and that you have the names of the chairman, secretary or equivalent officers?",
+      "label": "Do you have risk-based systems and controls to be reasonably satisfied that a registered co-operative exists and that the chairman, secretary or equivalent officer names have been provided?",
       "detail-required": true,
       "detail-label": "Describe your risk-based systems and controls",
       "correct-option": "Yes",
-      "process-id": "PROC-AML-002",
       "source-rules": [
         "4.7.2",
         "4.7.2(1)",
         "4.7.2(2)"
       ],
       "mapping-confidence": 0.95,
-      "remediation": "Your Customer Identification Procedure for co-operatives does not include appropriate risk-based systems and controls to verify that the co-operative exists and that you hold the names of the chairman, secretary or equivalent officers. Enhance your procedure to include controls that are reasonably designed to satisfy these requirements, as mandated by rules 4.7.2, 4.7.2(1), and 4.7.2(2)."
+      "remediation": "Your Customer Due Diligence for Co-operatives process does not include the mandatory risk-based systems and controls to verify co-operative existence and officer details. Update your process to include controls designed to be reasonably satisfied that the co-operative exists and that the names of the chairman, secretary or equivalent officer have been provided, as required under rules 4.7.2, 4.7.2(1), and 4.7.2(2)."
     },
     {
       "id": "4_7_3",
       "group": "collection-kyc",
-      "label": "Does your procedure require collection of all minimum KYC information about registered co-operatives: full name, address of registered office/principal place of operations, unique registration number, and full names of chairman, secretary and treasurer or equivalent officers?",
-      "detail-required": true,
-      "detail-label": "Describe how you collect this information",
+      "label": "Do you collect the minimum KYC information required for registered co-operatives?",
+      "detail-required": false,
       "correct-option": "Yes",
-      "process-id": "PROC-AML-002a",
+      "checklist-items": [
+        {
+          "label": "Full name of the co-operative"
+        },
+        {
+          "type": "or-group",
+          "items": [
+            {
+              "label": "Full address of the co-operative's registered office"
+            },
+            {
+              "label": "Full address of the co-operative's principal place of operations"
+            },
+            {
+              "label": "Residential address of the co-operative's secretary"
+            },
+            {
+              "label": "Residential address of the co-operative's president (if no secretary)"
+            },
+            {
+              "label": "Residential address of the co-operative's treasurer (if no secretary)"
+            }
+          ]
+        },
+        {
+          "label": "Unique identifying number issued upon registration (by State, Territory or overseas body)"
+        },
+        {
+          "label": "Full name of the chairman or equivalent officer"
+        },
+        {
+          "label": "Full name of the secretary or equivalent officer"
+        },
+        {
+          "label": "Full name of the treasurer or equivalent officer"
+        }
+      ],
       "source-rules": [
         "4.7.3",
         "4.7.3(1)",
@@ -41,61 +75,86 @@
         "4.7.3(3)",
         "4.7.3(4)"
       ],
-      "mapping-confidence": 0.98,
-      "remediation": "Your Collection of KYC Information procedure does not collect all minimum required information for registered co-operatives. Ensure your procedure mandates collection of: full name of the co-operative, address of registered office or principal place of operations (or residential address of secretary/president/treasurer), unique registration number, and full names of chairman, secretary and treasurer or equivalent officers, as required under rules 4.7.3(1), 4.7.3(2), 4.7.3(3), and 4.7.3(4)."
+      "mapping-confidence": 1.0,
+      "remediation": "Your Collection of KYC Information procedure does not include all minimum required data fields for registered co-operatives. Update your procedure to collect the full name of the co-operative, the full address of its registered office, principal place of operations, or the residential address of its secretary/president/treasurer, the unique identifying registration number, and the full names of the chairman, secretary, and treasurer (or equivalent officers), as required under rules 4.7.3(1) through 4.7.3(4)."
     },
     {
       "id": "4_7_4",
       "group": "additional-kyc-assessment",
-      "label": "Does your procedure include risk-based systems and controls to determine whether additional KYC information beyond the minimum should be collected for registered co-operatives?",
+      "label": "Do you have risk-based systems and controls to determine whether to collect additional KYC information beyond the minimum required?",
       "detail-required": true,
-      "detail-label": "Describe your risk-based decision process for additional collection",
+      "detail-label": "Describe your risk-based assessment process for additional KYC collection",
       "correct-option": "Yes",
-      "process-id": "PROC-AML-002c",
       "source-rules": [
         "4.7.4"
       ],
-      "mapping-confidence": 0.92,
-      "remediation": "Your Additional KYC Assessment procedure does not include risk-based systems and controls to determine whether additional KYC information should be collected for co-operatives beyond the minimum specified in rule 4.7.3. Implement controls to assess and document whether, based on risk, additional information is necessary, as required by rule 4.7.4."
+      "mapping-confidence": 0.9,
+      "remediation": "Your Customer Due Diligence for Co-operatives process does not include risk-based systems and controls to determine whether additional KYC information should be collected. Update your process to include risk-based controls that assess whether information beyond the minimum required should be collected for each registered co-operative, as required under rule 4.7.4."
     },
     {
       "id": "4_7_5",
-      "group": "verification-kyc",
-      "label": "Does your procedure require verification of at least the full name and unique registration number of the co-operative from ASIC, State/Territory/overseas registration bodies, the co-operative's registers, certified copies/extracts, reliable independent documents, or reliable independent electronic data?",
-      "detail-required": true,
-      "detail-label": "Describe your verification methods",
+      "group": "verification-information",
+      "label": "Do you verify the full name and unique identifying registration number of registered co-operatives from approved sources?",
+      "detail-required": false,
       "correct-option": "Yes",
-      "process-id": "PROC-AML-002b",
+      "checklist-items": [
+        {
+          "label": "Full name of the co-operative"
+        },
+        {
+          "label": "Unique identifying number issued upon registration"
+        }
+      ],
       "source-rules": [
         "4.7.5",
         "4.7.5(1)",
         "4.7.5(2)"
       ],
-      "mapping-confidence": 0.96,
-      "remediation": "Your Verification of Identity procedure does not verify the minimum required information (full name and unique registration number) for registered co-operatives from acceptable sources. Update your procedure to verify these details from ASIC, State/Territory/overseas registration bodies, the co-operative's registers, certified copies/extracts, reliable independent documents, or reliable independent electronic data, as required under rules 4.7.5(1) and 4.7.5(2)."
+      "mapping-confidence": 1.0,
+      "remediation": "Your Verification of Information procedure does not ensure verification of the full name and unique identifying registration number of co-operatives. Update your procedure to verify at minimum the full name and unique identifying registration number from approved sources such as ASIC, the relevant State/Territory/overseas registration body, co-operative registers, certified copies, reliable and independent documents, or reliable and independent electronic data, as required under rules 4.7.5(1) and 4.7.5(2)."
     },
     {
       "id": "4_7_6",
       "group": "additional-kyc-assessment",
-      "label": "Does your procedure include risk-based systems and controls to determine whether additional KYC information (beyond the minimum in rule 4.7.5) should be verified?",
+      "label": "Do you have risk-based systems and controls to determine whether to verify additional KYC information beyond the minimum required?",
       "detail-required": true,
-      "detail-label": "Describe your risk-based decision process for additional verification",
+      "detail-label": "Describe your risk-based assessment process for additional KYC verification",
       "correct-option": "Yes",
-      "process-id": "PROC-AML-002c",
       "source-rules": [
         "4.7.6"
       ],
       "mapping-confidence": 0.9,
-      "remediation": "Your Additional KYC Assessment procedure does not include risk-based systems and controls to determine whether information beyond the minimum (name and registration number) should be verified for co-operatives. Implement controls to assess and document whether, based on risk, additional verification of information such as address or officer names is necessary, as required by rule 4.7.6."
+      "remediation": "Your Customer Due Diligence for Co-operatives process does not include risk-based systems and controls to determine whether additional KYC information should be verified. Update your process to include risk-based controls that assess whether information beyond the minimum required should be verified for each registered co-operative, as required under rule 4.7.6."
     },
     {
       "id": "4_7_7",
-      "group": "verification-kyc",
-      "label": "Does your procedure require that verification of co-operative information be based on at least one of: co-operative registers/certified copies, minutes of meetings/certified copies, State/Territory/overseas registration body information, reliable independent documents, reliable independent electronic data, or a combination of these?",
+      "group": "verification-methods",
+      "label": "Do your verification procedures use approved methods (co-operative registers, certified copies, meeting minutes, State/Territory/overseas registration body sources, reliable and independent documents or electronic data)?",
       "detail-required": true,
-      "detail-label": "Describe which verification methods your procedure requires",
+      "detail-label": "Describe the verification methods you use",
       "correct-option": "Yes",
-      "process-id": "PROC-AML-002b",
+      "checklist-items": [
+        {
+          "type": "or-group",
+          "items": [
+            {
+              "label": "Co-operative registers or certified copies/extracts"
+            },
+            {
+              "label": "Minutes of co-operative meetings or certified copies/extracts"
+            },
+            {
+              "label": "Information from State, Territory or overseas registration body"
+            },
+            {
+              "label": "Reliable and independent documents relating to the co-operative"
+            },
+            {
+              "label": "Reliable and independent electronic data"
+            }
+          ]
+        }
+      ],
       "source-rules": [
         "4.7.7",
         "4.7.7(1)",
@@ -105,37 +164,35 @@
         "4.7.7(5)",
         "4.7.7(6)"
       ],
-      "mapping-confidence": 0.97,
-      "remediation": "Your Verification of Identity procedure does not mandate verification methods from acceptable sources for co-operatives. Update your procedure to require verification based on co-operative registers, certified copies/extracts, meeting minutes, State/Territory/overseas registration body information, reliable independent documents, reliable independent electronic data, or combinations thereof, as specified in rules 4.7.7(1) through 4.7.7(6)."
+      "mapping-confidence": 0.95,
+      "remediation": "Your Verification of Information procedure does not specify approved verification methods for co-operatives. Update your procedure to require that verification is based on at least one of the following: co-operative registers or certified copies/extracts, meeting minutes or certified copies/extracts, information from the State/Territory/overseas registration body, reliable and independent documents, or reliable and independent electronic data, as required under rule 4.7.7."
     },
     {
       "id": "4_7_8",
-      "group": "disclosure-certificate",
-      "label": "Does your procedure permit disclosure certificates to verify co-operative information where the information is not otherwise reasonably available from the sources in rule 4.7.7?",
+      "group": "verification-methods",
+      "label": "Do you permit the use of disclosure certificates to verify co-operative information when other sources are not reasonably available?",
       "detail-required": false,
       "correct-option": "Yes",
-      "process-id": "PROC-AML-002b",
       "source-rules": [
         "4.7.8",
         "4.7.8(1)",
         "4.7.8(2)"
       ],
-      "mapping-confidence": 0.88,
-      "remediation": "Your Verification of Identity procedure does not allow for disclosure certificates as a verification method for co-operatives when information is not reasonably available from other sources. Update your procedure to permit disclosure certificates where verification cannot be obtained from ASIC, registration bodies, registers, or other sources listed in rule 4.7.7, as provided for by rules 4.7.8(1) and 4.7.8(2)."
+      "mapping-confidence": 0.9,
+      "remediation": "Your Verification of Information procedure does not permit the use of disclosure certificates as an alternative verification method. Update your procedure to allow the use of disclosure certificates to verify co-operative information when the information is not otherwise reasonably available from approved sources, provided the certificate is used for the purposes of customer identification, as required under rules 4.7.8(1) and 4.7.8(2)."
     },
     {
       "id": "4_7_9",
       "group": "discrepancy-handling",
-      "label": "Does your procedure include risk-based systems and controls to respond to discrepancies that arise during verification of co-operative information, and to determine whether you can be reasonably satisfied about the co-operative's existence and officer names?",
+      "label": "Do you have risk-based systems and controls to respond to discrepancies in co-operative information verification?",
       "detail-required": true,
-      "detail-label": "Describe your discrepancy response process",
+      "detail-label": "Describe your discrepancy response procedures and risk assessment",
       "correct-option": "Yes",
-      "process-id": "PROC-AML-002",
       "source-rules": [
         "4.7.9"
       ],
-      "mapping-confidence": 0.93,
-      "remediation": "Your Customer Identification Procedure for co-operatives does not include appropriate risk-based systems and controls to manage discrepancies that arise during verification. Implement controls that address verification issues in a way that allows you to determine whether you remain reasonably satisfied about the co-operative's existence and the names of its chairman, secretary and equivalent officers, as required by rule 4.7.9."
+      "mapping-confidence": 0.95,
+      "remediation": "Your Customer Due Diligence for Co-operatives process does not include risk-based systems and controls to respond to discrepancies. Update your process to include controls that address any discrepancies in verified information and allow you to determine whether you remain reasonably satisfied about the existence of the co-operative and the accuracy of officer names, as required under rule 4.7.9."
     }
   ],
   "groups": [
@@ -148,38 +205,37 @@
     {
       "id": "general-cdd-obligation",
       "title": "General CDD Obligation",
-      "description": "Risk-based systems and controls to verify the existence of the co-operative and obtain the names of key officers",
+      "description": "Risk-based systems and controls to be reasonably satisfied about co-operative existence and officer details.",
       "variant": "main"
     },
     {
       "id": "collection-kyc",
       "title": "Collection of KYC Information",
-      "description": "Collection procedures for minimum KYC information about registered co-operatives",
+      "description": "Collection of minimum required KYC information for registered co-operatives.",
       "variant": "main"
     },
     {
       "id": "additional-kyc-assessment",
       "title": "Additional KYC Assessment",
-      "description": "Risk-based assessment and collection/verification of additional KYC information beyond the minimum requirements",
+      "description": "Risk-based assessment of whether to collect and verify additional KYC information beyond minimum requirements.",
       "variant": "main"
     },
     {
-      "id": "verification-kyc",
-      "title": "Verification of KYC Information",
-      "description": "Procedures and methods for verifying KYC information about registered co-operatives",
+      "id": "verification-information",
+      "title": "Verification of Information",
+      "description": "Verification of minimum required KYC information using approved sources.",
       "variant": "main"
     },
     {
-      "id": "disclosure-certificate",
-      "title": "Disclosure Certificate Procedures",
-      "description": "Use of disclosure certificates as an alternative verification method when information is not otherwise reasonably available",
-      "variant": "subprocess",
-      "subprocess-label": "Disclosure Certificate"
+      "id": "verification-methods",
+      "title": "Verification Methods",
+      "description": "Approved methods and sources for verifying co-operative information, including disclosure certificate procedures.",
+      "variant": "main"
     },
     {
       "id": "discrepancy-handling",
       "title": "Responding to Discrepancies",
-      "description": "Systems and controls for responding to discrepancies that arise during verification of co-operative information",
+      "description": "Risk-based systems and controls to address discrepancies identified during verification.",
       "variant": "main"
     }
   ],

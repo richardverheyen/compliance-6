@@ -12,213 +12,198 @@
     },
     {
       "id": "4_9_1",
-      "group": "document-verification-framework",
-      "label": "Does your AML/CTF program include verification of KYC information about individuals by means of reliable and independent documentation?",
+      "group": "doc-verification-framework",
+      "label": "Does your AML/CTF program provide for the verification of KYC information about individuals using reliable and independent documentation?",
       "detail-required": true,
-      "detail-label": "Describe your document-based verification procedure",
       "correct-option": "Yes",
       "process-id": "PROC-AML-002b",
       "source-rules": [
         "4.9.1"
       ],
-      "mapping-confidence": 1.0,
-      "remediation": "Your Verification of Identity procedure must include a documented approach to verifying KYC information about individuals using reliable and independent documentation. Define which documents your entity will accept for identity verification purposes, as required under rule 4.9.1."
+      "mapping-confidence": 0.95,
+      "remediation": "Your Verification of Identity process does not establish a documented framework for verifying individual KYC information using reliable and independent documents. Implement and document a verification approach that addresses the requirements in rules 4.9.2 and 4.9.3 before proceeding."
     },
     {
       "id": "4_9_2",
       "group": "document-validity-checks",
-      "label": "Does your AML/CTF program require verification that documents used for KYC information have not expired (with the exception of Commonwealth passports expired within the preceding two years)?",
+      "label": "Does your process require verification that documents used to establish KYC information have not expired (except for Commonwealth passports expired within the preceding two years)?",
       "detail-required": true,
-      "detail-label": "Describe how you check document expiry during verification",
       "correct-option": "Yes",
       "process-id": "PROC-AML-002b",
       "source-rules": [
         "4.9.2"
       ],
-      "mapping-confidence": 1.0,
-      "remediation": "Your Verification of Identity procedure must ensure that all documents used to verify KYC information are checked for expiry before acceptance. Implement a control to reject expired documents, except for Commonwealth passports that expired within the preceding two years, as required under rule 4.9.2."
+      "mapping-confidence": 0.95,
+      "remediation": "Your Verification of Identity process does not include mandatory checks to confirm that KYC verification documents have not expired. Update your procedure to verify document expiry dates for all documents used to verify individual identity and information, as required under rule 4.9.2."
     },
     {
       "id": "4_9_3_1",
-      "group": "document-requirements-individuals",
-      "label": "Have you documented what reliable and independent documentation you will require to verify an individual's name, date of birth, and/or residential address?",
+      "group": "document-selection-standards",
+      "label": "Have you documented which reliable and independent documents your organisation will require to verify an individual's name, date of birth, and/or residential address?",
       "detail-required": true,
-      "detail-label": "Specify which documents you require for name, DOB, and residential address verification",
       "correct-option": "Yes",
       "process-id": "PROC-AML-002b",
       "source-rules": [
         "4.9.3(1)"
       ],
-      "mapping-confidence": 1.0,
-      "remediation": "Your Verification of Identity procedure must specify in advance what reliable and independent documents you will accept to verify each core element of an individual's identity: name, date of birth, and residential address. Document your entity's policy on acceptable documents for each element, as required under rule 4.9.3(1)."
+      "mapping-confidence": 0.95,
+      "remediation": "Your Verification of Identity process does not specify which reliable and independent documents will be used to verify individual names, dates of birth, and residential addresses. Document the acceptable sources of verification for each of these core KYC data points, as required under rule 4.9.3(1)."
     },
     {
       "id": "4_9_3_2",
-      "group": "document-requirements-individuals",
-      "label": "If you verify other KYC information about individuals beyond name, DOB, and address, have you documented what reliable and independent documentation may be used?",
+      "group": "document-selection-standards",
+      "label": "If your organisation verifies additional KYC information beyond name, date of birth and residential address for individuals, have you documented which reliable and independent documents may be used to verify that information?",
       "detail-required": true,
-      "detail-label": "Describe what additional KYC information you verify and what documents you accept",
-      "correct-option": "N/A",
+      "correct-option": "Yes",
       "process-id": "PROC-AML-002b",
       "source-rules": [
         "4.9.3(2)"
       ],
-      "mapping-confidence": 0.85,
-      "remediation": "If your Verification of Identity procedure includes verification of additional KYC information beyond name, date of birth, and residential address, you must document what reliable and independent documents will be accepted for verification of each additional element, as required under rule 4.9.3(2)."
+      "mapping-confidence": 0.95,
+      "remediation": "Your Verification of Identity process does not specify acceptable documentation for any additional individual KYC information collected beyond the core data elements. Document which reliable and independent documents may be used to verify any additional KYC information collected, as required under rule 4.9.3(2)."
     },
     {
       "id": "4_9_3_3",
       "group": "document-copy-policy",
-      "label": "Have you established a risk-based policy on whether, and in what circumstances, you will accept copies of reliable and independent documents for verification of individual customer information?",
+      "label": "Have you established risk-based rules defining whether, and in what circumstances, your organisation will rely upon copies of reliable and independent documents?",
       "detail-required": true,
-      "detail-label": "Explain your policy on accepting certified copies, scans, or other copies",
       "correct-option": "Yes",
       "process-id": "PROC-AML-002b",
       "source-rules": [
         "4.9.3(3)"
       ],
-      "mapping-confidence": 1.0,
-      "remediation": "Your Verification of Identity procedure must include a documented risk-based policy that clearly states whether you will accept copies of documents (such as certified copies or scans) for verifying individual customer information, and under what specific circumstances copies are acceptable. This policy must be recorded in your AML/CTF program, as required under rule 4.9.3(3)."
+      "mapping-confidence": 0.95,
+      "remediation": "Your Verification of Identity process does not define when copies of documents may be accepted versus when originals are required. Establish risk-based criteria for accepting document copies and document those decisions in your policy, as required under rule 4.9.3(3)."
     },
     {
       "id": "4_9_3_4",
-      "group": "document-fraud-detection",
-      "label": "Have you established criteria and procedures to determine when you will take steps to verify whether an individual's document may have been forged, tampered with, cancelled, or stolen?",
+      "group": "document-integrity-checks",
+      "label": "Have you documented when and how your organisation will check whether documents produced about an individual may have been forged, tampered with, cancelled or stolen?",
       "detail-required": true,
-      "detail-label": "Describe your fraud detection procedures and what triggers verification steps",
       "correct-option": "Yes",
       "process-id": "PROC-AML-002b",
       "source-rules": [
         "4.9.3(4)"
       ],
-      "mapping-confidence": 1.0,
-      "remediation": "Your Verification of Identity procedure must document the circumstances in which you will investigate whether an individual's identity document may have been forged, tampered with, cancelled, or stolen, and what specific steps you will take to establish the authenticity of the document. This risk-based approach is required under rule 4.9.3(4)."
+      "mapping-confidence": 0.95,
+      "remediation": "Your Verification of Identity process does not include procedures for detecting forged, tampered, cancelled or stolen documents. Document the circumstances under which such checks will be performed and the specific steps your organisation will take to verify document authenticity, as required under rule 4.9.3(4)."
     },
     {
       "id": "4_9_3_5",
       "group": "document-authentication-services",
-      "label": "Have you determined whether you will use any available authentication services or systems to verify the authenticity of individual customer documents?",
+      "label": "Have you determined whether your organisation will use any available authentication services to verify documents used for KYC verification of individuals?",
       "detail-required": true,
-      "detail-label": "List any authentication services you use (e.g., government verification systems, issuer checks)",
       "correct-option": "Yes",
       "process-id": "PROC-AML-002b",
       "source-rules": [
         "4.9.3(5)"
       ],
-      "mapping-confidence": 1.0,
-      "remediation": "Your Verification of Identity procedure must address whether you will use any available authentication services (such as document issuer verification systems, government databases, or third-party authentication services) to verify documents provided by individuals. Document your decision on the use of authentication services in your AML/CTF program, as required under rule 4.9.3(5)."
+      "mapping-confidence": 0.95,
+      "remediation": "Your Verification of Identity process does not address the use of available authentication services for verifying individual KYC documents. Evaluate and document whether your organisation will use authentication services for document verification, as required under rule 4.9.3(5)."
     },
     {
       "id": "4_9_3_6",
-      "group": "independent-contact-verification",
-      "label": "Have you established a procedure to determine whether, and how, you will confirm KYC information about an individual by independently initiating contact with the person they claim to be?",
+      "group": "independent-contact-procedures",
+      "label": "Have you established procedures for independently initiating contact with an individual to confirm their KYC information, and documented the circumstances under which this will occur?",
       "detail-required": true,
-      "detail-label": "Describe your process for independently verifying customer identity through direct contact",
       "correct-option": "Yes",
       "process-id": "PROC-AML-002b",
       "source-rules": [
         "4.9.3(6)"
       ],
-      "mapping-confidence": 1.0,
-      "remediation": "Your Verification of Identity procedure must include a policy on whether you will conduct independent verification by directly contacting the individual to confirm their identity details, and if so, under what circumstances and through what methods. Document this approach in your AML/CTF program, as required under rule 4.9.3(6)."
+      "mapping-confidence": 0.95,
+      "remediation": "Your Verification of Identity process does not include procedures for independent contact verification. Document whether and how your organisation will independently contact individuals to confirm their KYC information, as required under rule 4.9.3(6)."
     },
     {
       "id": "4_9_4",
-      "group": "document-verification-non-individuals",
-      "label": "Does your AML/CTF program include verification of KYC information about customers who are not individuals (e.g., companies, trusts, partnerships) by means of reliable and independent documentation?",
+      "group": "non-individual-doc-framework",
+      "label": "Does your AML/CTF program provide for the verification of KYC information about customers who are not individuals using reliable and independent documentation?",
       "detail-required": true,
-      "detail-label": "Describe your document-based verification procedure for non-individual customers",
       "correct-option": "Yes",
       "process-id": "PROC-AML-002b",
       "source-rules": [
         "4.9.4"
       ],
-      "mapping-confidence": 1.0,
-      "remediation": "Your Verification of Identity procedure must include a documented approach to verifying KYC information about non-individual customers (such as companies, trusts, or partnerships) using reliable and independent documentation. Define which documents your entity will accept for verifying non-individual customer information, as required under rule 4.9.4."
+      "mapping-confidence": 0.95,
+      "remediation": "Your Verification of Identity process does not establish a documented framework for verifying KYC information about non-individual customers using reliable and independent documents. Implement and document a verification approach for non-individuals that addresses the requirements in rule 4.9.5 before proceeding."
     },
     {
       "id": "4_9_5_1",
-      "group": "document-quantity-non-individuals",
-      "label": "Have you documented what reliable and independent documents you will use, and how many, for verifying non-individual customers?",
+      "group": "non-individual-doc-selection",
+      "label": "Have you documented what reliable and independent documents and how many of them your organisation will use to verify KYC information about non-individual customers?",
       "detail-required": true,
-      "detail-label": "Specify the number and types of documents required for non-individual customer verification",
       "correct-option": "Yes",
       "process-id": "PROC-AML-002b",
       "source-rules": [
         "4.9.5(1)"
       ],
-      "mapping-confidence": 1.0,
-      "remediation": "Your Verification of Identity procedure must specify in advance what reliable and independent documents you will require to verify information about non-individual customers, including how many documents are required and which types are acceptable for different categories of entities. Document this policy in your AML/CTF program, as required under rule 4.9.5(1)."
+      "mapping-confidence": 0.95,
+      "remediation": "Your Verification of Identity process does not specify the number and type of reliable and independent documents required to verify non-individual customer KYC information. Document the specific documents and quantity requirements for verifying corporate or other non-individual customers, as required under rule 4.9.5(1)."
     },
     {
       "id": "4_9_5_2",
-      "group": "document-contemporaneousness",
-      "label": "Have you established risk-based criteria to determine whether a document is sufficiently contemporaneous (recent) for use in verifying non-individual customer information?",
+      "group": "non-individual-doc-currency",
+      "label": "Have you established risk-based criteria to determine whether a document is sufficiently contemporaneous for verification of non-individual customers?",
       "detail-required": true,
-      "detail-label": "Describe how you determine if a document is current enough for verification purposes",
       "correct-option": "Yes",
       "process-id": "PROC-AML-002b",
       "source-rules": [
         "4.9.5(2)"
       ],
-      "mapping-confidence": 1.0,
-      "remediation": "Your Verification of Identity procedure must document your risk-based approach to assessing the contemporaneousness (currency) of documents used to verify non-individual customer information. Define time thresholds or other criteria that determine whether a document is sufficiently recent for verification, as required under rule 4.9.5(2)."
+      "mapping-confidence": 0.95,
+      "remediation": "Your Verification of Identity process does not define what constitutes a sufficiently current or 'contemporaneous' document for non-individual verification. Establish and document risk-based criteria for determining document currency for corporate or other non-individual customers, as required under rule 4.9.5(2)."
     },
     {
       "id": "4_9_5_3",
-      "group": "document-copy-policy-non-individuals",
-      "label": "Have you established a risk-based policy on whether, and in what circumstances, you will accept copies of reliable and independent documents for verification of non-individual customer information?",
+      "group": "non-individual-copy-policy",
+      "label": "Have you established risk-based rules defining whether, and in what circumstances, your organisation will rely upon copies of reliable and independent documents for non-individual customers?",
       "detail-required": true,
-      "detail-label": "Explain your policy on accepting certified copies, scans, or other copies for non-individual customers",
       "correct-option": "Yes",
       "process-id": "PROC-AML-002b",
       "source-rules": [
         "4.9.5(3)"
       ],
-      "mapping-confidence": 1.0,
-      "remediation": "Your Verification of Identity procedure must include a documented risk-based policy that clearly states whether you will accept copies of documents (such as certified copies or scans) for verifying non-individual customer information, and under what specific circumstances copies are acceptable. This policy must be recorded in your AML/CTF program, as required under rule 4.9.5(3)."
+      "mapping-confidence": 0.95,
+      "remediation": "Your Verification of Identity process does not define when copies of documents may be accepted versus when originals are required for non-individual customers. Establish risk-based criteria for accepting document copies for corporate or other non-individual customers and document those decisions, as required under rule 4.9.5(3)."
     },
     {
       "id": "4_9_5_4",
-      "group": "document-fraud-detection-non-individuals",
-      "label": "Have you established criteria and procedures to determine when you will take steps to verify whether a non-individual customer's document may have been cancelled, forged, tampered with, or stolen?",
+      "group": "non-individual-integrity-checks",
+      "label": "Have you documented when and how your organisation will check whether documents produced about a non-individual customer may have been forged, tampered with, cancelled or stolen?",
       "detail-required": true,
-      "detail-label": "Describe your fraud detection procedures for non-individual customer documents",
       "correct-option": "Yes",
       "process-id": "PROC-AML-002b",
       "source-rules": [
         "4.9.5(4)"
       ],
-      "mapping-confidence": 1.0,
-      "remediation": "Your Verification of Identity procedure must document the circumstances in which you will investigate whether a non-individual customer's document may have been cancelled, forged, tampered with, or stolen, and what specific steps you will take to establish the authenticity of the document. This risk-based approach is required under rule 4.9.5(4)."
+      "mapping-confidence": 0.95,
+      "remediation": "Your Verification of Identity process does not include procedures for detecting forged, tampered, cancelled or stolen documents for non-individual customers. Document the circumstances under which such checks will be performed for corporate or other non-individual customers and the steps your organisation will take to verify document authenticity, as required under rule 4.9.5(4)."
     },
     {
       "id": "4_9_5_5",
-      "group": "document-authentication-services-non-individuals",
-      "label": "Have you determined whether you will use any available authentication services or systems to verify the authenticity of non-individual customer documents?",
+      "group": "non-individual-authentication-services",
+      "label": "Have you determined whether your organisation will use any available authentication services to verify documents used for KYC verification of non-individual customers?",
       "detail-required": true,
-      "detail-label": "List any authentication services you use for non-individual verification (e.g., ASIC lookups, registry checks)",
       "correct-option": "Yes",
       "process-id": "PROC-AML-002b",
       "source-rules": [
         "4.9.5(5)"
       ],
-      "mapping-confidence": 1.0,
-      "remediation": "Your Verification of Identity procedure must address whether you will use any available authentication services (such as ASIC company searches, land registry checks, or other government or third-party verification systems) to verify documents provided for non-individual customers. Document your decision on the use of authentication services in your AML/CTF program, as required under rule 4.9.5(5)."
+      "mapping-confidence": 0.95,
+      "remediation": "Your Verification of Identity process does not address the use of available authentication services for verifying non-individual customer KYC documents. Evaluate and document whether your organisation will use authentication services for non-individual document verification, as required under rule 4.9.5(5)."
     },
     {
       "id": "4_9_5_6",
-      "group": "independent-contact-verification-non-individuals",
-      "label": "Have you established a procedure to determine whether, and how, you will confirm KYC information about a non-individual customer by independently initiating contact with the customer?",
+      "group": "non-individual-contact-procedures",
+      "label": "Have you established procedures for independently initiating contact with a non-individual customer to confirm their KYC information, and documented the circumstances under which this will occur?",
       "detail-required": true,
-      "detail-label": "Describe your process for independently verifying non-individual customer information through direct contact",
       "correct-option": "Yes",
       "process-id": "PROC-AML-002b",
       "source-rules": [
         "4.9.5(6)"
       ],
-      "mapping-confidence": 1.0,
-      "remediation": "Your Verification of Identity procedure must include a policy on whether you will conduct independent verification by directly contacting the non-individual customer to confirm their KYC information, and if so, under what circumstances and through what methods. Document this approach in your AML/CTF program, as required under rule 4.9.5(6)."
+      "mapping-confidence": 0.95,
+      "remediation": "Your Verification of Identity process does not include procedures for independent contact verification with non-individual customers. Document whether and how your organisation will independently contact corporate or other non-individual customers to confirm their KYC information, as required under rule 4.9.5(6)."
     }
   ],
   "groups": [
@@ -229,87 +214,87 @@
       "variant": "main"
     },
     {
-      "id": "document-verification-framework",
-      "title": "Document Verification Framework",
-      "description": "Establish whether your AML/CTF program provides for verification of KYC information using reliable and independent documentation as part of your identity verification process.",
+      "id": "doc-verification-framework",
+      "title": "Verification Framework for Individuals",
+      "description": "Establish whether your AML/CTF program includes documented procedures for verifying individual KYC information using reliable and independent documents.",
       "variant": "main"
     },
     {
       "id": "document-validity-checks",
-      "title": "Document Validity and Expiry Checks",
-      "description": "Ensure that all documents used for KYC verification are current and valid before acceptance.",
+      "title": "Document Expiry and Validity",
+      "description": "Procedures to verify that documents used for KYC verification have not expired and remain current.",
       "variant": "main"
     },
     {
-      "id": "document-requirements-individuals",
-      "title": "Document Requirements for Individuals",
-      "description": "Define which reliable and independent documents are required to verify the identity and residential information of individual customers.",
+      "id": "document-selection-standards",
+      "title": "Document Selection and Acceptance Criteria",
+      "description": "Define which reliable and independent documents will be accepted to verify specific KYC information elements.",
       "variant": "main"
     },
     {
       "id": "document-copy-policy",
-      "title": "Document Copy Policy \u2014 Individuals",
-      "description": "Establish risk-based criteria for accepting copies of documents (such as certified copies or scans) when verifying individual customer information.",
+      "title": "Document Copy and Original Requirements",
+      "description": "Establish risk-based criteria for when copies may be accepted versus when original documents are required.",
       "variant": "main"
     },
     {
-      "id": "document-fraud-detection",
-      "title": "Document Fraud Detection \u2014 Individuals",
-      "description": "Define the circumstances and procedures for detecting and investigating potentially forged, tampered, cancelled, or stolen documents from individual customers.",
+      "id": "document-integrity-checks",
+      "title": "Document Integrity and Fraud Detection",
+      "description": "Procedures to detect and verify the authenticity of documents, including checks for forgery, tampering, cancellation or theft.",
       "variant": "main"
     },
     {
       "id": "document-authentication-services",
-      "title": "Document Authentication Services \u2014 Individuals",
-      "description": "Determine whether you will use available authentication services or verification systems to confirm the authenticity of individual customer documents.",
+      "title": "Document Authentication Services",
+      "description": "Determine whether authentication services (such as issuer verification) will be used to validate documents.",
       "variant": "main"
     },
     {
-      "id": "independent-contact-verification",
-      "title": "Independent Contact Verification \u2014 Individuals",
-      "description": "Establish a procedure for independently verifying an individual customer's identity by directly contacting them.",
+      "id": "independent-contact-procedures",
+      "title": "Independent Contact Verification",
+      "description": "Establish procedures for independently verifying KYC information by contacting the individual directly.",
       "variant": "main"
     },
     {
-      "id": "document-verification-non-individuals",
-      "title": "Document Verification Framework \u2014 Non-Individual Customers",
-      "description": "Establish whether your AML/CTF program provides for verification of KYC information about non-individual customers (companies, trusts, partnerships) using reliable and independent documentation.",
+      "id": "non-individual-doc-framework",
+      "title": "Verification Framework for Non-Individual Customers",
+      "description": "Establish whether your AML/CTF program includes documented procedures for verifying KYC information about non-individual customers (companies, trusts, partnerships, etc.) using reliable and independent documents.",
       "variant": "main"
     },
     {
-      "id": "document-quantity-non-individuals",
-      "title": "Document Quantity and Types \u2014 Non-Individual Customers",
-      "description": "Define what reliable and independent documents are required, and in what quantities, to verify information about non-individual customers.",
+      "id": "non-individual-doc-selection",
+      "title": "Non-Individual Document Selection and Quantity",
+      "description": "Define which reliable and independent documents and how many of them will be required to verify non-individual customer KYC information.",
       "variant": "main"
     },
     {
-      "id": "document-contemporaneousness",
-      "title": "Document Contemporaneousness \u2014 Non-Individual Customers",
-      "description": "Establish risk-based criteria to assess whether documents are sufficiently current and relevant for verifying non-individual customer information.",
+      "id": "non-individual-doc-currency",
+      "title": "Non-Individual Document Currency",
+      "description": "Establish risk-based criteria for determining whether documents are sufficiently current and relevant for non-individual verification.",
       "variant": "main"
     },
     {
-      "id": "document-copy-policy-non-individuals",
-      "title": "Document Copy Policy \u2014 Non-Individual Customers",
-      "description": "Establish risk-based criteria for accepting copies of documents when verifying non-individual customer information.",
+      "id": "non-individual-copy-policy",
+      "title": "Non-Individual Document Copy and Original Requirements",
+      "description": "Establish risk-based criteria for when copies may be accepted versus when original documents are required for non-individual customers.",
       "variant": "main"
     },
     {
-      "id": "document-fraud-detection-non-individuals",
-      "title": "Document Fraud Detection \u2014 Non-Individual Customers",
-      "description": "Define the circumstances and procedures for detecting and investigating potentially cancelled, forged, tampered, or stolen documents from non-individual customers.",
+      "id": "non-individual-integrity-checks",
+      "title": "Non-Individual Document Integrity and Fraud Detection",
+      "description": "Procedures to detect and verify the authenticity of documents used for non-individual customer verification.",
       "variant": "main"
     },
     {
-      "id": "document-authentication-services-non-individuals",
-      "title": "Document Authentication Services \u2014 Non-Individual Customers",
-      "description": "Determine whether you will use available authentication services (such as government registries or issuer verification systems) to confirm the authenticity of non-individual customer documents.",
+      "id": "non-individual-authentication-services",
+      "title": "Non-Individual Document Authentication Services",
+      "description": "Determine whether authentication services will be used to validate documents for non-individual customers.",
       "variant": "main"
     },
     {
-      "id": "independent-contact-verification-non-individuals",
-      "title": "Independent Contact Verification \u2014 Non-Individual Customers",
-      "description": "Establish a procedure for independently verifying a non-individual customer's information by directly contacting the customer.",
+      "id": "non-individual-contact-procedures",
+      "title": "Non-Individual Independent Contact Verification",
+      "description": "Establish procedures for independently verifying non-individual customer KYC information by contacting the customer directly.",
       "variant": "main"
     }
   ],

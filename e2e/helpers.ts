@@ -73,7 +73,13 @@ export async function signUp(
   if (!page.url().match(/sign-up\/tasks|onboarding|dashboard/)) {
     // OTP appeared — use Clerk dev magic code (works when email has +clerk_test suffix)
     await otpInput.fill("424242");
-    await page.waitForURL(/sign-up\/tasks|onboarding|dashboard/, { timeout: 20_000 });
+    // Wait for any navigation away from the sign-up flow. Clerk may redirect to
+    // /sign-up/tasks, /onboarding, /dashboard, or / depending on its configuration.
+    // /sign-up/tasks/... is Clerk's org-creation step — treat it as "done with OTP".
+    await page.waitForURL(
+      (url) => !url.pathname.startsWith("/sign-up") || url.pathname.startsWith("/sign-up/tasks"),
+      { timeout: 30_000 },
+    );
   }
 
   if (page.url().includes("sign-up/tasks")) {
@@ -92,9 +98,15 @@ export async function signUp(
     await page.waitForLoadState("load");
     await page.getByLabel(/organization name/i).fill(orgName);
     await page.getByRole("button", { name: /create organization/i }).click({ force: true });
-    await page.waitForURL("/dashboard", { timeout: 30_000 });
+    await page.waitForURL(/dashboard/, { timeout: 30_000 });
+    return;
   }
-  // If already at /dashboard, we're done.
+
+  // Clerk redirected to / or somewhere else — navigate directly to the dashboard.
+  if (!page.url().includes("dashboard")) {
+    await page.goto("/dashboard");
+    await page.waitForURL(/dashboard/, { timeout: 30_000 });
+  }
 }
 
 // ─── Regulation helpers ───────────────────────────────────────────────────────
@@ -179,6 +191,41 @@ export async function answerAllYes(page: Page) {
     if (name && !answered.has(name)) {
       answered.add(name);
       await inputs.nth(i).evaluate((el: HTMLInputElement) => el.closest("label")?.click());
+    }
+  }
+}
+
+/**
+ * Click all sub-type toggle buttons in the sub-scoping panel (if one exists).
+ * The panel appears after answering process-exists = Yes on forms that have
+ * sub_scoping entries. At least one sub-type must be selected or the main
+ * questions are hidden behind a gate prompt.
+ */
+export async function selectAllSubScoping(page: Page) {
+  const heading = page.locator('h3:text("Which sub-types apply to your organisation?")');
+  if (await heading.isVisible()) {
+    const panel = heading.locator("../..");
+    const buttons = panel.getByRole("button");
+    const count = await buttons.count();
+    for (let i = 0; i < count; i++) {
+      await buttons.nth(i).click();
+    }
+  }
+}
+
+/**
+ * Fill all visible, empty detail textareas on the current process form.
+ * These appear when a control has `detail-required: true` and the answer is "Yes".
+ * Skips textareas that already have a value.
+ */
+export async function fillAllDetailTextareas(page: Page, text: string) {
+  const textareas = page.locator('textarea[placeholder="Enter details…"]:not([disabled])');
+  const count = await textareas.count();
+  for (let i = 0; i < count; i++) {
+    const ta = textareas.nth(i);
+    const value = await ta.inputValue();
+    if (!value) {
+      await ta.fill(text);
     }
   }
 }

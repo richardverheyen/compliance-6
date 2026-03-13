@@ -1,0 +1,891 @@
+[
+  {
+    "code": "1",
+    "raw_code": "1",
+    "title": "Name of Instrument [see Note 1]",
+    "page": 1,
+    "depth": 0
+  },
+  {
+    "code": "2",
+    "raw_code": "2",
+    "title": "Rules",
+    "page": 1,
+    "depth": 0
+  },
+  {
+    "code": "1_1",
+    "raw_code": "Part 1.1",
+    "title": "Introduction",
+    "page": 2,
+    "depth": 1
+  },
+  {
+    "code": "1_2",
+    "raw_code": "Part 1.2",
+    "title": "Key terms and concepts",
+    "page": 2,
+    "depth": 1
+  },
+  {
+    "code": "2_1",
+    "raw_code": "Part 2.1",
+    "title": "Definition of \u2018designated business group\u2019",
+    "page": 17,
+    "depth": 1
+  },
+  {
+    "code": "CHAPTER_3",
+    "raw_code": "CHAPTER 3",
+    "title": "Correspondent Banking",
+    "page": 27,
+    "depth": 1
+  },
+  {
+    "code": "3_1",
+    "raw_code": "Part 3.1",
+    "title": "Entry into a correspondent banking relationship",
+    "page": 27,
+    "depth": 1
+  },
+  {
+    "code": "4_1",
+    "raw_code": "Part 4.1",
+    "title": "Introduction",
+    "page": 30,
+    "depth": 1
+  },
+  {
+    "code": "4_2",
+    "raw_code": "Part 4.2",
+    "title": "Applicable customer identification procedure with respect",
+    "page": null,
+    "depth": 1
+  },
+  {
+    "code": "4_3",
+    "raw_code": "Part 4.3",
+    "title": "Applicable customer identification procedure with respect",
+    "page": null,
+    "depth": 1
+  },
+  {
+    "code": "4_4",
+    "raw_code": "Part 4.4",
+    "title": "Applicable customer identification procedure with respect",
+    "page": null,
+    "depth": 1
+  },
+  {
+    "code": "4_5",
+    "raw_code": "Part 4.5",
+    "title": "Applicable customer identification procedure with respect",
+    "page": null,
+    "depth": 1
+  },
+  {
+    "code": "4_6",
+    "raw_code": "Part 4.6",
+    "title": "Applicable customer identification procedure with respect",
+    "page": null,
+    "depth": 1
+  },
+  {
+    "code": "4_7",
+    "raw_code": "Part 4.7",
+    "title": "Applicable customer identification procedure with respect",
+    "page": null,
+    "depth": 1
+  },
+  {
+    "code": "4_8",
+    "raw_code": "Part 4.8",
+    "title": "Applicable customer identification procedure with respect",
+    "page": null,
+    "depth": 1
+  },
+  {
+    "code": "4_9",
+    "raw_code": "Part 4.9",
+    "title": "Verification from documentation",
+    "page": 56,
+    "depth": 1
+  },
+  {
+    "code": "4_10",
+    "raw_code": "Part 4.10",
+    "title": "Verification from reliable and independent electronic data",
+    "page": 58,
+    "depth": 1
+  },
+  {
+    "code": "4_11",
+    "raw_code": "Part 4.11",
+    "title": "Agents of customers",
+    "page": 59,
+    "depth": 1
+  },
+  {
+    "code": "4_12",
+    "raw_code": "Part 4.12",
+    "title": "Collection and Verification of Beneficial Owner information",
+    "page": 61,
+    "depth": 1
+  },
+  {
+    "code": "4_13",
+    "raw_code": "Part 4.13",
+    "title": "Collection and Verification of Politically Exposed Person",
+    "page": null,
+    "depth": 1
+  },
+  {
+    "code": "4_14",
+    "raw_code": "Part 4.14",
+    "title": "Exemptions relating to the identification of beneficial",
+    "page": null,
+    "depth": 1
+  },
+  {
+    "code": "22",
+    "raw_code": "22",
+    "title": "/11/",
+    "page": 2024,
+    "depth": 0
+  },
+  {
+    "code": "4_15",
+    "raw_code": "Part 4.15",
+    "title": "Procedure to follow where a customer cannot provide",
+    "page": null,
+    "depth": 1
+  },
+  {
+    "code": "5_1",
+    "raw_code": "Part 5.1",
+    "title": "Special anti-money laundering and counter-terrorism",
+    "page": null,
+    "depth": 1
+  },
+  {
+    "code": "5_2",
+    "raw_code": "Part 5.2",
+    "title": "Applicable customer identification procedures in relation to",
+    "page": null,
+    "depth": 1
+  },
+  {
+    "code": "CHAPTER_6",
+    "raw_code": "CHAPTER 6",
+    "title": "Verification of identity",
+    "page": 72,
+    "depth": 1
+  },
+  {
+    "code": "6_1",
+    "raw_code": "Part 6.1",
+    "title": "Re-verification of KYC information",
+    "page": 72,
+    "depth": 1
+  },
+  {
+    "code": "6_2",
+    "raw_code": "Part 6.2",
+    "title": "Verification of identity of pre-commencement customers",
+    "page": 72,
+    "depth": 1
+  },
+  {
+    "code": "6_3",
+    "raw_code": "Part 6.3",
+    "title": "Verification of identity of low-risk service customers",
+    "page": 73,
+    "depth": 1
+  },
+  {
+    "code": "CHAPTER_7",
+    "raw_code": "CHAPTER 7",
+    "title": "Reliance on third parties",
+    "page": 74,
+    "depth": 1
+  },
+  {
+    "code": "7_1",
+    "raw_code": "Part 7.1",
+    "title": "Reliance",
+    "page": 74,
+    "depth": 1
+  },
+  {
+    "code": "7_2",
+    "raw_code": "Part 7.2",
+    "title": "Ongoing reliance under an agreement or arrangement",
+    "page": 74,
+    "depth": 1
+  },
+  {
+    "code": "7_3",
+    "raw_code": "Part 7.3",
+    "title": "Case-by-case reliance",
+    "page": 76,
+    "depth": 1
+  },
+  {
+    "code": "8_1",
+    "raw_code": "Part 8.1",
+    "title": "Part A of a standard anti-money laundering and",
+    "page": null,
+    "depth": 1
+  },
+  {
+    "code": "8_2",
+    "raw_code": "Part 8.2",
+    "title": "AML/CTF risk awareness training program",
+    "page": 81,
+    "depth": 1
+  },
+  {
+    "code": "8_3",
+    "raw_code": "Part 8.3",
+    "title": "Employee due diligence program",
+    "page": 81,
+    "depth": 1
+  },
+  {
+    "code": "8_4",
+    "raw_code": "Part 8.4",
+    "title": "Oversight by boards and senior management",
+    "page": 82,
+    "depth": 1
+  },
+  {
+    "code": "8_5",
+    "raw_code": "Part 8.5",
+    "title": "AML/CTF Compliance Officer",
+    "page": 82,
+    "depth": 1
+  },
+  {
+    "code": "8_6",
+    "raw_code": "Part 8.6",
+    "title": "Independent review",
+    "page": 82,
+    "depth": 1
+  },
+  {
+    "code": "8_7",
+    "raw_code": "Part 8.7",
+    "title": "Incorporation of feedback and guidance on ML/TF risks",
+    "page": null,
+    "depth": 1
+  },
+  {
+    "code": "8_8",
+    "raw_code": "Part 8.8",
+    "title": "Permanent establishments in a foreign country",
+    "page": 83,
+    "depth": 1
+  },
+  {
+    "code": "8_9",
+    "raw_code": "Part 8.9",
+    "title": "Reporting obligations",
+    "page": 84,
+    "depth": 1
+  },
+  {
+    "code": "9_1",
+    "raw_code": "Part 9.1",
+    "title": "Part A of a joint anti-money laundering and",
+    "page": null,
+    "depth": 1
+  },
+  {
+    "code": "9_2",
+    "raw_code": "Part 9.2",
+    "title": "AML/CTF risk awareness training program",
+    "page": 88,
+    "depth": 1
+  },
+  {
+    "code": "9_3",
+    "raw_code": "Part 9.3",
+    "title": "Employee due diligence program",
+    "page": 88,
+    "depth": 1
+  },
+  {
+    "code": "9_4",
+    "raw_code": "Part 9.4",
+    "title": "Oversight by boards and senior management",
+    "page": 89,
+    "depth": 1
+  },
+  {
+    "code": "22",
+    "raw_code": "22",
+    "title": "/11/",
+    "page": 2024,
+    "depth": 0
+  },
+  {
+    "code": "9_5",
+    "raw_code": "Part 9.5",
+    "title": "AML/CTF Compliance Officer",
+    "page": 89,
+    "depth": 1
+  },
+  {
+    "code": "9_6",
+    "raw_code": "Part 9.6",
+    "title": "Independent review",
+    "page": 89,
+    "depth": 1
+  },
+  {
+    "code": "9_7",
+    "raw_code": "Part 9.7",
+    "title": "Incorporation of feedback and guidance on ML/TF risks",
+    "page": null,
+    "depth": 1
+  },
+  {
+    "code": "9_8",
+    "raw_code": "Part 9.8",
+    "title": "Permanent establishments in a foreign country",
+    "page": 90,
+    "depth": 1
+  },
+  {
+    "code": "9_9",
+    "raw_code": "Part 9.9",
+    "title": "Reporting obligations",
+    "page": 91,
+    "depth": 1
+  },
+  {
+    "code": "10_1",
+    "raw_code": "Part 10.1",
+    "title": "Casinos",
+    "page": 92,
+    "depth": 1
+  },
+  {
+    "code": "10_2",
+    "raw_code": "Part 10.2",
+    "title": "On-course bookmakers and totalisator agency boards",
+    "page": 93,
+    "depth": 1
+  },
+  {
+    "code": "10_3",
+    "raw_code": "Part 10.3",
+    "title": "Gaming machines",
+    "page": 95,
+    "depth": 1
+  },
+  {
+    "code": "CHAPTER_11",
+    "raw_code": "CHAPTER 11",
+    "title": "Compliance Report \u2013 reporting and lodgment",
+    "page": null,
+    "depth": 1
+  },
+  {
+    "code": "CHAPTER_12",
+    "raw_code": "CHAPTER 12",
+    "title": "Electronic funds transfer instructions",
+    "page": 97,
+    "depth": 1
+  },
+  {
+    "code": "CHAPTER_13",
+    "raw_code": "CHAPTER 13",
+    "title": "Approved third-party bill payment system",
+    "page": 98,
+    "depth": 1
+  },
+  {
+    "code": "CHAPTER_14",
+    "raw_code": "CHAPTER 14",
+    "title": "Thresholds for certain designated services",
+    "page": 99,
+    "depth": 1
+  },
+  {
+    "code": "CHAPTER_15",
+    "raw_code": "CHAPTER 15",
+    "title": "Ongoing customer due diligence",
+    "page": 102,
+    "depth": 1
+  },
+  {
+    "code": "CHAPTER_16",
+    "raw_code": "CHAPTER 16",
+    "title": "Reportable details for international funds transfer",
+    "page": null,
+    "depth": 1
+  },
+  {
+    "code": "CHAPTER_17",
+    "raw_code": "CHAPTER 17",
+    "title": "Reportable details for international funds transfer",
+    "page": null,
+    "depth": 1
+  },
+  {
+    "code": "CHAPTER_18",
+    "raw_code": "CHAPTER 18",
+    "title": "Reportable details for suspicious matters",
+    "page": 123,
+    "depth": 1
+  },
+  {
+    "code": "CHAPTER_19",
+    "raw_code": "CHAPTER 19",
+    "title": "Reportable details for threshold transactions",
+    "page": 133,
+    "depth": 1
+  },
+  {
+    "code": "CHAPTER_20",
+    "raw_code": "CHAPTER 20",
+    "title": "Record-keeping obligations under section 114",
+    "page": 144,
+    "depth": 1
+  },
+  {
+    "code": "CHAPTER_21",
+    "raw_code": "CHAPTER 21",
+    "title": "Issuing or selling a security or derivative",
+    "page": 145,
+    "depth": 1
+  },
+  {
+    "code": "CHAPTER_22",
+    "raw_code": "CHAPTER 22",
+    "title": "Exemption of certain types of transactions",
+    "page": null,
+    "depth": 1
+  },
+  {
+    "code": "CHAPTER_23",
+    "raw_code": "CHAPTER 23",
+    "title": "Anti-Money Laundering and Counter-Terrorism",
+    "page": null,
+    "depth": 1
+  },
+  {
+    "code": "22",
+    "raw_code": "22",
+    "title": "/11/",
+    "page": 2024,
+    "depth": 0
+  },
+  {
+    "code": "CHAPTER_24",
+    "raw_code": "CHAPTER 24",
+    "title": "Anti-Money Laundering and Counter-Terrorism",
+    "page": null,
+    "depth": 1
+  },
+  {
+    "code": "CHAPTER_27",
+    "raw_code": "CHAPTER 27",
+    "title": "Anti-Money Laundering and Counter-Terrorism",
+    "page": null,
+    "depth": 1
+  },
+  {
+    "code": "CHAPTER_28",
+    "raw_code": "CHAPTER 28",
+    "title": "Applicable customer identification procedures in",
+    "page": null,
+    "depth": 1
+  },
+  {
+    "code": "CHAPTER_29",
+    "raw_code": "CHAPTER 29",
+    "title": "Record-keeping obligations under section 107",
+    "page": 177,
+    "depth": 1
+  },
+  {
+    "code": "CHAPTER_30",
+    "raw_code": "CHAPTER 30",
+    "title": "Disclosure certificates",
+    "page": 179,
+    "depth": 1
+  },
+  {
+    "code": "CHAPTER_31",
+    "raw_code": "CHAPTER 31",
+    "title": "Exemption of certain types of transactions",
+    "page": null,
+    "depth": 1
+  },
+  {
+    "code": "CHAPTER_32",
+    "raw_code": "CHAPTER 32",
+    "title": "Exemption of certain types of transactions",
+    "page": null,
+    "depth": 1
+  },
+  {
+    "code": "CHAPTER_33",
+    "raw_code": "CHAPTER 33",
+    "title": "Applicable customer identification procedure for",
+    "page": null,
+    "depth": 1
+  },
+  {
+    "code": "CHAPTER_34",
+    "raw_code": "CHAPTER 34",
+    "title": "Affixing of notices about cross-border movement",
+    "page": null,
+    "depth": 1
+  },
+  {
+    "code": "CHAPTER_35",
+    "raw_code": "CHAPTER 35",
+    "title": "Exemption from applicable customer",
+    "page": null,
+    "depth": 1
+  },
+  {
+    "code": "CHAPTER_36",
+    "raw_code": "CHAPTER 36",
+    "title": "Exemption of certain designated services within a",
+    "page": null,
+    "depth": 1
+  },
+  {
+    "code": "CHAPTER_37",
+    "raw_code": "CHAPTER 37",
+    "title": "Exemption from threshold transaction reporting",
+    "page": null,
+    "depth": 1
+  },
+  {
+    "code": "CHAPTER_38",
+    "raw_code": "CHAPTER 38",
+    "title": "Exemption from applicable customer",
+    "page": null,
+    "depth": 1
+  },
+  {
+    "code": "CHAPTER_39",
+    "raw_code": "CHAPTER 39",
+    "title": "Exemption from applicable customer",
+    "page": null,
+    "depth": 1
+  },
+  {
+    "code": "22",
+    "raw_code": "22",
+    "title": "/11/",
+    "page": 2024,
+    "depth": 0
+  },
+  {
+    "code": "CHAPTER_40",
+    "raw_code": "CHAPTER 40",
+    "title": "Definition of \u2018exempt legal practitioner service\u2019",
+    "page": 199,
+    "depth": 1
+  },
+  {
+    "code": "CHAPTER_41",
+    "raw_code": "CHAPTER 41",
+    "title": "Exemption from applicable customer",
+    "page": null,
+    "depth": 1
+  },
+  {
+    "code": "CHAPTER_42",
+    "raw_code": "CHAPTER 42",
+    "title": "Commodity warehousing of grain",
+    "page": 202,
+    "depth": 1
+  },
+  {
+    "code": "CHAPTER_43",
+    "raw_code": "CHAPTER 43",
+    "title": "Friendly Society closed funds",
+    "page": 204,
+    "depth": 1
+  },
+  {
+    "code": "CHAPTER_45",
+    "raw_code": "CHAPTER 45",
+    "title": "Debt Collection",
+    "page": 205,
+    "depth": 1
+  },
+  {
+    "code": "CHAPTER_46",
+    "raw_code": "CHAPTER 46",
+    "title": "Special circumstances for the applicable",
+    "page": null,
+    "depth": 1
+  },
+  {
+    "code": "CHAPTER_47",
+    "raw_code": "CHAPTER 47",
+    "title": "Risk-only life policy interests in a superannuation",
+    "page": null,
+    "depth": 1
+  },
+  {
+    "code": "CHAPTER_48",
+    "raw_code": "CHAPTER 48",
+    "title": "Exemption of salary packaging administration",
+    "page": null,
+    "depth": 1
+  },
+  {
+    "code": "CHAPTER_49",
+    "raw_code": "CHAPTER 49",
+    "title": "International Uniform Give-Up Agreements",
+    "page": 213,
+    "depth": 1
+  },
+  {
+    "code": "CHAPTER_50",
+    "raw_code": "CHAPTER 50",
+    "title": "Exemption from applicable customer",
+    "page": null,
+    "depth": 1
+  },
+  {
+    "code": "CHAPTER_51",
+    "raw_code": "CHAPTER 51",
+    "title": "AML/CTF Rules relating to certain definitions",
+    "page": null,
+    "depth": 1
+  },
+  {
+    "code": "CHAPTER_52",
+    "raw_code": "CHAPTER 52",
+    "title": "Persons who are licensed to operate no more",
+    "page": null,
+    "depth": 1
+  },
+  {
+    "code": "CHAPTER_54",
+    "raw_code": "CHAPTER 54",
+    "title": "Reporting obligations of registered remittance",
+    "page": null,
+    "depth": 1
+  },
+  {
+    "code": "CHAPTER_55",
+    "raw_code": "CHAPTER 55",
+    "title": "Remittance Sector Register",
+    "page": 224,
+    "depth": 1
+  },
+  {
+    "code": "CHAPTER_56",
+    "raw_code": "CHAPTER 56",
+    "title": "Information to be included in an application for",
+    "page": null,
+    "depth": 1
+  },
+  {
+    "code": "CHAPTER_57",
+    "raw_code": "CHAPTER 57",
+    "title": "Matters to be considered by the AUSTRAC CEO in",
+    "page": null,
+    "depth": 1
+  },
+  {
+    "code": "22",
+    "raw_code": "22",
+    "title": "/11/",
+    "page": 2024,
+    "depth": 0
+  },
+  {
+    "code": "CHAPTER_58",
+    "raw_code": "CHAPTER 58",
+    "title": "Matters to be considered by the AUSTRAC CEO",
+    "page": null,
+    "depth": 1
+  },
+  {
+    "code": "CHAPTER_59",
+    "raw_code": "CHAPTER 59",
+    "title": "Matters to be considered by the AUSTRAC CEO",
+    "page": null,
+    "depth": 1
+  },
+  {
+    "code": "CHAPTER_60",
+    "raw_code": "CHAPTER 60",
+    "title": "Change in registration details regarding the",
+    "page": null,
+    "depth": 1
+  },
+  {
+    "code": "CHAPTER_61",
+    "raw_code": "CHAPTER 61",
+    "title": "Reporting obligations of remittance affiliates",
+    "page": 272,
+    "depth": 1
+  },
+  {
+    "code": "CHAPTER_62",
+    "raw_code": "CHAPTER 62",
+    "title": "Reporting Entities Roll",
+    "page": 273,
+    "depth": 1
+  },
+  {
+    "code": "CHAPTER_63",
+    "raw_code": "CHAPTER 63",
+    "title": "Information to be provided or in relation to an",
+    "page": null,
+    "depth": 1
+  },
+  {
+    "code": "CHAPTER_64",
+    "raw_code": "CHAPTER 64",
+    "title": "Changes in enrolment details in respect to a",
+    "page": null,
+    "depth": 1
+  },
+  {
+    "code": "CHAPTER_65",
+    "raw_code": "CHAPTER 65",
+    "title": "Removal of entries from the Reporting Entities",
+    "page": null,
+    "depth": 1
+  },
+  {
+    "code": "CHAPTER_66",
+    "raw_code": "CHAPTER 66",
+    "title": "Applicable customer identification procedures in",
+    "page": null,
+    "depth": 1
+  },
+  {
+    "code": "CHAPTER_67",
+    "raw_code": "CHAPTER 67",
+    "title": "Warrants",
+    "page": 296,
+    "depth": 1
+  },
+  {
+    "code": "CHAPTER_68",
+    "raw_code": "CHAPTER 68",
+    "title": "Anti-Money Laundering and Counter-Terrorism",
+    "page": null,
+    "depth": 1
+  },
+  {
+    "code": "CHAPTER_69",
+    "raw_code": "CHAPTER 69",
+    "title": "Casino licence holders \u2013 exemption from applying",
+    "page": null,
+    "depth": 1
+  },
+  {
+    "code": "CHAPTER_70",
+    "raw_code": "CHAPTER 70",
+    "title": "Renewal of registration",
+    "page": 300,
+    "depth": 1
+  },
+  {
+    "code": "CHAPTER_71",
+    "raw_code": "CHAPTER 71",
+    "title": "Credit card reform - specifying persons under",
+    "page": null,
+    "depth": 1
+  },
+  {
+    "code": "CHAPTER_72",
+    "raw_code": "CHAPTER 72",
+    "title": "Account-based money transfer systems",
+    "page": 313,
+    "depth": 1
+  },
+  {
+    "code": "CHAPTER_73",
+    "raw_code": "CHAPTER 73",
+    "title": "Exemption for Registered Plan Management",
+    "page": null,
+    "depth": 1
+  },
+  {
+    "code": "22",
+    "raw_code": "22",
+    "title": "/11/",
+    "page": 2024,
+    "depth": 0
+  },
+  {
+    "code": "CHAPTER_74",
+    "raw_code": "CHAPTER 74",
+    "title": "Exemption for licensed trustee companies",
+    "page": 328,
+    "depth": 1
+  },
+  {
+    "code": "CHAPTER_75",
+    "raw_code": "CHAPTER 75",
+    "title": "Law Enforcement Operations",
+    "page": 330,
+    "depth": 1
+  },
+  {
+    "code": "CHAPTER_76",
+    "raw_code": "CHAPTER 76",
+    "title": "Digital Currency Exchange Register",
+    "page": 333,
+    "depth": 1
+  },
+  {
+    "code": "CHAPTER_77",
+    "raw_code": "CHAPTER 77",
+    "title": "Exemption from the applicable customer",
+    "page": null,
+    "depth": 1
+  },
+  {
+    "code": "CHAPTER_78",
+    "raw_code": "CHAPTER 78",
+    "title": "Wise Australia Pty Ltd",
+    "page": 341,
+    "depth": 1
+  },
+  {
+    "code": "CHAPTER_79",
+    "raw_code": "CHAPTER 79",
+    "title": "Applicable customer identification procedure \u2013",
+    "page": null,
+    "depth": 1
+  },
+  {
+    "code": "CHAPTER_80",
+    "raw_code": "CHAPTER 80",
+    "title": "AML/CTF Rules relating to certain definitions",
+    "page": null,
+    "depth": 1
+  },
+  {
+    "code": "CHAPTER_81",
+    "raw_code": "CHAPTER 81",
+    "title": "Financial institutions \u2013 Exemption from applying",
+    "page": null,
+    "depth": 1
+  },
+  {
+    "code": "22",
+    "raw_code": "22",
+    "title": "/11/",
+    "page": 2024,
+    "depth": 0
+  }
+]

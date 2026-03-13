@@ -73,7 +73,7 @@ export default function Home() {
           </p>
           <div className="mt-10 flex items-center justify-center gap-4">
             <Link
-              href="/signup"
+              href="/sign-up"
               className="rounded-lg bg-indigo-600 px-6 py-3 text-sm font-semibold text-white shadow-sm hover:bg-indigo-700"
             >
               Get Started
@@ -166,7 +166,7 @@ export default function Home() {
           </p>
           <div className="mt-8 flex items-center justify-center gap-4">
             <Link
-              href="/signup"
+              href="/sign-up"
               className="rounded-lg bg-white px-6 py-3 text-sm font-semibold text-indigo-600 shadow-sm hover:bg-indigo-50"
             >
               Get Started Free

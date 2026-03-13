@@ -3,31 +3,31 @@
     {
       "id": "process-exists",
       "group": "process-existence",
-      "label": "Does your business have a Customer Due Diligence — Individuals process?",
+      "label": "Does your business have a Customer Due Diligence \u2014 Individuals process?",
       "detail-required": false,
       "correct-option": "Yes",
       "source-rules": [],
       "mapping-confidence": 1.0,
-      "remediation": "Your organisation does not have a Customer Due Diligence — Individuals process in place. You must establish a documented Customer Due Diligence — Individuals process to meet your AML/CTF obligations. Review the controls below and implement the required procedures before completing this assessment."
+      "remediation": "Your organisation does not have a Customer Due Diligence \u2014 Individuals process in place. You must establish a documented Customer Due Diligence \u2014 Individuals process to meet your AML/CTF obligations. Review the controls below and implement the required procedures before completing this assessment."
     },
     {
       "id": "4_2_2",
       "group": "general-obligation",
-      "label": "Does your AML/CTF program include appropriate risk-based systems and controls designed to enable you to be reasonably satisfied that individual customers are who they claim to be?",
+      "label": "Does your Customer Identification Procedure include risk-based systems and controls designed to enable you to be reasonably satisfied that individual customers are who they claim to be?",
       "detail-required": true,
-      "detail-label": "Describe the risk-based systems and controls you use to establish reasonable satisfaction of customer identity",
+      "detail-label": "Describe your risk-based systems and controls for being reasonably satisfied about individual customer identity",
       "correct-option": "Yes",
       "process-id": "PROC-AML-002",
       "source-rules": [
         "4.2.2"
       ],
       "mapping-confidence": 1.0,
-      "remediation": "Your Customer Identification Procedure does not include appropriate risk-based systems and controls to establish reasonable satisfaction that individual customers are who they claim to be. Implement risk-based controls that enable you to assess and verify customer identity in accordance with the ML/TF risk the customer presents, as required under rule 4.2.2."
+      "remediation": "Your Customer Identification Procedure does not include appropriate risk-based systems and controls to enable reasonable satisfaction that individual customers are who they claim to be. Implement risk-based controls that assess ML/TF risk and adjust the level of identification assurance accordingly, as required under rule 4.2.2."
     },
     {
       "id": "4_2_3",
       "group": "collection-kyc",
-      "label": "Does your procedure collect the minimum KYC information for individual customers: full name, date of birth, and residential address?",
+      "label": "Does your procedure collect the minimum KYC information for individual customers (not sole traders)?",
       "detail-required": false,
       "correct-option": "Yes",
       "process-id": "PROC-AML-002a",
@@ -38,7 +38,6 @@
         "4.2.3(3)"
       ],
       "mapping-confidence": 1.0,
-      "remediation": "Your Customer Identification Procedure does not collect the minimum KYC information required for individual customers. Update your process to collect full name, date of birth, and residential address for every individual customer before commencing a designated service, as required under rules 4.2.3(1), 4.2.3(2), and 4.2.3(3).",
       "checklist-items": [
         {
           "label": "Full name"
@@ -49,12 +48,13 @@
         {
           "label": "Residential address"
         }
-      ]
+      ],
+      "remediation": "Your Collection of KYC Information process does not collect the minimum required information for individual customers. Update your procedure to collect full name, date of birth, and residential address for every individual customer (excluding sole traders) before commencing a designated service, as required under rules 4.2.3, 4.2.3(1), 4.2.3(2), and 4.2.3(3)."
     },
     {
       "id": "4_2_4",
       "group": "collection-kyc",
-      "label": "Does your procedure collect the minimum KYC information for sole traders: full name, date of birth, business name (if any), address of principal place of business or residential address, and ABN (if any)?",
+      "label": "Does your procedure collect the minimum KYC information for sole trader customers?",
       "detail-required": false,
       "correct-option": "Yes",
       "process-id": "PROC-AML-002a",
@@ -67,7 +67,6 @@
         "4.2.4(5)"
       ],
       "mapping-confidence": 1.0,
-      "remediation": "Your Customer Identification Procedure does not collect the minimum KYC information required for sole trader customers. Update your process to collect full name, date of birth, business name (if any), address of principal place of business or residential address, and any ABN issued to the customer, as required under rules 4.2.4(1) through 4.2.4(5).",
       "checklist-items": [
         {
           "label": "Full name"
@@ -76,13 +75,13 @@
           "label": "Date of birth"
         },
         {
-          "label": "Business name"
+          "label": "Full business name (if any)"
         },
         {
           "type": "or-group",
           "items": [
             {
-              "label": "Principal place of business address"
+              "label": "Principal place of business address (if any)"
             },
             {
               "label": "Residential address"
@@ -90,28 +89,29 @@
           ]
         },
         {
-          "label": "ABN"
+          "label": "ABN (if issued)"
         }
-      ]
+      ],
+      "remediation": "Your Collection of KYC Information process does not collect the minimum required information for sole trader customers. Update your procedure to collect full name, date of birth, business name (if any), principal place of business address or residential address, and ABN (if issued) for every sole trader customer, as required under rules 4.2.4, 4.2.4(1), 4.2.4(2), 4.2.4(3), 4.2.4(4), and 4.2.4(5)."
     },
     {
       "id": "4_2_5",
-      "group": "additional-kyc-assessment",
-      "label": "Does your AML/CTF program include appropriate risk-based systems and controls to determine whether any additional KYC information (beyond the minimum) should be collected about individual customers?",
+      "group": "kyc-assessment",
+      "label": "Does your procedure include risk-based systems and controls to determine whether additional KYC information beyond the minimum should be collected about individual customers?",
       "detail-required": true,
-      "detail-label": "Describe the risk-based approach you use to determine when additional KYC information should be collected",
+      "detail-label": "Describe your risk-based approach for determining when to collect additional KYC information",
       "correct-option": "Yes",
       "process-id": "PROC-AML-002c",
       "source-rules": [
         "4.2.5"
       ],
       "mapping-confidence": 1.0,
-      "remediation": "Your Customer Identification Procedure does not include appropriate risk-based systems and controls to determine when additional KYC information should be collected beyond the regulatory minimum. Implement a risk-based decision framework that assesses whether extra information is needed based on the ML/TF risk profile of each individual customer, as required under rule 4.2.5."
+      "remediation": "Your ML/TF Risk Assessment process does not include appropriate risk-based systems and controls for determining whether additional KYC information should be collected beyond the minimum requirements. Implement risk-based controls that assess customer ML/TF risk and determine when additional information collection is warranted, as required under rule 4.2.5."
     },
     {
       "id": "4_2_6",
       "group": "verification",
-      "label": "Does your procedure verify, at a minimum, the customer's full name and either their date of birth or residential address?",
+      "label": "Does your procedure verify the minimum required KYC information for individual customers?",
       "detail-required": false,
       "correct-option": "Yes",
       "process-id": "PROC-AML-002b",
@@ -123,7 +123,6 @@
         "4.2.6(2)(b)"
       ],
       "mapping-confidence": 1.0,
-      "remediation": "Your Verification of Identity process does not verify the minimum KYC information required for individual customers. Update your process to verify the customer's full name and either their date of birth or residential address before commencing a designated service, as required under rules 4.2.6(1) and 4.2.6(2).",
       "checklist-items": [
         {
           "label": "Full name"
@@ -139,14 +138,15 @@
             }
           ]
         }
-      ]
+      ],
+      "remediation": "Your Verification of Identity process does not verify the minimum required KYC information. Update your procedure to verify the customer's full name and either their date of birth or residential address for every individual customer, as required under rules 4.2.6, 4.2.6(1), 4.2.6(2), 4.2.6(2)(a), and 4.2.6(2)(b)."
     },
     {
       "id": "4_2_7",
       "group": "verification",
-      "label": "Is your verification of customer information based on reliable and independent documentation, reliable and independent electronic data, or a combination of both?",
+      "label": "Is verification of customer information based on reliable and independent documentation, reliable and independent electronic data, or a combination of both?",
       "detail-required": true,
-      "detail-label": "Describe the sources of documentation and/or electronic data you use for verification",
+      "detail-label": "Describe the sources you use for verification (documentation, electronic data, or combination)",
       "correct-option": "Yes",
       "process-id": "PROC-AML-002b",
       "source-rules": [
@@ -156,40 +156,40 @@
         "4.2.7(3)"
       ],
       "mapping-confidence": 1.0,
-      "remediation": "Your Verification of Identity process does not base verification on reliable and independent sources. Ensure that all customer information verification relies on reliable and independent documentation, reliable and independent electronic data, or a combination of both, as required under rules 4.2.7(1), 4.2.7(2), and 4.2.7(3)."
+      "remediation": "Your Verification of Identity process does not require verification to be based on reliable and independent sources. Update your procedure to ensure all verification is based on reliable and independent documentation, reliable and independent electronic data, or a combination of both, as required under rules 4.2.7, 4.2.7(1), 4.2.7(2), and 4.2.7(3)."
     },
     {
       "id": "4_2_8",
-      "group": "additional-verification-assessment",
-      "label": "Does your AML/CTF program include appropriate risk-based systems and controls to determine whether any additional KYC information (beyond the minimum) should be verified?",
+      "group": "kyc-assessment",
+      "label": "Does your procedure include risk-based systems and controls to determine whether additional KYC information beyond the minimum should be verified?",
       "detail-required": true,
-      "detail-label": "Describe the risk-based approach you use to determine when additional KYC information should be verified",
+      "detail-label": "Describe your risk-based approach for determining when to verify additional KYC information",
       "correct-option": "Yes",
       "process-id": "PROC-AML-002c",
       "source-rules": [
         "4.2.8"
       ],
       "mapping-confidence": 1.0,
-      "remediation": "Your Verification of Identity process does not include appropriate risk-based systems and controls to determine when additional KYC information should be verified beyond the regulatory minimum. Implement a risk-based decision framework that assesses whether extra verification is needed based on the ML/TF risk profile of each individual customer, as required under rule 4.2.8."
+      "remediation": "Your ML/TF Risk Assessment process does not include appropriate risk-based systems and controls for determining whether additional collected KYC information should be verified. Implement risk-based controls that assess customer ML/TF risk and determine when additional verification is warranted beyond the minimum requirements, as required under rule 4.2.8."
     },
     {
       "id": "4_2_9",
       "group": "discrepancy-handling",
-      "label": "Does your AML/CTF program include appropriate risk-based systems and controls to respond to any discrepancy that arises during verification so you can determine whether you are reasonably satisfied the customer is who they claim to be?",
+      "label": "Does your procedure include risk-based systems and controls to respond to discrepancies that arise during verification?",
       "detail-required": true,
-      "detail-label": "Describe your process for responding to verification discrepancies",
+      "detail-label": "Describe how you respond to verification discrepancies to determine reasonable satisfaction about customer identity",
       "correct-option": "Yes",
       "process-id": "PROC-AML-002b",
       "source-rules": [
         "4.2.9"
       ],
       "mapping-confidence": 1.0,
-      "remediation": "Your Verification of Identity process does not include appropriate systems and controls to respond to discrepancies discovered during verification. Implement risk-based procedures to investigate and resolve verification discrepancies so you can determine whether you remain reasonably satisfied the customer is who they claim to be, as required under rule 4.2.9."
+      "remediation": "Your Verification of Identity process does not include appropriate risk-based systems and controls for responding to discrepancies discovered during verification. Implement controls to investigate and resolve verification discrepancies so you can determine whether you are reasonably satisfied that the customer is who they claim to be, as required under rule 4.2.9."
     },
     {
       "id": "4_2_10",
-      "group": "safe-harbour-documentary",
-      "label": "Do you wish to use the documentary safe harbour procedure for medium or lower ML/TF risk customers?",
+      "group": "verification",
+      "label": "Do you use the documentation-based safe harbour procedure for medium or lower ML/TF risk individual customers?",
       "detail-required": false,
       "correct-option": "N/A",
       "process-id": "PROC-AML-002b",
@@ -197,12 +197,12 @@
         "4.2.10"
       ],
       "mapping-confidence": 1.0,
-      "remediation": "This is an optional safe harbour procedure. You may choose to implement it or use alternative verification methods that meet the requirements of rules 4.2.3 to 4.2.8."
+      "remediation": "This is an informational question about whether you use the optional documentation-based safe harbour procedure. If you answered when you intended to skip, please review your verification approach for medium or lower risk individual customers as described in rule 4.2.10."
     },
     {
       "id": "4_2_12",
-      "group": "safe-harbour-electronic",
-      "label": "Do you wish to use the electronic safe harbour procedure for medium or lower ML/TF risk customers?",
+      "group": "verification",
+      "label": "Do you use the electronic-based safe harbour procedure for medium or lower ML/TF risk individual customers?",
       "detail-required": false,
       "correct-option": "N/A",
       "process-id": "PROC-AML-002b",
@@ -210,7 +210,7 @@
         "4.2.12"
       ],
       "mapping-confidence": 1.0,
-      "remediation": "This is an optional safe harbour procedure. You may choose to implement it or use alternative verification methods that meet the requirements of rules 4.2.3 to 4.2.8."
+      "remediation": "This is an informational question about whether you use the optional electronic-based safe harbour procedure. If you answered when you intended to skip, please review your verification approach for medium or lower risk individual customers as described in rule 4.2.12."
     }
   ],
   "groups": [
@@ -222,58 +222,38 @@
     },
     {
       "id": "general-obligation",
-      "title": "General Customer Due Diligence Obligation",
-      "description": "Your AML/CTF program must include appropriate risk-based systems and controls designed to enable you to be reasonably satisfied that individual customers are who they claim to be.",
+      "title": "General CDD Obligation",
+      "description": "Top-level requirement to be reasonably satisfied about individual customer identity through risk-based controls.",
       "variant": "main"
     },
     {
       "id": "collection-kyc",
       "title": "Collection of KYC Information",
-      "description": "Minimum information requirements that must be collected for individuals and sole traders before commencing a designated service.",
-      "variant": "main"
-    },
-    {
-      "id": "additional-kyc-assessment",
-      "title": "Additional KYC Assessment",
-      "description": "Risk-based determination of whether additional KYC information beyond the minimum should be collected.",
+      "description": "Minimum KYC information that must be collected for individual customers and sole traders before commencing a designated service.",
       "variant": "main"
     },
     {
       "id": "verification",
       "title": "Verification of Information",
-      "description": "Minimum verification requirements and methods for confirming the identity information collected from customers.",
+      "description": "Verification requirements for collected KYC information, including acceptable sources and optional safe harbour procedures.",
       "variant": "main"
     },
     {
-      "id": "additional-verification-assessment",
-      "title": "Additional Verification Assessment",
-      "description": "Risk-based determination of whether additional KYC information beyond the minimum should be verified.",
+      "id": "kyc-assessment",
+      "title": "Additional KYC Assessment",
+      "description": "Risk-based decisions about whether to collect and verify KYC information beyond the minimum requirements.",
       "variant": "main"
     },
     {
       "id": "discrepancy-handling",
       "title": "Discrepancy Handling",
-      "description": "Systems and controls to respond when verification reveals inconsistencies or issues with customer information.",
+      "description": "Systems and controls for responding to discrepancies discovered during the verification process.",
       "variant": "main"
-    },
-    {
-      "id": "safe-harbour-documentary",
-      "title": "Documentary Safe Harbour Procedure",
-      "description": "Optional prescriptive procedure for document-based verification when ML/TF risk is assessed as medium or lower. This provides a safe harbour method to comply with collection and verification obligations.",
-      "variant": "subprocess",
-      "subprocess-label": "Documentary"
-    },
-    {
-      "id": "safe-harbour-electronic",
-      "title": "Electronic Safe Harbour Procedure",
-      "description": "Optional prescriptive procedure for electronic verification when ML/TF risk is assessed as medium or lower. This provides a safe harbour method to comply with collection and verification obligations.",
-      "variant": "subprocess",
-      "subprocess-label": "Electronic"
     }
   ],
   "rules": [
     {
-      "target": "4_2",
+      "target": "CHAPTER_28",
       "scope": "4_1_4_1",
       "effect": "SHOW",
       "schema": {

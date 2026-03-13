@@ -9,6 +9,143 @@
       "source-rules": [],
       "mapping-confidence": 1.0,
       "remediation": "Your organisation does not have a PEP Screening process in place. You must establish a documented PEP Screening process to meet your AML/CTF obligations. Review the controls below and implement the required procedures before completing this assessment."
+    },
+    {
+      "id": "4_13_1",
+      "group": "pep-determination",
+      "label": "Does your AML/CTF program include risk-management systems to determine whether a customer or beneficial owner is a politically exposed person (PEP)?",
+      "detail-required": true,
+      "detail-label": "Describe your PEP determination systems and timeline",
+      "correct-option": "Yes",
+      "source-rules": [
+        "4.13.1"
+      ],
+      "mapping-confidence": 1.0,
+      "remediation": "Your PEP Screening process lacks appropriate risk-management systems to identify PEPs. Establish systems to determine whether customers or beneficial owners are PEPs either before providing a designated service or as soon as practicable after provision, as required under rule 4.13.1."
+    },
+    {
+      "id": "4_13_2",
+      "group": "domestic-pep-screening",
+      "label": "For domestic PEPs and international organisation PEPs, does your process determine whether they are of high ML/TF risk?",
+      "detail-required": true,
+      "detail-label": "Describe how you assess high ML/TF risk for domestic and international organisation PEPs",
+      "correct-option": "Yes",
+      "source-rules": [
+        "4.13.2",
+        "4.13.2(2)"
+      ],
+      "mapping-confidence": 1.0,
+      "remediation": "Your PEP Screening process for domestic PEPs and international organisation PEPs does not include risk assessment. You must determine whether each such PEP is of high ML/TF risk, as required under rules 4.13.2 and 4.13.2(2)."
+    },
+    {
+      "id": "4_13_2_1",
+      "group": "domestic-pep-screening",
+      "label": "For beneficial owners who are domestic or international organisation PEPs, does your process comply with customer identification requirements (rules 4.2.3 to 4.2.9)?",
+      "detail-required": true,
+      "detail-label": "Describe how you apply identification requirements to PEP beneficial owners",
+      "correct-option": "Yes",
+      "source-rules": [
+        "4.13.2(1)"
+      ],
+      "mapping-confidence": 1.0,
+      "remediation": "Your PEP Screening process does not require identification compliance for beneficial owner PEPs. When a beneficial owner is identified as a domestic or international organisation PEP, apply the same identification requirements (rules 4.2.3 to 4.2.9) as if the PEP were the customer, as mandated by rule 4.13.2(1)."
+    },
+    {
+      "id": "4_13_2_3",
+      "group": "high-risk-pep-procedures",
+      "label": "For high ML/TF risk domestic or international organisation PEPs, does your process require senior management approval before establishing or continuing a business relationship?",
+      "detail-required": true,
+      "detail-label": "Describe your senior management approval procedures for high-risk PEPs",
+      "correct-option": "Yes",
+      "source-rules": [
+        "4.13.2(3)",
+        "4.13.3(2)"
+      ],
+      "mapping-confidence": 1.0,
+      "remediation": "Your PEP Screening process for high-risk PEPs does not include senior management approval. When a domestic or international organisation PEP is assessed as high ML/TF risk, obtain senior management approval before establishing or continuing the business relationship and before providing or continuing the designated service, as required under rules 4.13.2(3) and 4.13.3(2)."
+    },
+    {
+      "id": "4_13_2_3_b",
+      "group": "high-risk-pep-procedures",
+      "label": "For high ML/TF risk domestic or international organisation PEPs, do you take reasonable measures to establish the PEP's source of wealth and source of funds?",
+      "detail-required": true,
+      "detail-label": "Describe your process for determining source of wealth and source of funds",
+      "correct-option": "Yes",
+      "source-rules": [
+        "4.13.2(3)",
+        "4.13.3(3)"
+      ],
+      "mapping-confidence": 1.0,
+      "remediation": "Your PEP Screening process for high-risk PEPs does not include source of wealth and source of funds investigation. Take reasonable measures to establish the source of wealth and source of funds for high ML/TF risk domestic or international organisation PEPs, as required under rules 4.13.2(3) and 4.13.3(3)."
+    },
+    {
+      "id": "4_13_2_3_c",
+      "group": "high-risk-pep-procedures",
+      "label": "For high ML/TF risk domestic or international organisation PEPs, do you comply with Chapter 15 reporting obligations?",
+      "detail-required": true,
+      "detail-label": "Describe how your process addresses Chapter 15 obligations for high-risk PEPs",
+      "correct-option": "Yes",
+      "source-rules": [
+        "4.13.2(3)",
+        "4.13.3(4)"
+      ],
+      "mapping-confidence": 1.0,
+      "remediation": "Your PEP Screening process for high-risk PEPs does not address Chapter 15 reporting obligations. Ensure compliance with the obligations in Chapter 15 of the AML/CTF Rules for high ML/TF risk domestic or international organisation PEPs, as mandated by rules 4.13.2(3) and 4.13.3(4)."
+    },
+    {
+      "id": "4_13_3",
+      "group": "foreign-pep-screening",
+      "label": "For foreign PEPs, does your process require senior management approval before establishing or continuing a business relationship and before providing or continuing a designated service?",
+      "detail-required": true,
+      "detail-label": "Describe your senior management approval procedures for foreign PEPs",
+      "correct-option": "Yes",
+      "source-rules": [
+        "4.13.3",
+        "4.13.3(2)"
+      ],
+      "mapping-confidence": 1.0,
+      "remediation": "Your PEP Screening process for foreign PEPs does not include mandatory senior management approval. Obtain senior management approval before establishing or continuing a business relationship with a foreign PEP and before providing or continuing a designated service, as required under rule 4.13.3(2)."
+    },
+    {
+      "id": "4_13_3_b",
+      "group": "foreign-pep-screening",
+      "label": "For foreign PEPs, do you take reasonable measures to establish the PEP's source of wealth and source of funds?",
+      "detail-required": true,
+      "detail-label": "Describe your process for determining source of wealth and source of funds",
+      "correct-option": "Yes",
+      "source-rules": [
+        "4.13.3",
+        "4.13.3(3)"
+      ],
+      "mapping-confidence": 1.0,
+      "remediation": "Your PEP Screening process for foreign PEPs does not include source of wealth and source of funds investigation. Take reasonable measures to establish the source of wealth and source of funds for every foreign PEP, as required under rule 4.13.3(3)."
+    },
+    {
+      "id": "4_13_3_c",
+      "group": "foreign-pep-screening",
+      "label": "For foreign PEPs, do you comply with Chapter 15 reporting obligations?",
+      "detail-required": true,
+      "detail-label": "Describe how your process addresses Chapter 15 obligations for foreign PEPs",
+      "correct-option": "Yes",
+      "source-rules": [
+        "4.13.3",
+        "4.13.3(4)"
+      ],
+      "mapping-confidence": 1.0,
+      "remediation": "Your PEP Screening process for foreign PEPs does not address Chapter 15 reporting obligations. Ensure compliance with the obligations in Chapter 15 of the AML/CTF Rules for every foreign PEP, as mandated by rule 4.13.3(4)."
+    },
+    {
+      "id": "4_13_4",
+      "group": "pep-discrepancy-handling",
+      "label": "Does your process include risk-based systems and controls to respond to any discrepancy that arises when verifying information collected about a PEP?",
+      "detail-required": true,
+      "detail-label": "Describe your discrepancy resolution procedures for PEPs",
+      "correct-option": "Yes",
+      "source-rules": [
+        "4.13.4"
+      ],
+      "mapping-confidence": 1.0,
+      "remediation": "Your PEP Screening process lacks risk-based systems to handle discrepancies during verification. Establish appropriate risk-based systems and controls to respond to any discrepancy in verifying PEP information so that you can be reasonably satisfied the PEP is who they claim to be, as required under rule 4.13.4."
     }
   ],
   "groups": [
@@ -17,12 +154,75 @@
       "title": "Process Confirmation",
       "description": "Before answering the detailed compliance questions, confirm whether your organisation operates this business process.",
       "variant": "main"
+    },
+    {
+      "id": "pep-determination",
+      "title": "PEP Determination",
+      "description": "Systems and processes to identify whether customers and beneficial owners are politically exposed persons, and timing of such determination.",
+      "variant": "main"
+    },
+    {
+      "id": "domestic-pep-screening",
+      "title": "Domestic and International Organisation PEP Screening",
+      "description": "Risk-management systems for domestic PEPs and PEPs from international organisations, including identification and ML/TF risk assessment.",
+      "variant": "main"
+    },
+    {
+      "id": "high-risk-pep-procedures",
+      "title": "High ML/TF Risk PEP Procedures",
+      "description": "Enhanced procedures required for domestic or international organisation PEPs assessed as high ML/TF risk, including senior management approval, source of wealth investigation, and Chapter 15 compliance.",
+      "variant": "subprocess",
+      "subprocess-label": "High-Risk"
+    },
+    {
+      "id": "foreign-pep-screening",
+      "title": "Foreign PEP Screening",
+      "description": "Risk-management systems for foreign PEPs, including identification, senior management approval, source of wealth investigation, and Chapter 15 compliance.",
+      "variant": "main"
+    },
+    {
+      "id": "pep-discrepancy-handling",
+      "title": "PEP Discrepancy Handling",
+      "description": "Risk-based systems and controls to address discrepancies identified during verification of PEP information.",
+      "variant": "main"
     }
   ],
   "rules": [
     {
       "target": "4_13",
       "scope": "4_1_5_2",
+      "effect": "SHOW",
+      "schema": {
+        "const": "Yes"
+      }
+    },
+    {
+      "target": "high-risk-pep-procedures",
+      "scope": "4_13_2",
+      "effect": "SHOW",
+      "schema": {
+        "const": "Yes"
+      }
+    },
+    {
+      "target": "4_13_2_3",
+      "scope": "4_13_2",
+      "effect": "SHOW",
+      "schema": {
+        "const": "Yes"
+      }
+    },
+    {
+      "target": "4_13_2_3_b",
+      "scope": "4_13_2",
+      "effect": "SHOW",
+      "schema": {
+        "const": "Yes"
+      }
+    },
+    {
+      "target": "4_13_2_3_c",
+      "scope": "4_13_2",
       "effect": "SHOW",
       "schema": {
         "const": "Yes"

@@ -1,0 +1,46 @@
+{
+  "controls": [
+    {
+      "id": "process-exists",
+      "group": "process-existence",
+      "label": "Does your business have a Gaming Machines process?",
+      "detail-required": false,
+      "correct-option": "Yes",
+      "source-rules": [],
+      "mapping-confidence": 1.0,
+      "remediation": "Your organisation does not have a Gaming Machines process in place. You must establish a documented Gaming Machines process to meet your AML/CTF obligations. Review the controls below and implement the required procedures before completing this assessment."
+    }
+  ],
+  "groups": [
+    {
+      "id": "process-existence",
+      "title": "Process Confirmation",
+      "description": "Before answering the detailed compliance questions, confirm whether your organisation operates this business process.",
+      "variant": "main"
+    },
+    {
+      "id": "payout-threshold",
+      "title": "Gaming Machine Payout Thresholds",
+      "description": "Gaming machines (excluding casinos) benefit from threshold-based exemptions from routine customer identification for low-value transactions and deposits. These exemptions apply unless your enhanced due diligence program identifies elevated ML/TF risk.",
+      "variant": "main"
+    },
+    {
+      "id": "edd-override",
+      "title": "Enhanced Due Diligence Override",
+      "description": "All gaming machine exemptions are conditional. Your enhanced customer due diligence program must include the capability to override these exemptions and require customer identification when ML/TF risk warrants it.",
+      "variant": "main"
+    }
+  ],
+  "rules": [
+    {
+      "target": "CHAPTER_52",
+      "scope": "10_3",
+      "effect": "SHOW",
+      "schema": {
+        "const": "Yes"
+      }
+    }
+  ],
+  "sub_scoping": [],
+  "form_links": []
+}

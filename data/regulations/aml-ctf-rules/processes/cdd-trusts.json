@@ -3,19 +3,19 @@
     {
       "id": "process-exists",
       "group": "process-existence",
-      "label": "Does your business have a Customer Due Diligence — Trusts process?",
+      "label": "Does your business have a Customer Due Diligence \u2014 Trusts process?",
       "detail-required": false,
       "correct-option": "Yes",
       "source-rules": [],
       "mapping-confidence": 1.0,
-      "remediation": "Your organisation does not have a Customer Due Diligence — Trusts process in place. You must establish a documented Customer Due Diligence — Trusts process to meet your AML/CTF obligations. Review the controls below and implement the required procedures before completing this assessment."
+      "remediation": "Your organisation does not have a Customer Due Diligence \u2014 Trusts process in place. You must establish a documented Customer Due Diligence \u2014 Trusts process to meet your AML/CTF obligations. Review the controls below and implement the required procedures before completing this assessment."
     },
     {
       "id": "4_4_2",
-      "group": "general-obligation",
-      "label": "Does your CDD procedure include risk-based systems and controls to be reasonably satisfied that the trust exists and that the name of each trustee and beneficiary (or class of beneficiary) has been provided?",
+      "group": "trust-existence",
+      "label": "Does your Customer Identification Procedure include risk-based systems to verify that the trust exists and that the names of all trustees and beneficiaries (or a description of each class of beneficiary) have been provided?",
       "detail-required": true,
-      "detail-label": "Describe your risk-based systems and controls for verifying trust existence and identifying trustees/beneficiaries",
+      "detail-label": "Describe your risk-based systems and controls for verifying trust existence and identifying trustees and beneficiaries",
       "correct-option": "Yes",
       "process-id": "PROC-AML-002",
       "source-rules": [
@@ -23,185 +23,106 @@
         "4.4.2(1)",
         "4.4.2(2)"
       ],
-      "mapping-confidence": 0.95,
-      "remediation": "Your Customer Due Diligence procedure for trusts does not include the foundational risk-based controls required to be reasonably satisfied that the trust exists and that trustees and beneficiaries have been identified. Update your procedure to incorporate systems that assess trust existence and capture the name of each trustee and beneficiary (or description of each class of beneficiary) before providing designated services, as required under rules 4.4.2, 4.4.2(1), and 4.4.2(2)."
-    },
-    {
-      "id": "4_4_3_1",
-      "group": "collection-existence",
-      "label": "Does your procedure collect the full name of the trust (if any)?",
-      "detail-required": false,
-      "correct-option": "Yes",
-      "process-id": "PROC-AML-002a",
-      "source-rules": [
-        "4.4.3(1)"
-      ],
-      "mapping-confidence": 1.0,
-      "remediation": "Your Customer Due Diligence procedure does not collect the full name of the trust. Update your KYC collection process to capture the trust's full name where one exists, as required under rule 4.4.3(1)."
-    },
-    {
-      "id": "4_4_3_2",
-      "group": "collection-existence",
-      "label": "Does your procedure collect the full business name (if any) of the trustee in respect of the trust?",
-      "detail-required": false,
-      "correct-option": "Yes",
-      "process-id": "PROC-AML-002a",
-      "source-rules": [
-        "4.4.3(2)"
-      ],
-      "mapping-confidence": 1.0,
-      "remediation": "Your Customer Due Diligence procedure does not collect the business name of the trustee. Update your KYC collection process to capture the full business name of the trustee (if any) acting in respect of the trust, as required under rule 4.4.3(2)."
-    },
-    {
-      "id": "4_4_3_3",
-      "group": "collection-existence",
-      "label": "Does your procedure collect the type of the trust?",
-      "detail-required": false,
-      "correct-option": "Yes",
-      "process-id": "PROC-AML-002a",
-      "source-rules": [
-        "4.4.3(3)"
-      ],
-      "mapping-confidence": 1.0,
-      "remediation": "Your Customer Due Diligence procedure does not collect the type of trust. Update your KYC collection process to capture the trust type (e.g., discretionary, unit, charitable) for every trust customer, as required under rule 4.4.3(3)."
-    },
-    {
-      "id": "4_4_3_4",
-      "group": "collection-existence",
-      "label": "Does your procedure collect the country in which the trust was established?",
-      "detail-required": false,
-      "correct-option": "Yes",
-      "process-id": "PROC-AML-002a",
-      "source-rules": [
-        "4.4.3(4)"
-      ],
-      "mapping-confidence": 1.0,
-      "remediation": "Your Customer Due Diligence procedure does not collect the country of establishment for trusts. Update your KYC collection process to capture the country in which each trust was established, as required under rule 4.4.3(4)."
-    },
-    {
-      "id": "4_4_3_5",
-      "group": "collection-existence",
-      "label": "Does your procedure collect the full name of the settlor, unless an exemption applies (material contribution < $10,000, settlor deceased, simplified verification used, or customer is custodian/nominee)?",
-      "detail-required": true,
-      "detail-label": "Describe how your procedure determines whether settlor collection is required and how you collect this information",
-      "correct-option": "Yes",
-      "process-id": "PROC-AML-002a",
-      "source-rules": [
-        "4.4.3(5)",
-        "4.4.3(5)(a)",
-        "4.4.3(5)(b)",
-        "4.4.3(5)(c)",
-        "4.4.3(5)(d)"
-      ],
       "mapping-confidence": 0.9,
-      "remediation": "Your Customer Due Diligence procedure does not collect the full name of the trust settlor when required. Update your KYC collection process to capture the settlor's full name unless the settlor contributed less than $10,000, is deceased, you are using the simplified verification procedure, or the customer is a custodian or nominee, as required under rule 4.4.3(5) and its sub-rules."
+      "remediation": "Your Customer Identification Procedure for trusts does not include the required risk-based systems to verify trust existence and collect trustee and beneficiary information. Update your process to include controls designed to reasonably satisfy that the trust exists and that the name of each trustee and beneficiary, or a description of each class of beneficiary, has been provided, as required under rules 4.4.2, 4.4.2(1), and 4.4.2(2)."
     },
     {
-      "id": "4_4_3_6",
-      "group": "collection-existence",
-      "label": "When at least one trustee is an individual, does your procedure collect the minimum individual KYC information (full name, date of birth, residential address) for at least one individual trustee?",
+      "id": "4_4_3",
+      "group": "collection-kyc",
+      "label": "Does your procedure collect the minimum KYC information about trusts, including trust name, trustee business name, trust type, country of establishment, settlor name (subject to exceptions), and applicable trustee information?",
       "detail-required": false,
       "correct-option": "Yes",
       "process-id": "PROC-AML-002a",
       "source-rules": [
-        "4.4.3(6)"
-      ],
-      "mapping-confidence": 0.95,
-      "remediation": "Your Customer Due Diligence procedure does not collect individual trustee KYC information when the trust has individual trustees. Update your procedure to collect the information required under your individual CDD procedure (full name, date of birth, residential address) for at least one individual trustee, as required under rule 4.4.3(6)."
-    },
-    {
-      "id": "4_4_3_7",
-      "group": "collection-existence",
-      "label": "When at least one trustee is a company, does your procedure collect the minimum company KYC information (as per your company CDD procedure) for at least one company trustee?",
-      "detail-required": false,
-      "correct-option": "Yes",
-      "process-id": "PROC-AML-002a",
-      "source-rules": [
+        "4.4.3",
+        "4.4.3(1)",
+        "4.4.3(2)",
+        "4.4.3(3)",
+        "4.4.3(4)",
+        "4.4.3(5)",
+        "4.4.3(6)",
         "4.4.3(7)",
         "4.4.3(8)"
       ],
       "mapping-confidence": 0.95,
-      "remediation": "Your Customer Due Diligence procedure does not collect company trustee KYC information when the trust has company trustees. Update your procedure to collect the information required under your company CDD procedure (full name, type, registration details, principal place of business) for at least one company trustee, as required under rules 4.4.3(7) and 4.4.3(8)."
+      "checklist-items": [
+        {
+          "label": "Full name of the trust (if any)"
+        },
+        {
+          "label": "Full business name of the trustee in respect of the trust (if any)"
+        },
+        {
+          "label": "Type of the trust"
+        },
+        {
+          "label": "Country in which the trust was established"
+        },
+        {
+          "label": "Full name of the settlor (unless material contribution <$10k, deceased, simplified verification used, or customer is custodian/nominee)"
+        },
+        {
+          "label": "If any trustee is an individual: information required under the individual CDD procedure for at least one trustee"
+        },
+        {
+          "label": "If any trustee is a company: information required under the company CDD procedure for at least one trustee"
+        }
+      ],
+      "remediation": "Your Collection of KYC Information procedure does not capture the minimum required information about trust customers. Update your process to collect the full trust name, trustee business name, trust type, country of establishment, settlor name (subject to statutory exceptions), and complete individual or company identification information for at least one trustee, as required under rule 4.4.3 and its subparagraphs."
     },
     {
       "id": "4_4_4",
-      "group": "collection-existence",
-      "label": "Does your procedure include risk-based systems and controls to determine whether to collect additional KYC information about the trust's existence beyond the minimum required?",
+      "group": "collection-kyc",
+      "label": "Does your procedure include risk-based systems to determine whether any additional KYC information about the trust's existence should be collected beyond the minimum?",
       "detail-required": true,
-      "detail-label": "Describe your risk-based approach for determining when to collect additional trust existence information",
+      "detail-label": "Describe how you determine what additional trust information to collect based on ML/TF risk",
       "correct-option": "Yes",
       "process-id": "PROC-AML-002c",
       "source-rules": [
-        "4.4.4",
-        "4.4.7"
+        "4.4.4"
       ],
       "mapping-confidence": 0.9,
-      "remediation": "Your Customer Due Diligence procedure does not include risk-based controls to determine when additional KYC information about the trust's existence should be collected. Implement a risk-based assessment process that considers ML/TF risk relevant to the designated service to decide whether additional trust information is needed beyond the minimum requirements, as required under rules 4.4.4 and 4.4.7."
+      "remediation": "Your Collection of KYC Information procedure does not include risk-based systems to determine when additional information about the trust's existence should be collected. Implement controls that assess ML/TF risk and determine whether information beyond the minimum should be collected for each trust customer, as required under rule 4.4.4."
     },
     {
-      "id": "4_4_5_1",
-      "group": "verification-existence",
-      "label": "Does your procedure verify the full name of the trust (if any)?",
+      "id": "4_4_5",
+      "group": "verification",
+      "label": "Does your procedure verify, at a minimum, the trust name, information about at least one trustee (following individual or company verification procedures), and the settlor name (subject to exceptions)?",
       "detail-required": false,
       "correct-option": "Yes",
       "process-id": "PROC-AML-002b",
       "source-rules": [
-        "4.4.5(1)"
-      ],
-      "mapping-confidence": 1.0,
-      "remediation": "Your Customer Due Diligence procedure does not verify the full name of the trust. Update your verification process to confirm the trust's full name using reliable and independent sources, as required under rule 4.4.5(1)."
-    },
-    {
-      "id": "4_4_5_2",
-      "group": "verification-existence",
-      "label": "When at least one trustee is an individual, does your procedure verify the identity of at least one individual trustee in accordance with your individual CDD procedure?",
-      "detail-required": false,
-      "correct-option": "Yes",
-      "process-id": "PROC-AML-002b",
-      "source-rules": [
-        "4.4.5(2)"
-      ],
-      "mapping-confidence": 0.95,
-      "remediation": "Your Customer Due Diligence procedure does not verify individual trustee identity information. Update your verification process to verify at least one individual trustee's identity in accordance with your individual CDD procedure when the trust has individual trustees, as required under rule 4.4.5(2)."
-    },
-    {
-      "id": "4_4_5_3",
-      "group": "verification-existence",
-      "label": "When at least one trustee is a company, does your procedure verify the company information of at least one company trustee in accordance with your company CDD procedure?",
-      "detail-required": false,
-      "correct-option": "Yes",
-      "process-id": "PROC-AML-002b",
-      "source-rules": [
+        "4.4.5",
+        "4.4.5(1)",
+        "4.4.5(2)",
         "4.4.5(3)",
-        "4.4.5(4)"
-      ],
-      "mapping-confidence": 0.95,
-      "remediation": "Your Customer Due Diligence procedure does not verify company trustee information. Update your verification process to verify at least one company trustee in accordance with your company CDD procedure when the trust has company trustees, as required under rules 4.4.5(3) and 4.4.5(4)."
-    },
-    {
-      "id": "4_4_5_5",
-      "group": "verification-existence",
-      "label": "Does your procedure verify the full name of the settlor, unless an exemption applies (material contribution < $10,000, settlor deceased, simplified verification used, or customer is custodian/nominee)?",
-      "detail-required": true,
-      "detail-label": "Describe how your procedure determines whether settlor verification is required and how you verify this information",
-      "correct-option": "Yes",
-      "process-id": "PROC-AML-002b",
-      "source-rules": [
+        "4.4.5(4)",
         "4.4.5(5)",
         "4.4.5(5)(a)",
         "4.4.5(5)(b)",
         "4.4.5(5)(c)",
         "4.4.5(5)(d)"
       ],
-      "mapping-confidence": 0.9,
-      "remediation": "Your Customer Due Diligence procedure does not verify the full name of the trust settlor when required. Update your verification process to confirm the settlor's full name using reliable and independent sources unless the settlor contributed less than $10,000, is deceased, you are using the simplified verification procedure, or the customer is a custodian or nominee, as required under rule 4.4.5(5) and its sub-rules."
+      "mapping-confidence": 0.95,
+      "checklist-items": [
+        {
+          "label": "Full name of the trust (if any)"
+        },
+        {
+          "label": "Information about at least one trustee (individual or company) using the applicable CDD procedure"
+        },
+        {
+          "label": "Full name of the settlor (unless material contribution <$10k, deceased, simplified verification used, or customer is custodian/nominee)"
+        }
+      ],
+      "remediation": "Your Verification of Identity procedure does not verify the minimum required information about trust customers. Update your process to verify the trust name, complete information about at least one trustee using the relevant individual or company verification procedure, and the settlor name (subject to statutory exceptions), as required under rule 4.4.5 and its subparagraphs."
     },
     {
       "id": "4_4_6",
-      "group": "verification-existence",
-      "label": "Does your procedure include risk-based systems and controls to determine whether to verify additional trust existence information beyond the minimum required?",
+      "group": "verification",
+      "label": "Does your procedure include risk-based systems to determine whether and to what extent any additional KYC information about the trust's existence should be verified beyond the minimum?",
       "detail-required": true,
-      "detail-label": "Describe your risk-based approach for determining when to verify additional trust existence information",
+      "detail-label": "Describe how you determine what additional trust information to verify based on ML/TF risk",
       "correct-option": "Yes",
       "process-id": "PROC-AML-002c",
       "source-rules": [
@@ -209,14 +130,14 @@
         "4.4.7"
       ],
       "mapping-confidence": 0.9,
-      "remediation": "Your Customer Due Diligence procedure does not include risk-based controls to determine when additional trust existence information should be verified. Implement a risk-based assessment process that considers ML/TF risk relevant to the designated service to decide the extent of additional verification needed beyond the minimum requirements, as required under rules 4.4.6 and 4.4.7."
+      "remediation": "Your Verification of Identity procedure does not include risk-based systems to determine when additional trust information should be verified. Implement controls that assess ML/TF risk relevant to the designated service and determine whether information beyond the minimum should be verified for each trust customer, as required under rules 4.4.6 and 4.4.7."
     },
     {
       "id": "4_4_8",
       "group": "simplified-trustee-verification",
-      "label": "For eligible trusts (ASIC-registered MIS, certain wholesale MIS, or government superannuation funds), does your procedure include the option to use the simplified trustee verification procedure?",
+      "label": "Does your procedure use the simplified trustee verification procedure for eligible trusts (ASIC-registered MIS, wholesale-only unregistered MIS, Commonwealth-regulated trusts, or government superannuation funds)?",
       "detail-required": true,
-      "detail-label": "Describe how your simplified trustee verification procedure confirms the trust's regulatory status",
+      "detail-label": "Describe your simplified verification process and how you verify trust eligibility",
       "correct-option": "Yes",
       "process-id": "PROC-AML-002b",
       "source-rules": [
@@ -225,47 +146,50 @@
         "4.4.8(2)",
         "4.4.8(2)(a)",
         "4.4.8(2)(b)",
+        "4.4.8(3)",
         "4.4.8(4)"
       ],
       "mapping-confidence": 0.85,
-      "remediation": "Your Customer Due Diligence procedure does not include a simplified trustee verification option for eligible regulated trusts. Consider implementing a simplified verification procedure that verifies the trust's regulatory status (ASIC-registered MIS, wholesale-only unregistered MIS without small scale offerings, or government superannuation fund established by legislation) to streamline verification for these lower-risk trust types, as permitted under rule 4.4.8 and its sub-rules."
-    },
-    {
-      "id": "4_4_9_1",
-      "group": "collection-trustees-beneficiaries",
-      "label": "Does your procedure collect the full name and address of each trustee in respect of the trust?",
-      "detail-required": false,
-      "correct-option": "Yes",
-      "process-id": "PROC-AML-002a",
-      "source-rules": [
-        "4.4.9(1)"
-      ],
-      "mapping-confidence": 1.0,
-      "remediation": "Your Customer Due Diligence procedure does not collect the full name and address of all trustees. Update your KYC collection process to capture the full name and address of each trustee (not just one trustee), as required under rule 4.4.9(1).",
       "checklist-items": [
         {
-          "label": "Full name of each trustee"
-        },
-        {
-          "label": "Address of each trustee"
+          "type": "or-group",
+          "items": [
+            {
+              "label": "Verify trust is a managed investment scheme registered by ASIC"
+            },
+            {
+              "label": "Verify trust is an unregistered MIS with only wholesale clients and no small scale offerings (s1012E)"
+            },
+            {
+              "label": "Verify trust is registered and subject to Commonwealth statutory regulatory oversight"
+            },
+            {
+              "label": "Verify trust is a government superannuation fund established by legislation"
+            }
+          ]
         }
-      ]
+      ],
+      "remediation": "Your Verification of Identity procedure does not include the simplified trustee verification option for eligible trusts. Implement the simplified procedure that verifies the trust is an ASIC-registered MIS, wholesale-only unregistered MIS, Commonwealth-regulated trust, or government superannuation fund, which satisfies the verification requirements under rule 4.4.8 and its subparagraphs."
     },
     {
-      "id": "4_4_9_2",
-      "group": "collection-trustees-beneficiaries",
-      "label": "Does your procedure collect either the full name of each beneficiary, or (for class-based trusts) details of each class of beneficiaries?",
+      "id": "4_4_9",
+      "group": "trustees-beneficiaries-collection",
+      "label": "Does your procedure collect the full name and address of each trustee and either the full name of each beneficiary or details of each class of beneficiaries?",
       "detail-required": false,
       "correct-option": "Yes",
       "process-id": "PROC-AML-002a",
       "source-rules": [
+        "4.4.9",
+        "4.4.9(1)",
         "4.4.9(2)",
         "4.4.9(2)(a)",
         "4.4.9(2)(b)"
       ],
-      "mapping-confidence": 1.0,
-      "remediation": "Your Customer Due Diligence procedure does not collect beneficiary information. Update your KYC collection process to capture either the full name of each beneficiary or, when beneficiaries are identified by class membership, the details of each class of beneficiaries, as required under rule 4.4.9(2) and its sub-rules.",
+      "mapping-confidence": 0.95,
       "checklist-items": [
+        {
+          "label": "Full name and address of each trustee"
+        },
         {
           "type": "or-group",
           "items": [
@@ -273,18 +197,19 @@
               "label": "Full name of each beneficiary"
             },
             {
-              "label": "Class of beneficiaries (if beneficiaries defined by class)"
+              "label": "Details of each class of beneficiaries (if identified by class membership)"
             }
           ]
         }
-      ]
+      ],
+      "remediation": "Your Collection of KYC Information procedure does not collect complete trustee and beneficiary information for private trusts. Update your process to collect the full name and address of each trustee and either the full name of each beneficiary or details of each beneficiary class, as required under rule 4.4.9 and its subparagraphs."
     },
     {
       "id": "4_4_10",
-      "group": "collection-trustees-beneficiaries",
-      "label": "Does your procedure include risk-based systems and controls to determine whether to collect additional KYC information about trustees or beneficiaries beyond the minimum required?",
+      "group": "trustees-beneficiaries-collection",
+      "label": "Does your procedure include risk-based systems to determine whether any additional KYC information about trustees or beneficiaries should be collected beyond the minimum?",
       "detail-required": true,
-      "detail-label": "Describe your risk-based approach for determining when to collect additional trustee or beneficiary information",
+      "detail-label": "Describe how you determine what additional trustee or beneficiary information to collect based on ML/TF risk",
       "correct-option": "Yes",
       "process-id": "PROC-AML-002c",
       "source-rules": [
@@ -292,29 +217,29 @@
         "4.4.12"
       ],
       "mapping-confidence": 0.9,
-      "remediation": "Your Customer Due Diligence procedure does not include risk-based controls to determine when additional trustee or beneficiary information should be collected. Implement a risk-based assessment process that considers ML/TF risk relevant to the designated service to decide whether additional information is needed beyond the minimum trustee and beneficiary details, as required under rules 4.4.10 and 4.4.12."
+      "remediation": "Your Collection of KYC Information procedure does not include risk-based systems to determine when additional trustee or beneficiary information should be collected. Implement controls that assess ML/TF risk relevant to the designated service and determine whether information beyond the minimum should be collected, as required under rules 4.4.10 and 4.4.12."
     },
     {
       "id": "4_4_11",
-      "group": "verification-trustees-beneficiaries",
-      "label": "Does your procedure include risk-based systems and controls to determine whether and how to verify the name of trustees, beneficiaries, or class details?",
+      "group": "trustees-beneficiaries-verification",
+      "label": "Does your procedure include risk-based systems to determine whether and how to verify the name of any trustee or beneficiary, or details of beneficiary classes, or any other collected KYC information?",
       "detail-required": true,
-      "detail-label": "Describe your risk-based approach for determining when and how to verify trustee and beneficiary information",
+      "detail-label": "Describe your risk-based approach to verifying trustee and beneficiary information",
       "correct-option": "Yes",
-      "process-id": "PROC-AML-002c",
+      "process-id": "PROC-AML-002b",
       "source-rules": [
         "4.4.11",
         "4.4.12"
       ],
       "mapping-confidence": 0.9,
-      "remediation": "Your Customer Due Diligence procedure does not include risk-based controls to determine whether and how to verify trustee and beneficiary information. Implement a risk-based assessment process that considers ML/TF risk to decide the extent to which trustee names, beneficiary names, or class details should be verified using the approved sources, as required under rules 4.4.11 and 4.4.12."
+      "remediation": "Your Verification of Identity procedure does not include risk-based systems to determine whether and how to verify trustee and beneficiary information. Implement controls that assess ML/TF risk relevant to the designated service and determine the appropriate verification approach using the approved sources under rule 4.4.15, as required under rules 4.4.11 and 4.4.12."
     },
     {
       "id": "4_4_15",
-      "group": "verification-methods",
-      "label": "Does your procedure require that verification of trust information be based on trust deeds (or certified copies/extracts), reliable and independent documents, reliable and independent electronic data, or a combination of these sources?",
+      "group": "verification",
+      "label": "Does your verification procedure rely on trust deeds (or certified copies/extracts), reliable and independent documents, reliable and independent electronic data, or a combination of these sources?",
       "detail-required": true,
-      "detail-label": "Describe the acceptable sources and methods your procedure uses to verify trust information",
+      "detail-label": "Describe what sources you use to verify trust information",
       "correct-option": "Yes",
       "process-id": "PROC-AML-002b",
       "source-rules": [
@@ -325,14 +250,33 @@
         "4.4.15(4)"
       ],
       "mapping-confidence": 0.95,
-      "remediation": "Your Customer Due Diligence procedure does not specify acceptable sources for verifying trust information. Update your verification process to require use of trust deeds (or certified copies/extracts), reliable and independent documents, reliable and independent electronic data, or a combination of these sources, as required under rule 4.4.15 and its sub-rules."
+      "checklist-items": [
+        {
+          "type": "or-group",
+          "items": [
+            {
+              "label": "Trust deed, certified copy, or certified extract of trust deed"
+            },
+            {
+              "label": "Reliable and independent documents relating to the trust"
+            },
+            {
+              "label": "Reliable and independent electronic data"
+            },
+            {
+              "label": "Combination of the above sources"
+            }
+          ]
+        }
+      ],
+      "remediation": "Your Verification of Identity procedure does not use the approved sources for verifying trust information. Update your process to base verification on trust deeds (or certified copies/extracts), reliable and independent documents, reliable and independent electronic data, or a combination of these sources, as required under rule 4.4.15 and its subparagraphs."
     },
     {
       "id": "4_4_16",
-      "group": "verification-methods",
-      "label": "Does your procedure permit the use of disclosure certificates to verify trust information when the information is not otherwise reasonably available and the verification is for risk-based additional verification purposes?",
+      "group": "verification",
+      "label": "Where verification information is not otherwise reasonably available, does your procedure accept disclosure certificates as reliable and independent documents for risk-based verification purposes?",
       "detail-required": true,
-      "detail-label": "Describe when and how your procedure permits disclosure certificates as a verification source",
+      "detail-label": "Describe when and how you use disclosure certificates for trust verification",
       "correct-option": "Yes",
       "process-id": "PROC-AML-002b",
       "source-rules": [
@@ -341,28 +285,28 @@
         "4.4.16(2)"
       ],
       "mapping-confidence": 0.85,
-      "remediation": "Your Customer Due Diligence procedure does not permit disclosure certificates as a verification source for trust information. Update your verification methods to allow disclosure certificates when verifying additional risk-based information (under rules 4.4.6 or 4.4.11) and the information is not otherwise reasonably available from other approved sources, as permitted under rule 4.4.16 and its sub-rules."
+      "remediation": "Your Verification of Identity procedure does not include the option to use disclosure certificates when information is not otherwise reasonably available. Update your process to accept disclosure certificates as reliable and independent documents for risk-based verification under paragraphs 4.4.6 or 4.4.11, as permitted under rule 4.4.16 and its subparagraphs."
     },
     {
       "id": "4_4_17",
       "group": "discrepancy-handling",
-      "label": "Does your procedure include risk-based systems and controls to respond to discrepancies that arise during verification so you can determine whether you are reasonably satisfied that the trust exists and trustees/beneficiaries have been identified?",
+      "label": "Does your procedure include risk-based systems to respond to any discrepancy that arises during verification, so that you can determine whether you are reasonably satisfied about the trust's existence and the identity of trustees and beneficiaries?",
       "detail-required": true,
-      "detail-label": "Describe your process for responding to verification discrepancies for trusts",
+      "detail-label": "Describe your process for handling discrepancies identified during trust verification",
       "correct-option": "Yes",
-      "process-id": "PROC-AML-002b",
+      "process-id": "PROC-AML-002",
       "source-rules": [
         "4.4.17"
       ],
-      "mapping-confidence": 0.95,
-      "remediation": "Your Customer Due Diligence procedure does not include systems to respond to verification discrepancies for trusts. Update your procedure to incorporate risk-based controls that address discrepancies found during verification and enable you to determine whether you remain reasonably satisfied about the trust's existence and the identity of trustees and beneficiaries, as required under rule 4.4.17."
+      "mapping-confidence": 0.9,
+      "remediation": "Your Customer Identification Procedure does not include risk-based systems to respond to discrepancies arising during trust verification. Implement controls that enable you to respond to discrepancies and determine whether you remain reasonably satisfied about trust existence and trustee/beneficiary identification, as required under rule 4.4.17."
     },
     {
       "id": "4_4_18",
       "group": "custodians-nominees",
-      "label": "When the trustee customer is a custodian or nominee of a custodian (as defined in rule 4.4.19), does your procedure apply the exemption from collecting beneficiary names and from certain ongoing due diligence requirements with respect to underlying customers?",
+      "label": "When your customer is a custodian or nominee of a custodian, does your procedure omit the requirements to collect beneficiary information and apply the special rules regarding underlying customer due diligence?",
       "detail-required": true,
-      "detail-label": "Describe how your procedure identifies custodians/nominees and applies the appropriate exemptions",
+      "detail-label": "Describe your modified CDD procedure for custodians and nominees of custodians",
       "correct-option": "Yes",
       "process-id": "PROC-AML-002",
       "source-rules": [
@@ -374,43 +318,64 @@
         "4.4.18(3)(b)",
         "4.4.18(3)(c)"
       ],
-      "mapping-confidence": 0.85,
-      "remediation": "Your Customer Due Diligence procedure does not apply the custodian/nominee exemptions when the trustee is providing custodial or depository services. Update your procedure to exempt qualified custodians and nominees of custodians from the requirement to provide beneficiary names (rule 4.4.2(2) and 4.4.9(2)) and from certain ongoing due diligence requirements relating to their underlying customers, as permitted under rule 4.4.18 and its sub-rules, provided the custodian meets the certification and licensing requirements in rule 4.4.19."
+      "mapping-confidence": 0.8,
+      "remediation": "Your Customer Identification Procedure does not apply the special exemptions for custodians and nominees of custodians. Update your process to omit beneficiary information collection (rules 4.4.2(2) and 4.4.9(2)) and apply the modified requirements regarding underlying customer due diligence for Parts 4.12, 4.13, and Chapter 15, as specified under rule 4.4.18 and its subparagraphs."
     },
     {
-      "id": "4_4_19_1",
+      "id": "4_4_19",
       "group": "custodians-nominees",
-      "label": "When a trustee claims to be a custodian, does your procedure verify that they meet all the custodian criteria (company acting as trustee, providing item 46 custodial/depository service, holds AFSL or exempt, satisfies geographical link or on Reporting Entities Roll, has certified CDD compliance for underlying customers)?",
+      "label": "Does your procedure verify that customers claiming custodian or nominee of custodian status meet all the definitional requirements, including holding appropriate AFSL, satisfying geographical links or Reporting Entities Roll entry, and providing required certifications?",
       "detail-required": true,
-      "detail-label": "Describe how your procedure verifies custodian status and obtains the required certifications",
+      "detail-label": "Describe how you verify custodian/nominee status and obtain required certifications",
       "correct-option": "Yes",
-      "process-id": "PROC-AML-002",
+      "process-id": "PROC-AML-002b",
       "source-rules": [
+        "4.4.19",
         "4.4.19(1)",
         "4.4.19(1)(a)",
         "4.4.19(1)(b)",
         "4.4.19(1)(c)",
         "4.4.19(1)(d)",
-        "4.4.19(1)(e)"
-      ],
-      "mapping-confidence": 0.9,
-      "remediation": "Your Customer Due Diligence procedure does not verify custodian status before applying exemptions. Update your procedure to confirm that a trustee claiming custodian status is a company acting as trustee, providing custodial or depository services under item 46 of the AML/CTF Act, holds an AFSL or is exempt, satisfies the geographical link or is on the Reporting Entities Roll, and has provided written certification of CDD compliance for underlying customers, as required under rule 4.4.19(1) and its sub-rules."
-    },
-    {
-      "id": "4_4_19_4",
-      "group": "custodians-nominees",
-      "label": "When a trustee claims to be a nominee of a custodian, does your procedure verify that they are a related body corporate of a qualifying custodian and have provided the required certification from the appointing custodian?",
-      "detail-required": true,
-      "detail-label": "Describe how your procedure verifies nominee of custodian status and obtains the required appointing custodian certification",
-      "correct-option": "Yes",
-      "process-id": "PROC-AML-002",
-      "source-rules": [
+        "4.4.19(1)(e)",
         "4.4.19(4)",
         "4.4.19(4)(a)",
         "4.4.19(4)(b)"
       ],
-      "mapping-confidence": 0.9,
-      "remediation": "Your Customer Due Diligence procedure does not verify nominee of custodian status before applying exemptions. Update your procedure to confirm that a trustee claiming nominee of custodian status is a related body corporate of a qualifying custodian and has provided certification from the appointing custodian that confirms geographical link (or Reporting Entities Roll entry) and completion of CDD for underlying customers, as required under rule 4.4.19(4) and its sub-rules."
+      "mapping-confidence": 0.85,
+      "checklist-items": [
+        {
+          "label": "Verify the company is acting as a trustee"
+        },
+        {
+          "label": "Verify provision of custodial/depository service (item 46, AML/CTF Act)"
+        },
+        {
+          "type": "or-group",
+          "items": [
+            {
+              "label": "Verify AFSL authorising custodial/depository services"
+            },
+            {
+              "label": "Verify exemption from AFSL requirement"
+            }
+          ]
+        },
+        {
+          "type": "or-group",
+          "items": [
+            {
+              "label": "Verify satisfaction of geographical link test (s6(6))"
+            },
+            {
+              "label": "Obtain written certification of Reporting Entities Roll entry"
+            }
+          ]
+        },
+        {
+          "label": "Obtain written certification of completed CIP and OCDD for underlying customers"
+        }
+      ],
+      "remediation": "Your Verification of Identity procedure does not adequately verify custodian or nominee of custodian status. Implement controls to verify trustee capacity, custodial service provision, AFSL or exemption, geographical links or Roll entry, and obtain written certifications regarding underlying customer due diligence, as required under rule 4.4.19 and its subparagraphs."
     }
   ],
   "groups": [
@@ -421,60 +386,54 @@
       "variant": "main"
     },
     {
-      "id": "general-obligation",
-      "title": "General CDD Obligation for Trusts",
-      "description": "Risk-based systems and controls to establish that the trust exists and identify trustees and beneficiaries.",
+      "id": "trust-existence",
+      "title": "Trust Existence Verification",
+      "description": "Risk-based systems to verify that the trust exists and that trustees and beneficiaries have been identified.",
       "variant": "main"
     },
     {
-      "id": "collection-existence",
-      "title": "Collection of Trust Existence Information",
-      "description": "Minimum KYC information that must be collected to establish the trust and identify the trustee(s).",
+      "id": "collection-kyc",
+      "title": "Collection of KYC Information",
+      "description": "Minimum information required about the trust itself, including trust name, type, settlor, and trustee details.",
       "variant": "main"
     },
     {
-      "id": "verification-existence",
-      "title": "Verification of Trust Existence",
-      "description": "Procedures to verify the trust name, trustee identity, and settlor details.",
+      "id": "verification",
+      "title": "Verification of Trust Information",
+      "description": "Verify minimum trust information and determine what additional information requires verification based on ML/TF risk.",
       "variant": "main"
     },
     {
       "id": "simplified-trustee-verification",
       "title": "Simplified Trustee Verification Procedure",
-      "description": "For ASIC-registered MIS, certain wholesale MIS, government superannuation funds, and Commonwealth-regulated trusts, you may use a simplified verification procedure that verifies the trust's regulatory status in lieu of full trustee and settlor verification.",
+      "description": "Optional simplified procedure for ASIC-registered MIS, wholesale-only unregistered MIS, Commonwealth-regulated trusts, and government superannuation funds.",
       "variant": "subprocess",
-      "subprocess-label": "Simplified"
+      "subprocess-label": "Simplified Verification"
     },
     {
-      "id": "collection-trustees-beneficiaries",
+      "id": "trustees-beneficiaries-collection",
       "title": "Collection of Trustee and Beneficiary Information",
-      "description": "Detailed information about all trustees and beneficiaries (for private trusts not eligible for simplified procedure).",
+      "description": "Collect the full name and address of each trustee and beneficiary information (names or class details).",
       "variant": "main"
     },
     {
-      "id": "verification-trustees-beneficiaries",
-      "title": "Verification of Trustee and Beneficiary Information",
-      "description": "Risk-based determination of whether and how to verify trustee and beneficiary names and details.",
-      "variant": "main"
-    },
-    {
-      "id": "verification-methods",
-      "title": "Methods of Verification",
-      "description": "Acceptable sources and methods for verifying trust information.",
+      "id": "trustees-beneficiaries-verification",
+      "title": "Verification of Trustees and Beneficiaries",
+      "description": "Risk-based determination of whether and how to verify trustee and beneficiary information.",
       "variant": "main"
     },
     {
       "id": "discrepancy-handling",
-      "title": "Discrepancy Handling",
-      "description": "Systems to respond to verification discrepancies.",
+      "title": "Responding to Discrepancies",
+      "description": "Risk-based systems to respond to discrepancies arising during verification.",
       "variant": "main"
     },
     {
       "id": "custodians-nominees",
       "title": "Custodians and Nominees of Custodians",
-      "description": "Exemptions from certain beneficiary collection and verification requirements when the trustee is a custodian or nominee of a custodian providing custodial or depository services.",
+      "description": "Modified CDD requirements for customers that are custodians or nominees of custodians providing custodial or depository services.",
       "variant": "subprocess",
-      "subprocess-label": "Custodian"
+      "subprocess-label": "Custodians"
     }
   ],
   "rules": [
@@ -503,7 +462,23 @@
       }
     },
     {
-      "target": "collection-trustees-beneficiaries",
+      "target": "simplified-trustee-verification",
+      "scope": "sub-asic-mis",
+      "effect": "SHOW",
+      "schema": {
+        "const": "Yes"
+      }
+    },
+    {
+      "target": "simplified-trustee-verification",
+      "scope": "sub-govt-super",
+      "effect": "SHOW",
+      "schema": {
+        "const": "Yes"
+      }
+    },
+    {
+      "target": "trustees-beneficiaries-collection",
       "scope": "sub-private-trust",
       "effect": "SHOW",
       "schema": {
@@ -511,7 +486,7 @@
       }
     },
     {
-      "target": "verification-trustees-beneficiaries",
+      "target": "trustees-beneficiaries-verification",
       "scope": "sub-private-trust",
       "effect": "SHOW",
       "schema": {

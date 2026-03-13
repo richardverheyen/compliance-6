@@ -1,0 +1,119 @@
+{
+  "controls": [
+    {
+      "id": "process-exists",
+      "group": "process-existence",
+      "label": "Does your business have a Remittance Services process?",
+      "detail-required": false,
+      "correct-option": "Yes",
+      "source-rules": [],
+      "mapping-confidence": 1.0,
+      "remediation": "Your organisation does not have a Remittance Services process in place. You must establish a documented Remittance Services process to meet your AML/CTF obligations. Review the controls below and implement the required procedures before completing this assessment."
+    },
+    {
+      "id": "5_1_2_a",
+      "group": "remittance-registration",
+      "label": "Does your organization provide ONLY remittance services (item 54 of the AML/CTF Act section 6 table 1)?",
+      "detail-required": false,
+      "correct-option": "Yes",
+      "source-rules": [
+        "5.1.2"
+      ],
+      "mapping-confidence": 0.95,
+      "remediation": "Your Remittance Services registration cannot proceed. A special AML/CTF program is only required when all designated services provided fall exclusively under item 54 (remittance services). If you provide other designated services, you must establish a standard AML/CTF program under Chapter 4 instead, as required by rule 5.1.2."
+    },
+    {
+      "id": "5_1_2_b",
+      "group": "remittance-registration",
+      "label": "Does your special AML/CTF program set out customer identification procedures as its sole or primary purpose?",
+      "detail-required": true,
+      "detail-label": "Describe how your special AML/CTF program is structured to focus on customer identification procedures.",
+      "correct-option": "Yes",
+      "source-rules": [
+        "5.1.2"
+      ],
+      "mapping-confidence": 0.9,
+      "remediation": "Your special AML/CTF program does not meet the structural requirement under rule 5.1.2. The sole or primary purpose of a special program for remittance services must be to set out customer identification procedures. Revise your program documentation to clearly establish that customer identification is the core focus."
+    },
+    {
+      "id": "5_2_1_a",
+      "group": "special-cdd-procedures",
+      "label": "Does your special AML/CTF program comply with all Chapter 4 customer identification requirements (as if references to 'AML/CTF program' include 'special AML/CTF program')?",
+      "detail-required": true,
+      "detail-label": "Describe how your special AML/CTF program incorporates Chapter 4 requirements for customer identification, verification, and risk assessment.",
+      "correct-option": "Yes",
+      "source-rules": [
+        "5.2.1",
+        "5.2.2"
+      ],
+      "mapping-confidence": 0.95,
+      "remediation": "Your special AML/CTF program is not fully compliant with Chapter 4 requirements. Under rules 5.2.1 and 5.2.2, your special program must comply with all customer identification, verification, and risk assessment requirements in Chapter 4, as if those rules apply directly to remittance services. Review your program documentation against Chapter 4 controls and ensure all procedural requirements are implemented."
+    },
+    {
+      "id": "5_2_3_a",
+      "group": "special-cdd-procedures",
+      "label": "Does your special AML/CTF program incorporate the customer identification procedures specified in paragraphs 4.11.1 and 4.11.5 (as applied under paragraph 89(3)(b) of the AML/CTF Act)?",
+      "detail-required": true,
+      "detail-label": "Explain how paragraphs 4.11.1 and 4.11.5 are implemented in your special AML/CTF program.",
+      "correct-option": "Yes",
+      "source-rules": [
+        "5.2.3",
+        "4.11.1",
+        "4.11.5"
+      ],
+      "mapping-confidence": 0.85,
+      "remediation": "Your special AML/CTF program does not specifically incorporate the customer identification procedures required by paragraphs 4.11.1 and 4.11.5. Under rule 5.2.3, these paragraphs apply to your special program as if made under paragraph 89(3)(b) of the AML/CTF Act. Update your program documentation to explicitly address these procedural requirements."
+    },
+    {
+      "id": "5_1_2_c",
+      "group": "special-cdd-procedures",
+      "label": "Has your organization confirmed that Chapter 5 compliance obligations do NOT apply to pre-commencement customers?",
+      "detail-required": false,
+      "correct-option": "Yes",
+      "source-rules": [
+        "5.1.2"
+      ],
+      "mapping-confidence": 0.9,
+      "remediation": "Your special AML/CTF program may not correctly manage pre-commencement customer obligations. Under rule 5.1.2, Chapter 5 requirements do not apply to customers onboarded before the Chapter 5 commencement date. Confirm that your customer records clearly identify pre-commencement customers and that they are not subject to these special program requirements."
+    }
+  ],
+  "groups": [
+    {
+      "id": "process-existence",
+      "title": "Process Confirmation",
+      "description": "Before answering the detailed compliance questions, confirm whether your organisation operates this business process.",
+      "variant": "main"
+    },
+    {
+      "id": "remittance-registration",
+      "title": "Remittance Sector Register & Special Program Setup",
+      "description": "Confirm that your organization qualifies to operate a special AML/CTF program exclusively for remittance services under Chapter 5 of the AML/CTF Rules.",
+      "variant": "main"
+    },
+    {
+      "id": "special-cdd-procedures",
+      "title": "Customer Identification Procedures (Special Program)",
+      "description": "Ensure that your special AML/CTF program incorporates all Chapter 4 customer identification, verification, and risk assessment requirements as they apply to remittance services.",
+      "variant": "main"
+    },
+    {
+      "id": "remittance-reporting",
+      "title": "Reporting Obligations",
+      "description": "Manage reporting obligations for network providers and affiliates under applicable chapters.",
+      "variant": "subprocess",
+      "subprocess-label": "Reporting"
+    }
+  ],
+  "rules": [
+    {
+      "target": "CHAPTER_54",
+      "scope": "remittance",
+      "effect": "SHOW",
+      "schema": {
+        "const": "Yes"
+      }
+    }
+  ],
+  "sub_scoping": [],
+  "form_links": []
+}

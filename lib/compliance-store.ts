@@ -21,6 +21,7 @@ interface ComplianceState {
   isLoading: boolean;
   processAssignments: Record<string, string>; // processId -> teamMemberId
   reminders: Reminder[];
+  designatedServices: Record<string, string>; // controlId -> "Yes"
 
   // Load all user data from API
   initialize: () => Promise<void>;
@@ -61,6 +62,9 @@ interface ComplianceState {
   addReminder: (r: Omit<Reminder, "id">) => Promise<void>;
   deleteReminder: (id: string) => Promise<void>;
   getRemindersForKeyDate: (keyDateId: string) => Reminder[];
+
+  // Designated services (org-level, cross-regulation)
+  saveDesignatedServices: (updates: Record<string, boolean>) => Promise<void>;
 }
 
 function getAssessmentSectionAnswers(al: ActiveRegulation): Record<string, Record<string, string>> {
@@ -94,11 +98,12 @@ export const useComplianceStore = create<ComplianceState>()(
     isLoading: false,
     processAssignments: {},
     reminders: [],
+    designatedServices: {},
 
     initialize: async () => {
       set({ isLoading: true });
       try {
-        const [regsRes, arRes, teamRes, calRes, paRes, remRes, orgRes] = await Promise.all([
+        const [regsRes, arRes, teamRes, calRes, paRes, remRes, orgRes, dsRes] = await Promise.all([
           fetch("/api/compliance/regulations"),
           fetch("/api/compliance/active-regulations"),
           fetch("/api/compliance/team"),
@@ -106,9 +111,10 @@ export const useComplianceStore = create<ComplianceState>()(
           fetch("/api/compliance/process-assignments"),
           fetch("/api/compliance/reminders"),
           fetch("/api/organisation"),
+          fetch("/api/compliance/org/designated-services"),
         ]);
 
-        const [regulations, activeRegulationsRaw, teamData, calendarEvents, processAssignments, reminders, orgProfile] =
+        const [regulations, activeRegulationsRaw, teamData, calendarEvents, processAssignments, reminders, orgProfile, designatedServices] =
           await Promise.all([
             regsRes.ok ? regsRes.json() : [],
             arRes.ok ? arRes.json() : [],
@@ -117,6 +123,7 @@ export const useComplianceStore = create<ComplianceState>()(
             paRes.ok ? paRes.json() : {},
             remRes.ok ? remRes.json() : [],
             orgRes.ok ? orgRes.json() : null,
+            dsRes.ok ? dsRes.json() : {},
           ]);
 
         // Recompute processes client-side for each active regulation
@@ -133,6 +140,7 @@ export const useComplianceStore = create<ComplianceState>()(
           calendarEvents,
           processAssignments,
           reminders,
+          designatedServices: designatedServices ?? {},
           isLoading: false,
         });
       } catch {
@@ -511,5 +519,26 @@ export const useComplianceStore = create<ComplianceState>()(
 
     getRemindersForKeyDate: (keyDateId) =>
       get().reminders.filter((r) => r.keyDateId === keyDateId),
+
+    saveDesignatedServices: async (updates) => {
+      // Optimistic update
+      set((state) => {
+        const updated = { ...state.designatedServices };
+        for (const [k, v] of Object.entries(updates)) {
+          if (v) updated[k] = "Yes";
+          else delete updated[k];
+        }
+        return { designatedServices: updated };
+      });
+      try {
+        await fetch("/api/compliance/org/designated-services", {
+          method: "PATCH",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(updates),
+        });
+      } catch {
+        get().initialize();
+      }
+    },
   }),
 );

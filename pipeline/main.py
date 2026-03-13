@@ -364,7 +364,7 @@ def _filter_sequential_rule_codes(nodes: list[dict]) -> set[int]:
 
     # Build a rank map (natural sort order) for all stems
     def _stem_sort_key(s: str):
-        return [int(p) for p in s.split(".")]
+        return [int(p) for p in s.split(".") if p.isdigit()]
 
     sorted_stems = sorted(seen_stems, key=_stem_sort_key)
     stem_rank: dict[str, int] = {s: i for i, s in enumerate(sorted_stems)}
@@ -758,6 +758,16 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Scrape a PDF and extract text nodes to JSON.")
     sub = parser.add_subparsers(dest="command")
 
+    # Step 0: ToC extraction and classification
+    toc_p = sub.add_parser("toc", help="Step 0: Extract and classify Table of Contents")
+    toc_p.add_argument("pdf", help="Path to the PDF file")
+    toc_p.add_argument("run_dir", help="Run directory (e.g. runs/1)")
+    toc_p.add_argument(
+        "--step",
+        choices=["0a", "0b", "0c"],
+        help="Run only a specific sub-step (default: all)",
+    )
+
     # Default: full pipeline
     scrape_p = sub.add_parser("scrape", help="Full PDF scrape pipeline")
     scrape_p.add_argument("pdf", nargs="?", default="chapter4.pdf", help="Path to the PDF file")
@@ -772,7 +782,20 @@ if __name__ == "__main__":
     enrich_p.add_argument("groups_json", help="Path to groups.json")
 
     args = parser.parse_args()
-    if args.command == "groups":
+    if args.command == "toc":
+        from toc_extractor import run_all as toc_run_all, step_0a, step_0b, step_0c
+        pdf_path = os.path.abspath(args.pdf)
+        run_dir = os.path.abspath(args.run_dir)
+        os.makedirs(run_dir, exist_ok=True)
+        if args.step == "0a":
+            step_0a(pdf_path, run_dir)
+        elif args.step == "0b":
+            step_0b(pdf_path, run_dir)
+        elif args.step == "0c":
+            step_0c(run_dir)
+        else:
+            toc_run_all(pdf_path, run_dir)
+    elif args.command == "groups":
         run_groups(args.nodes_json)
     elif args.command == "enrich":
         run_enrich(args.nodes_json, args.groups_json)

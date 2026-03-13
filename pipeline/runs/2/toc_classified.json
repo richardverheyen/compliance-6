@@ -1,0 +1,754 @@
+{
+  "entries": [
+    {
+      "code": "1",
+      "title": "Name of Instrument",
+      "process_id": null
+    },
+    {
+      "code": "1_1",
+      "title": "Introduction",
+      "process_id": null
+    },
+    {
+      "code": "1_2",
+      "title": "Key terms and concepts",
+      "process_id": null
+    },
+    {
+      "code": "2",
+      "title": "Rules",
+      "process_id": null
+    },
+    {
+      "code": "2_1",
+      "title": "Definition of 'designated business group'",
+      "process_id": null
+    },
+    {
+      "code": "CHAPTER_3",
+      "title": "Correspondent Banking",
+      "process_id": "correspondent-banking"
+    },
+    {
+      "code": "CHAPTER_6",
+      "title": "Verification of identity",
+      "process_id": "risk-assessment"
+    },
+    {
+      "code": "CHAPTER_7",
+      "title": "Reliance on third parties",
+      "process_id": "third-party-reliance"
+    },
+    {
+      "code": "CHAPTER_11",
+      "title": "Compliance Report \u2013 reporting and lodgment",
+      "process_id": null
+    },
+    {
+      "code": "CHAPTER_12",
+      "title": "Electronic funds transfer instructions",
+      "process_id": null
+    },
+    {
+      "code": "CHAPTER_13",
+      "title": "Approved third-party bill payment system",
+      "process_id": null
+    },
+    {
+      "code": "CHAPTER_14",
+      "title": "Thresholds for certain designated services",
+      "process_id": null
+    },
+    {
+      "code": "CHAPTER_15",
+      "title": "Ongoing customer due diligence",
+      "process_id": null
+    },
+    {
+      "code": "CHAPTER_16",
+      "title": "Reportable details for international funds transfer",
+      "process_id": null
+    },
+    {
+      "code": "CHAPTER_17",
+      "title": "Reportable details for international funds transfer",
+      "process_id": null
+    },
+    {
+      "code": "CHAPTER_18",
+      "title": "Reportable details for suspicious matters",
+      "process_id": null
+    },
+    {
+      "code": "CHAPTER_19",
+      "title": "Reportable details for threshold transactions",
+      "process_id": null
+    },
+    {
+      "code": "CHAPTER_20",
+      "title": "Record-keeping obligations under section 114",
+      "process_id": null
+    },
+    {
+      "code": "CHAPTER_21",
+      "title": "Issuing or selling a security or derivative",
+      "process_id": null
+    },
+    {
+      "code": "CHAPTER_22",
+      "title": "Exemption of certain types of transactions",
+      "process_id": null
+    },
+    {
+      "code": "CHAPTER_23",
+      "title": "Anti-Money Laundering and Counter-Terrorism",
+      "process_id": "aml-ctf-program"
+    },
+    {
+      "code": "CHAPTER_24",
+      "title": "Anti-Money Laundering and Counter-Terrorism",
+      "process_id": "aml-ctf-program"
+    },
+    {
+      "code": "CHAPTER_27",
+      "title": "Anti-Money Laundering and Counter-Terrorism",
+      "process_id": "aml-ctf-program"
+    },
+    {
+      "code": "CHAPTER_28",
+      "title": "Applicable customer identification procedures in",
+      "process_id": "cdd-individuals"
+    },
+    {
+      "code": "CHAPTER_29",
+      "title": "Record-keeping obligations under section 107",
+      "process_id": null
+    },
+    {
+      "code": "CHAPTER_30",
+      "title": "Disclosure certificates",
+      "process_id": "cdd-companies"
+    },
+    {
+      "code": "CHAPTER_31",
+      "title": "Exemption of certain types of transactions",
+      "process_id": null
+    },
+    {
+      "code": "CHAPTER_32",
+      "title": "Exemption of certain types of transactions",
+      "process_id": null
+    },
+    {
+      "code": "CHAPTER_33",
+      "title": "Applicable customer identification procedure for",
+      "process_id": "cdd-individuals"
+    },
+    {
+      "code": "CHAPTER_34",
+      "title": "Affixing of notices about cross-border movement",
+      "process_id": null
+    },
+    {
+      "code": "CHAPTER_35",
+      "title": "Exemption from applicable customer",
+      "process_id": null
+    },
+    {
+      "code": "CHAPTER_36",
+      "title": "Exemption of certain designated services within a",
+      "process_id": null
+    },
+    {
+      "code": "CHAPTER_37",
+      "title": "Exemption from threshold transaction reporting",
+      "process_id": null
+    },
+    {
+      "code": "CHAPTER_38",
+      "title": "Exemption from applicable customer",
+      "process_id": null
+    },
+    {
+      "code": "CHAPTER_39",
+      "title": "Exemption from applicable customer",
+      "process_id": null
+    },
+    {
+      "code": "CHAPTER_40",
+      "title": "Definition of 'exempt legal practitioner service'",
+      "process_id": null
+    },
+    {
+      "code": "CHAPTER_41",
+      "title": "Exemption from applicable customer",
+      "process_id": null
+    },
+    {
+      "code": "CHAPTER_42",
+      "title": "Commodity warehousing of grain",
+      "process_id": null
+    },
+    {
+      "code": "CHAPTER_43",
+      "title": "Friendly Society closed funds",
+      "process_id": null
+    },
+    {
+      "code": "CHAPTER_45",
+      "title": "Debt Collection",
+      "process_id": null
+    },
+    {
+      "code": "CHAPTER_46",
+      "title": "Special circumstances for the applicable",
+      "process_id": null
+    },
+    {
+      "code": "CHAPTER_47",
+      "title": "Risk-only life policy interests in a superannuation",
+      "process_id": null
+    },
+    {
+      "code": "CHAPTER_48",
+      "title": "Exemption of salary packaging administration",
+      "process_id": null
+    },
+    {
+      "code": "CHAPTER_49",
+      "title": "International Uniform Give-Up Agreements",
+      "process_id": null
+    },
+    {
+      "code": "CHAPTER_50",
+      "title": "Exemption from applicable customer",
+      "process_id": null
+    },
+    {
+      "code": "CHAPTER_51",
+      "title": "AML/CTF Rules relating to certain definitions",
+      "process_id": null
+    },
+    {
+      "code": "CHAPTER_52",
+      "title": "Persons who are licensed to operate no more",
+      "process_id": "gaming-machines"
+    },
+    {
+      "code": "CHAPTER_54",
+      "title": "Reporting obligations of registered remittance",
+      "process_id": "remittance"
+    },
+    {
+      "code": "CHAPTER_55",
+      "title": "Remittance Sector Register",
+      "process_id": "remittance"
+    },
+    {
+      "code": "CHAPTER_56",
+      "title": "Information to be included in an application for",
+      "process_id": "remittance"
+    },
+    {
+      "code": "CHAPTER_57",
+      "title": "Matters to be considered by the AUSTRAC CEO in",
+      "process_id": "remittance"
+    },
+    {
+      "code": "CHAPTER_58",
+      "title": "Matters to be considered by the AUSTRAC CEO",
+      "process_id": "remittance"
+    },
+    {
+      "code": "CHAPTER_59",
+      "title": "Matters to be considered by the AUSTRAC CEO",
+      "process_id": "remittance"
+    },
+    {
+      "code": "CHAPTER_60",
+      "title": "Change in registration details regarding the",
+      "process_id": "remittance"
+    },
+    {
+      "code": "CHAPTER_61",
+      "title": "Reporting obligations of remittance affiliates",
+      "process_id": "remittance"
+    },
+    {
+      "code": "CHAPTER_62",
+      "title": "Reporting Entities Roll",
+      "process_id": null
+    },
+    {
+      "code": "CHAPTER_63",
+      "title": "Information to be provided or in relation to an",
+      "process_id": null
+    },
+    {
+      "code": "CHAPTER_64",
+      "title": "Changes in enrolment details in respect to a",
+      "process_id": null
+    },
+    {
+      "code": "CHAPTER_65",
+      "title": "Removal of entries from the Reporting Entities",
+      "process_id": null
+    },
+    {
+      "code": "CHAPTER_66",
+      "title": "Applicable customer identification procedures in",
+      "process_id": "cdd-individuals"
+    },
+    {
+      "code": "CHAPTER_67",
+      "title": "Warrants",
+      "process_id": null
+    },
+    {
+      "code": "CHAPTER_68",
+      "title": "Anti-Money Laundering and Counter-Terrorism",
+      "process_id": "aml-ctf-program"
+    },
+    {
+      "code": "CHAPTER_69",
+      "title": "Casino licence holders \u2013 exemption from applying",
+      "process_id": "casinos"
+    },
+    {
+      "code": "CHAPTER_70",
+      "title": "Renewal of registration",
+      "process_id": null
+    },
+    {
+      "code": "CHAPTER_71",
+      "title": "Credit card reform - specifying persons under",
+      "process_id": null
+    },
+    {
+      "code": "CHAPTER_72",
+      "title": "Account-based money transfer systems",
+      "process_id": null
+    },
+    {
+      "code": "CHAPTER_73",
+      "title": "Exemption for Registered Plan Management",
+      "process_id": null
+    },
+    {
+      "code": "CHAPTER_74",
+      "title": "Exemption for licensed trustee companies",
+      "process_id": null
+    },
+    {
+      "code": "CHAPTER_75",
+      "title": "Law Enforcement Operations",
+      "process_id": null
+    },
+    {
+      "code": "CHAPTER_76",
+      "title": "Digital Currency Exchange Register",
+      "process_id": "digital-currency-exchange"
+    },
+    {
+      "code": "CHAPTER_77",
+      "title": "Exemption from the applicable customer",
+      "process_id": null
+    },
+    {
+      "code": "CHAPTER_78",
+      "title": "Wise Australia Pty Ltd",
+      "process_id": null
+    },
+    {
+      "code": "CHAPTER_79",
+      "title": "Applicable customer identification procedure \u2013",
+      "process_id": "cdd-individuals"
+    },
+    {
+      "code": "CHAPTER_80",
+      "title": "AML/CTF Rules relating to certain definitions",
+      "process_id": null
+    },
+    {
+      "code": "CHAPTER_81",
+      "title": "Financial institutions \u2013 Exemption from applying",
+      "process_id": null
+    },
+    {
+      "code": "3_1",
+      "title": "Entry into a correspondent banking relationship",
+      "process_id": "correspondent-banking"
+    },
+    {
+      "code": "4_1",
+      "title": "Introduction",
+      "process_id": "risk-assessment"
+    },
+    {
+      "code": "4_2",
+      "title": "Applicable customer identification procedure with respect to individuals",
+      "process_id": "cdd-individuals"
+    },
+    {
+      "code": "4_3",
+      "title": "Applicable customer identification procedure with respect to companies",
+      "process_id": "cdd-companies"
+    },
+    {
+      "code": "4_4",
+      "title": "Applicable customer identification procedure with respect to trusts",
+      "process_id": "cdd-trusts"
+    },
+    {
+      "code": "4_5",
+      "title": "Applicable customer identification procedure with respect to partnerships",
+      "process_id": "cdd-partnerships"
+    },
+    {
+      "code": "4_6",
+      "title": "Applicable customer identification procedure with respect to associations",
+      "process_id": "cdd-associations"
+    },
+    {
+      "code": "4_7",
+      "title": "Applicable customer identification procedure with respect to co-operatives",
+      "process_id": "cdd-cooperatives"
+    },
+    {
+      "code": "4_8",
+      "title": "Applicable customer identification procedure with respect to government bodies",
+      "process_id": "cdd-government"
+    },
+    {
+      "code": "4_9",
+      "title": "Verification from documentation",
+      "process_id": "verification-documents"
+    },
+    {
+      "code": "4_10",
+      "title": "Verification from reliable and independent electronic data",
+      "process_id": "verification-electronic"
+    },
+    {
+      "code": "4_11",
+      "title": "Agents of customers",
+      "process_id": "agent-management"
+    },
+    {
+      "code": "4_12",
+      "title": "Collection and Verification of Beneficial Owner information",
+      "process_id": "beneficial-ownership"
+    },
+    {
+      "code": "4_13",
+      "title": "Collection and Verification of Politically Exposed Person",
+      "process_id": "pep-screening"
+    },
+    {
+      "code": "4_14",
+      "title": "Exemptions relating to the identification of beneficial",
+      "process_id": "beneficial-ownership"
+    },
+    {
+      "code": "4_15",
+      "title": "Procedure to follow where a customer cannot provide",
+      "process_id": "alternative-id"
+    },
+    {
+      "code": "22",
+      "title": "/11/",
+      "process_id": null
+    },
+    {
+      "code": "22",
+      "title": "/11/",
+      "process_id": null
+    },
+    {
+      "code": "22",
+      "title": "/11/",
+      "process_id": null
+    },
+    {
+      "code": "22",
+      "title": "/11/",
+      "process_id": null
+    },
+    {
+      "code": "22",
+      "title": "/11/",
+      "process_id": null
+    },
+    {
+      "code": "22",
+      "title": "/11/",
+      "process_id": null
+    },
+    {
+      "code": "22",
+      "title": "/11/",
+      "process_id": null
+    },
+    {
+      "code": "5_1",
+      "title": "Special anti-money laundering and counter-terrorism",
+      "process_id": "remittance"
+    },
+    {
+      "code": "5_2",
+      "title": "Applicable customer identification procedures in relation to remittance",
+      "process_id": "remittance"
+    },
+    {
+      "code": "6_1",
+      "title": "Re-verification of KYC information",
+      "process_id": "risk-assessment"
+    },
+    {
+      "code": "6_2",
+      "title": "Verification of identity of pre-commencement customers",
+      "process_id": "risk-assessment"
+    },
+    {
+      "code": "6_3",
+      "title": "Verification of identity of low-risk service customers",
+      "process_id": "risk-assessment"
+    },
+    {
+      "code": "7_1",
+      "title": "Reliance",
+      "process_id": "third-party-reliance"
+    },
+    {
+      "code": "7_2",
+      "title": "Ongoing reliance under an agreement or arrangement",
+      "process_id": "third-party-reliance"
+    },
+    {
+      "code": "7_3",
+      "title": "Case-by-case reliance",
+      "process_id": "third-party-reliance"
+    },
+    {
+      "code": "8_1",
+      "title": "Part A of a standard anti-money laundering and counter-terrorism financing program",
+      "process_id": "aml-ctf-program"
+    },
+    {
+      "code": "8_2",
+      "title": "AML/CTF risk awareness training program",
+      "process_id": "aml-ctf-program"
+    },
+    {
+      "code": "8_3",
+      "title": "Employee due diligence program",
+      "process_id": "aml-ctf-program"
+    },
+    {
+      "code": "8_4",
+      "title": "Oversight by boards and senior management",
+      "process_id": "aml-ctf-program"
+    },
+    {
+      "code": "8_5",
+      "title": "AML/CTF Compliance Officer",
+      "process_id": "aml-ctf-program"
+    },
+    {
+      "code": "8_6",
+      "title": "Independent review",
+      "process_id": "aml-ctf-program"
+    },
+    {
+      "code": "8_7",
+      "title": "Incorporation of feedback and guidance on ML/TF risks",
+      "process_id": "aml-ctf-program"
+    },
+    {
+      "code": "8_8",
+      "title": "Permanent establishments in a foreign country",
+      "process_id": "aml-ctf-program"
+    },
+    {
+      "code": "8_9",
+      "title": "Reporting obligations",
+      "process_id": "aml-ctf-program"
+    },
+    {
+      "code": "9_1",
+      "title": "Part A of a joint anti-money laundering and counter-terrorism financing program",
+      "process_id": "aml-ctf-program"
+    },
+    {
+      "code": "9_2",
+      "title": "AML/CTF risk awareness training program",
+      "process_id": "aml-ctf-program"
+    },
+    {
+      "code": "9_3",
+      "title": "Employee due diligence program",
+      "process_id": "aml-ctf-program"
+    },
+    {
+      "code": "9_4",
+      "title": "Oversight by boards and senior management",
+      "process_id": "aml-ctf-program"
+    },
+    {
+      "code": "9_5",
+      "title": "AML/CTF Compliance Officer",
+      "process_id": "aml-ctf-program"
+    },
+    {
+      "code": "9_6",
+      "title": "Independent review",
+      "process_id": "aml-ctf-program"
+    },
+    {
+      "code": "9_7",
+      "title": "Incorporation of feedback and guidance on ML/TF risks",
+      "process_id": "aml-ctf-program"
+    },
+    {
+      "code": "9_8",
+      "title": "Permanent establishments in a foreign country",
+      "process_id": "aml-ctf-program"
+    },
+    {
+      "code": "9_9",
+      "title": "Reporting obligations",
+      "process_id": "aml-ctf-program"
+    },
+    {
+      "code": "10_1",
+      "title": "Casinos",
+      "process_id": "casinos"
+    },
+    {
+      "code": "10_2",
+      "title": "On-course bookmakers and totalisator agency boards",
+      "process_id": "bookmakers"
+    },
+    {
+      "code": "10_3",
+      "title": "Gaming machines",
+      "process_id": "gaming-machines"
+    }
+  ],
+  "process_to_sections": {
+    "cdd-individuals": [
+      "CHAPTER_28",
+      "CHAPTER_33",
+      "CHAPTER_66",
+      "CHAPTER_79",
+      "4_2"
+    ],
+    "cdd-companies": [
+      "CHAPTER_30",
+      "4_3"
+    ],
+    "cdd-trusts": [
+      "4_4"
+    ],
+    "cdd-partnerships": [
+      "4_5"
+    ],
+    "cdd-associations": [
+      "4_6"
+    ],
+    "cdd-cooperatives": [
+      "4_7"
+    ],
+    "cdd-government": [
+      "4_8"
+    ],
+    "risk-assessment": [
+      "CHAPTER_6",
+      "4_1",
+      "6_1",
+      "6_2",
+      "6_3"
+    ],
+    "third-party-reliance": [
+      "CHAPTER_7",
+      "7_1",
+      "7_2",
+      "7_3"
+    ],
+    "aml-ctf-program": [
+      "CHAPTER_23",
+      "CHAPTER_24",
+      "CHAPTER_27",
+      "CHAPTER_68",
+      "8_1",
+      "8_2",
+      "8_3",
+      "8_4",
+      "8_5",
+      "8_6",
+      "8_7",
+      "8_8",
+      "8_9",
+      "9_1",
+      "9_2",
+      "9_3",
+      "9_4",
+      "9_5",
+      "9_6",
+      "9_7",
+      "9_8",
+      "9_9"
+    ],
+    "verification-documents": [
+      "4_9"
+    ],
+    "verification-electronic": [
+      "4_10"
+    ],
+    "agent-management": [
+      "4_11"
+    ],
+    "beneficial-ownership": [
+      "4_12",
+      "4_14"
+    ],
+    "pep-screening": [
+      "4_13"
+    ],
+    "alternative-id": [
+      "4_15"
+    ],
+    "casinos": [
+      "CHAPTER_69",
+      "10_1"
+    ],
+    "bookmakers": [
+      "10_2"
+    ],
+    "gaming-machines": [
+      "CHAPTER_52",
+      "10_3"
+    ],
+    "remittance": [
+      "CHAPTER_54",
+      "CHAPTER_55",
+      "CHAPTER_56",
+      "CHAPTER_57",
+      "CHAPTER_58",
+      "CHAPTER_59",
+      "CHAPTER_60",
+      "CHAPTER_61",
+      "5_1",
+      "5_2"
+    ],
+    "digital-currency-exchange": [
+      "CHAPTER_76"
+    ],
+    "correspondent-banking": [
+      "CHAPTER_3",
+      "3_1"
+    ]
+  },
+  "reasoning": "Key classification decisions: (1) Sections 1, 1_1, 1_2, 2, 2_1 are instrument-level definitions/introductions \u2192 null. (2) CHAPTER_3 and 3_1 explicitly cover correspondent banking \u2192 correspondent-banking. (3) CHAPTER_6 (Verification of identity) maps to risk-assessment per the process definition which explicitly covers Chapter 6 (6_1, 6_2, 6_3). (4) CHAPTER_7 and 7_1\u20137_3 map to third-party-reliance per definition. (5) 4_1 (CDD introduction) maps to risk-assessment per the process definition which explicitly includes Part 4.1. (6) 4_2\u20134_8 map to the respective customer-type CDD processes. (7) 4_9 \u2192 verification-documents, 4_10 \u2192 verification-electronic, 4_11 \u2192 agent-management, 4_12/4_14 \u2192 beneficial-ownership, 4_13 \u2192 pep-screening, 4_15 \u2192 alternative-id. (8) Sections 8_1\u20138_9 and 9_1\u20139_9 all map to aml-ctf-program (standard and joint AML/CTF programs respectively). (9) 5_1, 5_2, CHAPTER_54\u2013CHAPTER_61 all map to remittance. (10) CHAPTER_76 \u2192 digital-currency-exchange. (11) 10_1 \u2192 casinos, 10_2 \u2192 bookmakers, 10_3 \u2192 gaming-machines. (12) CHAPTER_23, 24, 27, 68 appear to be AML/CTF program instrument chapters \u2192 aml-ctf-program. (13) CHAPTER_28, 33, 66, 79 appear to be CDD procedure chapters for individuals based on titles. (14) CHAPTER_30 covers disclosure certificates which relates to company CDD safe harbours \u2192 cdd-companies. (15) CHAPTER_52 relates to persons licensed to operate gaming machines \u2192 gaming-machines. (16) CHAPTER_69 is a casino exemption \u2192 casinos. (17) Numerous exemption chapters, reporting/registration chapters (CHAPTER_11, 29, 31, 32, 34\u201350, 62\u201365, 67, 70\u201375, 77\u201378, 80\u201381) and operational/threshold chapters (CHAPTER_12\u201322) have no clear mapping to the listed business processes \u2192 null. (18) The seven duplicate [22] entries with title '/11/' appear to be ToC artifacts \u2192 null."
+}

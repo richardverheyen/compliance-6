@@ -36,7 +36,7 @@ logger = logging.getLogger(__name__)
 # Constants
 # ---------------------------------------------------------------------------
 
-ID_REGEX = re.compile(r"^4(_\d+)+(_[a-z])?$")
+ID_REGEX = re.compile(r"^\d+(_\d+)+(_[a-z])?$")
 SLUG_REGEX = re.compile(r"^[a-z][a-z0-9-]*$")
 
 FEEDBACK_DIR = "feedback"
@@ -71,7 +71,7 @@ TEXT_NODE_THRESHOLD = 50  # groups with >= this many nodes use the large model
 PROCESS_FORMS = {
     "cdd-individuals": {
         "title": "Customer Due Diligence — Individuals",
-        "source_groups": ["4_2"],
+        "description": "KYC collection and verification obligations for individual customers and sole traders, including minimum information requirements, verification methods, and risk-based additional due diligence.",
         "gated_by": "4_1_4_1",
         "sub_types": [
             {"id": "sub-individual", "label": "Individuals"},
@@ -91,7 +91,7 @@ PROCESS_FORMS = {
     },
     "cdd-companies": {
         "title": "Customer Due Diligence — Companies",
-        "source_groups": ["4_3"],
+        "description": "KYC collection and verification obligations for company customers including domestic, registered foreign, and unregistered foreign companies, covering beneficial ownership, listed company safe harbours, and disclosure certificates.",
         "gated_by": "4_1_4_2",
         "sub_types": [
             {"id": "sub-domestic", "label": "Domestic Companies"},
@@ -109,7 +109,7 @@ PROCESS_FORMS = {
     },
     "cdd-trusts": {
         "title": "Customer Due Diligence — Trusts",
-        "source_groups": ["4_4"],
+        "description": "KYC collection and verification obligations for trust customers including private trusts, ASIC-registered managed investment schemes, and government superannuation funds, covering trustee identification and simplified verification procedures.",
         "gated_by": "4_1_4_3",
         "sub_types": [
             {"id": "sub-private-trust", "label": "Private Trusts"},
@@ -128,7 +128,7 @@ PROCESS_FORMS = {
     },
     "cdd-partnerships": {
         "title": "Customer Due Diligence — Partnerships",
-        "source_groups": ["4_5"],
+        "description": "KYC collection and verification obligations for partnership customers, covering partner identification, business name verification, and risk-based due diligence for both individual and entity partners.",
         "gated_by": "4_1_4_4",
         "sub_types": [],
         "form_links": [],
@@ -141,7 +141,7 @@ PROCESS_FORMS = {
     },
     "cdd-associations": {
         "title": "Customer Due Diligence — Associations",
-        "source_groups": ["4_6"],
+        "description": "KYC collection and verification obligations for association customers, covering incorporated and unincorporated associations including officer identification and governing document requirements.",
         "gated_by": "4_1_4_5",
         "sub_types": [
             {"id": "sub-incorporated", "label": "Incorporated Associations"},
@@ -158,7 +158,7 @@ PROCESS_FORMS = {
     },
     "cdd-cooperatives": {
         "title": "Customer Due Diligence — Co-operatives",
-        "source_groups": ["4_7"],
+        "description": "KYC collection and verification obligations for co-operative customers, covering registration details, officer identification, and verification of co-operative status.",
         "gated_by": "4_1_4_6",
         "sub_types": [],
         "form_links": [],
@@ -170,7 +170,7 @@ PROCESS_FORMS = {
     },
     "cdd-government": {
         "title": "Customer Due Diligence — Government Bodies",
-        "source_groups": ["4_8"],
+        "description": "KYC collection and verification obligations for government body customers, covering domestic and foreign government bodies with additional beneficial ownership requirements for foreign entities.",
         "gated_by": "4_1_4_7",
         "sub_types": [
             {"id": "sub-domestic-govt", "label": "Domestic Government Bodies"},
@@ -186,18 +186,43 @@ PROCESS_FORMS = {
     },
     "risk-assessment": {
         "title": "ML/TF Risk Assessment",
-        "source_groups": ["4_1"],
+        "description": "Customer-level ML/TF risk assessment obligations that gate the applicable CDD procedure — determining which customer types are served, what risk factors apply, and which CDD processes must be followed. Covers the CDD chapter introduction (Part 4.1) AND the re-verification chapter (Chapter 6): re-verification of KYC information, verification of identity of pre-commencement customers, and verification of identity of low-risk service customers (sections 6_1, 6_2, 6_3). These re-verification triggers flow directly from risk assessment outcomes.",
         "gated_by": None,
         "sub_types": [],
         "form_links": [],
         "subprocess_groups": [],
         "architect_notes": [
             "Pre-commencement customers (rule 4.1.2) are handled externally via an onboarding diagram. Do not generate a control for 4.1.2.",
+            "Rule 4.1.3 enumerates 7 prescribed risk factors across sub-rules 4.1.3(1) through 4.1.3(7). Generate a single control `4_1_3` with `checklist-items` listing all 7 factors. Do NOT also generate separate Yes/No controls for 4.1.3(1), 4.1.3(1)(a), 4.1.3(1)(b), 4.1.3(2), etc. — the checklist on the parent control is sufficient to capture compliance with all sub-rules. Only break out a sub-rule as its own control if it introduces a genuinely distinct obligation that cannot be expressed as a checklist item.",
+        ],
+    },
+    "third-party-reliance": {
+        "title": "Third Party Reliance",
+        "description": "Obligations governing when and how a reporting entity may rely on CDD or verification performed by a third party (another reporting entity or eligible foreign entity). Covers the conditions for reliance, ongoing reliance under a standing agreement or arrangement, and case-by-case reliance arrangements. Maps to Chapter 7 (sections 7_1, 7_2, 7_3).",
+        "gated_by": None,
+        "sub_types": [],
+        "form_links": [],
+        "subprocess_groups": [],
+        "architect_notes": [
+            "Generate separate groups for: general reliance conditions, ongoing reliance (standing arrangements), and case-by-case reliance.",
+        ],
+    },
+    "aml-ctf-program": {
+        "title": "AML/CTF Program",
+        "description": "Organisational AML/CTF program obligations covering Part A (ML/TF risk assessment program design and governance), AML/CTF risk awareness training, employee due diligence, board and senior management oversight, AML/CTF Compliance Officer appointment, independent review, incorporation of regulatory feedback, permanent establishment obligations, and reporting obligations. Also covers joint AML/CTF program requirements for designated business groups.",
+        "gated_by": None,
+        "sub_types": [],
+        "form_links": [],
+        "subprocess_groups": ["training", "employee-due-diligence", "oversight", "independent-review", "joint-program"],
+        "architect_notes": [
+            "This form covers the entire AML/CTF Program chapter obligations — not individual customer due diligence but the entity's internal compliance program.",
+            "Generate separate groups for each major program component: ML/TF risk assessment program (Part A), training, employee due diligence, oversight and governance, compliance officer, independent review, and reporting.",
+            "The joint AML/CTF program obligations (Chapter 9) are parallel requirements for designated business groups — generate these as subprocess groups.",
         ],
     },
     "verification-documents": {
         "title": "Verification Standards — Documents",
-        "source_groups": ["4_9"],
+        "description": "Standards and requirements for verifying customer identity using documentary evidence, including acceptable document types and the documentary safe harbour procedure.",
         "gated_by": None,
         "sub_types": [],
         "form_links": [],
@@ -206,7 +231,7 @@ PROCESS_FORMS = {
     },
     "verification-electronic": {
         "title": "Verification Standards — Electronic",
-        "source_groups": ["4_10"],
+        "description": "Standards and requirements for verifying customer identity using electronic means, including data source requirements and the electronic safe harbour procedure.",
         "gated_by": None,
         "sub_types": [],
         "form_links": [],
@@ -215,7 +240,7 @@ PROCESS_FORMS = {
     },
     "agent-management": {
         "title": "Agent Management",
-        "source_groups": ["4_11"],
+        "description": "Obligations for reporting entities that use agents to provide designated services, covering agent due diligence, ongoing monitoring, AML/CTF agent program requirements, and agent register maintenance.",
         "gated_by": "4_1_8",
         "sub_types": [],
         "form_links": [],
@@ -226,7 +251,7 @@ PROCESS_FORMS = {
     },
     "beneficial-ownership": {
         "title": "Beneficial Ownership",
-        "source_groups": ["4_12"],
+        "description": "Obligations to identify and verify the beneficial owners of non-individual customers, including the threshold rules, chain-of-ownership tracing, and documentation requirements.",
         "gated_by": "4_1_5_1",
         "sub_types": [],
         "form_links": [],
@@ -237,7 +262,7 @@ PROCESS_FORMS = {
     },
     "pep-screening": {
         "title": "PEP Screening",
-        "source_groups": ["4_13"],
+        "description": "Obligations to identify and apply enhanced due diligence to politically exposed persons (PEPs), their associates, and family members, including screening procedures and enhanced ongoing monitoring.",
         "gated_by": "4_1_5_2",
         "sub_types": [],
         "form_links": [],
@@ -248,12 +273,83 @@ PROCESS_FORMS = {
     },
     "alternative-id": {
         "title": "Alternative Identity Proofing",
-        "source_groups": ["4_15"],
+        "description": "Alternative procedures for establishing and verifying customer identity where standard documentary or electronic methods are not practicable, including the conditions and safeguards that apply.",
         "gated_by": None,
         "sub_types": [],
         "form_links": [],
         "subprocess_groups": [],
         "architect_notes": [],
+    },
+    "casinos": {
+        "title": "Casinos",
+        "description": "Additional AML/CTF obligations specific to casino operators, including customer identification thresholds for gaming transactions, chip purchases, and cash transactions on the gaming floor. Maps to Chapter 10 section 10_1.",
+        "gated_by": "10_1",
+        "sub_types": [],
+        "form_links": [],
+        "subprocess_groups": [],
+        "architect_notes": [
+            "This form is gated externally by the 'Casinos' designated service selection. Do NOT generate a top-level scope gate question.",
+            "Focus on casino-specific thresholds and obligations — these are supplementary to, not a replacement for, standard CDD procedures.",
+        ],
+    },
+    "bookmakers": {
+        "title": "On-course Bookmakers & TABs",
+        "description": "Additional AML/CTF obligations specific to on-course bookmakers and totalisator agency boards (TABs), including customer identification thresholds for betting transactions. Maps to Chapter 10 section 10_2.",
+        "gated_by": "10_2",
+        "sub_types": [],
+        "form_links": [],
+        "subprocess_groups": [],
+        "architect_notes": [
+            "This form is gated externally by the 'On-course Bookmakers & TABs' designated service selection. Do NOT generate a top-level scope gate question.",
+            "Focus on bookmaker/TAB-specific transaction thresholds and identification obligations.",
+        ],
+    },
+    "gaming-machines": {
+        "title": "Gaming Machines",
+        "description": "Additional AML/CTF obligations specific to gaming machine operators, including customer identification thresholds for jackpot payouts and other gaming machine transactions. Maps to Chapter 10 section 10_3.",
+        "gated_by": "10_3",
+        "sub_types": [],
+        "form_links": [],
+        "subprocess_groups": [],
+        "architect_notes": [
+            "This form is gated externally by the 'Gaming Machines' designated service selection. Do NOT generate a top-level scope gate question.",
+            "Focus on gaming machine-specific payout thresholds and identification obligations.",
+        ],
+    },
+    "remittance": {
+        "title": "Remittance Services",
+        "description": "AML/CTF obligations for remittance dealers and remittance network operators providing designated remittance arrangements (Table 1 items 31, 32, 32A of the Act). Covers AUSTRAC registration via the Remittance Sector Register, reporting obligations for registered remittance network providers and affiliates, special CDD procedures for remittance transactions, change-of-details obligations, and matters considered by the AUSTRAC CEO for registration/cancellation decisions. Maps to Rules sections 5_1, 5_2, CHAPTER_54, CHAPTER_55, CHAPTER_56, CHAPTER_57, CHAPTER_58, CHAPTER_59, CHAPTER_60, CHAPTER_61.",
+        "gated_by": "remittance",
+        "sub_types": [],
+        "form_links": [],
+        "subprocess_groups": ["remittance-registration", "remittance-reporting"],
+        "architect_notes": [
+            "This form is gated externally by the 'Remittance Services' designated service selection. Do NOT generate a top-level scope gate question.",
+            "Generate separate groups for: Remittance Sector Register obligations, reporting obligations for network providers (CHAPTER_54), reporting obligations for affiliates (CHAPTER_61), and special CDD procedures (5_1, 5_2).",
+        ],
+    },
+    "digital-currency-exchange": {
+        "title": "Digital Currency Exchange",
+        "description": "AML/CTF obligations for digital currency exchange (DCE) providers exchanging digital currency for money or money for digital currency (Table 1 item 50A of the Act). Covers AUSTRAC registration via the Digital Currency Exchange Register, customer identification for exchange transactions, international funds transfer instruction (IFTI) reporting for cross-border digital currency movements, transaction monitoring for structuring, and record-keeping. Maps to Rules CHAPTER_76.",
+        "gated_by": "dce",
+        "sub_types": [],
+        "form_links": [],
+        "subprocess_groups": [],
+        "architect_notes": [
+            "This form is gated externally by the 'Digital Currency Exchange' designated service selection. Do NOT generate a top-level scope gate question.",
+            "Focus on DCE Register obligations (CHAPTER_76), registration requirements, and DCE-specific customer identification thresholds.",
+        ],
+    },
+    "correspondent-banking": {
+        "title": "Correspondent Banking",
+        "description": "AML/CTF obligations for ADIs and banks entering into or maintaining correspondent banking relationships with foreign financial institutions. Covers due diligence requirements before entering a relationship, ongoing monitoring of the relationship, prohibited relationships (shell banks), and record-keeping. Maps to Rules CHAPTER_3, section 3_1.",
+        "gated_by": None,
+        "sub_types": [],
+        "form_links": [],
+        "subprocess_groups": [],
+        "architect_notes": [
+            "Generate groups for: pre-entry due diligence requirements, prohibited relationships (shell banks), ongoing monitoring obligations, and record-keeping.",
+        ],
     },
 }
 
@@ -428,8 +524,8 @@ For non-CDD forms, organise by logical workflow steps.
 
 When a regulation enumerates a **specific list of required data fields or conditions** that must ALL be satisfied (e.g. "collect full name, date of birth, and residential address"), add a `checklist-items` array to the control. This renders as interactive checkboxes in the form.
 
-- Use `{"label": "..."}` for each required item
-- Use `{"type": "or-group", "items": [...]}` when any ONE of several alternatives satisfies the requirement (e.g. "principal place of business OR residential address")
+- Use `{{"label": "..."}}` for each required item
+- Use `{{"type": "or-group", "items": [...]}}` when any ONE of several alternatives satisfies the requirement (e.g. "principal place of business OR residential address")
 - Only use `checklist-items` for controls where the regulation explicitly lists a finite set of required elements — NOT for general process or risk-based questions
 - Controls with `checklist-items` MUST have `correct-option: "Yes"`
 
@@ -457,11 +553,11 @@ Example — "collect minimum KYC for sole traders" (where address is one of two 
 ## Critical Rules
 
 ### Control IDs — REQUIRED format
-Control IDs MUST match: ^4(_\\d+)+(_[a-z])?$
-- Derive from regulatory rule codes (e.g. rule 4.3.5(1) → id "4_3_5_1")
+Control IDs MUST match: ^\\d+(_\\d+)+(_[a-z])?$
+- Derive from the chapter and rule codes in the regulatory text (e.g. rule 3.1.3(1) → id "3_1_3_1", rule 8.2.3(4) → id "8_2_3_4", rule 10.1.6(1)(a) → id "10_1_6_1_a")
 - NEVER invent descriptive suffixes
-- Valid: 4_2, 4_2_3, 4_2_3_1, 4_2_3_1_a
-- Invalid: 4_3_8_simplified, 4_2_collection
+- Valid: 3_1_2, 4_2_3, 8_1_4, 10_1_6_1_a
+- Invalid: 3_1_3_7_b_records, 4_3_8_simplified, 8_2_collection
 
 ### Group IDs — semantic slugs ONLY
 Group IDs MUST match: ^[a-z][a-z0-9-]*$
@@ -546,15 +642,33 @@ def apply_feedback_overrides(result: dict, feedback: dict) -> dict:
     return result
 
 
-def gather_process_nodes(process_id: str, groups: list[dict]) -> list[dict]:
-    """Gather all text nodes for a process form from its source groups."""
-    form_def = PROCESS_FORMS[process_id]
+def load_toc_classification(run_dir: str) -> dict[str, list[str]]:
+    """Load toc_classified.json and return the process_to_sections mapping.
+
+    Returns a dict of {process_id: [section_code, ...]} where section codes
+    are underscore-normalised (e.g. "4_2", "4_3").
+    """
+    path = os.path.join(run_dir, "toc_classified.json")
+    if not os.path.exists(path):
+        logger.error(
+            f"toc_classified.json not found in {run_dir}. "
+            "Run 'python toc_extractor.py <pdf> <run_dir>' first."
+        )
+        sys.exit(1)
+    with open(path) as f:
+        data = json.load(f)
+    return data.get("process_to_sections", {})
+
+
+def gather_process_nodes(process_id: str, groups: list[dict], toc_classification: dict[str, list[str]]) -> list[dict]:
+    """Gather all text nodes for a process form using ToC classification."""
     group_map = {g["id"]: g for g in groups}
+    section_codes = toc_classification.get(process_id, [])
     all_nodes = []
 
-    for prefix in form_def["source_groups"]:
-        if prefix in group_map:
-            nodes = group_map[prefix].get("text_nodes", [])
+    for code in section_codes:
+        if code in group_map:
+            nodes = group_map[code].get("text_nodes", [])
             all_nodes.extend(nodes)
 
     return all_nodes
@@ -751,7 +865,7 @@ def call_process_architect(
 
     response = client.messages.create(
         model=model,
-        max_tokens=8192,
+        max_tokens=16000,
         system=PROCESS_SYSTEM_PROMPT,
         messages=[{"role": "user", "content": user_msg}],
         tools=[OUTPUT_TOOL],
@@ -830,6 +944,9 @@ def run_process_architect(run_dir: str, single_process: str | None = None,
     with open(enriched_path) as f:
         groups = json.load(f)
 
+    # Load ToC classification (section → process mapping)
+    toc_classification = load_toc_classification(run_dir)
+
     # Determine which processes to run
     if single_process:
         if single_process not in PROCESS_FORMS:
@@ -855,7 +972,7 @@ def run_process_architect(run_dir: str, single_process: str | None = None,
     total = len(processes_to_run)
     for i, (process_id, form_def) in enumerate(processes_to_run.items(), 1):
         # Gather text nodes
-        text_nodes = gather_process_nodes(process_id, groups)
+        text_nodes = gather_process_nodes(process_id, groups, toc_classification)
 
         if not text_nodes:
             logger.info(f"[{i}/{total}] Skipping {process_id} (no text nodes)")
@@ -916,16 +1033,18 @@ def run_process_architect(run_dir: str, single_process: str | None = None,
         coverage_reports[process_id] = report
         log_coverage_report(report)
 
-        # Add gating rule if this process is gated
+        # Add gating rule if this process is gated — target the first ToC section
+        # assigned to this process (gates the whole process group in the viewer)
         if form_def["gated_by"]:
-            target_section = form_def["source_groups"][0]
-            gating_rule = {
-                "target": target_section,
-                "scope": form_def["gated_by"],
-                "effect": "SHOW",
-                "schema": {"const": "Yes"},
-            }
-            result["rules"].insert(0, gating_rule)
+            process_sections = toc_classification.get(process_id, [])
+            if process_sections:
+                gating_rule = {
+                    "target": process_sections[0],
+                    "scope": form_def["gated_by"],
+                    "effect": "SHOW",
+                    "schema": {"const": "Yes"},
+                }
+                result["rules"].insert(0, gating_rule)
 
         # Write output
         if not dry_run:
@@ -978,7 +1097,7 @@ def run_process_architect(run_dir: str, single_process: str | None = None,
 
         if run_review and coverage_reports:
             logger.info("Starting second-pass review...")
-            review_results = run_review_pass(client, run_dir, groups, coverage_reports)
+            review_results = run_review_pass(client, run_dir, groups, coverage_reports, toc_classification)
             review_path = str(PROCESSES_DIR / "_review_results.json")
             with open(review_path, "w") as f:
                 json.dump(review_results, f, indent=2)
@@ -1065,6 +1184,7 @@ def run_review_pass(
     run_dir: str,
     groups: list[dict],
     coverage_reports: dict[str, dict],
+    toc_classification: dict[str, list[str]],
 ) -> dict:
     """Run second-pass review on process forms."""
     all_reviews = {}
@@ -1077,7 +1197,7 @@ def run_review_pass(
         with open(process_path) as f:
             result = json.load(f)
 
-        text_nodes = gather_process_nodes(process_id, groups)
+        text_nodes = gather_process_nodes(process_id, groups, toc_classification)
 
         nodes_text = ""
         for tn in text_nodes:

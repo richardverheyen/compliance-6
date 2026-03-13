@@ -9,6 +9,144 @@
       "source-rules": [],
       "mapping-confidence": 1.0,
       "remediation": "Your organisation does not have an Agent Management process in place. You must establish a documented Agent Management process to meet your AML/CTF obligations. Review the controls below and implement the required procedures before completing this assessment."
+    },
+    {
+      "id": "4_11_2",
+      "group": "collection-agent-info",
+      "label": "Does your Agent Management procedure collect the full name and authorization evidence for all individuals acting on behalf of customers?",
+      "detail-required": true,
+      "detail-label": "Describe how you collect agent names and authorization evidence",
+      "correct-option": "Yes",
+      "source-rules": [
+        "4.11.2(1)",
+        "4.11.2(2)"
+      ],
+      "mapping-confidence": 0.95,
+      "remediation": "Your Agent Management Program does not collect the minimum required information for individual agents. Your procedure must collect the full name of each individual who acts on behalf of the customer and evidence of the customer's authorization for that agent, as required under rules 4.11.2(1) and 4.11.2(2)."
+    },
+    {
+      "id": "4_11_3",
+      "group": "verification-agent-identity",
+      "label": "Do you have risk-based systems and controls to determine whether and to what extent to verify agent identity?",
+      "detail-required": true,
+      "detail-label": "Describe your risk-based approach to agent identity verification",
+      "correct-option": "Yes",
+      "source-rules": [
+        "4.11.3"
+      ],
+      "mapping-confidence": 0.95,
+      "remediation": "Your Agent Management Program lacks appropriate risk-based systems and controls for determining agent identity verification. You must establish controls that assess whether and to what extent to verify each agent's identity based on your ML/TF risk assessment, as required under rule 4.11.3."
+    },
+    {
+      "id": "4_11_4",
+      "group": "verification-agent-identity",
+      "label": "Does your agent identity verification process consider the ML/TF risk relevant to the designated service?",
+      "detail-required": true,
+      "detail-label": "Explain how ML/TF risk informs your agent verification decisions",
+      "correct-option": "Yes",
+      "source-rules": [
+        "4.11.4"
+      ],
+      "mapping-confidence": 0.95,
+      "remediation": "Your Agent Management Program does not consider ML/TF risk when determining agent identity verification. Your procedure must require that ML/TF risk relevant to the designated service informs whether and to what extent you verify each agent's identity, as required under rule 4.11.4."
+    },
+    {
+      "id": "4_11_6",
+      "group": "collection-agent-info-nonnatural",
+      "label": "Does your Agent Management procedure collect the full name and authorization evidence for individuals acting as agents of non-natural customers?",
+      "detail-required": true,
+      "detail-label": "Describe how you collect agent information for non-natural customer agents",
+      "correct-option": "Yes",
+      "source-rules": [
+        "4.11.6(1)",
+        "4.11.6(2)"
+      ],
+      "mapping-confidence": 0.95,
+      "remediation": "Your Agent Management Program does not collect the minimum required information for agents of non-natural customers. Your procedure must collect the full name of each individual acting on behalf of the non-natural customer and evidence of the customer's authorization for that agent, as required under rules 4.11.6(1) and 4.11.6(2)."
+    },
+    {
+      "id": "4_11_7",
+      "group": "verification-agent-identity-nonnatural",
+      "label": "Do you have risk-based systems and controls to determine whether and to what extent to verify agents of non-natural customers?",
+      "detail-required": true,
+      "detail-label": "Describe your risk-based approach to verifying non-natural customer agents",
+      "correct-option": "Yes",
+      "source-rules": [
+        "4.11.7"
+      ],
+      "mapping-confidence": 0.95,
+      "remediation": "Your Agent Management Program lacks appropriate risk-based systems and controls for agents of non-natural customers. You must establish controls that assess whether and to what extent to verify each such agent's identity based on your ML/TF risk assessment, as required under rule 4.11.7."
+    },
+    {
+      "id": "4_11_8",
+      "group": "verification-agent-identity-nonnatural",
+      "label": "Does your agent verification process for non-natural customers consider the ML/TF risk relevant to the designated service?",
+      "detail-required": true,
+      "detail-label": "Explain how ML/TF risk informs your verification decisions for non-natural customer agents",
+      "correct-option": "Yes",
+      "source-rules": [
+        "4.11.8"
+      ],
+      "mapping-confidence": 0.95,
+      "remediation": "Your Agent Management Program does not consider ML/TF risk when verifying agents of non-natural customers. Your procedure must require that ML/TF risk relevant to the designated service informs whether and to what extent you verify each agent, as required under rule 4.11.8."
+    },
+    {
+      "id": "4_11_9",
+      "group": "verifying-officer-option",
+      "label": "Do you use a verifying officer approach to identify agents of non-natural customers?",
+      "detail-required": false,
+      "correct-option": "N/A",
+      "source-rules": [
+        "4.11.9"
+      ],
+      "mapping-confidence": 0.95,
+      "remediation": "If you choose to use a verifying officer to identify agents of non-natural customers, you must meet all requirements in paragraphs 4.11.12 to 4.11.13 of these Rules, as provided under rule 4.11.9."
+    },
+    {
+      "id": "4_11_12",
+      "group": "verifying-officer-procedure",
+      "label": "Does your verifying officer procedure require agent identification, verifying officer identification and verification, authorization evidence, and record-keeping?",
+      "detail-required": true,
+      "detail-label": "Describe your complete verifying officer procedure including all required steps",
+      "correct-option": "Yes",
+      "source-rules": [
+        "4.11.12(1)",
+        "4.11.12(2)",
+        "4.11.12(3)",
+        "4.11.12(4)",
+        "4.11.12(5)"
+      ],
+      "mapping-confidence": 0.9,
+      "remediation": "Your Agent Management Program does not include all required elements in your verifying officer procedure. Your procedure must include: agent identification by the verifying officer, identification and verification of the verifying officer per Chapter 4 rules, evidence of customer authorization of the verifying officer, a record kept by the verifying officer of all collected matters, and provision to the reporting entity of the agent's full name and signature copy, as required under rule 4.11.12."
+    },
+    {
+      "id": "4_11_13",
+      "group": "verifying-officer-procedure",
+      "label": "Does your verifying officer collect all required agent identification information: full name, position title, signature copy, and authorization evidence?",
+      "detail-required": false,
+      "correct-option": "Yes",
+      "checklist-items": [
+        {
+          "label": "Full name of the agent"
+        },
+        {
+          "label": "Title of the position or role held by the agent"
+        },
+        {
+          "label": "Copy of the agent's signature"
+        },
+        {
+          "label": "Evidence of the agent's authorization to act"
+        }
+      ],
+      "source-rules": [
+        "4.11.13(1)",
+        "4.11.13(2)",
+        "4.11.13(3)",
+        "4.11.13(4)"
+      ],
+      "mapping-confidence": 0.95,
+      "remediation": "Your verifying officer procedure does not collect all required agent identification information. The verifying officer must collect the full name of the agent, the title of the position or role held by the agent with the customer, a copy of the agent's signature, and evidence of the agent's authorization to act on behalf of the customer, as required under rule 4.11.13."
     }
   ],
   "groups": [
@@ -17,12 +155,66 @@
       "title": "Process Confirmation",
       "description": "Before answering the detailed compliance questions, confirm whether your organisation operates this business process.",
       "variant": "main"
+    },
+    {
+      "id": "collection-agent-info",
+      "title": "Collection of Individual Agent Information",
+      "description": "Collecting minimum required information about individuals acting for or on behalf of customers.",
+      "variant": "main"
+    },
+    {
+      "id": "verification-agent-identity",
+      "title": "Verification of Individual Agent Identity",
+      "description": "Risk-based systems and controls for verifying the identity of individual agents based on ML/TF risk relevant to the designated service.",
+      "variant": "main"
+    },
+    {
+      "id": "collection-agent-info-nonnatural",
+      "title": "Collection of Agent Information for Non-Natural Customers",
+      "description": "Collecting minimum required information about individuals acting as agents of non-natural person customers.",
+      "variant": "main"
+    },
+    {
+      "id": "verification-agent-identity-nonnatural",
+      "title": "Verification of Agent Identity for Non-Natural Customers",
+      "description": "Risk-based systems and controls for verifying agents of non-natural person customers based on ML/TF risk relevant to the designated service.",
+      "variant": "main"
+    },
+    {
+      "id": "verifying-officer-option",
+      "title": "Verifying Officer Identification Procedure (Optional)",
+      "description": "Optional procedure allowing a customer's verifying officer (an employee, agent or contractor) to identify agents of non-natural person customers, subject to specified requirements.",
+      "variant": "subprocess",
+      "subprocess-label": "Verifying Officer"
+    },
+    {
+      "id": "verifying-officer-procedure",
+      "title": "Verifying Officer Requirements",
+      "description": "When using a verifying officer approach, requirements for identification, verification, authorization, and record-keeping.",
+      "variant": "subprocess",
+      "subprocess-label": "Verifying Officer"
     }
   ],
   "rules": [
     {
       "target": "4_11",
       "scope": "4_1_8",
+      "effect": "SHOW",
+      "schema": {
+        "const": "Yes"
+      }
+    },
+    {
+      "target": "verifying-officer-option",
+      "scope": "4_11_9",
+      "effect": "SHOW",
+      "schema": {
+        "const": "Yes"
+      }
+    },
+    {
+      "target": "verifying-officer-procedure",
+      "scope": "4_11_9",
       "effect": "SHOW",
       "schema": {
         "const": "Yes"

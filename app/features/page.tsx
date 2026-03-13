@@ -53,7 +53,7 @@ export default function FeaturesPage() {
         </div>
         <div className="mt-16 text-center">
           <Link
-            href="/signup"
+            href="/sign-up"
             className="rounded-lg bg-indigo-600 px-6 py-3 text-sm font-semibold text-white hover:bg-indigo-700"
           >
             Get Started

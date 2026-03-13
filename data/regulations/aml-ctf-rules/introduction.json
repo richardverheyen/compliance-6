@@ -7,6 +7,16 @@
       "description": "This introduction determines which parts of Chapter 4 apply to your business. Your answers here will scope the detailed compliance forms you need to complete."
     },
     {
+      "id": "designated-services",
+      "title": "Designated Services",
+      "description": "Some designated services have additional compliance obligations beyond standard CDD. Select any that apply to your business."
+    },
+    {
+      "id": "tranche-2-services",
+      "title": "Tranche 2 Designated Services",
+      "description": "New designated services commencing 31 March 2026 under the AML/CTF Amendment Act 2024. Select any that apply to your business to prepare your compliance program."
+    },
+    {
       "id": "4_1_4",
       "title": "Customer Categories",
       "description": "Select the types of customers your business provides designated services to. This determines which identification, verification and record-keeping rules apply to your program."
@@ -19,6 +29,31 @@
   ],
   "rules": [],
   "buttonGroups": {
+    "designated-services": {
+      "label": "Does your business provide any of these designated services?",
+      "multi": true,
+      "persist": true,
+      "options": [
+        { "key": "remittance",       "label": "Remittance Services",           "controlId": "remittance" },
+        { "key": "dce",              "label": "Digital Currency Exchange",     "controlId": "dce" },
+        { "key": "bullion",          "label": "Bullion Dealing",               "controlId": "bullion" },
+        { "key": "casinos",          "label": "Casinos",                       "controlId": "10_1" },
+        { "key": "bookmakers",       "label": "On-course Bookmakers & TABs",   "controlId": "10_2" },
+        { "key": "gaming_machines",  "label": "Gaming Machines",               "controlId": "10_3" }
+      ]
+    },
+    "tranche-2-services": {
+      "label": "Does your business provide any of these Tranche 2 services (commencing 31 March 2026)?",
+      "multi": true,
+      "persist": true,
+      "options": [
+        { "key": "real_estate",          "label": "Real Estate Services",                "controlId": "real_estate" },
+        { "key": "legal_services",       "label": "Legal & Conveyancing Services",       "controlId": "legal_services" },
+        { "key": "accounting",           "label": "Accounting Services",                 "controlId": "accounting" },
+        { "key": "trust_company_services","label": "Trust & Company Service Providers",  "controlId": "trust_company_services" },
+        { "key": "precious_metals_stones","label": "Dealers in Precious Metals & Stones","controlId": "precious_metals_stones" }
+      ]
+    },
     "4_1_4": {
       "label": "What types of customers does your business serve?",
       "multi": true,
@@ -62,10 +97,21 @@
     "4_1_4_7": { "sections": ["4_8"], "processes": ["cdd-government"] },
     "4_1_5_1": { "sections": ["4_12"], "processes": ["beneficial-ownership"] },
     "4_1_5_2": { "sections": ["4_13"], "processes": ["pep-screening"] },
-    "4_1_8":   { "sections": ["4_11"], "processes": ["agent-management"] }
+    "4_1_8":   { "sections": ["4_11"], "processes": ["agent-management"] },
+    "10_1":              { "sections": ["10_1"], "processes": ["casinos"] },
+    "10_2":              { "sections": ["10_2"], "processes": ["bookmakers"] },
+    "10_3":              { "sections": ["10_3"], "processes": ["gaming-machines"] },
+    "remittance":        { "sections": ["5_1", "5_2", "CHAPTER_54", "CHAPTER_55", "CHAPTER_56", "CHAPTER_57", "CHAPTER_58", "CHAPTER_59", "CHAPTER_60", "CHAPTER_61"], "processes": ["remittance"] },
+    "dce":               { "sections": ["CHAPTER_76"], "processes": ["digital-currency-exchange"] },
+    "bullion":           { "sections": [], "processes": ["bullion"] },
+    "real_estate":            { "sections": [], "processes": ["real-estate"] },
+    "legal_services":         { "sections": [], "processes": ["legal-services"] },
+    "accounting":             { "sections": [], "processes": ["accounting"] },
+    "trust_company_services": { "sections": [], "processes": ["trust-company-services"] },
+    "precious_metals_stones":  { "sections": [], "processes": ["precious-metals-stones"] }
   },
   "alwaysActive": {
-    "sections": ["4_1", "4_9", "4_10", "4_14", "4_15"],
-    "processes": ["risk-assessment", "verification-documents", "verification-electronic", "alternative-id"]
+    "sections": ["4_1", "4_9", "4_10", "4_14", "4_15", "CHAPTER_3", "3_1", "CHAPTER_6", "6_1", "6_2", "6_3", "CHAPTER_7", "7_1", "7_2", "7_3", "8_1", "8_2", "8_3", "8_4", "8_5", "8_6", "8_7", "8_8", "8_9", "9_1", "9_2", "9_3", "9_4", "9_5", "9_6", "9_7", "9_8", "9_9"],
+    "processes": ["risk-assessment", "verification-documents", "verification-electronic", "alternative-id", "third-party-reliance", "aml-ctf-program", "correspondent-banking"]
   }
 }

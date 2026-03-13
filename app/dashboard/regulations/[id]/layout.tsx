@@ -2,7 +2,7 @@
 
 import { useEffect, useState, useCallback, useRef } from "react";
 import { useParams, usePathname } from "next/navigation";
-import { PdfPanelContext } from "./_context";
+import { PdfPanelContext, type PdfDocument } from "./_context";
 
 // PDF.js viewer hosted in public/pdfjs/web/viewer.html
 // pagemode=none suppresses the sidebar on load
@@ -14,17 +14,42 @@ export default function RegulationLayout({ children }: { children: React.ReactNo
   const params = useParams();
   const id = params.id as string;
   const pathname = usePathname();
-  const isProcessView = pathname.includes("/processes/");
 
   const [pdfUrl, setPdfUrl] = useState<string | null>(null);
+  const [documents, setDocuments] = useState<PdfDocument[]>([]);
+  const [activeDocument, setActiveDocumentState] = useState<PdfDocument | null>(null);
   const [pdfVisible, setPdfVisible] = useState(false);
   const pdfVisibleRef = useRef(false);
-  const iframeRef = useRef<HTMLIFrameElement>(null);
+  const activeDocumentRef = useRef<PdfDocument | null>(null);
+  // One iframe element per document URL — never unmounted, so the browser
+  // preserves each PDF viewer's scroll position across tab switches.
+  const iframeRefs = useRef<Record<string, HTMLIFrameElement | null>>({});
+  // Proxy so all existing iframeRef.current call sites work unchanged.
+  // Always resolves to the currently active document's iframe element.
+  const iframeRef = {
+    get current(): HTMLIFrameElement | null {
+      const url = activeDocumentRef.current?.url;
+      return url ? (iframeRefs.current[url] ?? null) : null;
+    },
+  } as React.RefObject<HTMLIFrameElement>;
 
   useEffect(() => {
     fetch(`/api/compliance/regulations/${id}/manifest`)
       .then((r) => (r.ok ? r.json() : null))
-      .then((mf) => { if (mf?.pdfUrl) setPdfUrl(mf.pdfUrl); });
+      .then((mf) => {
+        if (!mf) return;
+        if (mf.documents?.length) {
+          setDocuments(mf.documents);
+          setActiveDocumentState(mf.documents[0]);
+          activeDocumentRef.current = mf.documents[0];
+        } else if (mf.pdfUrl) {
+          const primary = { label: "Source Document", url: mf.pdfUrl };
+          setDocuments([primary]);
+          setActiveDocumentState(primary);
+          activeDocumentRef.current = primary;
+        }
+        if (mf.pdfUrl) setPdfUrl(mf.pdfUrl);
+      });
   }, [id]);
 
   // Reset to hidden on every route change within this layout
@@ -34,13 +59,25 @@ export default function RegulationLayout({ children }: { children: React.ReactNo
 
   const togglePdf = useCallback(() => setPdfVisible((v) => !v), []);
 
-  // Keep ref in sync so navigateToPdfDestination can read the current value
-  // without being a stale closure.
+  // Keep refs in sync so callbacks don't capture stale values.
   useEffect(() => { pdfVisibleRef.current = pdfVisible; }, [pdfVisible]);
+
+  const setActiveDocument = useCallback((doc: PdfDocument) => {
+    setActiveDocumentState(doc);
+    activeDocumentRef.current = doc;
+  }, []);
 
   const navigateToPdfDestination = useCallback((ruleCode: string) => {
     const wasVisible = pdfVisibleRef.current;
     setPdfVisible(true);
+
+    // Switch to primary document (named destinations only exist there)
+    const primaryDoc = documents[0] ?? null;
+    const isSwitchingDoc = primaryDoc !== null && activeDocumentRef.current?.url !== primaryDoc.url;
+    if (isSwitchingDoc) {
+      setActiveDocumentState(primaryDoc);
+      activeDocumentRef.current = primaryDoc;
+    }
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const getApp = () => (iframeRef.current?.contentWindow as any)?.PDFViewerApplication;
@@ -66,7 +103,13 @@ export default function RegulationLayout({ children }: { children: React.ReactNo
       const pdfPageView = app.pdfViewer._pages[pageIndex];
       if (!pdfPageView) return false;
 
+      // Ensure pages have been laid out before computing scroll positions.
+      // app.initialized can become true before PDF.js finishes sizing all page
+      // divs; scrollHeight > clientHeight confirms the container is scrollable.
       const container: HTMLElement = app.pdfViewer.container;
+      if (!pdfPageView.div || pdfPageView.div.getBoundingClientRect().height === 0) return false;
+      if (app.pdfDocument.numPages > 1 && container.scrollHeight <= container.clientHeight) return false;
+
       const pageDiv = pdfPageView.div as HTMLDivElement;
 
       // 2. Compute the final centred scroll target in one step — no intermediate
@@ -215,17 +258,21 @@ export default function RegulationLayout({ children }: { children: React.ReactNo
       });
     };
 
-    // If the panel was closed, wait for the open animation (500ms) to finish
-    // before computing getBoundingClientRect-based scroll position.
+    // Only delay for the panel open animation — doc switches no longer require
+    // a remount wait since each iframe stays mounted with display:none.
     if (!wasVisible) {
       setTimeout(attemptNavigate, 520);
     } else {
       attemptNavigate();
     }
-  }, []);
+  // documents[0] is stable after mount; including documents causes unnecessary re-creation
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [documents]);
+
+  const hasDocuments = documents.length > 0;
 
   return (
-    <PdfPanelContext.Provider value={{ pdfVisible, togglePdf, pdfUrl, navigateToPdfDestination }}>
+    <PdfPanelContext.Provider value={{ pdfVisible, togglePdf, pdfUrl, documents, activeDocument, setActiveDocument, navigateToPdfDestination }}>
       {/*
         Two-column flex row. Content scrolls with the page normally.
         PDF panel is sticky to the viewport top so it always fills the screen
@@ -240,9 +287,9 @@ export default function RegulationLayout({ children }: { children: React.ReactNo
         </div>
 
         {/* PDF panel — sticky viewport-height column, animated width */}
-        {pdfUrl && (
+        {hasDocuments && (
           <div
-            className="hidden lg:block shrink-0 sticky top-0 overflow-hidden"
+            className="hidden lg:flex flex-col shrink-0 sticky top-0 overflow-hidden"
             style={{
               height: "100vh",
               width: pdfVisible ? "38vw" : "0",
@@ -250,12 +297,47 @@ export default function RegulationLayout({ children }: { children: React.ReactNo
               transition: "width 500ms ease-in-out, opacity 300ms ease-in-out",
             }}
           >
-            <iframe
-              ref={iframeRef}
-              src={viewerSrc(pdfUrl)}
-              title="Regulation Source Document"
-              className="h-full w-full border-l border-gray-200 bg-gray-50"
-            />
+            {/* Document switcher tabs — only shown when there are multiple docs */}
+            {documents.length > 1 && (
+              <div className="flex shrink-0 border-b border-gray-200 bg-white overflow-x-auto">
+                {documents.map((doc) => {
+                  const isActive = activeDocument?.url === doc.url;
+                  return (
+                    <button
+                      key={doc.url}
+                      type="button"
+                      onClick={() => setActiveDocument(doc)}
+                      className={[
+                        "px-3 py-2 text-xs font-medium whitespace-nowrap border-b-2 transition-colors",
+                        isActive
+                          ? "border-indigo-600 text-indigo-600"
+                          : "border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300",
+                      ].join(" ")}
+                    >
+                      {doc.label}
+                    </button>
+                  );
+                })}
+              </div>
+            )}
+
+            {/*
+              One iframe per document, all kept mounted. Inactive ones are hidden
+              with display:none so the browser preserves their internal scroll
+              state — no save/restore needed when switching tabs.
+            */}
+            {documents.map((doc) => (
+              <iframe
+                key={doc.url}
+                ref={(el) => { iframeRefs.current[doc.url] = el; }}
+                src={viewerSrc(doc.url)}
+                title={doc.label}
+                className={[
+                  "w-full border-l border-gray-200 bg-gray-50",
+                  doc.url === activeDocument?.url ? "flex flex-1" : "hidden",
+                ].join(" ")}
+              />
+            ))}
           </div>
         )}
       </div>

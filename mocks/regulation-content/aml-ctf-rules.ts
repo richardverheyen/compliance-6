@@ -74,7 +74,12 @@ export const amlCTFContent: RegulationContent = {
     "alternative-id":          alternativeId as unknown as ProcessForm,
   },
   manifest: {
-    pdfUrl: "/chapter4_linked.pdf",
+    pdfUrl: "/aml-ctf-rules-linked.pdf",
+    documents: [
+      { label: "AML/CTF Rules", url: "/aml-ctf-rules-linked.pdf" },
+      { label: "AML/CTF Act 2006", url: "/aml-ctf-act.pdf" },
+      { label: "Amendments 2025", url: "/aml-ctf-amendments.pdf" },
+    ],
     mermaidDiagram: MERMAID_DIAGRAM,
     hasIntroductionForm: true,
     processList: [

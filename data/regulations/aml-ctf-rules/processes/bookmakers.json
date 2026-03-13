@@ -1,0 +1,214 @@
+{
+  "controls": [
+    {
+      "id": "process-exists",
+      "group": "process-existence",
+      "label": "Does your business have an On-course Bookmakers & TABs process?",
+      "detail-required": false,
+      "correct-option": "Yes",
+      "source-rules": [],
+      "mapping-confidence": 1.0,
+      "remediation": "Your organisation does not have an On-course Bookmakers & TABs process in place. You must establish a documented On-course Bookmakers & TABs process to meet your AML/CTF obligations. Review the controls below and implement the required procedures before completing this assessment."
+    },
+    {
+      "id": "10_2_3",
+      "group": "customer-identification-exemptions",
+      "label": "Do you apply customer identification exemptions for on-course bookmaker designated services described in table 3 items 1 or 2 (cash wagering or similar)?",
+      "detail-required": true,
+      "detail-label": "Explain which designated service types you exempt and your process for determining exemption eligibility.",
+      "correct-option": "Yes",
+      "source-rules": [
+        "10.2.3"
+      ],
+      "mapping-confidence": 0.9,
+      "remediation": "Your On-course Bookmakers & TABs Customer Identification Procedure does not properly apply the exemptions available for low-risk designated services. Update your process to document that you are not required to collect and verify customer identification for services described in items 1 or 2 of table 3 in subsection 6(4) of the Act, unless enhanced due diligence or risk assessment requires otherwise, as stated in rule 10.2.3.",
+      "process-id": "PROC-AML-002"
+    },
+    {
+      "id": "10_2_4",
+      "group": "transaction-amount-exemptions",
+      "label": "Do you apply customer identification exemptions for designated services described in table 3 items 4, 7, or 8 when the transaction amount is under $10,000?",
+      "detail-required": true,
+      "detail-label": "Explain how you calculate transaction amounts and which designated service types qualify for this exemption.",
+      "correct-option": "Yes",
+      "source-rules": [
+        "10.2.4(1)",
+        "10.2.4(2)"
+      ],
+      "mapping-confidence": 0.9,
+      "remediation": "Your On-course Bookmakers & TABs Customer Identification Procedure does not properly apply the $10,000 transaction threshold exemption. Update your process to document that you are not required to collect and verify customer identification for services described in items 4, 7, or 8 of table 3 when the amount is less than $10,000, unless enhanced due diligence or risk assessment requires otherwise, as required by rules 10.2.4(1) and 10.2.4(2).",
+      "process-id": "PROC-AML-002"
+    },
+    {
+      "id": "10_2_5",
+      "group": "enhanced-due-diligence-override",
+      "label": "Do you have a process to determine whether exemptions should not apply if enhanced due diligence or customer identification program requirements exist?",
+      "detail-required": true,
+      "detail-label": "Describe your process for determining when exemptions do not apply, including how you identify customers requiring KYC despite exemption thresholds.",
+      "correct-option": "Yes",
+      "source-rules": [
+        "10.2.5"
+      ],
+      "mapping-confidence": 0.95,
+      "remediation": "Your On-course Bookmakers & TABs Customer Identification Procedure does not address the override condition for exemptions. Update your process to document that exemptions do not apply if your enhanced customer due diligence program or customer identification program determines that you must obtain and verify KYC information about a customer, as required by rule 10.2.5.",
+      "process-id": "PROC-AML-003"
+    },
+    {
+      "id": "10_2_6_1",
+      "group": "identity-verification-timing",
+      "label": "Do you verify customer identity within 14 days of a circumstance arising, or before commencing another designated service requiring Part 2 identity verification?",
+      "detail-required": true,
+      "detail-label": "Explain the specific timing requirements in your identity verification process and how you track the 14-day deadline.",
+      "correct-option": "Yes",
+      "source-rules": [
+        "10.2.6(1)(a)",
+        "10.2.6(1)(b)"
+      ],
+      "mapping-confidence": 0.95,
+      "remediation": "Your On-course Bookmakers & TABs identity verification process does not meet the required timing standards. Update your process to ensure the specified action (identity verification) is taken either within 14 days starting after a triggering circumstance comes into existence, or before you commence another designated service to the customer that requires Part 2 identification, as required by rules 10.2.6(1)(a) and 10.2.6(1)(b).",
+      "process-id": "PROC-AML-002b"
+    },
+    {
+      "id": "10_2_6_2",
+      "group": "suspicious-matter-reporting-timing",
+      "label": "Do you report suspicious matters within 14 days of the reporting obligation arising, or before commencing another designated service requiring Part 2 reporting?",
+      "detail-required": true,
+      "detail-label": "Explain your process for tracking suspicious matter reporting obligations and meeting the 14-day timeline.",
+      "correct-option": "Yes",
+      "source-rules": [
+        "10.2.6(2)(a)",
+        "10.2.6(2)(b)"
+      ],
+      "mapping-confidence": 0.95,
+      "remediation": "Your On-course Bookmakers & TABs suspicious matter reporting process does not meet the required timing standards. Update your process to ensure that suspicious matter reports are submitted either within 14 days starting after the reporting obligation arose, or before commencing another designated service to the customer that requires Part 2 reporting, as required by rules 10.2.6(2)(a) and 10.2.6(2)(b).",
+      "process-id": "PROC-AML-001"
+    },
+    {
+      "id": "10_2_6_3",
+      "group": "suspect-transaction-reporting-timing",
+      "label": "Do you report suspect transactions within 14 days of the reporting obligation arising, or before commencing another designated service requiring Part 2 reporting?",
+      "detail-required": true,
+      "detail-label": "Explain your process for tracking suspect transaction reporting obligations and meeting the 14-day timeline.",
+      "correct-option": "Yes",
+      "source-rules": [
+        "10.2.6(3)(a)",
+        "10.2.6(3)(b)"
+      ],
+      "mapping-confidence": 0.95,
+      "remediation": "Your On-course Bookmakers & TABs suspect transaction reporting process does not meet the required timing standards. Update your process to ensure that suspect transaction reports are submitted either within 14 days starting after the reporting obligation arose, or before commencing another designated service to the customer that requires Part 2 reporting, as required by rules 10.2.6(3)(a) and 10.2.6(3)(b).",
+      "process-id": "PROC-AML-001"
+    },
+    {
+      "id": "10_2_6_4",
+      "group": "reporting-exclusions",
+      "label": "Do you acknowledge that paragraphs 6.2.3 and 6.3.3 do not apply to your on-course bookmaker or TAB designated services?",
+      "detail-required": false,
+      "correct-option": "Yes",
+      "source-rules": [
+        "10.2.6(4)"
+      ],
+      "mapping-confidence": 0.85,
+      "remediation": "Your On-course Bookmakers & TABs compliance process does not correctly reflect the reporting exemptions. Confirm that paragraphs 6.2.3 and 6.3.3 do not apply to your designated services, as stated in rule 10.2.6(4).",
+      "process-id": "PROC-AML-001"
+    },
+    {
+      "id": "10_2_7",
+      "group": "record-keeping-exemptions",
+      "label": "Do you apply record-keeping exemptions for designated services described in table 3 items 1, 2, 6, or items 7\u20138 under $10,000?",
+      "detail-required": true,
+      "detail-label": "Explain which designated service types you exempt from record-keeping requirements and how you determine exemption eligibility.",
+      "correct-option": "Yes",
+      "source-rules": [
+        "10.2.7(1)",
+        "10.2.7(2)"
+      ],
+      "mapping-confidence": 0.9,
+      "remediation": "Your On-course Bookmakers & TABs Record Keeping process does not properly apply the exemptions available. Update your process to document that sections 106 and 107 of the Act do not apply to designated services described in items 1, 2, or 6 of table 3, or items 7\u20138 of table 3 when the transaction amount is less than $10,000, as required by rules 10.2.7(1) and 10.2.7(2).",
+      "process-id": "PROC-AML-004"
+    }
+  ],
+  "groups": [
+    {
+      "id": "process-existence",
+      "title": "Process Confirmation",
+      "description": "Before answering the detailed compliance questions, confirm whether your organisation operates this business process.",
+      "variant": "main"
+    },
+    {
+      "id": "customer-identification-exemptions",
+      "title": "Customer Identification Exemptions \u2013 Low-Risk Services",
+      "description": "Designated services for on-course bookmakers and TABs that are exempt from customer identification requirements under Division 4 of Part 2 (items 1 or 2 of table 3), subject to enhanced due diligence overrides.",
+      "variant": "main"
+    },
+    {
+      "id": "transaction-amount-exemptions",
+      "title": "Customer Identification Exemptions \u2013 Transaction Amount Threshold",
+      "description": "Exemptions available for designated services (items 4, 7, or 8 of table 3) when transaction amounts are under $10,000, subject to enhanced due diligence overrides.",
+      "variant": "main"
+    },
+    {
+      "id": "enhanced-due-diligence-override",
+      "title": "Enhanced Due Diligence Override Determination",
+      "description": "Process to determine when exemptions should not apply because your enhanced due diligence program or customer identification program requires KYC verification.",
+      "variant": "main"
+    },
+    {
+      "id": "identity-verification-timing",
+      "title": "Identity Verification Timing Requirements",
+      "description": "Modified timeframes for completing identity verification under Chapter 6 \u2013 either within 14 days of a circumstance arising or before commencing another Part 2 designated service.",
+      "variant": "main"
+    },
+    {
+      "id": "suspicious-matter-reporting-timing",
+      "title": "Suspicious Matter Reporting Timing",
+      "description": "Modified timeframes for submitting suspicious matter reports \u2013 either within 14 days of the obligation arising or before commencing another Part 2 designated service.",
+      "variant": "main"
+    },
+    {
+      "id": "suspect-transaction-reporting-timing",
+      "title": "Suspect Transaction Reporting Timing",
+      "description": "Modified timeframes for submitting suspect transaction reports \u2013 either within 14 days of the obligation arising or before commencing another Part 2 designated service.",
+      "variant": "main"
+    },
+    {
+      "id": "reporting-exclusions",
+      "title": "Reporting Exclusions",
+      "description": "Confirmation that certain reporting paragraphs under Chapter 6 do not apply to on-course bookmaker and TAB designated services.",
+      "variant": "main"
+    },
+    {
+      "id": "record-keeping-exemptions",
+      "title": "Record-Keeping Exemptions",
+      "description": "Exemptions from sections 106 and 107 of the Act for low-risk and below-threshold designated services (items 1, 2, 6, and items 7\u20138 under $10,000).",
+      "variant": "main"
+    }
+  ],
+  "rules": [
+    {
+      "target": "10_2",
+      "scope": "10_2",
+      "effect": "SHOW",
+      "schema": {
+        "const": "Yes"
+      }
+    },
+    {
+      "target": "enhanced-due-diligence-override",
+      "scope": "10_2_3",
+      "effect": "SHOW",
+      "schema": {
+        "const": "Yes"
+      }
+    },
+    {
+      "target": "enhanced-due-diligence-override",
+      "scope": "10_2_4",
+      "effect": "SHOW",
+      "schema": {
+        "const": "Yes"
+      }
+    }
+  ],
+  "sub_scoping": [],
+  "form_links": []
+}

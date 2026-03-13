@@ -12,145 +12,69 @@
     },
     {
       "id": "4_10_1",
-      "group": "electronic-verification-scope",
-      "label": "Does your AML/CTF program provide for verification of KYC information using reliable and independent electronic data?",
-      "detail-required": false,
+      "group": "electronic-verification-framework",
+      "label": "Does your AML/CTF program provide for the verification of KYC information collected about customers by means of reliable and independent electronic data?",
+      "detail-required": true,
+      "detail-label": "Describe the electronic verification methods and data sources used in your program",
       "correct-option": "Yes",
       "source-rules": [
         "4.10.1"
       ],
-      "mapping-confidence": 0.9,
-      "remediation": "Your Verification Standards \u2013 Electronic process must establish whether reliable and independent electronic data will be used for KYC verification. If you do not have documented procedures for electronic data verification, you cannot comply with the requirements in rule 4.10.1 which mandates systems and controls for this verification method."
+      "mapping-confidence": 0.95,
+      "remediation": "Your Verification Standards \u2014 Electronic process must establish a framework for using reliable and independent electronic data to verify KYC information. Update your AML/CTF program to define which electronic verification methods and data sources you will employ, as required under rule 4.10.1."
     },
     {
-      "id": "4_10_2_1_a",
+      "id": "4_10_2_1",
       "group": "data-reliability-assessment",
-      "label": "Have you established criteria to assess the accuracy of the electronic data sources you use for verification?",
+      "label": "Have you implemented risk-based systems and controls to assess whether electronic data used for verification is reliable and independent?",
       "detail-required": true,
-      "detail-label": "Describe your accuracy assessment criteria",
+      "detail-label": "Explain your risk-based assessment methodology for electronic data reliability",
       "correct-option": "Yes",
       "source-rules": [
-        "4.10.2(1)(a)"
+        "4.10.2",
+        "4.10.2(1)"
       ],
       "mapping-confidence": 0.95,
-      "remediation": "Your electronic data verification process must include risk-based systems and controls to determine whether electronic data is reliable and independent. Your assessment must evaluate data accuracy as required under rule 4.10.2(1)(a)\u2014specify the accuracy standards or error rates you accept for electronic verification sources."
-    },
-    {
-      "id": "4_10_2_1_b",
-      "group": "data-reliability-assessment",
-      "label": "Have you established criteria to assess the security of the electronic data sources you use?",
-      "detail-required": true,
-      "detail-label": "Describe your data security assessment criteria",
-      "correct-option": "Yes",
-      "source-rules": [
-        "4.10.2(1)(b)"
-      ],
-      "mapping-confidence": 0.95,
-      "remediation": "Your electronic data verification process must include risk-based systems and controls to determine whether electronic data is reliable and independent. Your assessment must evaluate data security as required under rule 4.10.2(1)(b)\u2014document the security standards you require for electronic verification sources (e.g., encryption, access controls, audit trails)."
-    },
-    {
-      "id": "4_10_2_1_c",
-      "group": "data-reliability-assessment",
-      "label": "Have you established criteria to assess how regularly the electronic data sources you use are kept up-to-date?",
-      "detail-required": true,
-      "detail-label": "Describe your data currency assessment criteria",
-      "correct-option": "Yes",
-      "source-rules": [
-        "4.10.2(1)(c)"
-      ],
-      "mapping-confidence": 0.95,
-      "remediation": "Your electronic data verification process must include risk-based systems and controls to determine whether electronic data is reliable and independent. Your assessment must evaluate how data is kept up-to-date as required under rule 4.10.2(1)(c)\u2014specify acceptable update frequencies or refresh intervals for the electronic sources you rely on."
-    },
-    {
-      "id": "4_10_2_1_d",
-      "group": "data-reliability-assessment",
-      "label": "Have you established criteria to assess the comprehensiveness of the electronic data sources you use (such as the range of persons included and the collection period)?",
-      "detail-required": true,
-      "detail-label": "Describe your data comprehensiveness assessment criteria",
-      "correct-option": "Yes",
-      "source-rules": [
-        "4.10.2(1)(d)"
-      ],
-      "mapping-confidence": 0.95,
-      "remediation": "Your electronic data verification process must include risk-based systems and controls to determine whether electronic data is reliable and independent. Your assessment must evaluate data comprehensiveness as required under rule 4.10.2(1)(d)\u2014document how you evaluate the range of persons covered and the historical period of data in your electronic sources."
-    },
-    {
-      "id": "4_10_2_1_e",
-      "group": "data-reliability-assessment",
-      "label": "Have you established criteria to verify that the electronic data has been verified from a reliable and independent source?",
-      "detail-required": true,
-      "detail-label": "Describe your source verification criteria",
-      "correct-option": "Yes",
-      "source-rules": [
-        "4.10.2(1)(e)"
-      ],
-      "mapping-confidence": 0.95,
-      "remediation": "Your electronic data verification process must include risk-based systems and controls to determine whether electronic data is reliable and independent. Your assessment must verify that the data itself comes from a reliable and independent source as required under rule 4.10.2(1)(e)\u2014document how you confirm the provenance and independence of your electronic data sources."
-    },
-    {
-      "id": "4_10_2_1_f",
-      "group": "data-reliability-assessment",
-      "label": "Have you established criteria to assess whether the electronic data is maintained by a government body or pursuant to legislation?",
-      "detail-required": true,
-      "detail-label": "Describe your government/legislative data assessment criteria",
-      "correct-option": "Yes",
-      "source-rules": [
-        "4.10.2(1)(f)"
-      ],
-      "mapping-confidence": 0.95,
-      "remediation": "Your electronic data verification process must include risk-based systems and controls to determine whether electronic data is reliable and independent. Your assessment must consider whether data is maintained by a government body or pursuant to legislation as required under rule 4.10.2(1)(f)\u2014document how you identify and prioritise such authoritative sources."
-    },
-    {
-      "id": "4_10_2_1_g",
-      "group": "data-reliability-assessment",
-      "label": "Have you established criteria to assess whether the electronic data can be additionally authenticated?",
-      "detail-required": true,
-      "detail-label": "Describe your data authentication criteria",
-      "correct-option": "Yes",
-      "source-rules": [
-        "4.10.2(1)(g)"
-      ],
-      "mapping-confidence": 0.95,
-      "remediation": "Your electronic data verification process must include risk-based systems and controls to determine whether electronic data is reliable and independent. Your assessment must evaluate the potential for additional authentication of the data as required under rule 4.10.2(1)(g)\u2014specify the authentication methods (e.g., multi-source cross-checking, third-party validation) you employ."
+      "remediation": "Your Verification Standards \u2014 Electronic process must include risk-based systems and controls to determine whether electronic data is reliable and independent. Implement a documented assessment methodology that evaluates the factors specified in rule 4.10.2(1), including data accuracy, security, currency, comprehensiveness, source verification, government/legislative basis, and authentication capability."
     },
     {
       "id": "4_10_2_2",
-      "group": "electronic-data-sources",
-      "label": "Have you pre-defined which reliable and independent electronic data sources your organisation will use for verification purposes?",
+      "group": "electronic-data-selection",
+      "label": "Have you pre-defined which reliable and independent electronic data sources your reporting entity will use for verification of KYC information?",
       "detail-required": true,
-      "detail-label": "List or describe the electronic data sources you will use",
+      "detail-label": "List the approved electronic data sources and explain why each is considered reliable and independent",
       "correct-option": "Yes",
       "source-rules": [
         "4.10.2(2)"
       ],
       "mapping-confidence": 0.95,
-      "remediation": "Your electronic data verification process must establish systems and controls to determine what reliable and independent electronic data will be used as required under rule 4.10.2(2). You must pre-define and document the specific electronic data sources your reporting entity will rely on for KYC verification."
+      "remediation": "Your Verification Standards \u2014 Electronic process must specify which reliable and independent electronic data sources your reporting entity will use for verification. Document the approved electronic data sources and provide justification for each selection based on your risk-based assessment, as required under rule 4.10.2(2)."
     },
     {
       "id": "4_10_2_3",
-      "group": "tolerance-and-error-thresholds",
-      "label": "Have you established pre-defined tolerance levels for matches and errors when using electronic data for verification?",
+      "group": "match-tolerance-standards",
+      "label": "Have you established pre-defined tolerance levels for matches and errors when verifying KYC information against electronic data?",
       "detail-required": true,
-      "detail-label": "Describe your pre-defined tolerance levels for matches and errors",
+      "detail-label": "Describe your pre-defined tolerance levels for matches and errors, and explain how these levels reflect your risk-based approach",
       "correct-option": "Yes",
       "source-rules": [
         "4.10.2(3)"
       ],
       "mapping-confidence": 0.95,
-      "remediation": "Your electronic data verification process must include risk-based systems and controls to determine the reporting entity's pre-defined tolerance levels for matches and errors as required under rule 4.10.2(3). Document the specific thresholds (e.g., % match required, acceptable error rates) that will trigger acceptance or rejection of electronic verification results."
+      "remediation": "Your Verification Standards \u2014 Electronic process must include pre-defined tolerance levels for matches and errors to guide verification decisions. Document your tolerance thresholds (e.g. exact match required, partial match acceptable) and explain how they align with your risk assessment, as required under rule 4.10.2(3)."
     },
     {
       "id": "4_10_2_4",
-      "group": "independent-confirmation",
-      "label": "Have you established procedures to determine when, and how, to confirm KYC information by independently initiating contact with the person the customer claims to be?",
+      "group": "independent-contact-confirmation",
+      "label": "Does your process include provisions to confirm KYC information by independently initiating contact with the person the customer claims to be?",
       "detail-required": true,
-      "detail-label": "Describe your independent contact confirmation procedures",
+      "detail-label": "Describe the circumstances under which you initiate independent contact and how you document this confirmation",
       "correct-option": "Yes",
       "source-rules": [
         "4.10.2(4)"
       ],
-      "mapping-confidence": 0.95,
-      "remediation": "Your electronic data verification process must establish risk-based systems and controls as required under rule 4.10.2(4) to decide whether and how to independently confirm KYC information by contacting the person the customer claims to be. Document your decision criteria (e.g., risk triggers, customer types) and the methods you will use for independent confirmation."
+      "mapping-confidence": 0.92,
+      "remediation": "Your Verification Standards \u2014 Electronic process must specify whether and how you will confirm KYC information by independently initiating contact with the person the customer claims to be. Define the risk-based triggers for independent contact, the contact methods used, and your documentation requirements, as required under rule 4.10.2(4)."
     }
   ],
   "groups": [
@@ -161,37 +85,70 @@
       "variant": "main"
     },
     {
-      "id": "electronic-verification-scope",
-      "title": "Electronic Verification Scope",
-      "description": "Determination of whether your AML/CTF program will use reliable and independent electronic data for KYC verification.",
+      "id": "electronic-verification-framework",
+      "title": "Electronic Verification Framework",
+      "description": "Establishes the overall framework for using reliable and independent electronic data to verify KYC information collected about customers.",
       "variant": "main"
     },
     {
       "id": "data-reliability-assessment",
-      "title": "Assessment of Electronic Data Reliability",
-      "description": "Risk-based systems and controls to determine whether electronic data is reliable and independent, evaluating accuracy, security, currency, comprehensiveness, source provenance, government/legislative origin, and additional authentication capabilities.",
+      "title": "Data Reliability Assessment",
+      "description": "Risk-based systems and controls to evaluate whether electronic data is reliable and independent, considering accuracy, security, currency, comprehensiveness, source verification, government/legislative basis, and authentication capability.",
       "variant": "main"
     },
     {
-      "id": "electronic-data-sources",
-      "title": "Pre-Defined Electronic Data Sources",
-      "description": "Selection and documentation of the specific reliable and independent electronic data sources your organisation will use for verification.",
+      "id": "electronic-data-selection",
+      "title": "Electronic Data Selection",
+      "description": "Pre-definition of the reliable and independent electronic data sources that your reporting entity will use for verification purposes.",
       "variant": "main"
     },
     {
-      "id": "tolerance-and-error-thresholds",
-      "title": "Tolerance Levels and Error Thresholds",
-      "description": "Pre-defined tolerance levels for matches and acceptable errors when using electronic data verification.",
+      "id": "match-tolerance-standards",
+      "title": "Match and Error Tolerance Standards",
+      "description": "Pre-defined tolerance levels for matches and errors that guide verification decisions and reflect the reporting entity's risk-based approach.",
       "variant": "main"
     },
     {
-      "id": "independent-confirmation",
-      "title": "Independent Confirmation Procedures",
-      "description": "Risk-based procedures to determine when and how to independently confirm KYC information by directly contacting the person the customer claims to be.",
+      "id": "independent-contact-confirmation",
+      "title": "Independent Contact Confirmation",
+      "description": "Procedures for confirming KYC information by independently initiating contact with the person the customer claims to be, where appropriate.",
       "variant": "main"
     }
   ],
-  "rules": [],
+  "rules": [
+    {
+      "target": "data-reliability-assessment",
+      "scope": "4_10_1",
+      "effect": "SHOW",
+      "schema": {
+        "const": "Yes"
+      }
+    },
+    {
+      "target": "electronic-data-selection",
+      "scope": "4_10_2_1",
+      "effect": "SHOW",
+      "schema": {
+        "const": "Yes"
+      }
+    },
+    {
+      "target": "match-tolerance-standards",
+      "scope": "4_10_2_1",
+      "effect": "SHOW",
+      "schema": {
+        "const": "Yes"
+      }
+    },
+    {
+      "target": "independent-contact-confirmation",
+      "scope": "4_10_2_1",
+      "effect": "SHOW",
+      "schema": {
+        "const": "Yes"
+      }
+    }
+  ],
   "sub_scoping": [],
   "form_links": []
 }

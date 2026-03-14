@@ -2,10 +2,10 @@
 /**
  * upload-e2e-artifacts.mjs
  *
- * Uploads Playwright test artifacts (videos and PDFs) to a Supabase storage
- * bucket and updates the README.md with links to the uploaded files.
+ * Uploads Playwright test artifacts (videos and PDFs) to Supabase storage
+ * and updates README.md with per-journey links.
  *
- * Required environment variables (export before running):
+ * Required env vars:
  *   SUPABASE_ARTIFACTS_URL              — cloud project URL
  *   SUPABASE_ARTIFACTS_SERVICE_ROLE_KEY — service role key
  *
@@ -20,224 +20,205 @@ import path from 'path';
 import { createClient } from '@supabase/supabase-js';
 
 // ---------------------------------------------------------------------------
-// 1. Read and validate environment variables
+// 1. Env vars
 // ---------------------------------------------------------------------------
 
 const SUPABASE_URL = process.env.SUPABASE_ARTIFACTS_URL;
 const SERVICE_ROLE_KEY = process.env.SUPABASE_ARTIFACTS_SERVICE_ROLE_KEY;
 
 if (!SUPABASE_URL) {
-  console.error(
-    'Error: SUPABASE_ARTIFACTS_URL is not set.\n' +
-    'Export it before running this script:\n' +
-    '  export SUPABASE_ARTIFACTS_URL=https://xxxx.supabase.co'
-  );
+  console.error('Error: SUPABASE_ARTIFACTS_URL is not set.');
   process.exit(1);
 }
-
 if (!SERVICE_ROLE_KEY) {
-  console.error(
-    'Error: SUPABASE_ARTIFACTS_SERVICE_ROLE_KEY is not set.\n' +
-    'Export it before running this script:\n' +
-    '  export SUPABASE_ARTIFACTS_SERVICE_ROLE_KEY=eyJ...'
-  );
+  console.error('Error: SUPABASE_ARTIFACTS_SERVICE_ROLE_KEY is not set.');
   process.exit(1);
 }
 
 const BUCKET = 'e2e-artifacts';
-const MAX_FILE_SIZE = 50 * 1024 * 1024; // 50 MB
+const MAX_FILE_SIZE = 50 * 1024 * 1024;
 
-// ---------------------------------------------------------------------------
-// 2. Collect artifacts
-// ---------------------------------------------------------------------------
+function todayString() {
+  const d = new Date();
+  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+}
 
+const today = todayString();
 const projectRoot = process.cwd();
 const testResultsDir = path.join(projectRoot, 'test-results');
 const pdfsDir = path.join(testResultsDir, 'pdfs');
 
-/**
- * Returns today's date as YYYY-MM-DD using the local system clock.
- */
-function todayString() {
-  const d = new Date();
-  const yyyy = d.getFullYear();
-  const mm = String(d.getMonth() + 1).padStart(2, '0');
-  const dd = String(d.getDate()).padStart(2, '0');
-  return `${yyyy}-${mm}-${dd}`;
+// ---------------------------------------------------------------------------
+// 2. Map test-results folders to journey numbers
+//    e.g. "journey-02-aml-ctf-assessm-..." → "journey-02"
+// ---------------------------------------------------------------------------
+
+/** @param {string} dirName @returns {string|null} */
+function journeyKey(dirName) {
+  const m = dirName.match(/^(journey-\d+)/i);
+  return m ? m[1].toLowerCase() : null;
 }
 
-const today = todayString();
+const JOURNEY_LABELS = {
+  'journey-01': 'Journey 1 — Account Creation',
+  'journey-02': 'Journey 2 — AML/CTF Self-Assessment',
+};
 
-/** @type {{ localPath: string; filename: string; type: 'videos' | 'pdfs'; contentType: string }[]} */
-const artifacts = [];
+// ---------------------------------------------------------------------------
+// 3. Collect artifacts
+// ---------------------------------------------------------------------------
 
-// Find .webm files recursively in test-results/
+/** @type {Map<string, { video?: {localPath:string;filename:string}; pdfs: {localPath:string;filename:string}[] }>} */
+const byJourney = new Map();
+
+// Initialise all known journeys so they appear even if no artifacts found
+for (const key of Object.keys(JOURNEY_LABELS)) {
+  byJourney.set(key, { pdfs: [] });
+}
+
+// Videos — one per test-results subfolder
 if (fs.existsSync(testResultsDir)) {
-  const allFiles = fs.readdirSync(testResultsDir, { recursive: true });
-  for (const rel of allFiles) {
-    const relStr = typeof rel === 'string' ? rel : rel.toString();
-    if (!relStr.endsWith('.webm')) continue;
-    const fullPath = path.join(testResultsDir, relStr);
-    const stat = fs.statSync(fullPath);
-    if (stat.isFile()) {
-      if (stat.size > MAX_FILE_SIZE) {
-        console.warn(`Skipping ${relStr} — file exceeds 50 MB (${(stat.size / 1024 / 1024).toFixed(1)} MB)`);
-        continue;
-      }
-      artifacts.push({
-        localPath: fullPath,
-        filename: path.basename(fullPath),
-        type: 'videos',
-        contentType: 'video/webm',
-      });
+  for (const entry of fs.readdirSync(testResultsDir, { withFileTypes: true })) {
+    if (!entry.isDirectory()) continue;
+    const key = journeyKey(entry.name);
+    if (!key) continue;
+    const videoPath = path.join(testResultsDir, entry.name, 'video.webm');
+    if (!fs.existsSync(videoPath)) continue;
+    const stat = fs.statSync(videoPath);
+    if (stat.size > MAX_FILE_SIZE) {
+      console.warn(`Skipping ${entry.name}/video.webm — exceeds 50 MB`);
+      continue;
     }
+    const bucket = byJourney.get(key) ?? { pdfs: [] };
+    bucket.video = { localPath: videoPath, filename: `${key}-video.webm` };
+    byJourney.set(key, bucket);
   }
 }
 
-// Find .pdf files in test-results/pdfs/
+// PDFs — assign to journey-02 by default (audit report comes from that journey)
 if (fs.existsSync(pdfsDir)) {
-  const pdfFiles = fs.readdirSync(pdfsDir);
-  for (const filename of pdfFiles) {
+  for (const filename of fs.readdirSync(pdfsDir)) {
     if (!filename.endsWith('.pdf')) continue;
     const fullPath = path.join(pdfsDir, filename);
     const stat = fs.statSync(fullPath);
-    if (!stat.isFile()) continue;
-    if (stat.size > MAX_FILE_SIZE) {
-      console.warn(`Skipping ${filename} — file exceeds 50 MB (${(stat.size / 1024 / 1024).toFixed(1)} MB)`);
-      continue;
-    }
-    artifacts.push({
-      localPath: fullPath,
-      filename,
-      type: 'pdfs',
-      contentType: 'application/pdf',
-    });
+    if (!stat.isFile() || stat.size > MAX_FILE_SIZE) continue;
+    const bucket = byJourney.get('journey-02') ?? { pdfs: [] };
+    bucket.pdfs.push({ localPath: fullPath, filename });
+    byJourney.set('journey-02', bucket);
   }
 }
 
-if (artifacts.length === 0) {
-  console.log('No artifacts found in test-results/. Nothing to upload.');
-  console.log('Run `npm run test:e2e` first to generate test artifacts.');
+const totalArtifacts = [...byJourney.values()].reduce(
+  (n, b) => n + (b.video ? 1 : 0) + b.pdfs.length,
+  0,
+);
+
+if (totalArtifacts === 0) {
+  console.log('No artifacts found. Run `npm run test:e2e` first.');
   process.exit(0);
 }
 
-console.log(`Found ${artifacts.length} artifact(s) to upload.`);
+console.log(`Found ${totalArtifacts} artifact(s) to upload.\n`);
 
 // ---------------------------------------------------------------------------
-// 3. Upload to Supabase storage
+// 4. Upload
 // ---------------------------------------------------------------------------
 
 const supabase = createClient(SUPABASE_URL, SERVICE_ROLE_KEY);
 
-/** @type {{ filename: string; url: string }[]} */
-const uploadedVideos = [];
-/** @type {{ filename: string; url: string }[]} */
-const uploadedPdfs = [];
-
-for (const artifact of artifacts) {
-  const storagePath = `${artifact.type}/${today}/${artifact.filename}`;
-  const fileBuffer = fs.readFileSync(artifact.localPath);
-
-  process.stdout.write(`Uploading ${artifact.filename} → ${storagePath} ... `);
-
+/**
+ * @param {string} localPath
+ * @param {string} storagePath
+ * @param {string} contentType
+ * @returns {Promise<string|null>} public URL or null on failure
+ */
+async function upload(localPath, storagePath, contentType) {
+  process.stdout.write(`  ${path.basename(localPath)} → ${storagePath} ... `);
+  const fileBuffer = fs.readFileSync(localPath);
   const { error } = await supabase.storage
     .from(BUCKET)
-    .upload(storagePath, fileBuffer, {
-      upsert: true,
-      contentType: artifact.contentType,
-    });
-
+    .upload(storagePath, fileBuffer, { upsert: true, contentType });
   if (error) {
-    console.error(`FAILED\n  ${error.message}`);
-    continue;
+    console.log(`FAILED (${error.message})`);
+    return null;
   }
-
-  const publicUrl = `${SUPABASE_URL}/storage/v1/object/public/${BUCKET}/${storagePath}`;
-  console.log(`OK\n  ${publicUrl}`);
-
-  const entry = { filename: artifact.filename, url: publicUrl };
-  if (artifact.type === 'videos') {
-    uploadedVideos.push(entry);
-  } else {
-    uploadedPdfs.push(entry);
-  }
+  const url = `${SUPABASE_URL}/storage/v1/object/public/${BUCKET}/${storagePath}`;
+  console.log(`OK`);
+  return url;
 }
 
-// ---------------------------------------------------------------------------
-// 4. Build manifest
-// ---------------------------------------------------------------------------
+/** @type {Map<string, { videoUrl?: string; pdfUrls: {filename:string;url:string}[] }>} */
+const results = new Map();
 
-const manifest = {
-  uploadedAt: new Date().toISOString(),
-  date: today,
-  videos: uploadedVideos,
-  pdfs: uploadedPdfs,
-};
+for (const [key, artifacts] of byJourney) {
+  console.log(`${JOURNEY_LABELS[key] ?? key}`);
+  const result = { pdfUrls: [] };
 
-console.log('\nManifest:');
-console.log(JSON.stringify(manifest, null, 2));
+  if (artifacts.video) {
+    const storagePath = `videos/${today}/${artifacts.video.filename}`;
+    const url = await upload(artifacts.video.localPath, storagePath, 'video/webm');
+    if (url) result.videoUrl = url;
+  }
+
+  for (const pdf of artifacts.pdfs) {
+    const storagePath = `pdfs/${today}/${pdf.filename}`;
+    const url = await upload(pdf.localPath, storagePath, 'application/pdf');
+    if (url) result.pdfUrls.push({ filename: pdf.filename, url });
+  }
+
+  results.set(key, result);
+  console.log('');
+}
 
 // ---------------------------------------------------------------------------
 // 5. Update README.md
 // ---------------------------------------------------------------------------
 
 const readmePath = path.join(projectRoot, 'README.md');
-
 if (!fs.existsSync(readmePath)) {
-  console.warn('README.md not found — skipping README update.');
+  console.warn('README.md not found — skipping update.');
   process.exit(0);
 }
 
-const readmeContent = fs.readFileSync(readmePath, 'utf8');
+const START = '<!-- E2E_ARTIFACTS_START -->';
+const END = '<!-- E2E_ARTIFACTS_END -->';
 
-const START_MARKER = '<!-- E2E_ARTIFACTS_START -->';
-const END_MARKER = '<!-- E2E_ARTIFACTS_END -->';
-
-const startIdx = readmeContent.indexOf(START_MARKER);
-const endIdx = readmeContent.indexOf(END_MARKER);
+let readme = fs.readFileSync(readmePath, 'utf8');
+const startIdx = readme.indexOf(START);
+const endIdx = readme.indexOf(END);
 
 if (startIdx === -1 || endIdx === -1) {
-  console.warn('README.md does not contain E2E artifact markers — skipping README update.');
+  console.warn('README markers not found — skipping update.');
   process.exit(0);
 }
 
-// Build markdown table rows
-/** @param {{ filename: string; url: string }[]} items */
-function buildRows(items) {
-  return items.map((item) => {
-    const isVideo = item.filename.endsWith('.webm');
-    const icon = isVideo ? '📹 Video' : '📄 PDF';
-    const linkText = isVideo ? 'Open video' : 'Open PDF';
-    return `| ${icon} | ${item.filename} | [${linkText}](${item.url}) |`;
-  });
+// Build per-journey markdown
+const sections = [];
+for (const [key, result] of results) {
+  const label = JOURNEY_LABELS[key] ?? key;
+  const lines = [`#### ${label}`];
+
+  if (!result.videoUrl && result.pdfUrls.length === 0) {
+    lines.push('_No artifacts recorded for this journey._');
+  } else {
+    if (result.videoUrl) {
+      lines.push(`- 📹 **Video** — [Watch recording](${result.videoUrl})`);
+    }
+    for (const { filename, url } of result.pdfUrls) {
+      lines.push(`- 📄 **PDF** — [Open audit report](${url})`);
+    }
+  }
+
+  sections.push(lines.join('\n'));
 }
 
-const videoRows = buildRows(uploadedVideos);
-const pdfRows = buildRows(uploadedPdfs);
-const allRows = [...videoRows, ...pdfRows];
+const newBlock =
+  `${START}\n` +
+  `### E2E Test Recordings\n\n` +
+  `_Last updated: ${today}_\n\n` +
+  sections.join('\n\n') +
+  `\n${END}`;
 
-let tableSection = '';
-if (allRows.length > 0) {
-  tableSection =
-    '\n| Type | File | Link |\n' +
-    '|------|------|------|\n' +
-    allRows.join('\n') +
-    '\n';
-}
-
-const newSection =
-  `${START_MARKER}\n` +
-  `## Latest E2E Test Recordings\n\n` +
-  `> Last updated: ${today} · [View all runs](https://github.com/)\n` +
-  `\n### Journey 2 — AML/CTF Self-Assessment\n` +
-  tableSection +
-  `\n*Videos open directly in browser or download as .webm. PDFs open inline.*\n` +
-  `${END_MARKER}`;
-
-const updatedReadme =
-  readmeContent.slice(0, startIdx) +
-  newSection +
-  readmeContent.slice(endIdx + END_MARKER.length);
-
-fs.writeFileSync(readmePath, updatedReadme, 'utf8');
-console.log('\nREADME.md updated with artifact links.');
+readme = readme.slice(0, startIdx) + newBlock + readme.slice(endIdx + END.length);
+fs.writeFileSync(readmePath, readme, 'utf8');
+console.log('README.md updated.');

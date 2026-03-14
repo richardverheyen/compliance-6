@@ -2,23 +2,23 @@
 
 ## Latest Changes
 
-| Date | Area | Change |
-|------|------|--------|
-| Mar 2026 | Testing | Added full E2E test suite covering account creation and AML/CTF self-assessment (video recorded for each journey) |
-| Mar 2026 | Compliance Assessment | Restored checklist items in process forms with generation and preservation logic |
-| Mar 2026 | Compliance Assessment | Fixed process forms navigating away on every answer change |
-| Mar 2026 | Compliance Assessment | Fixed form scroll jump and double-scroll on process pages |
-| Mar 2026 | Reporting | Added PDF excerpt generation and rule coverage audit to the pipeline viewer |
-| Mar 2026 | Reporting | Fixed PDF sidebar sticky layout and PDF navigation animation timing |
-| Mar 2026 | Dashboard | Unified assessment and history into a single tabbed view per assessment |
-| Mar 2026 | Dashboard | Fixed progress bar and completion status to apply group-level visibility rules correctly |
-| Mar 2026 | Dashboard | Added last assessed date and non-compliant count to Business Processes widget |
-| Mar 2026 | Dashboard | Made process owner name clickable to open Assign Owner modal from the assessment table |
-| Mar 2026 | Dashboard | Fixed double scrollbar on dashboard layout |
-| Mar 2026 | UX | Improved self-assessment terminology, clickable reminder text and regulation names throughout |
-| Mar 2026 | Infrastructure | Obfuscated pricing page amounts for alpha testers |
-| Feb 2026 | Compliance Assessment | Fixed missing key prop on list fragments in the Remediation page |
-| Feb 2026 | Compliance Assessment | Improved checklist control rendering in the remediation table |
+| Date | Area | Change | J1: Account Creation | J2: AML/CTF Assessment |
+|------|------|--------|---------------------|------------------------|
+| Mar 14, 2026 | Testing | Added full E2E test suite covering account creation and AML/CTF self-assessment | [▶ Video](https://pjwzrykeexzeftwremvm.supabase.co/storage/v1/object/public/e2e-artifacts/videos/2026-03-14/journey-01-video.webm) | [▶ Video](https://pjwzrykeexzeftwremvm.supabase.co/storage/v1/object/public/e2e-artifacts/videos/2026-03-14/journey-02-video.webm) · [📄 PDF](https://pjwzrykeexzeftwremvm.supabase.co/storage/v1/object/public/e2e-artifacts/pdfs/2026-03-14/audit-report-1773389711779.pdf) |<!-- LATEST_RECORDINGS -->
+| Mar 2026 | Compliance Assessment | Restored checklist items in process forms with generation and preservation logic | | |
+| Mar 2026 | Compliance Assessment | Fixed process forms navigating away on every answer change | | |
+| Mar 2026 | Compliance Assessment | Fixed form scroll jump and double-scroll on process pages | | |
+| Mar 2026 | Reporting | Added PDF excerpt generation and rule coverage audit to the pipeline viewer | | |
+| Mar 2026 | Reporting | Fixed PDF sidebar sticky layout and PDF navigation animation timing | | |
+| Mar 2026 | Dashboard | Unified assessment and history into a single tabbed view per assessment | | |
+| Mar 2026 | Dashboard | Fixed progress bar and completion status to apply group-level visibility rules correctly | | |
+| Mar 2026 | Dashboard | Added last assessed date and non-compliant count to Business Processes widget | | |
+| Mar 2026 | Dashboard | Made process owner name clickable to open Assign Owner modal from the assessment table | | |
+| Mar 2026 | Dashboard | Fixed double scrollbar on dashboard layout | | |
+| Mar 2026 | UX | Improved self-assessment terminology, clickable reminder text and regulation names throughout | | |
+| Mar 2026 | Infrastructure | Obfuscated pricing page amounts for alpha testers | | |
+| Feb 2026 | Compliance Assessment | Fixed missing key prop on list fragments in the Remediation page | | |
+| Feb 2026 | Compliance Assessment | Improved checklist control rendering in the remediation table | | |
 
 ---
 

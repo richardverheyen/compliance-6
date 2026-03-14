@@ -220,5 +220,22 @@ const newBlock =
   `\n${END}`;
 
 readme = readme.slice(0, startIdx) + newBlock + readme.slice(endIdx + END.length);
+
+// Also update the <!-- LATEST_RECORDINGS --> row in the changelog table.
+const TABLE_ROW_MARKER = '<!-- LATEST_RECORDINGS -->';
+const lines = readme.split('\n');
+const rowIdx = lines.findIndex(l => l.includes(TABLE_ROW_MARKER));
+if (rowIdx !== -1) {
+  const j1 = results.get('journey-01');
+  const j2 = results.get('journey-02');
+  const j1Cell = j1?.videoUrl ? `[▶ Video](${j1.videoUrl})` : '';
+  const j2Parts = [];
+  if (j2?.videoUrl) j2Parts.push(`[▶ Video](${j2.videoUrl})`);
+  for (const { url } of (j2?.pdfUrls ?? [])) j2Parts.push(`[📄 PDF](${url})`);
+  const j2Cell = j2Parts.join(' · ');
+  lines[rowIdx] = `| ${today} | Testing | Added full E2E test suite covering account creation and AML/CTF self-assessment | ${j1Cell} | ${j2Cell} |${TABLE_ROW_MARKER}`;
+  readme = lines.join('\n');
+}
+
 fs.writeFileSync(readmePath, readme, 'utf8');
 console.log('README.md updated.');

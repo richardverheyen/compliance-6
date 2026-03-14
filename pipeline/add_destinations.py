@@ -23,6 +23,65 @@ import pdfplumber
 import pymupdf as fitz
 
 NODES_PATH = "runs/1/nodes.json"
+
+# ---------------------------------------------------------------------------
+# Sequential rule-code filter (mirrors main.py _filter_sequential_rule_codes)
+# ---------------------------------------------------------------------------
+
+def _parse_rule_code(rule_code: str) -> tuple[str, list[str]]:
+    """Split a rule_code into its dotted stem and bracket parts.
+    '4.9.3(1)(a)' → ('4.9.3', ['1', 'a'])
+    'Part 4.1'    → ('4.1',  [])
+    """
+    rc = rule_code.strip()
+    if rc.startswith("Part "):
+        rc = rc[5:]
+    brackets: list[str] = []
+    while rc.endswith(")"):
+        i = rc.rfind("(")
+        if i == -1:
+            break
+        brackets.insert(0, rc[i + 1:-1])
+        rc = rc[:i]
+    return rc, brackets
+
+
+def _filter_sequential_rule_codes(nodes: list[dict]) -> set[int]:
+    """Return node_indexes whose rule_code stem is in monotonically non-decreasing
+    order through the document.  False-positive rule_codes arise when the scraper's
+    state machine retains a stem from a cross-reference in body text, then combines
+    it with a subsequent bracket marker.  These show up as large forward jumps (e.g.
+    4.9.3 appearing immediately after 4.2.11) and are filtered out here.
+    Mirrors the same function in main.py — keep in sync if either changes.
+    """
+    def _stem_sort_key(s: str):
+        return [int(p) for p in s.split(".") if p.isdigit()]
+
+    seen_stems: set[str] = set()
+    for n in nodes:
+        rc = n.get("rule_code", "")
+        if rc:
+            stem, _ = _parse_rule_code(rc)
+            seen_stems.add(stem)
+
+    sorted_stems = sorted(seen_stems, key=_stem_sort_key)
+    stem_rank: dict[str, int] = {s: i for i, s in enumerate(sorted_stems)}
+
+    valid: set[int] = set()
+    hwm = -1
+    FWD_THRESHOLD = 3
+
+    for n in nodes:
+        rc = n.get("rule_code", "")
+        if not rc:
+            continue
+        stem, _ = _parse_rule_code(rc)
+        rank = stem_rank[stem]
+        if rank >= hwm and rank <= hwm + FWD_THRESHOLD:
+            valid.add(n["node_index"])
+            hwm = max(hwm, rank)
+
+    return valid
 INPUT_PDF = "chapter4.pdf"
 OUTPUT_PDF = "chapter4_linked.pdf"
 # Padding above each rule line so it's not flush with the top of the viewport
@@ -99,12 +158,15 @@ def main():
     with open(args.nodes) as f:
         nodes = json.load(f)
 
-    rule_nodes = [n for n in nodes if n.get("rule_code")]
-    print(f"Found {len(rule_nodes)} rule nodes")
+    # Filter out false-positive rule_codes (scraper state-machine artifacts)
+    # before creating destinations, exactly as build_groups does in main.py.
+    valid_node_indexes = _filter_sequential_rule_codes(nodes)
+    rule_nodes = [n for n in nodes if n.get("rule_code") and n["node_index"] in valid_node_indexes]
+    print(f"Found {len(rule_nodes)} rule nodes ({len([n for n in nodes if n.get('rule_code')]) - len(rule_nodes)} false positives filtered)")
 
-    # Sort by (page, y_indent desc) to process in document order so that the
+    # Sort by (page, node_index) to process in document order so that the
     # min_top disambiguation works correctly for same-page duplicate text snippets.
-    rule_nodes.sort(key=lambda n: (n.get("page", 0), -n.get("y_indent", n.get("top", 0))))
+    rule_nodes.sort(key=lambda n: (n.get("page", 0), n.get("node_index", 0)))
 
     # --- Step 1: find y-coordinates via pdfplumber ---
     destinations: list[tuple[str, int, float, float]] = []  # (rule_code, page_0idx, x, pdf_y)

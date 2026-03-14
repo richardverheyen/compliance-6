@@ -4,6 +4,7 @@
 
 | Date | Area | Change | J1: Account Creation | J2: AML/CTF Assessment |
 |------|------|--------|---------------------|------------------------|
+| Mar 14, 2026 | Pipeline | Fixed PDF named destinations linking to wrong sections — filtered 28 false-positive rule codes caused by scraper state-machine artifacts (e.g. 4.9.3(3) now correctly links to the risk-based copies policy on p.28 instead of p.5) | | |
 | Mar 14, 2026 | Testing | Added full E2E test suite covering account creation and AML/CTF self-assessment | [▶ Video](https://pjwzrykeexzeftwremvm.supabase.co/storage/v1/object/public/e2e-artifacts/videos/2026-03-14/journey-01-video.webm) | [▶ Video](https://pjwzrykeexzeftwremvm.supabase.co/storage/v1/object/public/e2e-artifacts/videos/2026-03-14/journey-02-video.webm) · [📄 PDF](https://pjwzrykeexzeftwremvm.supabase.co/storage/v1/object/public/e2e-artifacts/pdfs/2026-03-14/audit-report-1773389711779.pdf) |<!-- LATEST_RECORDINGS -->
 | Mar 2026 | Compliance Assessment | Restored checklist items in process forms with generation and preservation logic | | |
 | Mar 2026 | Compliance Assessment | Fixed process forms navigating away on every answer change | | |
